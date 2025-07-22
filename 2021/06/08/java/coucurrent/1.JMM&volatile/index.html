@@ -82,12 +82,12 @@
 
 
 
-<meta name="description" content="现代计算机模型冯诺依曼计算机模型 现代计算机硬件基本结构 CPU内部结构 CPU多核缓存架构 缓存一致性协议(MESI) 具体流程：主存中存在变量x&#x3D;1，多cpu多线程读取x（lock的是缓存行，当锁的数据横跨多个缓存行时就会进行总线加锁），copy副本到工作线程，此时所有线程中缓存行的状态都是S，T1线程想要修改x时，把缓存行设为E，T1修改x之后，其它线程通过总线嗅探机制时刻监听着，其它线程对">
+<meta name="description" content="现代计算机模型冯诺依曼计算机模型 现代计算机硬件基本结构 CPU内部结构 CPU多核缓存架构 缓存一致性协议(MESI) 缓存一致性协议(MESI) 数据操作流程MESI协议是一种广泛使用的缓存一致性协议，它定义了缓存行(Cache Line)的四种状态，并通过这四种状态的转换来维护多核处理器中缓存的一致性。以下是MESI协议的核心内容和数据操作流程： MESI四种状态 Modified (已修改">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JMM&amp;volatile">
 <meta property="og:url" content="https://marchnineteen.github.io/2021/06/08/java/coucurrent/1.JMM&volatile/index.html">
 <meta property="og:site_name" content="Marcher">
-<meta property="og:description" content="现代计算机模型冯诺依曼计算机模型 现代计算机硬件基本结构 CPU内部结构 CPU多核缓存架构 缓存一致性协议(MESI) 具体流程：主存中存在变量x&#x3D;1，多cpu多线程读取x（lock的是缓存行，当锁的数据横跨多个缓存行时就会进行总线加锁），copy副本到工作线程，此时所有线程中缓存行的状态都是S，T1线程想要修改x时，把缓存行设为E，T1修改x之后，其它线程通过总线嗅探机制时刻监听着，其它线程对">
+<meta property="og:description" content="现代计算机模型冯诺依曼计算机模型 现代计算机硬件基本结构 CPU内部结构 CPU多核缓存架构 缓存一致性协议(MESI) 缓存一致性协议(MESI) 数据操作流程MESI协议是一种广泛使用的缓存一致性协议，它定义了缓存行(Cache Line)的四种状态，并通过这四种状态的转换来维护多核处理器中缓存的一致性。以下是MESI协议的核心内容和数据操作流程： MESI四种状态 Modified (已修改">
 <meta property="og:image" content="https://marchnineteen.github.io/uploads/java/concurrent/%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%A8%A1%E5%9E%8B.png">
 <meta property="og:image" content="https://marchnineteen.github.io/uploads/java/concurrent/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.png">
 <meta property="og:image" content="https://marchnineteen.github.io/uploads/java/concurrent/CPU%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png">
@@ -105,7 +105,7 @@
 <meta property="og:image" content="https://marchnineteen.github.io/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E5%90%8C%E6%AD%A5%E8%A7%84%E5%88%99.png">
 <meta property="og:image" content="https://marchnineteen.github.io/uploads/java/concurrent/%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92.png">
 <meta property="article:published_time" content="2021-06-08T00:00:00.000Z">
-<meta property="article:modified_time" content="2023-05-08T01:44:57.915Z">
+<meta property="article:modified_time" content="2025-07-22T16:26:38.026Z">
 <meta property="article:author" content="Marcher">
 <meta property="article:tag" content="JMM volatile">
 <meta name="twitter:card" content="summary">
@@ -403,7 +403,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.8k 字
+                  3.4k 字
                 </span>
               
 
@@ -419,7 +419,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  6 分钟
+                  12 分钟
                 </span>
               
             </div>
@@ -445,6 +445,112 @@
 <p>CPU内部结构<br><img src="/uploads/java/concurrent/CPU%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="CPU内部结构"></p>
 <p>CPU多核缓存架构<br><img src="/uploads/java/concurrent/CPU%E5%A4%9A%E6%A0%B8%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84.png" alt="CPU多核缓存架构"></p>
 <p>缓存一致性协议(MESI)<br><img src="/uploads/java/concurrent/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE.png" alt="缓存一致性协议"></p>
+<h1 id="缓存一致性协议-MESI-数据操作流程"><a href="#缓存一致性协议-MESI-数据操作流程" class="headerlink" title="缓存一致性协议(MESI) 数据操作流程"></a>缓存一致性协议(MESI) 数据操作流程</h1><p>MESI协议是一种广泛使用的缓存一致性协议，它定义了缓存行(Cache Line)的四种状态，并通过这四种状态的转换来维护多核处理器中缓存的一致性。以下是MESI协议的核心内容和数据操作流程：</p>
+<h2 id="MESI四种状态"><a href="#MESI四种状态" class="headerlink" title="MESI四种状态"></a>MESI四种状态</h2><ol>
+<li><p><strong>Modified (已修改)</strong>：</p>
+<ul>
+<li>缓存行已被修改，与主内存不同</li>
+<li>只有当前缓存拥有该数据的最新副本</li>
+<li>必须将数据写回主内存才能共享</li>
+</ul>
+</li>
+<li><p><strong>Exclusive (独占)</strong>：</p>
+<ul>
+<li>缓存行与主内存一致</li>
+<li>只有当前缓存拥有该数据</li>
+<li>可以直接修改，转为Modified状态</li>
+</ul>
+</li>
+<li><p><strong>Shared (共享)</strong>：</p>
+<ul>
+<li>缓存行与主内存一致</li>
+<li>可能有多个缓存同时拥有该数据副本</li>
+<li>不能直接修改，需要先获取独占权</li>
+</ul>
+</li>
+<li><p><strong>Invalid (无效)</strong>：</p>
+<ul>
+<li>缓存行不包含有效数据</li>
+<li>必须从主内存或其他缓存获取最新数据</li>
+</ul>
+</li>
+</ol>
+<h2 id="基本操作流程"><a href="#基本操作流程" class="headerlink" title="基本操作流程"></a>基本操作流程</h2><h3 id="1-读操作-Read"><a href="#1-读操作-Read" class="headerlink" title="1. 读操作(Read)"></a>1. 读操作(Read)</h3><ul>
+<li>如果本地缓存有有效数据(Modified/Exclusive/Shared)，直接返回</li>
+<li>如果本地缓存无效(Invalid)，发起总线读请求(BusRd)<ul>
+<li>其他缓存检查自己是否有该数据的Modified副本<ul>
+<li>有：提供数据并转为Shared状态</li>
+<li>无：主内存提供数据</li>
+</ul>
+</li>
+<li>请求者缓存行转为Shared或Exclusive状态(取决于是否有其他缓存也拥有该数据)</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-写操作-Write"><a href="#2-写操作-Write" class="headerlink" title="2. 写操作(Write)"></a>2. 写操作(Write)</h3><ul>
+<li>如果本地缓存是Modified状态，直接写入</li>
+<li>如果本地缓存是Exclusive状态，转为Modified并写入</li>
+<li>如果本地缓存是Shared或Invalid状态：<ul>
+<li>发起总线读无效请求(BusRdX)</li>
+<li>其他缓存将对应行设为Invalid</li>
+<li>请求者获得独占权，缓存行转为Modified状态后执行写入</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-监听总线事件"><a href="#3-监听总线事件" class="headerlink" title="3. 监听总线事件"></a>3. 监听总线事件</h3><p>每个缓存控制器监听总线上的事务：</p>
+<ul>
+<li><p><strong>BusRd</strong>：其他核心请求读取数据</p>
+<ul>
+<li>如果本地是Modified：提供数据并转为Shared</li>
+<li>如果本地是Exclusive：转为Shared</li>
+<li>如果本地是Shared：无变化</li>
+<li>如果本地是Invalid：忽略</li>
+</ul>
+</li>
+<li><p><strong>BusRdX</strong>：其他核心请求写入权限</p>
+<ul>
+<li>如果本地是Modified：提供数据并转为Invalid</li>
+<li>如果本地是Exclusive：转为Invalid</li>
+<li>如果本地是Shared：转为Invalid</li>
+<li>如果本地是Invalid：忽略</li>
+</ul>
+</li>
+<li><p><strong>Flush</strong>：其他核心将Modified数据写回主存</p>
+<ul>
+<li>如果本地是Shared或Invalid：更新数据</li>
+</ul>
+</li>
+</ul>
+<h2 id="典型状态转换示例"><a href="#典型状态转换示例" class="headerlink" title="典型状态转换示例"></a>典型状态转换示例</h2><ol>
+<li><strong>初始状态</strong>：所有缓存行Invalid</li>
+<li><strong>核心A读取X</strong>：<ul>
+<li>发起BusRd</li>
+<li>从内存加载X</li>
+<li>状态：Exclusive (因为其他缓存没有X) </li>
+</ul>
+</li>
+<li><strong>核心B读取X</strong>：<ul>
+<li>发起BusRd</li>
+<li>核心A检测到BusRd，转为Shared</li>
+<li>核心B从核心A或内存获取X</li>
+<li>状态：Shared (两个核心)</li>
+</ul>
+</li>
+<li><strong>核心A写入X</strong>：<ul>
+<li>发起BusRdX</li>
+<li>核心B检测到BusRdX，转为Invalid</li>
+<li>核心A获得独占权，状态：Modified</li>
+</ul>
+</li>
+<li><strong>核心B读取X</strong>：<ul>
+<li>发起BusRd</li>
+<li>核心A检测到BusRd，将数据写回内存并转为Shared</li>
+<li>核心B从核心A或内存获取X</li>
+<li>状态：Shared (两个核心)</li>
+</ul>
+</li>
+</ol>
+<p>MESI协议通过这种状态转换机制，确保了多核处理器中缓存数据的一致性，同时尽可能减少了不必要的总线流量和内存访问。</p>
 <h2 id="具体流程："><a href="#具体流程：" class="headerlink" title="具体流程："></a>具体流程：</h2><p><strong>主存中存在变量x=1，多cpu多线程读取x（lock的是缓存行，当锁的数据横跨多个缓存行时就会进行总线加锁），copy副本到工作线程，此时所有线程中缓存行的状态<br>都是S，T1线程想要修改x时，把缓存行设为E，T1修改x之后，其它线程通过总线嗅探机制时刻监听着，其它线程对该缓存行的操作，<br>发现T1变成M之后，其它线程的变成I，T1对x的操作，等待某一个时间后，刷回主存。其它线程，当发现x被修改之后，会重新去主存中<br>copy，但是cpu不会等待，从而出现指令重排。</strong></p>
 <p><img src="/uploads/java/concurrent/CPU%E5%A4%9A%E6%A0%B8%E7%BC%93%E5%AD%98%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.png" alt="具体流程"></p>
 <h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><h2 id="什么是线程"><a href="#什么是线程" class="headerlink" title="什么是线程"></a>什么是线程</h2><p>进程是系统分配资源的基本单位，线程是调度CPU的基本单位，一个进程至少包含一个执行线程，<br>线程寄生在进程当中。每个线程都有一个程序计数器（记录要执行的下一条指令），<br>一组寄存器（保存当前线程的工作变量），堆栈（记录执行历史，其中每一帧保存了一个已经调用但未返回的过程）</p>
@@ -486,6 +592,112 @@
 <li>底层实现：通过汇编lock前缀指令，它会锁定变量缓存行区域并写回主内存，这个操作称为“缓存锁定”，缓存一致性机制会阻止同时修改被两个以上处理器缓存的内存区域数据。一个处理器的缓存回写到内存内存会导致其他处理器的缓存无效</li>
 <li>汇编代码查看<br>XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly -Xcomp</li>
 </ul>
+<h2 id="volatile-无法保证原子性研究"><a href="#volatile-无法保证原子性研究" class="headerlink" title="volatile 无法保证原子性研究"></a>volatile 无法保证原子性研究</h2><h3 id="i-操作为何会被其他线程覆盖"><a href="#i-操作为何会被其他线程覆盖" class="headerlink" title="i++ 操作为何会被其他线程覆盖"></a><code>i++</code> 操作为何会被其他线程覆盖</h3><p><code>i++</code> 操作在多线程环境下容易被其他线程覆盖，这是因为它的执行过程不是原子性的，而是由多个步骤组成的复合操作。下面详细解释这一现象的原因和机制：</p>
+<h4 id="1-i-操作的实际执行步骤"><a href="#1-i-操作的实际执行步骤" class="headerlink" title="1. i++ 操作的实际执行步骤"></a>1. <code>i++</code> 操作的实际执行步骤</h4><p>看似简单的 <code>i++</code> 实际上包含 <strong>3个独立的操作</strong>：</p>
+<ol>
+<li><strong>读取（Read）</strong>：从内存中读取变量 <code>i</code> 的当前值到寄存器/工作内存</li>
+<li><strong>增加（Increment）</strong>：将读取的值加1（在CPU寄存器中计算）</li>
+<li><strong>写入（Write）</strong>：将新值写回内存中的变量 <code>i</code></li>
+</ol>
+<h4 id="2-并发覆盖的具体过程"><a href="#2-并发覆盖的具体过程" class="headerlink" title="2. 并发覆盖的具体过程"></a>2. 并发覆盖的具体过程</h4><p>假设初始值 <code>i = 5</code>，两个线程同时执行 <code>i++</code>：</p>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>线程A操作</th>
+<th>线程B操作</th>
+<th>内存值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t1</td>
+<td>读取i=5</td>
+<td>-</td>
+<td>5</td>
+</tr>
+<tr>
+<td>t2</td>
+<td>-</td>
+<td>读取i=5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>t3</td>
+<td>计算5+1=6</td>
+<td>-</td>
+<td>5</td>
+</tr>
+<tr>
+<td>t4</td>
+<td>-</td>
+<td>计算5+1=6</td>
+<td>5</td>
+</tr>
+<tr>
+<td>t5</td>
+<td>写入i=6</td>
+<td>-</td>
+<td>6</td>
+</tr>
+<tr>
+<td>t6</td>
+<td>-</td>
+<td>写入i=6</td>
+<td>6</td>
+</tr>
+</tbody></table>
+<p><strong>最终结果</strong>：<code>i=6</code> 而不是预期的 <code>7</code>，线程B的写入覆盖了线程A的写入。</p>
+<p>update flag =true</p>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>线程A操作</th>
+<th>线程B操作</th>
+<th>内存值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t1</td>
+<td>读取flag，写入true</td>
+<td>-</td>
+<td>true</td>
+</tr>
+<tr>
+<td>t2</td>
+<td>-</td>
+<td>读取主内存最新的flag</td>
+<td>true</td>
+</tr>
+</tbody></table>
+<h4 id="3-字节码层面的证据"><a href="#3-字节码层面的证据" class="headerlink" title="3. 字节码层面的证据"></a>3. 字节码层面的证据</h4><p>通过查看 <code>i++</code> 的字节码可以更清楚地看到问题：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 源代码</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    i++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对应的字节码</span></span><br><span class="line">getfield #2    // 读取字段i的值（步骤1）</span><br><span class="line">iconst_1       <span class="comment">// 准备常量1</span></span><br><span class="line">iadd           <span class="comment">// 执行加法（步骤2）</span></span><br><span class="line">putfield #2    // 将结果写回字段i（步骤3）</span><br></pre></td></tr></table></figure>
+
+<h5 id="重点！"><a href="#重点！" class="headerlink" title="重点！"></a>重点！</h5><p>这三个字节码指令之间存在 <strong>线程切换的可能性</strong>。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 源代码</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">boolean</span> flag = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setFlag</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    flag = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对应的字节码</span></span><br><span class="line">aload_0         <span class="comment">// 加载this引用到操作数栈</span></span><br><span class="line">iconst_1        <span class="comment">// 将int常量1（true）压入栈</span></span><br><span class="line">putfield #2     // 将栈顶值(true)存入对象的第2个字段(flag)</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-与原子操作的对比"><a href="#4-与原子操作的对比" class="headerlink" title="4. 与原子操作的对比"></a>4. 与原子操作的对比</h4><p>真正的原子操作（如 <code>AtomicInteger.incrementAndGet()</code>）会：</p>
+<ol>
+<li>使用 <strong>CAS (Compare-And-Swap)</strong> 指令</li>
+<li>在硬件层面保证 <strong>读取-修改-写入</strong> 作为一个不可分割的整体执行</li>
+<li>通过CPU提供的原子指令（如x86的<code>LOCK XADD</code>）实现</li>
+</ol>
+<h4 id="5-覆盖问题的本质原因"><a href="#5-覆盖问题的本质原因" class="headerlink" title="5. 覆盖问题的本质原因"></a>5. 覆盖问题的本质原因</h4><p><code>i++</code> 被覆盖的核心原因是：</p>
+<ol>
+<li><strong>操作非原子性</strong>：三个步骤可能被线程切换打断</li>
+<li><strong>缺乏同步机制</strong>：没有锁或内存屏障保护</li>
+<li><strong>可见性问题</strong>：一个线程的修改可能不会立即被其他线程看到</li>
+<li><strong>竞态条件</strong>：多个线程基于相同的旧值进行计算</li>
+</ol>
+<h4 id="6-具体场景示例"><a href="#6-具体场景示例" class="headerlink" title="6. 具体场景示例"></a>6. 具体场景示例</h4><h5 id="银行账户取款问题"><a href="#银行账户取款问题" class="headerlink" title="银行账户取款问题"></a>银行账户取款问题</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Account</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> balance = <span class="number">100</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 不安全的取款方法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">withdraw</span><span class="params">(<span class="keyword">int</span> amount)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(balance &gt;= amount) &#123;</span><br><span class="line">            <span class="comment">// 这里可能被其他线程中断</span></span><br><span class="line">            balance -= amount; <span class="comment">// 等价于 balance = balance - amount</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>两个线程同时取款100元，可能导致：</p>
+<ul>
+<li>都检查通过 <code>balance &gt;= 100</code></li>
+<li>都执行 <code>balance - 100</code></li>
+<li>最终余额可能是0（正确）或 -100（错误）</li>
+</ul>
+<p>假如是withdraw方法是原子性的，那么线程balance - 100,另一个线程再进入withdraw方法的时候，从主内存从读取的balance值就会是0</p>
 <h1 id="可见性-amp-原子性-amp-有序性"><a href="#可见性-amp-原子性-amp-有序性" class="headerlink" title="可见性&amp;原子性&amp;有序性"></a>可见性&amp;原子性&amp;有序性</h1><p>并发编程三大特性</p>
 <ul>
 <li>可见性</li>
@@ -762,7 +974,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#现代计算机模型"><span class="nav-text">现代计算机模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#具体流程："><span class="nav-text">具体流程：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程"><span class="nav-text">线程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是线程"><span class="nav-text">什么是线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java线程与内核线程的关系"><span class="nav-text">Java线程与内核线程的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java线程生命状态"><span class="nav-text">Java线程生命状态</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#并发"><span class="nav-text">并发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么用到并发"><span class="nav-text">为什么用到并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发产生的问题"><span class="nav-text">并发产生的问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JMM"><span class="nav-text">JMM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM虚拟机规范主内存与工作内存"><span class="nav-text">JVM虚拟机规范主内存与工作内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存模型与硬件内存架构的关系"><span class="nav-text">Java内存模型与硬件内存架构的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存模型内存交互操作"><span class="nav-text">Java内存模型内存交互操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存模型内存同步规则"><span class="nav-text">Java内存模型内存同步规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile原理与内存语义"><span class="nav-text">volatile原理与内存语义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可见性-amp-原子性-amp-有序性"><span class="nav-text">可见性&amp;原子性&amp;有序性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#有序性-amp-指令重排"><span class="nav-text">有序性&amp;指令重排</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总线风暴–过度使用volatile可能产生的问题"><span class="nav-text">总线风暴–过度使用volatile可能产生的问题</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#现代计算机模型"><span class="nav-text">现代计算机模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存一致性协议-MESI-数据操作流程"><span class="nav-text">缓存一致性协议(MESI) 数据操作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MESI四种状态"><span class="nav-text">MESI四种状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本操作流程"><span class="nav-text">基本操作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-读操作-Read"><span class="nav-text">1. 读操作(Read)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-写操作-Write"><span class="nav-text">2. 写操作(Write)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-监听总线事件"><span class="nav-text">3. 监听总线事件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#典型状态转换示例"><span class="nav-text">典型状态转换示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体流程："><span class="nav-text">具体流程：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程"><span class="nav-text">线程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是线程"><span class="nav-text">什么是线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java线程与内核线程的关系"><span class="nav-text">Java线程与内核线程的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java线程生命状态"><span class="nav-text">Java线程生命状态</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#并发"><span class="nav-text">并发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么用到并发"><span class="nav-text">为什么用到并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发产生的问题"><span class="nav-text">并发产生的问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JMM"><span class="nav-text">JMM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM虚拟机规范主内存与工作内存"><span class="nav-text">JVM虚拟机规范主内存与工作内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存模型与硬件内存架构的关系"><span class="nav-text">Java内存模型与硬件内存架构的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存模型内存交互操作"><span class="nav-text">Java内存模型内存交互操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存模型内存同步规则"><span class="nav-text">Java内存模型内存同步规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile原理与内存语义"><span class="nav-text">volatile原理与内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile-无法保证原子性研究"><span class="nav-text">volatile 无法保证原子性研究</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#i-操作为何会被其他线程覆盖"><span class="nav-text">i++ 操作为何会被其他线程覆盖</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-i-操作的实际执行步骤"><span class="nav-text">1. i++ 操作的实际执行步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-并发覆盖的具体过程"><span class="nav-text">2. 并发覆盖的具体过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-字节码层面的证据"><span class="nav-text">3. 字节码层面的证据</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#重点！"><span class="nav-text">重点！</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-与原子操作的对比"><span class="nav-text">4. 与原子操作的对比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-覆盖问题的本质原因"><span class="nav-text">5. 覆盖问题的本质原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-具体场景示例"><span class="nav-text">6. 具体场景示例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#银行账户取款问题"><span class="nav-text">银行账户取款问题</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可见性-amp-原子性-amp-有序性"><span class="nav-text">可见性&amp;原子性&amp;有序性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#有序性-amp-指令重排"><span class="nav-text">有序性&amp;指令重排</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总线风暴–过度使用volatile可能产生的问题"><span class="nav-text">总线风暴–过度使用volatile可能产生的问题</span></a></li></ol></div>
             
 
           </div>
@@ -783,7 +995,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -797,7 +1009,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">64.1k</span>
+    <span title="Site words total count">65.6k</span>
   
 </div>
 
@@ -824,7 +1036,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共64.1k字</span>
+  <span class="post-count">博客全站共65.6k字</span>
 </div>
 
         

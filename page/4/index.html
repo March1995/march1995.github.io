@@ -299,240 +299,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/behavioral/strategy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/strategy/" itemprop="url">Java设计模式：策略模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  263 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义一系列算法，封装每个算法，并使它们可以互换。策略模式可以让算法独立于使用它的客户端。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>把对象的功能实现定义成一个接口，对象中依赖一个功能接口，通过改变接口的实现，来达到不同的功能。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义功能接口</p>
-<pre><code>public interface CallBehavior {
-
-   // 叫，不同动物叫声不同
-   void call();
-}</code></pre><p>   功能接口实现</p>
-<pre><code>public class Quack implements CallBehavior {
-
-    @Override
-    public void call() {
-        System.out.println(&quot;鸭子叫!&quot;);
-    }
-}
-
-public class Squeak implements CallBehavior {
-
-   @Override
-   public void call() {
-       System.out.println(&quot;鸡叫k!&quot;);
-   }
-}</code></pre><p>   定义对象类，并依赖功能接口，通过改变接口的具体实现达到不同的功能</p>
-<pre><code>public class Duck {
-
-    private CallBehavior behavior;
-
-    public void performQuack() {
-        if (behavior != null) {
-            behavior.call();
-        }
-    }
-    public void setQuackBehavior(CallBehavior behavior) {
-        this.behavior = behavior;
-    }
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        Duck duck = new Duck();
-        CallBehavior quack = new Quack();
-        duck.setQuackBehavior(quack);
-        duck.performQuack();
-        CallBehavior squeak = new Squeak();
-        duck.setQuackBehavior(squeak);
-        duck.performQuack();
-    }
-}</code></pre><p>   输出：</p>
-<pre><code>鸭子叫!
-鸡叫k!</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><ul>
-<li>java.util.Comparator#compare()</li>
-<li>javax.servlet.http.HttpServlet</li>
-<li>javax.servlet.Filter#doFilter()</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/behavioral/observer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -752,6 +518,240 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
 <li>java.util.Observer</li>
 <li>java.util.EventListener</li>
 <li>javax.servlet.http.HttpSessionBindingListener</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/behavioral/strategy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/strategy/" itemprop="url">Java设计模式：策略模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  263 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义一系列算法，封装每个算法，并使它们可以互换。策略模式可以让算法独立于使用它的客户端。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>把对象的功能实现定义成一个接口，对象中依赖一个功能接口，通过改变接口的实现，来达到不同的功能。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义功能接口</p>
+<pre><code>public interface CallBehavior {
+
+   // 叫，不同动物叫声不同
+   void call();
+}</code></pre><p>   功能接口实现</p>
+<pre><code>public class Quack implements CallBehavior {
+
+    @Override
+    public void call() {
+        System.out.println(&quot;鸭子叫!&quot;);
+    }
+}
+
+public class Squeak implements CallBehavior {
+
+   @Override
+   public void call() {
+       System.out.println(&quot;鸡叫k!&quot;);
+   }
+}</code></pre><p>   定义对象类，并依赖功能接口，通过改变接口的具体实现达到不同的功能</p>
+<pre><code>public class Duck {
+
+    private CallBehavior behavior;
+
+    public void performQuack() {
+        if (behavior != null) {
+            behavior.call();
+        }
+    }
+    public void setQuackBehavior(CallBehavior behavior) {
+        this.behavior = behavior;
+    }
+}</code></pre><p>   测试：</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        Duck duck = new Duck();
+        CallBehavior quack = new Quack();
+        duck.setQuackBehavior(quack);
+        duck.performQuack();
+        CallBehavior squeak = new Squeak();
+        duck.setQuackBehavior(squeak);
+        duck.performQuack();
+    }
+}</code></pre><p>   输出：</p>
+<pre><code>鸭子叫!
+鸡叫k!</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><ul>
+<li>java.util.Comparator#compare()</li>
+<li>javax.servlet.http.HttpServlet</li>
+<li>javax.servlet.Filter#doFilter()</li>
 </ul>
 
           
@@ -1107,7 +1107,7 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/structure/facade/">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/structure/flyweight/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -1126,7 +1126,7 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/facade/" itemprop="url">Java设计模式：外观模式</a></h1>
+                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/flyweight/" itemprop="url">Java设计模式：享元模式</a></h1>
         
 
         <div class="post-meta">
@@ -1192,7 +1192,7 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  244 字
+                  415 字
                 </span>
               
 
@@ -1231,44 +1231,68 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>提供了一个统一的接口，用来访问子系统中的一群接口，从而让子系统更容易使用。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义一个外观对象，在内部进行功能的封装，功能具体是在都在外观类的内部，其它方法要使用该功能<br>调用外观对象的方法即可。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个电影播放系统，方法代表需要功能所需步骤</p>
-<pre><code>public class SubSystem {
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>利用共享的方式来支持大量细粒度的对象，这些对象一部分内部状态是相同的。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>在享元接口中 定义一个方法，即为对象的外部状态，每个对象的外部状态都不同<br>在接口的实现类中添加一个成员变量作为识别标志，在创建工厂类中添加一个Map以识别标志为key，即以对象内部相同状态为key，<br>调用方法即可改变其它状态</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组享元接口 拥有改变外部对象的方法</p>
+<pre><code>public interface Flyweight {
 
-    public void turnOnTV() {
-        System.out.println(&quot;turnOnTV()&quot;);
+    /**
+     * 外部状态，每个享元对象的外部状态不同
+     *
+     * @param extrinsicState
+     */
+    public void extrinsicState(String extrinsicState);
+}</code></pre><p>   定义一个享元接口实现类，内部状态为成员变量，提供外部状态实现</p>
+<pre><code>public class ConcreteFlyweight implements Flyweight {
+
+    private String intrinsicState;
+
+    public ConcreteFlyweight(String intrinsicState) {
+        this.intrinsicState = intrinsicState;
     }
 
-    public void setCD(String cd) {
-        System.out.println(&quot;setCD( &quot; + cd + &quot; )&quot;);
+    @Override
+    public void extrinsicState(String extrinsicState) {
+        System.out.println(&quot;Object address: &quot; + System.identityHashCode(this));
+        System.out.println(&quot;IntrinsicState: &quot; + intrinsicState);
+        System.out.println(&quot;ExtrinsicState: &quot; + extrinsicState);
     }
+}</code></pre><p>   定义享元对象工厂类，定义一个全局变量map存储享元对象。</p>
+<pre><code>public class FlyweightFactory {
 
-    public void starWatching() {
-        System.out.println(&quot;starWatching()&quot;);
+    private HashMap&lt;String, Flyweight&gt; flyweights = new HashMap&lt;&gt;();
+
+    public Flyweight getFlyweight(String intrinsicState) {
+        if (!flyweights.containsKey(intrinsicState)) {
+            Flyweight flyweight = new ConcreteFlyweight(intrinsicState);
+            flyweights.put(intrinsicState, flyweight);
+        }
+        return flyweights.get(intrinsicState);
     }
-
-}</code></pre><p>   定义一个外观类，封装了看电影的三步骤，客户端只需调用外观类的方法即可实现功能</p>
-<pre><code>public class Facade {
-
-    private SubSystem subSystem = new SubSystem();
-
-    public void watchMovie(String name) {
-        subSystem.turnOnTV();
-        subSystem.setCD(name);
-        subSystem.starWatching();
-    }
-}</code></pre><p>   测试：</p>
+}  </code></pre><p>   测试</p>
 <pre><code>public class Client {
 
     public static void main(String[] args) {
-        Facade facade = new Facade();
-        facade.watchMovie(&quot;家有喜事&quot;);
+        FlyweightFactory factory = new FlyweightFactory();
+        Flyweight flyweight1 = factory.getFlyweight(&quot;aa&quot;);
+        Flyweight flyweight2 = factory.getFlyweight(&quot;aa&quot;);
+        flyweight1.extrinsicState(&quot;x&quot;);
+        flyweight2.extrinsicState(&quot;y&quot;);
     }
-}</code></pre><p>   测试：</p>
-<pre><code>turnOnTV()
-setCD( 家有喜事 )
-starWatching()</code></pre>
+}</code></pre><p>   结果</p>
+<pre><code>Object address: 985934102
+IntrinsicState: aa
+ExtrinsicState: x
+Object address: 985934102
+IntrinsicState: aa
+ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" class="headerlink" title="JDK使用："></a>JDK使用：</h3><p>Java 利用缓存来加速大量小对象的访问时间。</p>
+<ul>
+<li>java.lang.Integer#valueOf(int)</li>
+<li>java.lang.Boolean#valueOf(boolean)</li>
+<li>java.lang.Byte#valueOf(byte)</li>
+<li>java.lang.Character#valueOf(char)</li>
+</ul>
+
           
         
       
@@ -1496,6 +1520,774 @@ starWatching()</code></pre>
       }
    }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
 
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/decorator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/decorator/" itemprop="url">Java设计模式：装饰者</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
+                2019-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  578 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>为对象动态添加功能。组合模式是部分和整理的关系，而装饰器模式只是额外增加某些功能。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>装饰者（Decorator）和具体组件（ConcreteComponent）都继承自组件（Component）,<strong>装饰者组合了一个组件</strong>，这样它可以装饰其它装饰者或者具体组件。</p>
+<p>就是把这个装饰者套在被装饰者之上，从而动态扩展被装饰者的功能。</p>
+<p>装饰者的方法有一部分是自己的，这属于它的功能，然后调用被装饰者的方法实现，从而也保留了被装饰者的功能。可以看到，具体组件应当是装饰层次的最低层，因为只有具体组件的方法实现不需要依赖于其它对象。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>设计不同种类的饮料，饮料可以添加配料，比如可以添加牛奶，并且支持动态添加新配料。每增加一种配料，该饮料的价格就会增加，要求计算一种饮料的价格。</p>
+<p>下面实现在 DarkRoast 饮料上新增新添加 Mocha 配料，之后又添加了 Milk 配料。DarkRoast 被 Mocha 包裹，Mocha 又被 Milk 包裹。它们都继承自相同父类，都有 cost() 方法，外层类的 cost() 方法调用了内层类的 cost() 方法。</p>
+<p>   定义一个组件（Component）接口,这里为饮料。装饰者和具体组件都要实现它。</p>
+<pre><code>public interface Beverage {
+
+    public double cost();
+}</code></pre><p>   具体组件实现DarkRoast饮料</p>
+<pre><code>public class DarkRoast implements Beverage {
+
+   @Override
+   public double cost() {
+       return 1;
+   }
+}</code></pre><p>   定义一个装饰者抽象类，实现了饮料接口，拥有饮料的方法，并关联了饮料接口对象。</p>
+<pre><code>public abstract class CondimentDecorator implements Beverage {
+
+    protected Beverage beverage;
+
+    public CondimentDecorator(Beverage beverage) {
+        this.beverage = beverage;
+    }
+}</code></pre><p>   装饰者实现类Milk，继承了装饰者类</p>
+<pre><code>public class Milk extends CondimentDecorator {
+
+    public Milk(Beverage beverage) {
+        super(beverage);
+    }
+
+    @Override
+    public double cost() {
+        return 1 + beverage.cost();
+    }
+}</code></pre><p>   装饰者实现类Mocha，继承了装饰者类</p>
+<pre><code>public class Mocha extends CondimentDecorator {
+
+    public Mocha(Beverage beverage) {
+        super(beverage);
+    }
+
+    @Override
+    public double cost() {
+        return 1 + beverage.cost();
+    }
+}</code></pre><p>   测试：当执行cost()方法时会一层一层从内往外调用。</p>
+<pre><code>public class Client {
+
+   public static void main(String[] args) {
+       Beverage beverage = new DarkRoast();// 一杯饮料
+       beverage = new Mocha(beverage);// 饮料里加mocha
+       beverage = new Milk(beverage);// 饮料里加牛奶
+       System.out.println(beverage.cost());//总价
+   }</code></pre><p>   }</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/bridge/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/bridge/" itemprop="url">Java设计模式：桥接器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
+                2019-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  427 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将抽象与实现分离开来，使它们可以独立变化。</p>
+<p>抽象与实现解耦，例如一个生产线的机器，将参数设定与具体生产的过程实现分离开，使整个生产线更加灵活，用一套参数也可以使用不同的工作模式。</p>
+<p>其中参数设定与生产过程属于两种不同的维度，桥接模式所做的事情就是将不同的维度联结在一起！</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
+<li>在一个类中通过组合另一个对象，调用时只需在当前类调用对象方法即可，实现解耦。</li>
+</ul>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义电视机抽象类,拥有3个方法。</p>
+<pre><code>public abstract class Tv {
+
+    public abstract void on();
+
+    public abstract void off();
+
+    public abstract void tuneTunnel();</code></pre><p>   定义一个电视机的实现类，Sony电视机。</p>
+<pre><code>public class SonyTv extends Tv {
+
+    @Override
+    public void on() {
+        System.out.println(&quot;SonyTv,on&quot;);
+    }
+
+    @Override
+    public void off() {
+        System.out.println(&quot;SonyTv,off&quot;);
+    }
+
+    @Override
+    public void tuneTunnel() {
+        System.out.println(&quot;SonyTv,tuneTunnel&quot;);
+    }</code></pre><p>   定义一个遥控器抽象类。组合了一个电视机对象。</p>
+<pre><code>protected Tv tv;
+
+    public RemoteControl(Tv tv) {
+        this.tv = tv;
+    }
+
+    public abstract void on();
+
+    public abstract void off();
+
+    public abstract void tuneTunnel();   </code></pre><p>   定义一个遥控器的实现类，Sony电视机遥控器。</p>
+<pre><code>public class SonyRemoteControl extends RemoteControl {
+
+    public SonyRemoteControl(Tv tv) {
+        super(tv);
+    }
+
+    @Override
+    public void on() {
+        System.out.println(&quot;sonyRemoteControl,on&quot;);
+        tv.on();
+    }
+
+    @Override
+    public void off() {
+        System.out.println(&quot;sonyRemoteControl,off&quot;);
+        tv.off();
+    }
+
+    @Override
+    public void tuneTunnel() {
+        System.out.println(&quot;sonyRemoteControl,tuneTunnel&quot;);
+        tv.off();
+    }
+} </code></pre><p>   在生成sony电视机遥控器时，传入一个sony电视机对象，即可使用该遥控器实现该电视机的状态变换。</p>
+<pre><code>public class Client {
+
+   public static void main(String[] args) {
+       Tv sonyTv = new SonyTv();
+       SonyRemoteControl sonyRemoteControl = new SonyRemoteControl(sonyTv);
+       sonyRemoteControl.on();
+       sonyRemoteControl.off();
+       sonyRemoteControl.tuneTunnel();
+   }
+}</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/composite/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/composite/" itemprop="url">Java设计模式：组合模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
+                2019-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  496 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将对象组合成树形结构来表示“整体/部分”层次关系，允许用户以相同的方式处理单独对象和组合对象。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>组件（Component）类是组合类（Composite）和叶子类（Leaf）的父类，可以把组合类看成是树的中间节点。<br>组合对象拥有一个或多个组件对象，因此组合对象的操作可以委托给组件对象去处理，而组件对象可以是另一个组合对象或者叶子对象。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组件抽象类</p>
+<pre><code>public abstract class Component {
+
+    protected String name;
+
+    public Component(String name) {
+        this.name = name;
+    }
+
+    public void print() {
+        print(0);
+    }
+    public abstract void print(int level);
+
+    public abstract void add(Component component);
+
+    public abstract void remove(Component component);
+}</code></pre><p>   定义一个组合类，继承组件类，并依赖了组件类，依赖的组件类可以是另一个组合对象或者叶子对象</p>
+<pre><code>public class Composite extends Component {
+
+    private List&lt;Component&gt; child;
+
+    public Composite(String name) {
+        super(name);
+        child = new ArrayList&lt;&gt;();
+    }
+
+    @Override
+    public void print(int level) {
+        for (int i = 0; i &lt; level; i++) {
+            System.out.print(&quot;--&quot;);
+        }
+        System.out.println(&quot;Composite:&quot; + name);
+        for (Component component : child) {
+            component.print(level + 1);
+        }
+    }
+
+    @Override
+    public void add(Component component) {
+        child.add(component);
+    }
+
+    @Override
+    public void remove(Component component) {
+        child.remove(component);
+    }
+}</code></pre><p>   定义一个叶子类，继承组件类。</p>
+<pre><code>public class Leaf extends Component{
+
+    public Leaf(String name) {
+        super(name);
+    }
+
+    @Override
+    public void print(int level) {
+        for (int i = 0; i &lt; level; i++) {
+            System.out.print(&quot;--&quot;);
+        }
+        System.out.println(&quot;left:&quot; + name);
+    }
+
+    @Override
+    public void add(Component component) {
+        throw new UnsupportedOperationException(); // 牺牲透明性换取单一职责原则，这样就不用考虑是叶子节点还是组合节点
+    }
+
+    @Override
+    public void remove(Component component) {
+        throw new UnsupportedOperationException();
+    }  </code></pre><p>   测试</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        Composite root = new Composite(&quot;root&quot;);
+        Component node1 = new Leaf(&quot;1&quot;);
+        Component node2 = new Composite(&quot;2&quot;);
+        Component node3 = new Leaf(&quot;3&quot;);
+        root.add(node1);
+        root.add(node2);
+        root.add(node3);
+        Component node21 = new Leaf(&quot;21&quot;);
+        Component node22 = new Composite(&quot;22&quot;);
+        node2.add(node21);
+        node2.add(node22);
+        Component node221 = new Leaf(&quot;221&quot;);
+        node22.add(node221);
+        root.print();
+    }
+}</code></pre><p>   结果</p>
+<pre><code>Composite:root
+--left:1
+--Composite:2
+----left:21
+----Composite:22
+------left:221
+--left:3</code></pre>
           
         
       
@@ -2084,774 +2876,6 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/bridge/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/bridge/" itemprop="url">Java设计模式：桥接器</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  427 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将抽象与实现分离开来，使它们可以独立变化。</p>
-<p>抽象与实现解耦，例如一个生产线的机器，将参数设定与具体生产的过程实现分离开，使整个生产线更加灵活，用一套参数也可以使用不同的工作模式。</p>
-<p>其中参数设定与生产过程属于两种不同的维度，桥接模式所做的事情就是将不同的维度联结在一起！</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
-<li>在一个类中通过组合另一个对象，调用时只需在当前类调用对象方法即可，实现解耦。</li>
-</ul>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义电视机抽象类,拥有3个方法。</p>
-<pre><code>public abstract class Tv {
-
-    public abstract void on();
-
-    public abstract void off();
-
-    public abstract void tuneTunnel();</code></pre><p>   定义一个电视机的实现类，Sony电视机。</p>
-<pre><code>public class SonyTv extends Tv {
-
-    @Override
-    public void on() {
-        System.out.println(&quot;SonyTv,on&quot;);
-    }
-
-    @Override
-    public void off() {
-        System.out.println(&quot;SonyTv,off&quot;);
-    }
-
-    @Override
-    public void tuneTunnel() {
-        System.out.println(&quot;SonyTv,tuneTunnel&quot;);
-    }</code></pre><p>   定义一个遥控器抽象类。组合了一个电视机对象。</p>
-<pre><code>protected Tv tv;
-
-    public RemoteControl(Tv tv) {
-        this.tv = tv;
-    }
-
-    public abstract void on();
-
-    public abstract void off();
-
-    public abstract void tuneTunnel();   </code></pre><p>   定义一个遥控器的实现类，Sony电视机遥控器。</p>
-<pre><code>public class SonyRemoteControl extends RemoteControl {
-
-    public SonyRemoteControl(Tv tv) {
-        super(tv);
-    }
-
-    @Override
-    public void on() {
-        System.out.println(&quot;sonyRemoteControl,on&quot;);
-        tv.on();
-    }
-
-    @Override
-    public void off() {
-        System.out.println(&quot;sonyRemoteControl,off&quot;);
-        tv.off();
-    }
-
-    @Override
-    public void tuneTunnel() {
-        System.out.println(&quot;sonyRemoteControl,tuneTunnel&quot;);
-        tv.off();
-    }
-} </code></pre><p>   在生成sony电视机遥控器时，传入一个sony电视机对象，即可使用该遥控器实现该电视机的状态变换。</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-       Tv sonyTv = new SonyTv();
-       SonyRemoteControl sonyRemoteControl = new SonyRemoteControl(sonyTv);
-       sonyRemoteControl.on();
-       sonyRemoteControl.off();
-       sonyRemoteControl.tuneTunnel();
-   }
-}</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/decorator/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/decorator/" itemprop="url">Java设计模式：装饰者</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  578 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>为对象动态添加功能。组合模式是部分和整理的关系，而装饰器模式只是额外增加某些功能。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>装饰者（Decorator）和具体组件（ConcreteComponent）都继承自组件（Component）,<strong>装饰者组合了一个组件</strong>，这样它可以装饰其它装饰者或者具体组件。</p>
-<p>就是把这个装饰者套在被装饰者之上，从而动态扩展被装饰者的功能。</p>
-<p>装饰者的方法有一部分是自己的，这属于它的功能，然后调用被装饰者的方法实现，从而也保留了被装饰者的功能。可以看到，具体组件应当是装饰层次的最低层，因为只有具体组件的方法实现不需要依赖于其它对象。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>设计不同种类的饮料，饮料可以添加配料，比如可以添加牛奶，并且支持动态添加新配料。每增加一种配料，该饮料的价格就会增加，要求计算一种饮料的价格。</p>
-<p>下面实现在 DarkRoast 饮料上新增新添加 Mocha 配料，之后又添加了 Milk 配料。DarkRoast 被 Mocha 包裹，Mocha 又被 Milk 包裹。它们都继承自相同父类，都有 cost() 方法，外层类的 cost() 方法调用了内层类的 cost() 方法。</p>
-<p>   定义一个组件（Component）接口,这里为饮料。装饰者和具体组件都要实现它。</p>
-<pre><code>public interface Beverage {
-
-    public double cost();
-}</code></pre><p>   具体组件实现DarkRoast饮料</p>
-<pre><code>public class DarkRoast implements Beverage {
-
-   @Override
-   public double cost() {
-       return 1;
-   }
-}</code></pre><p>   定义一个装饰者抽象类，实现了饮料接口，拥有饮料的方法，并关联了饮料接口对象。</p>
-<pre><code>public abstract class CondimentDecorator implements Beverage {
-
-    protected Beverage beverage;
-
-    public CondimentDecorator(Beverage beverage) {
-        this.beverage = beverage;
-    }
-}</code></pre><p>   装饰者实现类Milk，继承了装饰者类</p>
-<pre><code>public class Milk extends CondimentDecorator {
-
-    public Milk(Beverage beverage) {
-        super(beverage);
-    }
-
-    @Override
-    public double cost() {
-        return 1 + beverage.cost();
-    }
-}</code></pre><p>   装饰者实现类Mocha，继承了装饰者类</p>
-<pre><code>public class Mocha extends CondimentDecorator {
-
-    public Mocha(Beverage beverage) {
-        super(beverage);
-    }
-
-    @Override
-    public double cost() {
-        return 1 + beverage.cost();
-    }
-}</code></pre><p>   测试：当执行cost()方法时会一层一层从内往外调用。</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-       Beverage beverage = new DarkRoast();// 一杯饮料
-       beverage = new Mocha(beverage);// 饮料里加mocha
-       beverage = new Milk(beverage);// 饮料里加牛奶
-       System.out.println(beverage.cost());//总价
-   }</code></pre><p>   }</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/composite/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/composite/" itemprop="url">Java设计模式：组合模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  496 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将对象组合成树形结构来表示“整体/部分”层次关系，允许用户以相同的方式处理单独对象和组合对象。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>组件（Component）类是组合类（Composite）和叶子类（Leaf）的父类，可以把组合类看成是树的中间节点。<br>组合对象拥有一个或多个组件对象，因此组合对象的操作可以委托给组件对象去处理，而组件对象可以是另一个组合对象或者叶子对象。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组件抽象类</p>
-<pre><code>public abstract class Component {
-
-    protected String name;
-
-    public Component(String name) {
-        this.name = name;
-    }
-
-    public void print() {
-        print(0);
-    }
-    public abstract void print(int level);
-
-    public abstract void add(Component component);
-
-    public abstract void remove(Component component);
-}</code></pre><p>   定义一个组合类，继承组件类，并依赖了组件类，依赖的组件类可以是另一个组合对象或者叶子对象</p>
-<pre><code>public class Composite extends Component {
-
-    private List&lt;Component&gt; child;
-
-    public Composite(String name) {
-        super(name);
-        child = new ArrayList&lt;&gt;();
-    }
-
-    @Override
-    public void print(int level) {
-        for (int i = 0; i &lt; level; i++) {
-            System.out.print(&quot;--&quot;);
-        }
-        System.out.println(&quot;Composite:&quot; + name);
-        for (Component component : child) {
-            component.print(level + 1);
-        }
-    }
-
-    @Override
-    public void add(Component component) {
-        child.add(component);
-    }
-
-    @Override
-    public void remove(Component component) {
-        child.remove(component);
-    }
-}</code></pre><p>   定义一个叶子类，继承组件类。</p>
-<pre><code>public class Leaf extends Component{
-
-    public Leaf(String name) {
-        super(name);
-    }
-
-    @Override
-    public void print(int level) {
-        for (int i = 0; i &lt; level; i++) {
-            System.out.print(&quot;--&quot;);
-        }
-        System.out.println(&quot;left:&quot; + name);
-    }
-
-    @Override
-    public void add(Component component) {
-        throw new UnsupportedOperationException(); // 牺牲透明性换取单一职责原则，这样就不用考虑是叶子节点还是组合节点
-    }
-
-    @Override
-    public void remove(Component component) {
-        throw new UnsupportedOperationException();
-    }  </code></pre><p>   测试</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        Composite root = new Composite(&quot;root&quot;);
-        Component node1 = new Leaf(&quot;1&quot;);
-        Component node2 = new Composite(&quot;2&quot;);
-        Component node3 = new Leaf(&quot;3&quot;);
-        root.add(node1);
-        root.add(node2);
-        root.add(node3);
-        Component node21 = new Leaf(&quot;21&quot;);
-        Component node22 = new Composite(&quot;22&quot;);
-        node2.add(node21);
-        node2.add(node22);
-        Component node221 = new Leaf(&quot;221&quot;);
-        node22.add(node221);
-        root.print();
-    }
-}</code></pre><p>   结果</p>
-<pre><code>Composite:root
---left:1
---Composite:2
-----left:21
-----Composite:22
-------left:221
---left:3</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/04/datastructure/index/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3216,7 +3240,7 @@ for (int i=1; i&lt;=n; i*=2)        //循环log2n次
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -3230,7 +3254,7 @@ for (int i=1; i&lt;=n; i*=2)        //循环log2n次
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">64.1k</span>
+    <span title="Site words total count">65.6k</span>
   
 </div>
 
@@ -3257,7 +3281,7 @@ for (int i=1; i&lt;=n; i*=2)        //循环log2n次
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共64.1k字</span>
+  <span class="post-count">博客全站共65.6k字</span>
 </div>
 
         
