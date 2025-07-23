@@ -9,6 +9,7 @@ categories: [JVM]
 > https://www.cnblogs.com/likehua/p/3369823.html
  
 > 实战https://juejin.cn/post/7025410482341150751?utm_source=gold_browser_extension#heading-8 
+> https://blog.csdn.net/weixin_42081445/article/details/144562955
 
 # 1.堆大小设置
 
