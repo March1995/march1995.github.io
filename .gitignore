@@ -7,3 +7,5 @@ public/
 .deploy*/
 .idea/
 *.iml
+/source/.obsidian
+/source/copilot-custom-prompts
