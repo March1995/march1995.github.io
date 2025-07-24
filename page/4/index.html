@@ -299,6 +299,240 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/behavioral/strategy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/strategy/" itemprop="url">Java设计模式：策略模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  263 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义一系列算法，封装每个算法，并使它们可以互换。策略模式可以让算法独立于使用它的客户端。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>把对象的功能实现定义成一个接口，对象中依赖一个功能接口，通过改变接口的实现，来达到不同的功能。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义功能接口</p>
+<pre><code>public interface CallBehavior {
+
+   // 叫，不同动物叫声不同
+   void call();
+}</code></pre><p>   功能接口实现</p>
+<pre><code>public class Quack implements CallBehavior {
+
+    @Override
+    public void call() {
+        System.out.println(&quot;鸭子叫!&quot;);
+    }
+}
+
+public class Squeak implements CallBehavior {
+
+   @Override
+   public void call() {
+       System.out.println(&quot;鸡叫k!&quot;);
+   }
+}</code></pre><p>   定义对象类，并依赖功能接口，通过改变接口的具体实现达到不同的功能</p>
+<pre><code>public class Duck {
+
+    private CallBehavior behavior;
+
+    public void performQuack() {
+        if (behavior != null) {
+            behavior.call();
+        }
+    }
+    public void setQuackBehavior(CallBehavior behavior) {
+        this.behavior = behavior;
+    }
+}</code></pre><p>   测试：</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        Duck duck = new Duck();
+        CallBehavior quack = new Quack();
+        duck.setQuackBehavior(quack);
+        duck.performQuack();
+        CallBehavior squeak = new Squeak();
+        duck.setQuackBehavior(squeak);
+        duck.performQuack();
+    }
+}</code></pre><p>   输出：</p>
+<pre><code>鸭子叫!
+鸡叫k!</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><ul>
+<li>java.util.Comparator#compare()</li>
+<li>javax.servlet.http.HttpServlet</li>
+<li>javax.servlet.Filter#doFilter()</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/behavioral/observer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -575,7 +809,7 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/behavioral/strategy/">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/structure/flyweight/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -594,7 +828,7 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/strategy/" itemprop="url">Java设计模式：策略模式</a></h1>
+                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/flyweight/" itemprop="url">Java设计模式：享元模式</a></h1>
         
 
         <div class="post-meta">
@@ -660,7 +894,7 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  263 字
+                  415 字
                 </span>
               
 
@@ -699,59 +933,66 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义一系列算法，封装每个算法，并使它们可以互换。策略模式可以让算法独立于使用它的客户端。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>把对象的功能实现定义成一个接口，对象中依赖一个功能接口，通过改变接口的实现，来达到不同的功能。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义功能接口</p>
-<pre><code>public interface CallBehavior {
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>利用共享的方式来支持大量细粒度的对象，这些对象一部分内部状态是相同的。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>在享元接口中 定义一个方法，即为对象的外部状态，每个对象的外部状态都不同<br>在接口的实现类中添加一个成员变量作为识别标志，在创建工厂类中添加一个Map以识别标志为key，即以对象内部相同状态为key，<br>调用方法即可改变其它状态</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组享元接口 拥有改变外部对象的方法</p>
+<pre><code>public interface Flyweight {
 
-   // 叫，不同动物叫声不同
-   void call();
-}</code></pre><p>   功能接口实现</p>
-<pre><code>public class Quack implements CallBehavior {
+    /**
+     * 外部状态，每个享元对象的外部状态不同
+     *
+     * @param extrinsicState
+     */
+    public void extrinsicState(String extrinsicState);
+}</code></pre><p>   定义一个享元接口实现类，内部状态为成员变量，提供外部状态实现</p>
+<pre><code>public class ConcreteFlyweight implements Flyweight {
+
+    private String intrinsicState;
+
+    public ConcreteFlyweight(String intrinsicState) {
+        this.intrinsicState = intrinsicState;
+    }
 
     @Override
-    public void call() {
-        System.out.println(&quot;鸭子叫!&quot;);
+    public void extrinsicState(String extrinsicState) {
+        System.out.println(&quot;Object address: &quot; + System.identityHashCode(this));
+        System.out.println(&quot;IntrinsicState: &quot; + intrinsicState);
+        System.out.println(&quot;ExtrinsicState: &quot; + extrinsicState);
     }
-}
+}</code></pre><p>   定义享元对象工厂类，定义一个全局变量map存储享元对象。</p>
+<pre><code>public class FlyweightFactory {
 
-public class Squeak implements CallBehavior {
+    private HashMap&lt;String, Flyweight&gt; flyweights = new HashMap&lt;&gt;();
 
-   @Override
-   public void call() {
-       System.out.println(&quot;鸡叫k!&quot;);
-   }
-}</code></pre><p>   定义对象类，并依赖功能接口，通过改变接口的具体实现达到不同的功能</p>
-<pre><code>public class Duck {
-
-    private CallBehavior behavior;
-
-    public void performQuack() {
-        if (behavior != null) {
-            behavior.call();
+    public Flyweight getFlyweight(String intrinsicState) {
+        if (!flyweights.containsKey(intrinsicState)) {
+            Flyweight flyweight = new ConcreteFlyweight(intrinsicState);
+            flyweights.put(intrinsicState, flyweight);
         }
+        return flyweights.get(intrinsicState);
     }
-    public void setQuackBehavior(CallBehavior behavior) {
-        this.behavior = behavior;
-    }
-}</code></pre><p>   测试：</p>
+}  </code></pre><p>   测试</p>
 <pre><code>public class Client {
 
     public static void main(String[] args) {
-        Duck duck = new Duck();
-        CallBehavior quack = new Quack();
-        duck.setQuackBehavior(quack);
-        duck.performQuack();
-        CallBehavior squeak = new Squeak();
-        duck.setQuackBehavior(squeak);
-        duck.performQuack();
+        FlyweightFactory factory = new FlyweightFactory();
+        Flyweight flyweight1 = factory.getFlyweight(&quot;aa&quot;);
+        Flyweight flyweight2 = factory.getFlyweight(&quot;aa&quot;);
+        flyweight1.extrinsicState(&quot;x&quot;);
+        flyweight2.extrinsicState(&quot;y&quot;);
     }
-}</code></pre><p>   输出：</p>
-<pre><code>鸭子叫!
-鸡叫k!</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><ul>
-<li>java.util.Comparator#compare()</li>
-<li>javax.servlet.http.HttpServlet</li>
-<li>javax.servlet.Filter#doFilter()</li>
+}</code></pre><p>   结果</p>
+<pre><code>Object address: 985934102
+IntrinsicState: aa
+ExtrinsicState: x
+Object address: 985934102
+IntrinsicState: aa
+ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" class="headerlink" title="JDK使用："></a>JDK使用：</h3><p>Java 利用缓存来加速大量小对象的访问时间。</p>
+<ul>
+<li>java.lang.Integer#valueOf(int)</li>
+<li>java.lang.Boolean#valueOf(boolean)</li>
+<li>java.lang.Byte#valueOf(byte)</li>
+<li>java.lang.Character#valueOf(char)</li>
 </ul>
 
           
@@ -1107,247 +1348,6 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/structure/flyweight/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/flyweight/" itemprop="url">Java设计模式：享元模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  415 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>利用共享的方式来支持大量细粒度的对象，这些对象一部分内部状态是相同的。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>在享元接口中 定义一个方法，即为对象的外部状态，每个对象的外部状态都不同<br>在接口的实现类中添加一个成员变量作为识别标志，在创建工厂类中添加一个Map以识别标志为key，即以对象内部相同状态为key，<br>调用方法即可改变其它状态</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组享元接口 拥有改变外部对象的方法</p>
-<pre><code>public interface Flyweight {
-
-    /**
-     * 外部状态，每个享元对象的外部状态不同
-     *
-     * @param extrinsicState
-     */
-    public void extrinsicState(String extrinsicState);
-}</code></pre><p>   定义一个享元接口实现类，内部状态为成员变量，提供外部状态实现</p>
-<pre><code>public class ConcreteFlyweight implements Flyweight {
-
-    private String intrinsicState;
-
-    public ConcreteFlyweight(String intrinsicState) {
-        this.intrinsicState = intrinsicState;
-    }
-
-    @Override
-    public void extrinsicState(String extrinsicState) {
-        System.out.println(&quot;Object address: &quot; + System.identityHashCode(this));
-        System.out.println(&quot;IntrinsicState: &quot; + intrinsicState);
-        System.out.println(&quot;ExtrinsicState: &quot; + extrinsicState);
-    }
-}</code></pre><p>   定义享元对象工厂类，定义一个全局变量map存储享元对象。</p>
-<pre><code>public class FlyweightFactory {
-
-    private HashMap&lt;String, Flyweight&gt; flyweights = new HashMap&lt;&gt;();
-
-    public Flyweight getFlyweight(String intrinsicState) {
-        if (!flyweights.containsKey(intrinsicState)) {
-            Flyweight flyweight = new ConcreteFlyweight(intrinsicState);
-            flyweights.put(intrinsicState, flyweight);
-        }
-        return flyweights.get(intrinsicState);
-    }
-}  </code></pre><p>   测试</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        FlyweightFactory factory = new FlyweightFactory();
-        Flyweight flyweight1 = factory.getFlyweight(&quot;aa&quot;);
-        Flyweight flyweight2 = factory.getFlyweight(&quot;aa&quot;);
-        flyweight1.extrinsicState(&quot;x&quot;);
-        flyweight2.extrinsicState(&quot;y&quot;);
-    }
-}</code></pre><p>   结果</p>
-<pre><code>Object address: 985934102
-IntrinsicState: aa
-ExtrinsicState: x
-Object address: 985934102
-IntrinsicState: aa
-ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" class="headerlink" title="JDK使用："></a>JDK使用：</h3><p>Java 利用缓存来加速大量小对象的访问时间。</p>
-<ul>
-<li>java.lang.Integer#valueOf(int)</li>
-<li>java.lang.Boolean#valueOf(boolean)</li>
-<li>java.lang.Byte#valueOf(byte)</li>
-<li>java.lang.Character#valueOf(char)</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/adapter/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1575,7 +1575,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/decorator/">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/javase/hashMap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -1594,7 +1594,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/decorator/" itemprop="url">Java设计模式：装饰者</a></h1>
+                <a class="post-title-link" href="/2019/01/08/java/javase/hashMap/" itemprop="url">JDK1.8 HashMap源码分析</a></h1>
         
 
         <div class="post-meta">
@@ -1629,8 +1629,8 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
+                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaSE</span>
                   </a>
                 </span>
 
@@ -1660,7 +1660,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  578 字
+                  3.3k 字
                 </span>
               
 
@@ -1676,7 +1676,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2 分钟
+                  14 分钟
                 </span>
               
             </div>
@@ -1699,62 +1699,359 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>为对象动态添加功能。组合模式是部分和整理的关系，而装饰器模式只是额外增加某些功能。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>装饰者（Decorator）和具体组件（ConcreteComponent）都继承自组件（Component）,<strong>装饰者组合了一个组件</strong>，这样它可以装饰其它装饰者或者具体组件。</p>
-<p>就是把这个装饰者套在被装饰者之上，从而动态扩展被装饰者的功能。</p>
-<p>装饰者的方法有一部分是自己的，这属于它的功能，然后调用被装饰者的方法实现，从而也保留了被装饰者的功能。可以看到，具体组件应当是装饰层次的最低层，因为只有具体组件的方法实现不需要依赖于其它对象。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>设计不同种类的饮料，饮料可以添加配料，比如可以添加牛奶，并且支持动态添加新配料。每增加一种配料，该饮料的价格就会增加，要求计算一种饮料的价格。</p>
-<p>下面实现在 DarkRoast 饮料上新增新添加 Mocha 配料，之后又添加了 Milk 配料。DarkRoast 被 Mocha 包裹，Mocha 又被 Milk 包裹。它们都继承自相同父类，都有 cost() 方法，外层类的 cost() 方法调用了内层类的 cost() 方法。</p>
-<p>   定义一个组件（Component）接口,这里为饮料。装饰者和具体组件都要实现它。</p>
-<pre><code>public interface Beverage {
+            <p><a href="https://blog.csdn.net/qq_36520235/article/details/82417949" target="_blank" rel="noopener">Hashmap的结构，1.7和1.8有哪些区别，史上最深入的分析</a><br><a href="https://www.cnblogs.com/Hangtutu/p/9251999.html" target="_blank" rel="noopener">jdk1.7死环</a><br><a href="https://juejin.im/post/5a66a08d5188253dc3321da0" target="_blank" rel="noopener">jdk1.7线程不安全</a><br><a href="https://blog.csdn.net/u013494765/article/details/77837338" target="_blank" rel="noopener">jdk1.8扩容核心-链表复制处理</a><br><a href="https://mp.weixin.qq.com/s/NvmqdPOyWQdeHG2s-xSbHg" target="_blank" rel="noopener">HashMap1.8面试连问</a><br><a href="https://blog.csdn.net/weixin_42340670/article/details/80503517?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3" target="_blank" rel="noopener">HashMap1.8源码解析：resize方法（有问题）</a></p>
+<h1 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h1><p><img src="/uploads/java/javase/hashMap.png" alt="hashMap继承关系"></p>
+<h1 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h1><pre><code>// Hash表结构
+transient Node&lt;K,V&gt;[] table;
 
-    public double cost();
-}</code></pre><p>   具体组件实现DarkRoast饮料</p>
-<pre><code>public class DarkRoast implements Beverage {
+// 保证 fail-fast机制
+transient int modCount;
 
-   @Override
-   public double cost() {
-       return 1;
-   }
-}</code></pre><p>   定义一个装饰者抽象类，实现了饮料接口，拥有饮料的方法，并关联了饮料接口对象。</p>
-<pre><code>public abstract class CondimentDecorator implements Beverage {
+// 下一次扩容时的阈值 (capacity * load factor).
+int threshold;
 
-    protected Beverage beverage;
+// 负载因子，决定hash表的数据填充程度，此值越大说明hash表填充的越满，空间利用率高，但是增加了查询开销，此值若太小，hash表空间利用率不高且rehash更加频繁
+final float loadFactor;    
 
-    public CondimentDecorator(Beverage beverage) {
-        this.beverage = beverage;
+// 默认初始容量,必须是2的次方
+static final int DEFAULT_INITIAL_CAPACITY = 1 &lt;&lt; 4; // aka 16
+
+// 最大容量，2的30次方，因为int类型32位，去掉一位符号位，只能左移30位
+static final int MAXIMUM_CAPACITY = 1 &lt;&lt; 30;
+
+// 默认负载因子
+static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
+// jdk1.8增加 链表转红黑树的阈值
+static final int TREEIFY_THRESHOLD = 8;
+
+// jdk1.8增加 红黑树转链表的阈值
+static final int UNTREEIFY_THRESHOLD = 6;</code></pre><h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><p>HashMap一共有4个构造方法，主要的工作就是完成容量和加载因子的赋值。Hash表都是采用的<strong>懒加载</strong>方式，当第一次插入数据时才会创建。</p>
+<pre><code>// 指定默认容量和负载因子   
+public HashMap(int initialCapacity, float loadFactor) {
+        if (initialCapacity &lt; 0)
+            throw new IllegalArgumentException(&quot;Illegal initial capacity: &quot; +
+                                               initialCapacity);
+        if (initialCapacity &gt; MAXIMUM_CAPACITY)
+            initialCapacity = MAXIMUM_CAPACITY;
+        if (loadFactor &lt;= 0 || Float.isNaN(loadFactor))
+            throw new IllegalArgumentException(&quot;Illegal load factor: &quot; +
+                                               loadFactor);
+        this.loadFactor = loadFactor;
+        // 找到大于等于initialCapacity的最小的2的幂  若传入6 threshold=8
+        this.threshold = tableSizeFor(initialCapacity);
+}
+
+// 使用默认负载因子
+public HashMap(int initialCapacity) {
+        this(initialCapacity, DEFAULT_LOAD_FACTOR);
+}
+
+// 参数全部都是默认值
+public HashMap() {
+       this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
+}
+
+// 构造一个新的 HashMap与指定的相同的映射 Map 。 
+public HashMap(Map&lt;? extends K, ? extends V&gt; m) {
+        this.loadFactor = DEFAULT_LOAD_FACTOR;
+        putMapEntries(m, false);
+}</code></pre><h1 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h1><h2 id="添加一个元素put-K-k-V-v"><a href="#添加一个元素put-K-k-V-v" class="headerlink" title="添加一个元素put(K k,V v)"></a>添加一个元素put(K k,V v)</h2><p>HashMap允许K和V都为null，添加一个键值对时使用put方法，如果之前已经存在K的键值，那么旧值将会被新值替换。</p>
+<pre><code>// return 前一个值与key相关联 ，或null如果没有key的映射。 （A null返回也可以指示以前关联的地图null与key。 
+public V put(K key, V value) {
+        return putVal(hash(key), key, value, false, true);
+}
+
+//先来看看hash方法，采用了Object的hash算法返回的是对象的内存地址,每个对象在内存中地址不一样，所以他们的hash值也不一样，不同的算法hashCode不同。
+// 这里使用右移操作是为了让高位也参与运算提高散射率。低16位与高16位异或作为key的最终hash值。
+// （h &gt;&gt;&gt; 16，表示无符号右移16位，高位补0，任何数跟0异或都是其本身，因此key的hash值高16位不变。） 
+// 为什么要这么干呢？ 这个与HashMap中table下标的计算有关。n = table.length; index = （n-1） &amp; hash;因为，table的长度都是2的幂，因此index仅与hash值的低n位有关，hash值的高位都被与操作置为0了。 
+// key为null 默认为0即数组第一个
+static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
+}
+
+/**
+ * @param hash key的Hash值 经过高位与地位的异或运算
+ * @param key 
+ * @param value 
+ * @param onlyIfAbsent 如果是，则不要更改现有值
+ * @param evict 如果为false，则表处于创建模式。
+ * @return 返回旧值或者null值。
+ */        
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                   boolean evict) {
+        Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
+        // 如果哈希表的长度为空 调用resize()扩容方法 n为表长度
+        if ((tab = table) == null || (n = tab.length) == 0)
+            n = (tab = resize()).length;
+        // 如果当前数组下标为null值， (i = (n - 1) &amp; hash]即计算数组下标)，数组当前下标新建一个节点，即为头结点
+        if ((p = tab[i = (n - 1) &amp; hash]) == null)
+            tab[i] = newNode(hash, key, value, null);
+        // 数组上该位置有值,桶处有节点，发生hash冲突
+        else {
+            Node&lt;K,V&gt; e; K k;
+            // 如果头结点的值与添加的值一致，hash冲突后，key的值也一致，进行替换。将e指向p
+            if (p.hash == hash &amp;&amp;
+                ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
+                e = p;
+            // 如果与头节点不同，并且该桶目前已经是红黑树状态，调用putTreeVal()方法 
+            else if (p instanceof TreeNode)
+                e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
+            // 如果与头节点不同,桶中仍是链表阶段
+            else {
+                // 循环遍历链表
+                for (int binCount = 0; ; ++binCount) {
+                // 讲e指向下一个节点，如果是null，说明该桶中只有头节点，直接添加到链表尾部即可
+                    if ((e = p.next) == null) {
+                        p.next = newNode(hash, key, value, null);
+                        // 如果此时链表个数达到了8，那么需要将该桶处链表转换成红黑树，treeifyBin()方法将hash处的桶转成红黑树
+                        if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                            treeifyBin(tab, hash);
+                        break;
+                    }
+                    //如果与已有节点相同，跳出循环
+                    if (e.hash == hash &amp;&amp;
+                        ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
+                        break;
+                    p = e;
+                }
+            }
+            // 存在重复key进行覆盖
+            if (e != null) { // existing mapping for key
+                V oldValue = e.value;
+                if (!onlyIfAbsent || oldValue == null)
+                    e.value = value;
+                // 子类实现 linkHashMap 
+                afterNodeAccess(e);
+                return oldValue;
+            }
+        }
+        //是一个全新节点，那么size需要+1
+        ++modCount;
+        // 如果大小朝阳了阈值，需要扩容
+        if (++size &gt; threshold)
+            resize();
+        //子类实现    
+        afterNodeInsertion(evict);
+        return null;
+}</code></pre><p>putVal()方法的流程：</p>
+<ul>
+<li>1.若hash表为空，调用resize方法创建。</li>
+<li>2.若桶的头结点为空，创建新结点放在数组中作为链表的头结点。</li>
+<li>3.若头节点不为空，即发生hash冲突，取出头结点与当前值判断，若重复直接覆盖；</li>
+<li>4.若不重复且当前处于红黑树状态，调用putTreeVal()方法；若不重复且当前处于链表阶段，遍历链表直到找到重复节点或者链表尾部，把该节点插入尾部；存在重复key就跳出循环。</li>
+<li>5.存在重复key，进行value替换。</li>
+<li>6.扩容验证。</li>
+</ul>
+<h2 id="resize-方法"><a href="#resize-方法" class="headerlink" title="resize()方法"></a>resize()方法</h2><p>resize()在哈希表为null时将会初始化，但是在已经初始化后就会进行容量扩展</p>
+<pre><code>final Node&lt;K,V&gt;[] resize() {
+        Node&lt;K,V&gt;[] oldTab = table;
+        int oldCap = (oldTab == null) ? 0 : oldTab.length;// 旧表容量
+        int oldThr = threshold;// 旧表的扩容阈值
+        int newCap, newThr = 0;
+        // 旧表存在
+        if (oldCap &gt; 0) {
+            // 容量已达上限 
+            if (oldCap &gt;= MAXIMUM_CAPACITY) {
+                threshold = Integer.MAX_VALUE;
+                return oldTab;
+            }
+            // 否则新容量与新阈值都扩大2倍
+            else if ((newCap = oldCap &lt;&lt; 1) &lt; MAXIMUM_CAPACITY &amp;&amp;
+                     oldCap &gt;= DEFAULT_INITIAL_CAPACITY)
+                newThr = oldThr &lt;&lt; 1; // double threshold
+        }
+        / /如果就阈值&gt;0，说明构造方法中指定了容量
+        else if (oldThr &gt; 0) // initial capacity was placed in threshold
+            newCap = oldThr;
+        // 初始化时没有指定阈值和容量，使用默认的容量16和阈值16*0.75=12    
+        else {               // zero initial threshold signifies using defaults
+            newCap = DEFAULT_INITIAL_CAPACITY;
+            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+        }
+        //如果新的阈值为 0 ，就得用 新容量*加载因子 重计算一次
+        if (newThr == 0) {
+            float ft = (float)newCap * loadFactor;
+            newThr = (newCap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; (float)MAXIMUM_CAPACITY ?
+                      (int)ft : Integer.MAX_VALUE);
+        }
+        threshold = newThr;
+        //常见扩容后的hash表
+        @SuppressWarnings({&quot;rawtypes&quot;,&quot;unchecked&quot;})
+            Node&lt;K,V&gt;[] newTab = (Node&lt;K,V&gt;[])new Node[newCap];
+        table = newTab;
+        // 属于扩容
+        if (oldTab != null) {
+            //遍历旧表 
+            for (int j = 0; j &lt; oldCap; ++j) {
+                Node&lt;K,V&gt; e;
+                // 当前位置有值
+                if ((e = oldTab[j]) != null) {
+                    oldTab[j] = null;
+                    //如果只有一个节点，直接在新表中赋值
+                    if (e.next == null)
+                        newTab[e.hash &amp; (newCap - 1)] = e;
+                    else if (e instanceof TreeNode)
+                        //如果旧哈希表中这个位置的桶是树形结构，就要把新哈希表里当前桶也变成树形结构
+                        ((TreeNode&lt;K,V&gt;)e).split(this, newTab, j, oldCap);
+                    else { // preserve order 保留旧哈希表桶中链表的顺序
+                        // 通过e.hash &amp; oldCap将链表分为两队，参考知乎上的一段解释 
+                        /** 
+                        * 把链表上的键值对按hash值分成lo和hi两串，lo串的新索引位置与原先相同[原先位j]，hi串的新索引位置为[原先位置j+oldCap]； 
+                        * 链表的键值对加入lo还是hi串取决于 判断条件if ((e.hash &amp; oldCap) == 0)，因为* capacity是2的幂，所以oldCap为10...0的二进制形式，若判断条件为真，意味着 
+                        * oldCap为1的那位对应的hash位为0，对新索引的计算没有影响（新索引 
+                        * =hash&amp;(newCap-*1)，newCap=oldCap&lt;&lt;2）；若判断条件为假，则 oldCap为1的那位* 对应的hash位为1， 
+                        * 即新索引=hash&amp;( newCap-1 )= hash&amp;( (oldCap&lt;&lt;2) - 1)，相当于多了10...0， 
+                        * 即 oldCap 
+                        * 例子： 
+                        * 旧容量=16，二进制10000；新容量=32，二进制100000 
+                        * 旧索引的计算： 
+                        * hash = xxxx xxxx xxxy xxxx 
+                        * 旧容量-1 1111 
+                        * &amp;运算 xxxx 
+                        * 新索引的计算： 
+                        * hash = xxxx xxxx xxxy xxxx 
+                        * 新容量-1 1 1111 
+                        * &amp;运算 y xxxx 
+                        * 新索引 = 旧索引 + y0000，若判断条件为真，则y=0(lo串索引不变)，否则y=1(hi串 
+                        * 索引=旧索引+旧容量10000) 
+                           */  
+                        Node&lt;K,V&gt; loHead = null, loTail = null;
+                        Node&lt;K,V&gt; hiHead = null, hiTail = null;
+                        Node&lt;K,V&gt; next;
+                        do {
+                            next = e.next;
+                            // 双链表 尾插法 
+                            if ((e.hash &amp; oldCap) == 0) {
+                                if (loTail == null)
+                                    loHead = e;
+                                else
+                                    loTail.next = e;
+                                loTail = e;
+                            }
+                            else {
+                                if (hiTail == null)
+                                    hiHead = e;
+                                else
+                                    hiTail.next = e;
+                                hiTail = e;
+                            }
+                        } while ((e = next) != null);
+                        if (loTail != null) {
+                            loTail.next = null;
+                            newTab[j] = loHead;
+                        }
+                        if (hiTail != null) {
+                            hiTail.next = null;
+                            newTab[j + oldCap] = hiHead;
+                        }
+                    }
+                }
+            }
+        }
+        return newTab;
+}</code></pre><p>resize()首先获取新容量以及新阈值，然后根据新容量创建新表。如果是扩容操作，则需要进行rehash操作，通过e.hash&amp;oldCap将链表分为两列，更好地均匀分布在新表中。     </p>
+<h2 id="get-K-k-操作"><a href="#get-K-k-操作" class="headerlink" title="get(K k)操作"></a>get(K k)操作</h2><p>get(K k)根据键得到值，如果值不存在，那么返回null</p>
+<pre><code>public V get(Object key) {
+        Node&lt;K,V&gt; e;
+        return (e = getNode(hash(key), key)) == null ? null : e.value;
     }
-}</code></pre><p>   装饰者实现类Milk，继承了装饰者类</p>
-<pre><code>public class Milk extends CondimentDecorator {
 
-    public Milk(Beverage beverage) {
-        super(beverage);
+final Node&lt;K,V&gt; getNode(int hash, Object key) {
+    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; first, e; int n; K k;
+    // hash表不为空且第一个节点存在
+    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;
+        (first = tab[(n - 1) &amp; hash]) != null) {
+        // 第一个节点即为要查询的节点
+        if (first.hash == hash &amp;&amp; // always check first node
+            ((k = first.key) == key || (key != null &amp;&amp; key.equals(k))))
+            return first;
+        // 链表不止一个头节点    
+        if ((e = first.next) != null) {
+            // 首节点是红黑树节点，调用getTreeNode方法
+            if (first instanceof TreeNode)
+                return ((TreeNode&lt;K,V&gt;)first).getTreeNode(hash, key);
+            // 首节点是链表,循环遍历链表
+            do {
+                // 匹配就返回
+                if (e.hash == hash &amp;&amp;
+                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
+                    return e;
+            } while ((e = e.next) != null);
+        }
     }
+    return null;
+}  </code></pre><p>getNode()过程：</p>
+<ul>
+<li>1.如果hash表为空或者长度为0或找不到hash值对应的数组位置，返回null</li>
+<li>2.如果头节点匹配，返回头结点。</li>
+<li>3.如果头结点不匹配且没有后续节点，返回null</li>
+<li>4.如果头结点不匹配且头结点是红黑树类型，调用getTreeNode方法寻找节点</li>
+<li>5.如果头结点不匹配且头结点是链表结构，从前往后遍历，找到相应的节点就返回</li>
+</ul>
+<h2 id="remove-操作"><a href="#remove-操作" class="headerlink" title="remove()操作"></a>remove()操作</h2><p>remove(K k)用于根据键值删除键值对，如果哈希表中存在该键，那么返回键对应的值，否则返回null。  </p>
+<pre><code>public V remove(Object key) {
+    Node&lt;K,V&gt; e;
+    return (e = removeNode(hash(key), key, null, false, true)) == null ?
+        null : e.value;
+}
 
-    @Override
-    public double cost() {
-        return 1 + beverage.cost();
+final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
+                           boolean matchValue, boolean movable) {
+    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, index;
+    // 当前hash表存在且长度大于0且数组中存在头结点
+    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;
+        (p = tab[index = (n - 1) &amp; hash]) != null) {
+        Node&lt;K,V&gt; node = null, e; K k; V v;
+        // 头节点即为key所对应的节点，node即为头节点
+        if (p.hash == hash &amp;&amp;
+            ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
+            node = p;
+        // 头结点有下一个节点    
+        else if ((e = p.next) != null) {
+            // 首节点是红黑树节点，调用getTreeNode方法
+            if (p instanceof TreeNode)
+                node = ((TreeNode&lt;K,V&gt;)p).getTreeNode(hash, key);
+            else {
+                // 首节点是链表,遍历链表
+                do {
+                    if (e.hash == hash &amp;&amp;
+                        ((k = e.key) == key ||
+                         (key != null &amp;&amp; key.equals(k)))) {
+                        node = e;
+                        break;
+                    }
+                    p = e;
+                } while ((e = e.next) != null);
+            }
+        }
+        //如果存在待删除节点节点
+        if (node != null &amp;&amp; (!matchValue || (v = node.value) == value ||
+                             (value != null &amp;&amp; value.equals(v)))) {
+            //如果节点是TreeNode，使用红黑树的方法                 
+            if (node instanceof TreeNode)
+                ((TreeNode&lt;K,V&gt;)node).removeTreeNode(this, tab, movable);
+            //如果待删除节点是头节点，更改桶中的头节点即可    
+            else if (node == p)
+                tab[index] = node.next;
+            //在链表遍历过程中，p代表node节点的前驱节点    
+            else
+                p.next = node.next;
+            ++modCount;
+            --size;
+            afterNodeRemoval(node);
+            return node;
+        }
     }
-}</code></pre><p>   装饰者实现类Mocha，继承了装饰者类</p>
-<pre><code>public class Mocha extends CondimentDecorator {
-
-    public Mocha(Beverage beverage) {
-        super(beverage);
-    }
-
-    @Override
-    public double cost() {
-        return 1 + beverage.cost();
-    }
-}</code></pre><p>   测试：当执行cost()方法时会一层一层从内往外调用。</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-       Beverage beverage = new DarkRoast();// 一杯饮料
-       beverage = new Mocha(beverage);// 饮料里加mocha
-       beverage = new Milk(beverage);// 饮料里加牛奶
-       System.out.println(beverage.cost());//总价
-   }</code></pre><p>   }</p>
+    return null;
+}   </code></pre><p>总体来说，removeNode（）先查出待删除的节点，查找过程与查询过程类型，只不过多了在遍历链表时还需要保存前驱节点，因为后面删除时要用到（单链表结构）。存在待删除节点，接下来再执行删除操作.</p>
+<ul>
+<li>1.如果待删除节点是TreeNode，那么调用removeTreeNode()方法 </li>
+<li>2.如果待删除节点是Node，并且待删除节点就是头节点，那么将头节点更改为原有节点的下一个节点就可以了 </li>
+<li>3.如果待删除节点是Node且待删除节点不是头节点，那么将遍历过程中保存的前驱节点p的后继节点设为node的后继节点就可以了</li>
+</ul>
 
           
         
@@ -2343,7 +2640,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/javase/hashMap/">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/decorator/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -2362,7 +2659,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/08/java/javase/hashMap/" itemprop="url">JDK1.8 HashMap源码分析</a></h1>
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/decorator/" itemprop="url">Java设计模式：装饰者</a></h1>
         
 
         <div class="post-meta">
@@ -2397,8 +2694,8 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaSE</span>
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
                   </a>
                 </span>
 
@@ -2428,7 +2725,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3.3k 字
+                  578 字
                 </span>
               
 
@@ -2444,7 +2741,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  14 分钟
+                  2 分钟
                 </span>
               
             </div>
@@ -2467,359 +2764,62 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
       
         
           
-            <p><a href="https://blog.csdn.net/qq_36520235/article/details/82417949" target="_blank" rel="noopener">Hashmap的结构，1.7和1.8有哪些区别，史上最深入的分析</a><br><a href="https://www.cnblogs.com/Hangtutu/p/9251999.html" target="_blank" rel="noopener">jdk1.7死环</a><br><a href="https://juejin.im/post/5a66a08d5188253dc3321da0" target="_blank" rel="noopener">jdk1.7线程不安全</a><br><a href="https://blog.csdn.net/u013494765/article/details/77837338" target="_blank" rel="noopener">jdk1.8扩容核心-链表复制处理</a><br><a href="https://mp.weixin.qq.com/s/NvmqdPOyWQdeHG2s-xSbHg" target="_blank" rel="noopener">HashMap1.8面试连问</a><br><a href="https://blog.csdn.net/weixin_42340670/article/details/80503517?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3" target="_blank" rel="noopener">HashMap1.8源码解析：resize方法（有问题）</a></p>
-<h1 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h1><p><img src="/uploads/java/javase/hashMap.png" alt="hashMap继承关系"></p>
-<h1 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h1><pre><code>// Hash表结构
-transient Node&lt;K,V&gt;[] table;
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>为对象动态添加功能。组合模式是部分和整理的关系，而装饰器模式只是额外增加某些功能。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>装饰者（Decorator）和具体组件（ConcreteComponent）都继承自组件（Component）,<strong>装饰者组合了一个组件</strong>，这样它可以装饰其它装饰者或者具体组件。</p>
+<p>就是把这个装饰者套在被装饰者之上，从而动态扩展被装饰者的功能。</p>
+<p>装饰者的方法有一部分是自己的，这属于它的功能，然后调用被装饰者的方法实现，从而也保留了被装饰者的功能。可以看到，具体组件应当是装饰层次的最低层，因为只有具体组件的方法实现不需要依赖于其它对象。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>设计不同种类的饮料，饮料可以添加配料，比如可以添加牛奶，并且支持动态添加新配料。每增加一种配料，该饮料的价格就会增加，要求计算一种饮料的价格。</p>
+<p>下面实现在 DarkRoast 饮料上新增新添加 Mocha 配料，之后又添加了 Milk 配料。DarkRoast 被 Mocha 包裹，Mocha 又被 Milk 包裹。它们都继承自相同父类，都有 cost() 方法，外层类的 cost() 方法调用了内层类的 cost() 方法。</p>
+<p>   定义一个组件（Component）接口,这里为饮料。装饰者和具体组件都要实现它。</p>
+<pre><code>public interface Beverage {
 
-// 保证 fail-fast机制
-transient int modCount;
+    public double cost();
+}</code></pre><p>   具体组件实现DarkRoast饮料</p>
+<pre><code>public class DarkRoast implements Beverage {
 
-// 下一次扩容时的阈值 (capacity * load factor).
-int threshold;
+   @Override
+   public double cost() {
+       return 1;
+   }
+}</code></pre><p>   定义一个装饰者抽象类，实现了饮料接口，拥有饮料的方法，并关联了饮料接口对象。</p>
+<pre><code>public abstract class CondimentDecorator implements Beverage {
 
-// 负载因子，决定hash表的数据填充程度，此值越大说明hash表填充的越满，空间利用率高，但是增加了查询开销，此值若太小，hash表空间利用率不高且rehash更加频繁
-final float loadFactor;    
+    protected Beverage beverage;
 
-// 默认初始容量,必须是2的次方
-static final int DEFAULT_INITIAL_CAPACITY = 1 &lt;&lt; 4; // aka 16
+    public CondimentDecorator(Beverage beverage) {
+        this.beverage = beverage;
+    }
+}</code></pre><p>   装饰者实现类Milk，继承了装饰者类</p>
+<pre><code>public class Milk extends CondimentDecorator {
 
-// 最大容量，2的30次方，因为int类型32位，去掉一位符号位，只能左移30位
-static final int MAXIMUM_CAPACITY = 1 &lt;&lt; 30;
-
-// 默认负载因子
-static final float DEFAULT_LOAD_FACTOR = 0.75f;
-
-// jdk1.8增加 链表转红黑树的阈值
-static final int TREEIFY_THRESHOLD = 8;
-
-// jdk1.8增加 红黑树转链表的阈值
-static final int UNTREEIFY_THRESHOLD = 6;</code></pre><h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><p>HashMap一共有4个构造方法，主要的工作就是完成容量和加载因子的赋值。Hash表都是采用的<strong>懒加载</strong>方式，当第一次插入数据时才会创建。</p>
-<pre><code>// 指定默认容量和负载因子   
-public HashMap(int initialCapacity, float loadFactor) {
-        if (initialCapacity &lt; 0)
-            throw new IllegalArgumentException(&quot;Illegal initial capacity: &quot; +
-                                               initialCapacity);
-        if (initialCapacity &gt; MAXIMUM_CAPACITY)
-            initialCapacity = MAXIMUM_CAPACITY;
-        if (loadFactor &lt;= 0 || Float.isNaN(loadFactor))
-            throw new IllegalArgumentException(&quot;Illegal load factor: &quot; +
-                                               loadFactor);
-        this.loadFactor = loadFactor;
-        // 找到大于等于initialCapacity的最小的2的幂  若传入6 threshold=8
-        this.threshold = tableSizeFor(initialCapacity);
-}
-
-// 使用默认负载因子
-public HashMap(int initialCapacity) {
-        this(initialCapacity, DEFAULT_LOAD_FACTOR);
-}
-
-// 参数全部都是默认值
-public HashMap() {
-       this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
-}
-
-// 构造一个新的 HashMap与指定的相同的映射 Map 。 
-public HashMap(Map&lt;? extends K, ? extends V&gt; m) {
-        this.loadFactor = DEFAULT_LOAD_FACTOR;
-        putMapEntries(m, false);
-}</code></pre><h1 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h1><h2 id="添加一个元素put-K-k-V-v"><a href="#添加一个元素put-K-k-V-v" class="headerlink" title="添加一个元素put(K k,V v)"></a>添加一个元素put(K k,V v)</h2><p>HashMap允许K和V都为null，添加一个键值对时使用put方法，如果之前已经存在K的键值，那么旧值将会被新值替换。</p>
-<pre><code>// return 前一个值与key相关联 ，或null如果没有key的映射。 （A null返回也可以指示以前关联的地图null与key。 
-public V put(K key, V value) {
-        return putVal(hash(key), key, value, false, true);
-}
-
-//先来看看hash方法，采用了Object的hash算法返回的是对象的内存地址,每个对象在内存中地址不一样，所以他们的hash值也不一样，不同的算法hashCode不同。
-// 这里使用右移操作是为了让高位也参与运算提高散射率。低16位与高16位异或作为key的最终hash值。
-// （h &gt;&gt;&gt; 16，表示无符号右移16位，高位补0，任何数跟0异或都是其本身，因此key的hash值高16位不变。） 
-// 为什么要这么干呢？ 这个与HashMap中table下标的计算有关。n = table.length; index = （n-1） &amp; hash;因为，table的长度都是2的幂，因此index仅与hash值的低n位有关，hash值的高位都被与操作置为0了。 
-// key为null 默认为0即数组第一个
-static final int hash(Object key) {
-        int h;
-        return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
-}
-
-/**
- * @param hash key的Hash值 经过高位与地位的异或运算
- * @param key 
- * @param value 
- * @param onlyIfAbsent 如果是，则不要更改现有值
- * @param evict 如果为false，则表处于创建模式。
- * @return 返回旧值或者null值。
- */        
-final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
-                   boolean evict) {
-        Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
-        // 如果哈希表的长度为空 调用resize()扩容方法 n为表长度
-        if ((tab = table) == null || (n = tab.length) == 0)
-            n = (tab = resize()).length;
-        // 如果当前数组下标为null值， (i = (n - 1) &amp; hash]即计算数组下标)，数组当前下标新建一个节点，即为头结点
-        if ((p = tab[i = (n - 1) &amp; hash]) == null)
-            tab[i] = newNode(hash, key, value, null);
-        // 数组上该位置有值,桶处有节点，发生hash冲突
-        else {
-            Node&lt;K,V&gt; e; K k;
-            // 如果头结点的值与添加的值一致，hash冲突后，key的值也一致，进行替换。将e指向p
-            if (p.hash == hash &amp;&amp;
-                ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
-                e = p;
-            // 如果与头节点不同，并且该桶目前已经是红黑树状态，调用putTreeVal()方法 
-            else if (p instanceof TreeNode)
-                e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
-            // 如果与头节点不同,桶中仍是链表阶段
-            else {
-                // 循环遍历链表
-                for (int binCount = 0; ; ++binCount) {
-                // 讲e指向下一个节点，如果是null，说明该桶中只有头节点，直接添加到链表尾部即可
-                    if ((e = p.next) == null) {
-                        p.next = newNode(hash, key, value, null);
-                        // 如果此时链表个数达到了8，那么需要将该桶处链表转换成红黑树，treeifyBin()方法将hash处的桶转成红黑树
-                        if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st
-                            treeifyBin(tab, hash);
-                        break;
-                    }
-                    //如果与已有节点相同，跳出循环
-                    if (e.hash == hash &amp;&amp;
-                        ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
-                        break;
-                    p = e;
-                }
-            }
-            // 存在重复key进行覆盖
-            if (e != null) { // existing mapping for key
-                V oldValue = e.value;
-                if (!onlyIfAbsent || oldValue == null)
-                    e.value = value;
-                // 子类实现 linkHashMap 
-                afterNodeAccess(e);
-                return oldValue;
-            }
-        }
-        //是一个全新节点，那么size需要+1
-        ++modCount;
-        // 如果大小朝阳了阈值，需要扩容
-        if (++size &gt; threshold)
-            resize();
-        //子类实现    
-        afterNodeInsertion(evict);
-        return null;
-}</code></pre><p>putVal()方法的流程：</p>
-<ul>
-<li>1.若hash表为空，调用resize方法创建。</li>
-<li>2.若桶的头结点为空，创建新结点放在数组中作为链表的头结点。</li>
-<li>3.若头节点不为空，即发生hash冲突，取出头结点与当前值判断，若重复直接覆盖；</li>
-<li>4.若不重复且当前处于红黑树状态，调用putTreeVal()方法；若不重复且当前处于链表阶段，遍历链表直到找到重复节点或者链表尾部，把该节点插入尾部；存在重复key就跳出循环。</li>
-<li>5.存在重复key，进行value替换。</li>
-<li>6.扩容验证。</li>
-</ul>
-<h2 id="resize-方法"><a href="#resize-方法" class="headerlink" title="resize()方法"></a>resize()方法</h2><p>resize()在哈希表为null时将会初始化，但是在已经初始化后就会进行容量扩展</p>
-<pre><code>final Node&lt;K,V&gt;[] resize() {
-        Node&lt;K,V&gt;[] oldTab = table;
-        int oldCap = (oldTab == null) ? 0 : oldTab.length;// 旧表容量
-        int oldThr = threshold;// 旧表的扩容阈值
-        int newCap, newThr = 0;
-        // 旧表存在
-        if (oldCap &gt; 0) {
-            // 容量已达上限 
-            if (oldCap &gt;= MAXIMUM_CAPACITY) {
-                threshold = Integer.MAX_VALUE;
-                return oldTab;
-            }
-            // 否则新容量与新阈值都扩大2倍
-            else if ((newCap = oldCap &lt;&lt; 1) &lt; MAXIMUM_CAPACITY &amp;&amp;
-                     oldCap &gt;= DEFAULT_INITIAL_CAPACITY)
-                newThr = oldThr &lt;&lt; 1; // double threshold
-        }
-        / /如果就阈值&gt;0，说明构造方法中指定了容量
-        else if (oldThr &gt; 0) // initial capacity was placed in threshold
-            newCap = oldThr;
-        // 初始化时没有指定阈值和容量，使用默认的容量16和阈值16*0.75=12    
-        else {               // zero initial threshold signifies using defaults
-            newCap = DEFAULT_INITIAL_CAPACITY;
-            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
-        }
-        //如果新的阈值为 0 ，就得用 新容量*加载因子 重计算一次
-        if (newThr == 0) {
-            float ft = (float)newCap * loadFactor;
-            newThr = (newCap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; (float)MAXIMUM_CAPACITY ?
-                      (int)ft : Integer.MAX_VALUE);
-        }
-        threshold = newThr;
-        //常见扩容后的hash表
-        @SuppressWarnings({&quot;rawtypes&quot;,&quot;unchecked&quot;})
-            Node&lt;K,V&gt;[] newTab = (Node&lt;K,V&gt;[])new Node[newCap];
-        table = newTab;
-        // 属于扩容
-        if (oldTab != null) {
-            //遍历旧表 
-            for (int j = 0; j &lt; oldCap; ++j) {
-                Node&lt;K,V&gt; e;
-                // 当前位置有值
-                if ((e = oldTab[j]) != null) {
-                    oldTab[j] = null;
-                    //如果只有一个节点，直接在新表中赋值
-                    if (e.next == null)
-                        newTab[e.hash &amp; (newCap - 1)] = e;
-                    else if (e instanceof TreeNode)
-                        //如果旧哈希表中这个位置的桶是树形结构，就要把新哈希表里当前桶也变成树形结构
-                        ((TreeNode&lt;K,V&gt;)e).split(this, newTab, j, oldCap);
-                    else { // preserve order 保留旧哈希表桶中链表的顺序
-                        // 通过e.hash &amp; oldCap将链表分为两队，参考知乎上的一段解释 
-                        /** 
-                        * 把链表上的键值对按hash值分成lo和hi两串，lo串的新索引位置与原先相同[原先位j]，hi串的新索引位置为[原先位置j+oldCap]； 
-                        * 链表的键值对加入lo还是hi串取决于 判断条件if ((e.hash &amp; oldCap) == 0)，因为* capacity是2的幂，所以oldCap为10...0的二进制形式，若判断条件为真，意味着 
-                        * oldCap为1的那位对应的hash位为0，对新索引的计算没有影响（新索引 
-                        * =hash&amp;(newCap-*1)，newCap=oldCap&lt;&lt;2）；若判断条件为假，则 oldCap为1的那位* 对应的hash位为1， 
-                        * 即新索引=hash&amp;( newCap-1 )= hash&amp;( (oldCap&lt;&lt;2) - 1)，相当于多了10...0， 
-                        * 即 oldCap 
-                        * 例子： 
-                        * 旧容量=16，二进制10000；新容量=32，二进制100000 
-                        * 旧索引的计算： 
-                        * hash = xxxx xxxx xxxy xxxx 
-                        * 旧容量-1 1111 
-                        * &amp;运算 xxxx 
-                        * 新索引的计算： 
-                        * hash = xxxx xxxx xxxy xxxx 
-                        * 新容量-1 1 1111 
-                        * &amp;运算 y xxxx 
-                        * 新索引 = 旧索引 + y0000，若判断条件为真，则y=0(lo串索引不变)，否则y=1(hi串 
-                        * 索引=旧索引+旧容量10000) 
-                           */  
-                        Node&lt;K,V&gt; loHead = null, loTail = null;
-                        Node&lt;K,V&gt; hiHead = null, hiTail = null;
-                        Node&lt;K,V&gt; next;
-                        do {
-                            next = e.next;
-                            // 双链表 尾插法 
-                            if ((e.hash &amp; oldCap) == 0) {
-                                if (loTail == null)
-                                    loHead = e;
-                                else
-                                    loTail.next = e;
-                                loTail = e;
-                            }
-                            else {
-                                if (hiTail == null)
-                                    hiHead = e;
-                                else
-                                    hiTail.next = e;
-                                hiTail = e;
-                            }
-                        } while ((e = next) != null);
-                        if (loTail != null) {
-                            loTail.next = null;
-                            newTab[j] = loHead;
-                        }
-                        if (hiTail != null) {
-                            hiTail.next = null;
-                            newTab[j + oldCap] = hiHead;
-                        }
-                    }
-                }
-            }
-        }
-        return newTab;
-}</code></pre><p>resize()首先获取新容量以及新阈值，然后根据新容量创建新表。如果是扩容操作，则需要进行rehash操作，通过e.hash&amp;oldCap将链表分为两列，更好地均匀分布在新表中。     </p>
-<h2 id="get-K-k-操作"><a href="#get-K-k-操作" class="headerlink" title="get(K k)操作"></a>get(K k)操作</h2><p>get(K k)根据键得到值，如果值不存在，那么返回null</p>
-<pre><code>public V get(Object key) {
-        Node&lt;K,V&gt; e;
-        return (e = getNode(hash(key), key)) == null ? null : e.value;
+    public Milk(Beverage beverage) {
+        super(beverage);
     }
 
-final Node&lt;K,V&gt; getNode(int hash, Object key) {
-    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; first, e; int n; K k;
-    // hash表不为空且第一个节点存在
-    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;
-        (first = tab[(n - 1) &amp; hash]) != null) {
-        // 第一个节点即为要查询的节点
-        if (first.hash == hash &amp;&amp; // always check first node
-            ((k = first.key) == key || (key != null &amp;&amp; key.equals(k))))
-            return first;
-        // 链表不止一个头节点    
-        if ((e = first.next) != null) {
-            // 首节点是红黑树节点，调用getTreeNode方法
-            if (first instanceof TreeNode)
-                return ((TreeNode&lt;K,V&gt;)first).getTreeNode(hash, key);
-            // 首节点是链表,循环遍历链表
-            do {
-                // 匹配就返回
-                if (e.hash == hash &amp;&amp;
-                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
-                    return e;
-            } while ((e = e.next) != null);
-        }
+    @Override
+    public double cost() {
+        return 1 + beverage.cost();
     }
-    return null;
-}  </code></pre><p>getNode()过程：</p>
-<ul>
-<li>1.如果hash表为空或者长度为0或找不到hash值对应的数组位置，返回null</li>
-<li>2.如果头节点匹配，返回头结点。</li>
-<li>3.如果头结点不匹配且没有后续节点，返回null</li>
-<li>4.如果头结点不匹配且头结点是红黑树类型，调用getTreeNode方法寻找节点</li>
-<li>5.如果头结点不匹配且头结点是链表结构，从前往后遍历，找到相应的节点就返回</li>
-</ul>
-<h2 id="remove-操作"><a href="#remove-操作" class="headerlink" title="remove()操作"></a>remove()操作</h2><p>remove(K k)用于根据键值删除键值对，如果哈希表中存在该键，那么返回键对应的值，否则返回null。  </p>
-<pre><code>public V remove(Object key) {
-    Node&lt;K,V&gt; e;
-    return (e = removeNode(hash(key), key, null, false, true)) == null ?
-        null : e.value;
-}
+}</code></pre><p>   装饰者实现类Mocha，继承了装饰者类</p>
+<pre><code>public class Mocha extends CondimentDecorator {
 
-final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
-                           boolean matchValue, boolean movable) {
-    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, index;
-    // 当前hash表存在且长度大于0且数组中存在头结点
-    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;
-        (p = tab[index = (n - 1) &amp; hash]) != null) {
-        Node&lt;K,V&gt; node = null, e; K k; V v;
-        // 头节点即为key所对应的节点，node即为头节点
-        if (p.hash == hash &amp;&amp;
-            ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
-            node = p;
-        // 头结点有下一个节点    
-        else if ((e = p.next) != null) {
-            // 首节点是红黑树节点，调用getTreeNode方法
-            if (p instanceof TreeNode)
-                node = ((TreeNode&lt;K,V&gt;)p).getTreeNode(hash, key);
-            else {
-                // 首节点是链表,遍历链表
-                do {
-                    if (e.hash == hash &amp;&amp;
-                        ((k = e.key) == key ||
-                         (key != null &amp;&amp; key.equals(k)))) {
-                        node = e;
-                        break;
-                    }
-                    p = e;
-                } while ((e = e.next) != null);
-            }
-        }
-        //如果存在待删除节点节点
-        if (node != null &amp;&amp; (!matchValue || (v = node.value) == value ||
-                             (value != null &amp;&amp; value.equals(v)))) {
-            //如果节点是TreeNode，使用红黑树的方法                 
-            if (node instanceof TreeNode)
-                ((TreeNode&lt;K,V&gt;)node).removeTreeNode(this, tab, movable);
-            //如果待删除节点是头节点，更改桶中的头节点即可    
-            else if (node == p)
-                tab[index] = node.next;
-            //在链表遍历过程中，p代表node节点的前驱节点    
-            else
-                p.next = node.next;
-            ++modCount;
-            --size;
-            afterNodeRemoval(node);
-            return node;
-        }
+    public Mocha(Beverage beverage) {
+        super(beverage);
     }
-    return null;
-}   </code></pre><p>总体来说，removeNode（）先查出待删除的节点，查找过程与查询过程类型，只不过多了在遍历链表时还需要保存前驱节点，因为后面删除时要用到（单链表结构）。存在待删除节点，接下来再执行删除操作.</p>
-<ul>
-<li>1.如果待删除节点是TreeNode，那么调用removeTreeNode()方法 </li>
-<li>2.如果待删除节点是Node，并且待删除节点就是头节点，那么将头节点更改为原有节点的下一个节点就可以了 </li>
-<li>3.如果待删除节点是Node且待删除节点不是头节点，那么将遍历过程中保存的前驱节点p的后继节点设为node的后继节点就可以了</li>
-</ul>
+
+    @Override
+    public double cost() {
+        return 1 + beverage.cost();
+    }
+}</code></pre><p>   测试：当执行cost()方法时会一层一层从内往外调用。</p>
+<pre><code>public class Client {
+
+   public static void main(String[] args) {
+       Beverage beverage = new DarkRoast();// 一杯饮料
+       beverage = new Mocha(beverage);// 饮料里加mocha
+       beverage = new Milk(beverage);// 饮料里加牛奶
+       System.out.println(beverage.cost());//总价
+   }</code></pre><p>   }</p>
 
           
         
