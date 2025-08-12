@@ -518,7 +518,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/10/31/java/coucurrent/3.CountDownLatch&Semaphore/">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/10/11/active/appH5Token/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -537,7 +537,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/10/31/java/coucurrent/3.CountDownLatch&Semaphore/" itemprop="url">CountDownLatch&Semaphore-共享锁</a></h1>
+                <a class="post-title-link" href="/2021/10/11/active/appH5Token/" itemprop="url">app嵌入H5如何同步登录状态</a></h1>
         
 
         <div class="post-meta">
@@ -549,8 +549,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-31T00:00:00+00:00">
-                2021-10-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-11T00:00:00+00:00">
+                2021-10-11
               </time>
             
 
@@ -572,8 +572,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">并发编程</span>
+                  <a href="/categories/active/" itemprop="url" rel="index">
+                    <span itemprop="name">active</span>
                   </a>
                 </span>
 
@@ -603,7 +603,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  35 字
+                  149 字
                 </span>
               
 
@@ -642,7 +642,8 @@
       
         
           
-            <h1 id="1-Semaphore-是什么？"><a href="#1-Semaphore-是什么？" class="headerlink" title="1. Semaphore 是什么？"></a>1. Semaphore 是什么？</h1><p>Semaphore 字面意思是信号量的意思，它的作用是控制访问特定资源的线程数目。</p>
+            <p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
+<p>优化的方向：<br>A.APP登陆状态的变化是请求页面，登录后使用webview调用对应域名下的接口实现H5的登录B.每次请求H5url增加get登陆的信息，例如访问 index.php变成index.php？a=xxx通过附加信息同步登录状态<br>优化的方案不知道那个更好一点</p>
 
           
         
@@ -869,423 +870,6 @@
 </tr>
 </tbody></table>
 
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/10/11/active/appH5Token/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/10/11/active/appH5Token/" itemprop="url">app嵌入H5如何同步登录状态</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-11T00:00:00+00:00">
-                2021-10-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/active/" itemprop="url" rel="index">
-                    <span itemprop="name">active</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  149 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
-<p>优化的方向：<br>A.APP登陆状态的变化是请求页面，登录后使用webview调用对应域名下的接口实现H5的登录B.每次请求H5url增加get登陆的信息，例如访问 index.php变成index.php？a=xxx通过附加信息同步登录状态<br>优化的方案不知道那个更好一点</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo调用模块</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
-                2021-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.3k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  5 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一、Dubbo-调用模块基本组成"><a href="#一、Dubbo-调用模块基本组成" class="headerlink" title="一、Dubbo 调用模块基本组成"></a>一、Dubbo 调用模块基本组成</h2><ol>
-<li>透明代理：通过动态代理技术，屏蔽远程调用细节以提高编程友好性。</li>
-<li>负载均衡：当有多个提供者是，如何选择哪个进行调用的负载算法。</li>
-<li>容错机制：当服务调用失败时采取的策略</li>
-<li>调用方式：支持同步调用、异步调用</li>
-</ol>
-<p><img src="/uploads/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97.png" alt="调用模块.png"></p>
-<h3 id="透明代理"><a href="#透明代理" class="headerlink" title="透明代理"></a>透明代理</h3><p>参见源码：<br>com.alibaba.dubbo.config.ReferenceConfig#createProxy<br>com.alibaba.dubbo.common.bytecode.ClassGenerator<br>com.alibaba.dubbo.rpc.proxy.javassist.JavassistProxyFactory</p>
-<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>Dubbo 目前官方支持以下负载均衡策略：</p>
-<ol>
-<li>随机(random)：按权重设置随机概率。此为默认算法.</li>
-<li>轮循(roundrobin):按公约后的权重设置轮循比率。</li>
-<li>最少活跃调用数(leastactive):相同活跃数的随机，活跃数指调用前后计数差。</li>
-<li>一致性Hash(consistenthash ):相同的参数总是发到同一台机器</li>
-</ol>
-<p>设置方式支持如下四种方式设置，优先级由低至高:</p>
-<!-- 服务端级别-->
-<p>&lt;dubbo:service interface=”…” loadbalance=”roundrobin” /&gt;</p>
-<!-- 客户端级别-->
-<p>&lt;dubbo:reference interface=”…” loadbalance=”roundrobin” /&gt;</p>
-<!-- 服务端方法级别-->
-<p>&lt;dubbo:service interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
-<!-- 客户端方法级别-->
-<p>&lt;dubbo:reference interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
-<p>一至性hash 算法详解：<br><img src="/uploads/dubbo/%E4%B8%80%E8%87%B3%E6%80%A7hash.png" alt="一至性hash.png"></p>
-<h3 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h3><p>Dubbo 官方目前支持以下容错策略：</p>
-<ol>
-<li>失败自动切换：调用失败后基于retries=“2”属性重试其它服务器</li>
-<li>快速失败：快速失败，只发起一次调用，失败立即报错。</li>
-<li>勿略失败：失败后勿略，不抛出异常给客户端。</li>
-<li>失败重试：失败自动恢复，后台记录失败请求，定时重发。通常用于消息通知操作</li>
-<li>并行调用:只要一个成功即返回，并行调用指定数量机器，可通过 forks=”2”来设置最大并行数。</li>
-<li>广播调用：广播调用所有提供者，逐个调用，任意一台报错则报错 设置方式支持如下两种方式设置，优先级由低至高<br>&lt;!–<br>Failover 失败自动切换 retries=”1” 切换次数<br>Failfast 快速失败<br>Failsafe 勿略失败<br>Failback 失败重试，5秒后仅重试一次<br>Forking 并行调用 forks=”2” 最大并行数<br>Broadcast 广播调用</li>
-</ol>
-<p>–&gt;<br>&lt;dubbo:service interface=”…” cluster=”broadcast” /&gt;<br>&lt;dubbo:reference interface=”…” cluster=”broadcast”/ &gt;<br>注：容错机制 在基于 API设置时无效 如 referenceConfig.setCluster(“failback”); 经测试不启作用 </p>
-<h3 id="异步调用"><a href="#异步调用" class="headerlink" title="异步调用"></a>异步调用</h3><p>异步调用是指发起远程调用之后获取结果的方式。</p>
-<ol>
-<li>同步等待结果返回（默认）</li>
-<li>异步等待结果返回</li>
-<li>不需要返回结果</li>
-</ol>
-<p>Dubbo 中关于异步等待结果返回的实现流程如下图：</p>
-<p><img src="/uploads/dubbo/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8.png" alt="异步调用.png"></p>
-<p>异步调用配置:<br>&lt;dubbo:reference id=”asyncDemoService”<br>interface=”com.tuling.teach.service.async.AsyncDemoService”&gt;</p>
-<!-- 异步调async：true 异步调用 false 同步调用-->
-<p>&lt;dubbo:method name=”sayHello1” async=”false”/&gt;<br>&lt;dubbo:method name=”sayHello2” async=”false”/&gt;<br>&lt;dubbo:method name=”notReturn” return=”false”/&gt;<br></p>
-<p>注：在进行异步调用时 容错机制不能为  cluster=”forking” 或  cluster=”broadcast”</p>
-<h2 id="二、Dubbo-调用非典型使用场景"><a href="#二、Dubbo-调用非典型使用场景" class="headerlink" title="二、Dubbo 调用非典型使用场景"></a>二、Dubbo 调用非典型使用场景</h2><h3 id="泛化提供-amp-引用"><a href="#泛化提供-amp-引用" class="headerlink" title="泛化提供&amp;引用"></a>泛化提供&amp;引用</h3><p>泛化提供<br>是指不通过接口的方式直接将服务暴露出去。通常用于Mock框架或服务降级框架实现。</p>
-<p>泛化引用<br>是指不通过常规接口的方式去引用服务，通常用于测试框架</p>
-<h3 id="隐示传参"><a href="#隐示传参" class="headerlink" title="隐示传参"></a>隐示传参</h3><p>是指通过非常方法参数传递参数，类似于http 调用当中添加cookie值。通常用于分布式追踪框架的实现。使用方式如下 ：<br>//客户端隐示设置值<br>RpcContext.getContext().setAttachment(“index”, “1”); // 隐式传参，后面的远程调用都会隐<br>//服务端隐示获取值<br>String index = RpcContext.getContext().getAttachment(“index”);</p>
-<h3 id="令牌验证"><a href="#令牌验证" class="headerlink" title="令牌验证"></a>令牌验证</h3><p>通过令牌验证在注册中心控制权限，以决定要不要下发令牌给消费者，可以防止消费者绕过注册中心访问提供者，<br>另外通过注册中心可灵活改变授权方式，而不需修改或升级提供者</p>
-<h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><p>类似于 WEB 中的Filter ，Dubbo本身提供了Filter 功能用于拦截远程方法的调用。其支持自定义过滤器与官方的过滤器使用：</p>
-<p>演示添加日志访问过滤:</p>
-<p>&lt;dubbo:provider filter=”accesslog” accesslog=”logs/dubbo.log”/&gt;<br>以上配置 就是 为 服务提供者 添加 日志记录过滤器， 所有访问日志将会集中打印至 accesslog 当中</p>
-<h2 id="三、Dubbo调用流程"><a href="#三、Dubbo调用流程" class="headerlink" title="三、Dubbo调用流程"></a>三、Dubbo调用流程</h2><p><img src="/uploads/dubbo/Dubbo%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png" alt="Dubbo调用流程.png"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//------ 6协议 调用</span></span><br><span class="line">doInvoke:<span class="number">77</span>, DubboInvoker &#123;org.apache.dubbo.rpc.protocol.dubbo&#125;</span><br><span class="line">invoke:<span class="number">155</span>, AbstractInvoker &#123;org.apache.dubbo.rpc.protocol&#125;</span><br><span class="line"><span class="comment">//------ 5异步转同步</span></span><br><span class="line">invoke:<span class="number">52</span>, AsyncToSyncInvoker &#123;org.apache.dubbo.rpc.protocol&#125; <span class="comment">// 异步转同步 ,返回结果之前进行阻塞调用线程</span></span><br><span class="line"><span class="comment">//----- 4过滤器链</span></span><br><span class="line">invoke:<span class="number">92</span>, MonitorFilter &#123;org.apache.dubbo.monitor.support&#125;  <span class="comment">// 过滤链-&gt; 监控器</span></span><br><span class="line">invoke:<span class="number">54</span>, FutureFilter &#123;org.apache.dubbo.rpc.protocol.dubbo.filter&#125;    <span class="comment">//过滤链-&gt; 回调参数</span></span><br><span class="line">invoke:<span class="number">14</span>, ProviderHelloFilter &#123;com.wyb.dubbo&#125;  <span class="comment">// 过滤链-&gt; 自定义过滤器</span></span><br><span class="line">invoke:<span class="number">60</span>, ConsumerContextFilter &#123;org.apache.dubbo.rpc.filter&#125; <span class="comment">// 过滤链-&gt; 消费者环境初始化</span></span><br><span class="line"><span class="comment">//------3集群处理</span></span><br><span class="line">doInvoke:<span class="number">82</span>, FailoverClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">// 集服-失败重试</span></span><br><span class="line">invoke:<span class="number">248</span>, AbstractClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">//</span></span><br><span class="line"><span class="comment">//----- Mock服务</span></span><br><span class="line">invoke:<span class="number">78</span>, MockClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support.wrapper&#125; <span class="comment">// mock 服务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//----- 2动态代理 --透明化</span></span><br><span class="line">invoke:<span class="number">55</span>, InvokerInvocationHandler &#123;org.apache.dubbo.rpc.proxy&#125;<span class="comment">// 代理的中间接口</span></span><br><span class="line">getUser:-<span class="number">1</span>, proxy0 &#123;org.apache.dubbo.common.bytecode&#125; <span class="comment">// 代理对象</span></span><br><span class="line"><span class="comment">//----- 1调用客户端</span></span><br><span class="line">main:<span class="number">53</span>, DubboClient &#123;com.wyb.dubbo&#125;  <span class="comment">// 客户端</span></span><br><span class="line"></span><br><span class="line">RegistryProtocol --&gt; Cluster --&gt; MockClusterInvoker:ClusterInvoker-&gt;DubboProtocol-&gt;FilterChain:AsyncToSyncInvoker:DubboInvoker</span><br><span class="line">协议--》(注册协议)---&gt;MockClusterInvoker ---》ClusterInvoker---&gt; RegistryDirectory ---&gt;(DubboProtcol)-&gt;FilterChain--&gt;DubboInvoker</span><br></pre></td></tr></table></figure>
           
         
       
@@ -1866,6 +1450,241 @@
 <h1 id="Zookeeper-注册中心"><a href="#Zookeeper-注册中心" class="headerlink" title="Zookeeper 注册中心"></a>Zookeeper 注册中心</h1><p>Zookeper是一个树型的目录服务，本身支持变更推送相比redis的实现Publish/Subscribe功能更稳定。</p>
 <p>结构：<br><img src="/uploads/dubbo/Zookeeper%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83.png" alt="Zookeeper注册中心.png"></p>
 
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo调用模块</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
+                2021-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.3k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一、Dubbo-调用模块基本组成"><a href="#一、Dubbo-调用模块基本组成" class="headerlink" title="一、Dubbo 调用模块基本组成"></a>一、Dubbo 调用模块基本组成</h2><ol>
+<li>透明代理：通过动态代理技术，屏蔽远程调用细节以提高编程友好性。</li>
+<li>负载均衡：当有多个提供者是，如何选择哪个进行调用的负载算法。</li>
+<li>容错机制：当服务调用失败时采取的策略</li>
+<li>调用方式：支持同步调用、异步调用</li>
+</ol>
+<p><img src="/uploads/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97.png" alt="调用模块.png"></p>
+<h3 id="透明代理"><a href="#透明代理" class="headerlink" title="透明代理"></a>透明代理</h3><p>参见源码：<br>com.alibaba.dubbo.config.ReferenceConfig#createProxy<br>com.alibaba.dubbo.common.bytecode.ClassGenerator<br>com.alibaba.dubbo.rpc.proxy.javassist.JavassistProxyFactory</p>
+<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>Dubbo 目前官方支持以下负载均衡策略：</p>
+<ol>
+<li>随机(random)：按权重设置随机概率。此为默认算法.</li>
+<li>轮循(roundrobin):按公约后的权重设置轮循比率。</li>
+<li>最少活跃调用数(leastactive):相同活跃数的随机，活跃数指调用前后计数差。</li>
+<li>一致性Hash(consistenthash ):相同的参数总是发到同一台机器</li>
+</ol>
+<p>设置方式支持如下四种方式设置，优先级由低至高:</p>
+<!-- 服务端级别-->
+<p>&lt;dubbo:service interface=”…” loadbalance=”roundrobin” /&gt;</p>
+<!-- 客户端级别-->
+<p>&lt;dubbo:reference interface=”…” loadbalance=”roundrobin” /&gt;</p>
+<!-- 服务端方法级别-->
+<p>&lt;dubbo:service interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
+<!-- 客户端方法级别-->
+<p>&lt;dubbo:reference interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
+<p>一至性hash 算法详解：<br><img src="/uploads/dubbo/%E4%B8%80%E8%87%B3%E6%80%A7hash.png" alt="一至性hash.png"></p>
+<h3 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h3><p>Dubbo 官方目前支持以下容错策略：</p>
+<ol>
+<li>失败自动切换：调用失败后基于retries=“2”属性重试其它服务器</li>
+<li>快速失败：快速失败，只发起一次调用，失败立即报错。</li>
+<li>勿略失败：失败后勿略，不抛出异常给客户端。</li>
+<li>失败重试：失败自动恢复，后台记录失败请求，定时重发。通常用于消息通知操作</li>
+<li>并行调用:只要一个成功即返回，并行调用指定数量机器，可通过 forks=”2”来设置最大并行数。</li>
+<li>广播调用：广播调用所有提供者，逐个调用，任意一台报错则报错 设置方式支持如下两种方式设置，优先级由低至高<br>&lt;!–<br>Failover 失败自动切换 retries=”1” 切换次数<br>Failfast 快速失败<br>Failsafe 勿略失败<br>Failback 失败重试，5秒后仅重试一次<br>Forking 并行调用 forks=”2” 最大并行数<br>Broadcast 广播调用</li>
+</ol>
+<p>–&gt;<br>&lt;dubbo:service interface=”…” cluster=”broadcast” /&gt;<br>&lt;dubbo:reference interface=”…” cluster=”broadcast”/ &gt;<br>注：容错机制 在基于 API设置时无效 如 referenceConfig.setCluster(“failback”); 经测试不启作用 </p>
+<h3 id="异步调用"><a href="#异步调用" class="headerlink" title="异步调用"></a>异步调用</h3><p>异步调用是指发起远程调用之后获取结果的方式。</p>
+<ol>
+<li>同步等待结果返回（默认）</li>
+<li>异步等待结果返回</li>
+<li>不需要返回结果</li>
+</ol>
+<p>Dubbo 中关于异步等待结果返回的实现流程如下图：</p>
+<p><img src="/uploads/dubbo/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8.png" alt="异步调用.png"></p>
+<p>异步调用配置:<br>&lt;dubbo:reference id=”asyncDemoService”<br>interface=”com.tuling.teach.service.async.AsyncDemoService”&gt;</p>
+<!-- 异步调async：true 异步调用 false 同步调用-->
+<p>&lt;dubbo:method name=”sayHello1” async=”false”/&gt;<br>&lt;dubbo:method name=”sayHello2” async=”false”/&gt;<br>&lt;dubbo:method name=”notReturn” return=”false”/&gt;<br></p>
+<p>注：在进行异步调用时 容错机制不能为  cluster=”forking” 或  cluster=”broadcast”</p>
+<h2 id="二、Dubbo-调用非典型使用场景"><a href="#二、Dubbo-调用非典型使用场景" class="headerlink" title="二、Dubbo 调用非典型使用场景"></a>二、Dubbo 调用非典型使用场景</h2><h3 id="泛化提供-amp-引用"><a href="#泛化提供-amp-引用" class="headerlink" title="泛化提供&amp;引用"></a>泛化提供&amp;引用</h3><p>泛化提供<br>是指不通过接口的方式直接将服务暴露出去。通常用于Mock框架或服务降级框架实现。</p>
+<p>泛化引用<br>是指不通过常规接口的方式去引用服务，通常用于测试框架</p>
+<h3 id="隐示传参"><a href="#隐示传参" class="headerlink" title="隐示传参"></a>隐示传参</h3><p>是指通过非常方法参数传递参数，类似于http 调用当中添加cookie值。通常用于分布式追踪框架的实现。使用方式如下 ：<br>//客户端隐示设置值<br>RpcContext.getContext().setAttachment(“index”, “1”); // 隐式传参，后面的远程调用都会隐<br>//服务端隐示获取值<br>String index = RpcContext.getContext().getAttachment(“index”);</p>
+<h3 id="令牌验证"><a href="#令牌验证" class="headerlink" title="令牌验证"></a>令牌验证</h3><p>通过令牌验证在注册中心控制权限，以决定要不要下发令牌给消费者，可以防止消费者绕过注册中心访问提供者，<br>另外通过注册中心可灵活改变授权方式，而不需修改或升级提供者</p>
+<h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><p>类似于 WEB 中的Filter ，Dubbo本身提供了Filter 功能用于拦截远程方法的调用。其支持自定义过滤器与官方的过滤器使用：</p>
+<p>演示添加日志访问过滤:</p>
+<p>&lt;dubbo:provider filter=”accesslog” accesslog=”logs/dubbo.log”/&gt;<br>以上配置 就是 为 服务提供者 添加 日志记录过滤器， 所有访问日志将会集中打印至 accesslog 当中</p>
+<h2 id="三、Dubbo调用流程"><a href="#三、Dubbo调用流程" class="headerlink" title="三、Dubbo调用流程"></a>三、Dubbo调用流程</h2><p><img src="/uploads/dubbo/Dubbo%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png" alt="Dubbo调用流程.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//------ 6协议 调用</span></span><br><span class="line">doInvoke:<span class="number">77</span>, DubboInvoker &#123;org.apache.dubbo.rpc.protocol.dubbo&#125;</span><br><span class="line">invoke:<span class="number">155</span>, AbstractInvoker &#123;org.apache.dubbo.rpc.protocol&#125;</span><br><span class="line"><span class="comment">//------ 5异步转同步</span></span><br><span class="line">invoke:<span class="number">52</span>, AsyncToSyncInvoker &#123;org.apache.dubbo.rpc.protocol&#125; <span class="comment">// 异步转同步 ,返回结果之前进行阻塞调用线程</span></span><br><span class="line"><span class="comment">//----- 4过滤器链</span></span><br><span class="line">invoke:<span class="number">92</span>, MonitorFilter &#123;org.apache.dubbo.monitor.support&#125;  <span class="comment">// 过滤链-&gt; 监控器</span></span><br><span class="line">invoke:<span class="number">54</span>, FutureFilter &#123;org.apache.dubbo.rpc.protocol.dubbo.filter&#125;    <span class="comment">//过滤链-&gt; 回调参数</span></span><br><span class="line">invoke:<span class="number">14</span>, ProviderHelloFilter &#123;com.wyb.dubbo&#125;  <span class="comment">// 过滤链-&gt; 自定义过滤器</span></span><br><span class="line">invoke:<span class="number">60</span>, ConsumerContextFilter &#123;org.apache.dubbo.rpc.filter&#125; <span class="comment">// 过滤链-&gt; 消费者环境初始化</span></span><br><span class="line"><span class="comment">//------3集群处理</span></span><br><span class="line">doInvoke:<span class="number">82</span>, FailoverClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">// 集服-失败重试</span></span><br><span class="line">invoke:<span class="number">248</span>, AbstractClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">//</span></span><br><span class="line"><span class="comment">//----- Mock服务</span></span><br><span class="line">invoke:<span class="number">78</span>, MockClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support.wrapper&#125; <span class="comment">// mock 服务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//----- 2动态代理 --透明化</span></span><br><span class="line">invoke:<span class="number">55</span>, InvokerInvocationHandler &#123;org.apache.dubbo.rpc.proxy&#125;<span class="comment">// 代理的中间接口</span></span><br><span class="line">getUser:-<span class="number">1</span>, proxy0 &#123;org.apache.dubbo.common.bytecode&#125; <span class="comment">// 代理对象</span></span><br><span class="line"><span class="comment">//----- 1调用客户端</span></span><br><span class="line">main:<span class="number">53</span>, DubboClient &#123;com.wyb.dubbo&#125;  <span class="comment">// 客户端</span></span><br><span class="line"></span><br><span class="line">RegistryProtocol --&gt; Cluster --&gt; MockClusterInvoker:ClusterInvoker-&gt;DubboProtocol-&gt;FilterChain:AsyncToSyncInvoker:DubboInvoker</span><br><span class="line">协议--》(注册协议)---&gt;MockClusterInvoker ---》ClusterInvoker---&gt; RegistryDirectory ---&gt;(DubboProtcol)-&gt;FilterChain--&gt;DubboInvoker</span><br></pre></td></tr></table></figure>
           
         
       
@@ -2805,6 +2624,329 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2020/01/11/java/javase/streamApiAction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/01/11/java/javase/streamApiAction/" itemprop="url">java 1.8  steam流操作</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-11T00:00:00+00:00">
+                2020-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaSE</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.1k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/java8/StreamApiAction.java" target="_blank" rel="noopener">相应源码地址</a></p>
+<h2 id="流操作类型"><a href="#流操作类型" class="headerlink" title="流操作类型"></a>流操作类型</h2><h3 id="中间操作"><a href="#中间操作" class="headerlink" title="中间操作"></a>中间操作</h3><p>目的是打开一个流，做出一些操作或者映射后，会返回一个新的流交给下个操作。lazy的，在调用方式时并没有真正执行。</p>
+<h3 id="终止操作"><a href="#终止操作" class="headerlink" title="终止操作"></a>终止操作</h3><p>在执行这个操作后，流被使用，在出现终止操作时才会调用之前的所有方法。</p>
+<h3 id="short-circuiting"><a href="#short-circuiting" class="headerlink" title="short-circuiting"></a>short-circuiting</h3><p>对于一个 intermediate 操作，如果它接受的是一个无限大（infinite/unbounded）的 Stream，但返回一个有限的新 Stream。<br>对于一个 terminal 操作，如果它接受的是一个无限大的 Stream，但能在有限的时间计算出结果。</p>
+<h2 id="具体流操作"><a href="#具体流操作" class="headerlink" title="具体流操作"></a>具体流操作</h2><h3 id="中间操作-1"><a href="#中间操作-1" class="headerlink" title="中间操作"></a>中间操作</h3><ul>
+<li>map (mapToInt, flatMap 等)</li>
+</ul>
+<p>把input Stream 的每一个元素，映射成 output Stream 的另外一个元素。</p>
+<p>map一对一</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;list中数的平方</span><br><span class="line">list.stream().map(v -&gt; v * v)</span><br></pre></td></tr></table></figure>
+
+<p>flatMap一对多 多对多 映射,把流扁平化，多个流转化成流里所有元素的单个流。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list1 &#x3D; Arrays.asList(1, 2, 3, 4, 5);</span><br><span class="line">List&lt;Integer&gt; list2 &#x3D; Arrays.asList(6, 7, 8, 9, 10);</span><br><span class="line">List&lt;List&lt;Integer&gt;&gt; allList &#x3D; new ArrayList&lt;&gt;();</span><br><span class="line">allList.add(list1);</span><br><span class="line">allList.add(list2);</span><br><span class="line">        </span><br><span class="line">allList.stream().flatMap(v -&gt; v.stream()).forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>filter </li>
+</ul>
+<p>过滤,对元素进行某种条件过滤，留下符合的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 留下偶数</span><br><span class="line">list.stream().filter(v -&gt; v % 2 &#x3D;&#x3D; 0).forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>distinct </li>
+</ul>
+<p>去重，不接收方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.stream().distinct().forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>sorted</li>
+</ul>
+<p>排序，接受一个Comparator，或者默认顺序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list.stream().sorted()</span><br><span class="line">list.stream().sorted((o1, o2) -&gt; -1)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>peek</li>
+</ul>
+<p>peek 对每个元素执行操作并返回一个新的 Stream。类似foreach，foreach是终止操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list &#x3D; list.stream().peek(System.out::println).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>limit</li>
+</ul>
+<p>返回 Stream 的前面 n 个元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.stream().limit(2).forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>skip</li>
+</ul>
+<p>扔掉前 n 个元素（它是由一个叫 subStream 的方法改名而来）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.stream().skip(2).forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>parallel</li>
+</ul>
+<p>转行成并行流，进行多线程操作，顺序会改变。可以使用forEachOrdered，固定顺序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">list.stream().parallel().forEach(System.out::println);</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">1</span><br><span class="line">5</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>sequential</li>
+</ul>
+<p>并行流转为串行流</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list.parallelStream().forEach(System.out::println);</span><br><span class="line">list.parallelStream().sequential().forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>unordered</li>
+</ul>
+<p><strong>消除了必须保持有序的流的约束</strong>,返回一个无序的等效的Stream，可能返回的是Stream本身，因为该Stream已经是无序的，或者该Stream的底层状态被修改为了无序.<br>一般用于并行的时候。例如TreeSet，或者流操作中指定顺序，会取消排序和指定顺序无效。</p>
+<h3 id="终止操作-1"><a href="#终止操作-1" class="headerlink" title="终止操作"></a>终止操作</h3><ul>
+<li>forEach</li>
+</ul>
+<p>forEach 不能修改自己包含的本地变量值，也不能用 break/return 之类的关键字提前结束循环。</p>
+<ul>
+<li><p>forEachOrdered</p>
+</li>
+<li><p>toArray</p>
+</li>
+<li><p>reduce</p>
+</li>
+</ul>
+<p>这个方法的主要作用是把 Stream 元素组合起来。它提供一个起始值（种子），然后依照运算规则（BinaryOperator），和前面 Stream 的第一个、第二个、第 n 个元素组合。<br>从这个意义上说，字符串拼接、数值的 sum、min、max、average 都是特殊的 reduce。</p>
+<p>注意：没有起始值，返回对象为Optional</p>
+<ul>
+<li>collect</li>
+</ul>
+<p>两个方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;R&gt; R collect(Supplier&lt;R&gt; supplier,</span><br><span class="line">                  BiConsumer&lt;R, ? super T&gt; accumulator,</span><br><span class="line">                  BiConsumer&lt;R, R&gt; combiner);</span><br><span class="line">                  </span><br><span class="line">IntStream i &#x3D; IntStream.of(6,5,7,1, 2, 3, 3);</span><br><span class="line">  List&lt;Integer&gt; v &#x3D; i</span><br><span class="line">      .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);</span><br><span class="line">  </span><br><span class="line">  System.out.println(v);</span><br><span class="line"></span><br><span class="line">&lt;R, A&gt; R collect(Collector&lt;? super T, A, R&gt; collector);</span><br></pre></td></tr></table></figure>
+
+<p>Collector在后面重点讲解</p>
+<ul>
+<li><p>min</p>
+</li>
+<li><p>max</p>
+</li>
+<li><p>count</p>
+</li>
+<li><p>anyMatch</p>
+</li>
+<li><p>allMatch</p>
+</li>
+<li><p>noneMatch</p>
+</li>
+<li><p>findFirst</p>
+</li>
+<li><p>findAny</p>
+</li>
+<li><p>iterator</p>
+</li>
+</ul>
+<h3 id="Short-circuiting"><a href="#Short-circuiting" class="headerlink" title="Short-circuiting"></a>Short-circuiting</h3><ul>
+<li><p>anyMatch</p>
+</li>
+<li><p>allMatch </p>
+</li>
+<li><p>noneMatch</p>
+</li>
+<li><p>findFirst </p>
+</li>
+<li><p>findAny </p>
+</li>
+<li><p>limit</p>
+</li>
+</ul>
+<h2 id="Collectors"><a href="#Collectors" class="headerlink" title="Collectors"></a>Collectors</h2><p>要作用就是辅助进行各类有用的 reduction 操作，例如转变输出为 Collection，把 Stream 元素进行归组。</p>
+<ul>
+<li>类型归纳 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Collectors.toList();</span><br><span class="line">Collectors.toMap();</span><br><span class="line">Collectors.toSet();</span><br><span class="line">Collectors.toCollection();</span><br><span class="line">Collectors.toConcurrentMap();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>joining</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; strList = Arrays.asList(<span class="string">"aa"</span>, <span class="string">"bb"</span>, <span class="string">"cc"</span>, <span class="string">"dd"</span>, <span class="string">"ee"</span>);</span><br><span class="line">String s = strList.stream().collect(Collectors.joining());</span><br><span class="line">System.out.println(s);</span><br><span class="line"><span class="comment">// 逗号连接</span></span><br><span class="line">s = strList.stream().collect(Collectors.joining(<span class="string">","</span>));</span><br><span class="line">System.out.println(s);</span><br><span class="line"><span class="comment">// 逗号连接</span></span><br><span class="line">s = strList.stream().collect(Collectors.joining(<span class="string">","</span>, <span class="string">"["</span>, <span class="string">"]"</span>));</span><br><span class="line">System.out.println(s);</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">- collectingAndThen</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">s = strList.stream().collect(Collectors.collectingAndThen(Collectors.joining(<span class="string">","</span>), String::toUpperCase));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>groupingBy groupingByConcurrent</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;String&gt;&gt; map = strList.stream().collect(Collectors.groupingBy(String::length));</span><br><span class="line">map.keySet().forEach(v -&gt; map.get(v).forEach(System.out::println));</span><br><span class="line">    </span><br><span class="line">Map&lt;Integer, Set&lt;String&gt;&gt; map1 = strList.stream().collect(Collectors.groupingBy(String::length, Collectors.toSet();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>partitioningBy</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;Boolean, List&lt;Integer&gt;&gt; mapBoolean = list.stream().collect(Collectors.partitioningBy(v -&gt; v % <span class="number">2</span> == <span class="number">0</span>));</span><br><span class="line">mapBoolean.keySet().forEach(v -&gt; mapBoolean.get(v).forEach(System.out::println));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>summingInt/Double/Long summarizingInt/Double/Long</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2859,7 +3001,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-count">62</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2971,7 +3113,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">73.9k</span>
+    <span title="Site words total count">70.9k</span>
   
 </div>
 
@@ -2998,7 +3140,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共73.9k字</span>
+  <span class="post-count">博客全站共70.9k字</span>
 </div>
 
         
