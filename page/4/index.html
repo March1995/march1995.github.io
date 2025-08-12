@@ -2411,7 +2411,7 @@ Using index condition
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/behavioral/strategy/">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/structure/facade/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -2430,7 +2430,7 @@ Using index condition
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/strategy/" itemprop="url">Java设计模式：策略模式</a></h1>
+                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/facade/" itemprop="url">Java设计模式：外观模式</a></h1>
         
 
         <div class="post-meta">
@@ -2496,7 +2496,7 @@ Using index condition
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  263 字
+                  244 字
                 </span>
               
 
@@ -2535,61 +2535,44 @@ Using index condition
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义一系列算法，封装每个算法，并使它们可以互换。策略模式可以让算法独立于使用它的客户端。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>把对象的功能实现定义成一个接口，对象中依赖一个功能接口，通过改变接口的实现，来达到不同的功能。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义功能接口</p>
-<pre><code>public interface CallBehavior {
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>提供了一个统一的接口，用来访问子系统中的一群接口，从而让子系统更容易使用。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义一个外观对象，在内部进行功能的封装，功能具体是在都在外观类的内部，其它方法要使用该功能<br>调用外观对象的方法即可。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个电影播放系统，方法代表需要功能所需步骤</p>
+<pre><code>public class SubSystem {
 
-   // 叫，不同动物叫声不同
-   void call();
-}</code></pre><p>   功能接口实现</p>
-<pre><code>public class Quack implements CallBehavior {
-
-    @Override
-    public void call() {
-        System.out.println(&quot;鸭子叫!&quot;);
+    public void turnOnTV() {
+        System.out.println(&quot;turnOnTV()&quot;);
     }
-}
 
-public class Squeak implements CallBehavior {
-
-   @Override
-   public void call() {
-       System.out.println(&quot;鸡叫k!&quot;);
-   }
-}</code></pre><p>   定义对象类，并依赖功能接口，通过改变接口的具体实现达到不同的功能</p>
-<pre><code>public class Duck {
-
-    private CallBehavior behavior;
-
-    public void performQuack() {
-        if (behavior != null) {
-            behavior.call();
-        }
+    public void setCD(String cd) {
+        System.out.println(&quot;setCD( &quot; + cd + &quot; )&quot;);
     }
-    public void setQuackBehavior(CallBehavior behavior) {
-        this.behavior = behavior;
+
+    public void starWatching() {
+        System.out.println(&quot;starWatching()&quot;);
+    }
+
+}</code></pre><p>   定义一个外观类，封装了看电影的三步骤，客户端只需调用外观类的方法即可实现功能</p>
+<pre><code>public class Facade {
+
+    private SubSystem subSystem = new SubSystem();
+
+    public void watchMovie(String name) {
+        subSystem.turnOnTV();
+        subSystem.setCD(name);
+        subSystem.starWatching();
     }
 }</code></pre><p>   测试：</p>
 <pre><code>public class Client {
 
     public static void main(String[] args) {
-        Duck duck = new Duck();
-        CallBehavior quack = new Quack();
-        duck.setQuackBehavior(quack);
-        duck.performQuack();
-        CallBehavior squeak = new Squeak();
-        duck.setQuackBehavior(squeak);
-        duck.performQuack();
+        Facade facade = new Facade();
+        facade.watchMovie(&quot;家有喜事&quot;);
     }
-}</code></pre><p>   输出：</p>
-<pre><code>鸭子叫!
-鸡叫k!</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><ul>
-<li>java.util.Comparator#compare()</li>
-<li>javax.servlet.http.HttpServlet</li>
-<li>javax.servlet.Filter#doFilter()</li>
-</ul>
-
+}</code></pre><p>   测试：</p>
+<pre><code>turnOnTV()
+setCD( 家有喜事 )
+starWatching()</code></pre>
           
         
       
@@ -3162,6 +3145,240 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/behavioral/strategy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/strategy/" itemprop="url">Java设计模式：策略模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  263 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义一系列算法，封装每个算法，并使它们可以互换。策略模式可以让算法独立于使用它的客户端。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>把对象的功能实现定义成一个接口，对象中依赖一个功能接口，通过改变接口的实现，来达到不同的功能。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义功能接口</p>
+<pre><code>public interface CallBehavior {
+
+   // 叫，不同动物叫声不同
+   void call();
+}</code></pre><p>   功能接口实现</p>
+<pre><code>public class Quack implements CallBehavior {
+
+    @Override
+    public void call() {
+        System.out.println(&quot;鸭子叫!&quot;);
+    }
+}
+
+public class Squeak implements CallBehavior {
+
+   @Override
+   public void call() {
+       System.out.println(&quot;鸡叫k!&quot;);
+   }
+}</code></pre><p>   定义对象类，并依赖功能接口，通过改变接口的具体实现达到不同的功能</p>
+<pre><code>public class Duck {
+
+    private CallBehavior behavior;
+
+    public void performQuack() {
+        if (behavior != null) {
+            behavior.call();
+        }
+    }
+    public void setQuackBehavior(CallBehavior behavior) {
+        this.behavior = behavior;
+    }
+}</code></pre><p>   测试：</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        Duck duck = new Duck();
+        CallBehavior quack = new Quack();
+        duck.setQuackBehavior(quack);
+        duck.performQuack();
+        CallBehavior squeak = new Squeak();
+        duck.setQuackBehavior(squeak);
+        duck.performQuack();
+    }
+}</code></pre><p>   输出：</p>
+<pre><code>鸭子叫!
+鸡叫k!</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><ul>
+<li>java.util.Comparator#compare()</li>
+<li>javax.servlet.http.HttpServlet</li>
+<li>javax.servlet.Filter#doFilter()</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/behavioral/chainOfResponsibility/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3405,223 +3622,6 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
     }
 }</code></pre><p>   输出：最外层的Handler即调用所有类型的处理请求</p>
 <pre><code>request1 is handle by ConcreteHandler1</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/structure/facade/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/facade/" itemprop="url">Java设计模式：外观模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  244 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>提供了一个统一的接口，用来访问子系统中的一群接口，从而让子系统更容易使用。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义一个外观对象，在内部进行功能的封装，功能具体是在都在外观类的内部，其它方法要使用该功能<br>调用外观对象的方法即可。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个电影播放系统，方法代表需要功能所需步骤</p>
-<pre><code>public class SubSystem {
-
-    public void turnOnTV() {
-        System.out.println(&quot;turnOnTV()&quot;);
-    }
-
-    public void setCD(String cd) {
-        System.out.println(&quot;setCD( &quot; + cd + &quot; )&quot;);
-    }
-
-    public void starWatching() {
-        System.out.println(&quot;starWatching()&quot;);
-    }
-
-}</code></pre><p>   定义一个外观类，封装了看电影的三步骤，客户端只需调用外观类的方法即可实现功能</p>
-<pre><code>public class Facade {
-
-    private SubSystem subSystem = new SubSystem();
-
-    public void watchMovie(String name) {
-        subSystem.turnOnTV();
-        subSystem.setCD(name);
-        subSystem.starWatching();
-    }
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        Facade facade = new Facade();
-        facade.watchMovie(&quot;家有喜事&quot;);
-    }
-}</code></pre><p>   测试：</p>
-<pre><code>turnOnTV()
-setCD( 家有喜事 )
-starWatching()</code></pre>
           
         
       
