@@ -93,7 +93,7 @@
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4942449-51c43e347a13527d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4942449-6c1ae30630a5a608.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="article:published_time" content="2017-03-16T00:00:00.000Z">
-<meta property="article:modified_time" content="2025-07-24T01:55:45.870Z">
+<meta property="article:modified_time" content="2025-08-12T14:43:21.338Z">
 <meta property="article:author" content="Marcher">
 <meta property="article:tag" content="java collection">
 <meta name="twitter:card" content="summary">
@@ -543,7 +543,13 @@
 <p>2、对于以数组为底层数据结构实现的，譬如ArrayList，当数组满了之后，数组长度变大 oldCapacity + (oldCapacity &gt;&gt; 1)，然后将原数组中的数据复制到新数组中。</p>
 <p>3、对于以链表结构实现的，譬如TreeSet，TreeMap，则是动态增加元素~~即每次加１即可。</p>
 <h2 id="注意点："><a href="#注意点：" class="headerlink" title="注意点："></a>注意点：</h2><p><strong>为啥arrayList最大值是Integer.MAX_VALUE - 8</strong>：<br>数组作为一个对象，需要一定的内存存储对象头信息，对象头信息最大占用内存不可超过8字节。</p>
-<h2 id="部分源码实现过程："><a href="#部分源码实现过程：" class="headerlink" title="部分源码实现过程："></a>部分源码实现过程：</h2><h3 id="hashMap-put过程"><a href="#hashMap-put过程" class="headerlink" title="hashMap put过程"></a>hashMap put过程</h3><p>1.判断hash表是否为空，为空resize()方法创建表<br>2.根据hash值获得hash表中桶的头结点，若头结点为空直接调用newNode()添加结点<br>3.如果发生了hash冲突，先得到头结点进行比较，如果相同，替换节点值<br>4.如果头结点头结点不相同，且此时已处于红黑树状态，调用putTreeVal()添加入树中<br>5.如果还是处于链表状态，从头开始遍历链表，一旦找到相同的结点，就跳出循环，若到链表末尾，则添加一个结点<br>6.若添加后达到红黑树的阈值，则转换为红黑树(从treeifyBin方法可以看到，当容量小于64时，不会进行红黑树转换，只会扩容)<br>7.如果是添加一个数据，size将加一，如果达到阈值，则resize()扩容</p>
+<h2 id="部分源码实现过程："><a href="#部分源码实现过程：" class="headerlink" title="部分源码实现过程："></a>部分源码实现过程：</h2><h3 id="hashMap-put过程"><a href="#hashMap-put过程" class="headerlink" title="hashMap put过程"></a>hashMap put过程</h3><p>1.判断hash表是否为空，为空resize()方法创建表</p>
+<p>2.根据hash值获得hash表中桶的头结点，若头结点为空直接调用newNode()添加结点</p>
+<p>3.如果发生了hash冲突，先得到头结点进行比较，如果相同，替换节点值</p>
+<p>4.如果头结点头结点不相同，且此时已处于红黑树状态，调用putTreeVal()添加入树中</p>
+<p>5.如果还是处于链表状态，从头开始遍历链表，一旦找到相同的结点，就跳出循环，若到链表末尾，则添加一个结点</p>
+<p>6.若添加后达到红黑树的阈值，则转换为红黑树(从treeifyBin方法可以看到，当容量小于64时，不会进行红黑树转换，只会扩容)</p>
+<p>7.如果是添加一个数据，size将加一，如果达到阈值，则resize()扩容</p>
 <h3 id="hashMap-resize"><a href="#hashMap-resize" class="headerlink" title="hashMap resize"></a>hashMap resize</h3><p>首先获取新容量以及新阈值，然后根据新容量创建新表。如果是扩容操作，则需要进行rehash操作，通过e.hash&amp;oldCap将链表分为两列，更好地均匀分布在新表中。 </p>
 <h3 id="linkList-中间插入过程"><a href="#linkList-中间插入过程" class="headerlink" title="linkList 中间插入过程"></a>linkList 中间插入过程</h3><p>例：在A，B两个连续结点中插入C结点,形成ACB</p>
 <p>1.创建一个新结点，将新节点的后继指针指向B，前继指针指向A<br>2.将B的前指针指向C<br>3.根据A是否为空判断，A为空该节点为头结点，重置first结点；不为空A的后指针指向C</p>
@@ -719,7 +725,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-count">62</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -847,7 +853,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">65.6k</span>
+    <span title="Site words total count">72.6k</span>
   
 </div>
 
@@ -874,7 +880,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共65.6k字</span>
+  <span class="post-count">博客全站共72.6k字</span>
 </div>
 
         

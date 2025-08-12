@@ -299,6 +299,1494 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2018/10/31/java/jvm/jvm%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/31/java/jvm/jvm%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" itemprop="url">jvm基础学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-31T00:00:00+00:00">
+                2018-10-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6.2k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  21 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一：内存区域"><a href="#一：内存区域" class="headerlink" title="一：内存区域"></a>一：内存区域</h1><p><img src="/uploads/java/jvm/jvm%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F.jpg" alt="内存区域"></p>
+<h2 id="线程私有-针对于方法-："><a href="#线程私有-针对于方法-：" class="headerlink" title="线程私有(针对于方法)："></a>线程私有(针对于方法)：</h2><p>   程序计数器（Program Count Register）：如果线程正在执行java方法，计数器记录正在执行的虚拟机字节码地址；Native方法，值为空。</p>
+<p>   虚拟机栈（Vm Stack）: 描述Java方法执行的内存模型：每个方法在执行的同时会创建一个栈帧用于存储<strong>局部变量表</strong>、操作数栈、动态链接、方法出口等。</p>
+<ul>
+<li><p>人们常说的Java内存分为堆内存（Heap）和栈内存（Stack），这个栈就是虚拟机栈，或者说是机栈中局部变量表部分。</p>
+</li>
+<li><p>局部变量表（虚拟机栈）存放编译器可知的<strong>基本数据类型</strong>和<strong>对象引用</strong>。</p>
+</li>
+<li><p>当线程请求的栈深度超过最大值，会抛出 StackOverflowError 异常；栈进行动态扩展时如果无法申请到足够内存，会抛出 OutOfMemoryError 异常。</p>
+<p>本地方法栈（Native Method Stack）：作用与虚拟机栈相似，本地方法栈执行Native方法。</p>
+</li>
+</ul>
+<h2 id="线程共享（针对于Class）："><a href="#线程共享（针对于Class）：" class="headerlink" title="线程共享（针对于Class）："></a>线程共享（针对于Class）：</h2><p>   堆（Heap）：存放<strong>所有对象实例</strong>以及<strong>数组</strong>，是垃圾回收的主要区域。</p>
+<ul>
+<li><p>现在垃圾收集器基本采用<strong>分代收集算法</strong>，主要思想为针对不用类型的对象采取不同的垃圾回收算法，可将堆分为<strong>新生代</strong>和<strong>老年代</strong>，还可细分。</p>
+</li>
+<li><p>从内存分配的角度，堆可能分出多个线程私有的分配缓冲区(TLAB)，只是为了更好回收内存，更快分配内存，存储对象不变。</p>
+</li>
+<li><p>堆无需连续内存，可以动态增加，增加失败会抛出OutOfMemoryError 异常。可以通过 -Xms 和 -Xmx 两个虚拟机参数来指定一个程序的堆内存大小，第一个参数设置初始值，第二个参数设置最大值。java -Xms1M -Xmx2M。</p>
+<p>方法区（Method Area）：用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。</p>
+</li>
+<li><p>和堆一样不需要连续的内存，还可以选择不实现垃圾回收，对这一区域内存回收目标主要是针对常量池和类型的卸载，一般难以实现，效果较差。</p>
+</li>
+<li><p>HotSpot 虚拟机把它当成永久代来进行垃圾回收。但是很难确定永久代的大小，因为它受到很多因素影响，并且每次 Full GC 之后永久代的大小都会改变，所以经常会抛出 OutOfMemoryError 异常。为了更容易管理方法区，从 JDK 1.8 开始，移除永久代，并把方法区移至元空间，它位于本地内存中，而不是虚拟机内存中。</p>
+<p>运行时常量池（Runtime Constant Pool）：是方法区的一部分。Class 文件中的常量池（编译器生成的各种字面量和符号引用）会在类加载后被放入这个区域。</p>
+</li>
+<li><p>具备动态性，除了再编译器生成的常量放入这一区域外，还允许动态生成。常量不仅仅再编译期间才能产生，在运行时也可能产生新的常量，例如String类的intern()。</p>
+</li>
+<li><p>受到方法区内存大小限制，无法申请到内存时会抛出OutOfMemoryError异常。</p>
+<p>直接内存：不是虚拟机运行时数据区的一部分。jdk1.4中引入NIO，可以直接使用native函数库分配堆外的内存，然后通过一个存储在Java堆里的DirectByteBuffer对象作为这块内存的引用进行操作，避免了Java堆和Native对中来回复制数据显著提高性能。</p>
+</li>
+</ul>
+<h1 id="二：HotSpot虚拟机对象"><a href="#二：HotSpot虚拟机对象" class="headerlink" title="二：HotSpot虚拟机对象"></a>二：HotSpot虚拟机对象</h1><h2 id="对象的创建"><a href="#对象的创建" class="headerlink" title="对象的创建"></a>对象的创建</h2><p>   空间划分（内存分配）：堆采用的垃圾收集器是否带有压缩整理功能–&gt;堆是否规整–&gt;内存的分配方式，规整采用<strong>指针碰撞</strong>方法，否则采用<strong>空闲列表</strong>方式</p>
+<p>   对象在创建中是否频繁（并发问题）：</p>
+<ul>
+<li><p>同步处理，CAS加失败重试保证原子性</p>
+</li>
+<li><p>本地线程分配缓冲区（TLAB）：每个线程在Java堆中预先分配一小块内存。线程私有内存。</p>
+</li>
+<li><p>内存分配完成后，进行对象实例字段的初始化（不包括对象头，内存空间都为零值）；若使用TLAB，则可提前在TLAB中分配。</p>
+<p>对象头设置：存放类的元数据信息、对象的哈希码、对象的GC分代年龄等信息。虚拟机当前运行状态（如是否启用偏向锁）不同，对象头有不同的设置方式。</p>
+<p>上述工作完成后，虚拟机角度新的对象已经产生，程序角度对象创建刚刚开始–<init>方法还未执行。</init></p>
+</li>
+</ul>
+<h2 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h2><p>   <img src="/uploads/java/jvm/%E5%AF%B9%E8%B1%A1%E5%9C%A8%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80.jpg" alt="对象在内存布局"></p>
+<h2 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h2><p>   Java程序通过栈上的reference（指向对象的引用）数据操作堆上的具体数据。访问方式由虚拟机实现。主流方式有2种。</p>
+<ul>
+<li>句柄：堆中划分句柄池，reference存储对象的句柄地址，句柄包含<strong>对象实例数据</strong>与<strong>类型数据（类数据）</strong>各自的具体地址。<br>优点：在对象被移动时（垃圾收集时移动对象是非常普遍的行为）只会改变句柄中的实例数据指针，reference本事不需要修改。</li>
+<li>直接指针：reference存储的直接是对象的地址，对象的实例数据中要放置访问类型数据的指针。<br>优点：速度快，节省了一次指针定位的时间开销。</li>
+</ul>
+<h1 id="三：垃圾收集"><a href="#三：垃圾收集" class="headerlink" title="三：垃圾收集"></a>三：垃圾收集</h1><p>   垃圾收集需要考虑三个问题：<strong>回收哪些内存</strong>，<strong>什么时候回收</strong>，<strong>怎么回收</strong></p>
+<p>   垃圾收集器主要针对堆和方法区进行。</p>
+<p>   程序计数器、虚拟机栈和本地方法栈这三个区域属于线程私有的，只存在于线程的生命周期内，线程结束之后也会消失，因此不需要对这三个区域进行垃圾回收。</p>
+<h2 id="判断一个对象是否可被回收（回收哪些内存）"><a href="#判断一个对象是否可被回收（回收哪些内存）" class="headerlink" title="判断一个对象是否可被回收（回收哪些内存）"></a>判断一个对象是否可被回收（回收哪些内存）</h2><h3 id="1-引用计数算法"><a href="#1-引用计数算法" class="headerlink" title="1.引用计数算法"></a>1.引用计数算法</h3><p>   给对象添加一个引用计数器，当对象增加引用时就加一，失效一个引用时就减一。引用计数器为0的对象表示可以回收。 </p>
+<ul>
+<li><p>由于存在循环引用，引用计数器永远不为0，导致永远不会被回收。</p>
+<h3 id="2-可达性分析算法"><a href="#2-可达性分析算法" class="headerlink" title="2.可达性分析算法"></a>2.可达性分析算法</h3><p>通过 Roots作为起点，能够到达的对象被视为存活，不可达的对象可以回收。<br><img src="/uploads/java/jvm/%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90%E7%AE%97%E6%B3%95.png" alt="可达性分析算法"></p>
+<p>可作为GC Roots的对象：（全局性引用如常量和类静态变量，应用上下文如帧栈中的本地变量表）</p>
+</li>
+<li><p>虚拟机栈（帧栈中的本地变量两）中引用的对象</p>
+</li>
+<li><p>方法区中的类静态属性引用的对象</p>
+</li>
+<li><p>方法区中常量引用的对象</p>
+</li>
+<li><p>本地方法栈中的JNI（即一般说的Native方法）引用的对象。</p>
+<h3 id="3-对象生存还是死亡（finalize-方法）"><a href="#3-对象生存还是死亡（finalize-方法）" class="headerlink" title="3.对象生存还是死亡（finalize()方法）"></a>3.对象生存还是死亡（finalize()方法）</h3><p>在可达性分析算法过程中不可达的对象并非一定会被回收。在可达性分析算法被认为无引用链后，需要2步才能真正宣告对象已死。</p>
+</li>
+<li><p>进行一次筛选，筛选条件为对象是否有必要执行finalize()方法，若对象未执行过finalize方法，将其放入F-Queue队列，由一低优先级线程执行该队列中对象的finalize方法。<br>执行finalize方法完毕后，GC会再次判断该对象是否可达，若不可达，则进行回收，否则，对象“复活”。</p>
+</li>
+<li><p>若未覆盖finalize方法，则直接将其回收。</p>
+<p>自救只能进行一次，如果回收的对象之前调用了 finalize() 方法自救，后面回收时不会调用 finalize() 方法。</p>
+<h3 id="4-方法区回收"><a href="#4-方法区回收" class="headerlink" title="4.方法区回收"></a>4.方法区回收</h3><p>因为方法区主要存放永久代对象，而永久代对象的回收率比新生代低很多，因此在方法区上进行回收性价比不高。主要是对常量池的回收和对类的卸载。</p>
+<p>在大量使用反射、动态代理、CGLib 等 ByteCode 框架、动态生成 JSP 以及 OSGi 这类频繁自定义 ClassLoader 的场景都需要虚拟机具备类卸载功能，以保证不会出现内存溢出。</p>
+<p>类的卸载条件很多，需要满足以下三个条件，并且满足了也不一定会被卸载：</p>
+</li>
+<li><p>该类所有的实例都已经被回收，也就是堆中不存在该类的任何实例。</p>
+</li>
+<li><p>加载该类的 ClassLoader 已经被回收。</p>
+</li>
+<li><p>该类对应的 Class 对象没有在任何地方被引用，也就无法在任何地方通过反射访问该类方法。</p>
+<p>可以通过 -Xnoclassgc 参数来控制是否对类进行卸载。</p>
+</li>
+</ul>
+<h2 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h2><p>   无论是通过引用计数算法判断对象的引用数量，还是通过可达性分析算法判断对象是否可达，判定对象是否可被回收都与引用有关。</p>
+<p>   Java 提供了四种强度不同的引用类型。</p>
+<h3 id="1-强引用"><a href="#1-强引用" class="headerlink" title="1.强引用"></a>1.强引用</h3><p>   被强引用关联的对象不会被回收。使用 new 一个新对象的方式来创建强引用。 </p>
+<pre><code>Object obj = new Object();</code></pre><h3 id="2-软引用"><a href="#2-软引用" class="headerlink" title="2.软引用"></a>2.软引用</h3><p>   被软引用关联的对象只有在内存不够的情况下才会被回收。使用 SoftReference 类来创建软引用。 </p>
+<pre><code>Object obj = new Object();
+SoftReference&lt;Object&gt; sf = new SoftReference&lt;Object&gt;(obj);
+obj = null;  // 使对象只被软引用关联</code></pre><h3 id="3-弱引用"><a href="#3-弱引用" class="headerlink" title="3.弱引用"></a>3.弱引用</h3><p>   被弱引用关联的对象一定会被回收，也就是说它只能存活到下一次垃圾回收发生之前。使用 WeakReference 类来实现弱引用。</p>
+<pre><code>Object obj = new Object();
+SoftReference&lt;Object&gt; sf = new SoftReference&lt;Object&gt;(obj);
+obj = null;  // 使对象只被软引用关联</code></pre><h3 id="4-虚引用"><a href="#4-虚引用" class="headerlink" title="4.虚引用"></a>4.虚引用</h3><p>   又称为幽灵引用或者幻影引用，一个对象是否有虚引用的存在，不会对其生存时间造成影响，也无法通过虚引用得到一个对象。</p>
+<p>   为一个对象设置虚引用的唯一目的是能在这个对象被回收时收到一个系统通知。</p>
+<p>   使用 PhantomReference 来创建虚引用。</p>
+<pre><code>Object obj = new Object();
+PhantomReference&lt;Object&gt; pf = new PhantomReference&lt;Object&gt;(obj, null);
+obj = null;</code></pre><h2 id="垃圾收集算法（怎么回收）"><a href="#垃圾收集算法（怎么回收）" class="headerlink" title="垃圾收集算法（怎么回收）"></a>垃圾收集算法（怎么回收）</h2><h3 id="1-标记-清除"><a href="#1-标记-清除" class="headerlink" title="1.标记 - 清除"></a>1.标记 - 清除</h3><p>   <img src="/uploads/java/jvm/%E6%A0%87%E8%AE%B0-%E6%B8%85%E9%99%A4.jpg" alt="标记-清除"><br>   标记要回收的对象，然后清除。</p>
+<p>   不足：</p>
+<p>   标记和清除过程效率都不高；<br>   会产生大量不连续的内存碎片，导致无法给大对象分配内存。</p>
+<h3 id="2-标记-整理"><a href="#2-标记-整理" class="headerlink" title="2.标记 - 整理"></a>2.标记 - 整理</h3><p>   <img src="/uploads/java/jvm/%E6%A0%87%E8%AE%B0-%E6%95%B4%E7%90%86.jpg" alt="标记-整理"><br>   让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。</p>
+<h3 id="3-复制"><a href="#3-复制" class="headerlink" title="3.复制"></a>3.复制</h3><p>   <img src="/uploads/java/jvm/%E5%A4%8D%E5%88%B6.jpg" alt="复制"><br>   将内存划分为大小相等的两块，每次只使用其中一块，当这一块内存用完了就将还存活的对象复制到另一块上面，然后再把使用过的内存空间进行一次清理。</p>
+<p>   主要不足是只使用了内存的一半。</p>
+<p>   现在的商业虚拟机都采用这种收集算法来回收新生代，但是并不是将新生代划分为大小相等的两块，而是分为一块较大的 Eden 空间和两块较小的 Survivor 空间，每次使用 Eden 空间和其中一块 Survivor。在回收时，将 Eden 和 Survivor 中还存活着的对象一次性复制到另一块 Survivor 空间上，最后清理 Eden 和使用过的那一块 Survivor。</p>
+<p>   HotSpot 虚拟机的 Eden 和 Survivor 的大小比例默认为 8:1，保证了内存的利用率达到 90%。如果每次回收有多于 10% 的对象存活，那么一块 Survivor 空间就不够用了，此时需要依赖于老年代进行分配担保，也就是借用老年代的空间存储放不下的对象。</p>
+<h3 id="4-分代收集"><a href="#4-分代收集" class="headerlink" title="4.分代收集"></a>4.分代收集</h3><p>   现在的商业虚拟机采用分代收集算法，它根据对象存活周期将内存划分为几块，不同块采用适当的收集算法。</p>
+<p>   一般将堆分为新生代和老年代。</p>
+<ul>
+<li>新生代使用：复制算法</li>
+<li>老年代使用：标记 - 清除 或者 标记 - 整理 算法</li>
+</ul>
+<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><h3 id="HotSpot垃圾收集器"><a href="#HotSpot垃圾收集器" class="headerlink" title="HotSpot垃圾收集器"></a>HotSpot垃圾收集器</h3><p>   <img src="/uploads/java/jvm/HotSpot%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.jpg" alt="HotSpot垃圾收集器"></p>
+<p>   连线表示可以配合使用。</p>
+<ul>
+<li><p>单线程与多线程：单线程指的是垃圾收集器只使用一个线程进行收集，而多线程使用多个线程；</p>
+</li>
+<li><p>串行与并行：串行指的是垃圾收集器与用户程序交替执行，这意味着在执行垃圾收集的时候需要停顿用户程序；并行指的是垃圾收集器和用户程序同时执行。除了 CMS 和 G1 之外，其它垃圾收集器都是以串行的方式执行。 </p>
+<h3 id="1-Serial-收集器"><a href="#1-Serial-收集器" class="headerlink" title="1.Serial 收集器"></a>1.Serial 收集器</h3><p>串行，单线程。优点：高效，单cpu环境没有线程交互的切换，拥有最高的单线程收集效率。</p>
+</li>
+</ul>
+<p>   <strong>client模式的下的默认新生代</strong>垃圾收集器。因为在该应用场景下，分配给虚拟机管理的内存一般来说不会很大。</p>
+<p>   Serial 收集器收集几十兆甚至一两百兆的新生代停顿时间可以控制在一百多毫秒以内，只要不是太频繁，这点停顿是可以接受的。</p>
+<h3 id="2-ParNew-收集器"><a href="#2-ParNew-收集器" class="headerlink" title="2.ParNew 收集器"></a>2.ParNew 收集器</h3><p>   Serial 收集器的多线程版本。</p>
+<p>   是 <strong>Server 模式下的虚拟机首选新生代</strong>收集器，除了性能原因外，主要是因为除了 Serial 收集器，只有它能与 CMS 收集器配合工作。</p>
+<p>   默认开启的线程数量与 CPU 数量相同，可以使用 -XX:ParallelGCThreads 参数来设置线程数。</p>
+<h3 id="3-Parallel-Scavenge-收集器"><a href="#3-Parallel-Scavenge-收集器" class="headerlink" title="3.Parallel Scavenge 收集器"></a>3.Parallel Scavenge 收集器</h3><p>   多线程收集器。</p>
+<p>   其它收集器关注点是尽可能缩短垃圾收集时用户线程的停顿时间，而它的目标是达到一个可控制的吞吐量，它被称为“吞吐量优先”收集器。这里的吞吐量指 CPU 用于运行用户代码的时间占总时间的比值。</p>
+<p>   停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户体验。而高吞吐量则可以高效率地利用 CPU 时间，尽快完成程序的运算任务，适合在后台运算而不需要太多交互的任务。</p>
+<p>   缩短停顿时间是以牺牲吞吐量和新生代空间来换取的：新生代空间变小，垃圾回收变得频繁，导致吞吐量下降。</p>
+<p>   可以通过一个开关参数打开 GC 自适应的调节策略（GC Ergonomics），就不需要手工指定新生代的大小（-Xmn）、Eden 和 Survivor 区的比例、晋升老年代对象年龄等细节参数了。虚拟机会根据当前系统的运行情况收集性能监控信息，动态调整这些参数以提供最合适的停顿时间或者最大的吞吐量。</p>
+<h3 id="4-Serial-Old-收集器"><a href="#4-Serial-Old-收集器" class="headerlink" title="4.Serial Old 收集器"></a>4.Serial Old 收集器</h3><p>   是 Serial 收集器的老年代版本，也是给 Client 模式下的虚拟机使用。如果用在 Server 模式下，它有两大用途：</p>
+<ul>
+<li><p>在 JDK 1.5 以及之前版本（Parallel Old 诞生以前）中与 Parallel Scavenge 收集器搭配使用。</p>
+</li>
+<li><p>作为 CMS 收集器的后备预案，在并发收集发生 Concurrent Mode Failure 时使用。</p>
+<h3 id="5-Parallel-Old-收集器"><a href="#5-Parallel-Old-收集器" class="headerlink" title="5.Parallel Old 收集器"></a>5.Parallel Old 收集器</h3><p>是 Parallel Scavenge 收集器的老年代版本。</p>
+<p>在注重吞吐量以及 CPU 资源敏感的场合，都可以优先考虑 Parallel Scavenge 加 Parallel Old 收集器。</p>
+<h3 id="6-CMS-收集器"><a href="#6-CMS-收集器" class="headerlink" title="6. CMS 收集器"></a>6. CMS 收集器</h3><p><img src="/uploads/java/jvm/CMS%E6%94%B6%E9%9B%86%E5%99%A8.jpg" alt="CMS收集器"><br>CMS（Concurrent Mark Sweep），Mark Sweep 指的是标记 - 清除算法。</p>
+<p>分为以下四个流程：</p>
+</li>
+<li><p>初始标记：仅仅只是标记一下 GC Roots 能直接关联到的对象，速度很快，需要停顿。</p>
+</li>
+<li><p>并发标记：进行 GC Roots Tracing 的过程，它在整个回收过程中耗时最长，不需要停顿。</p>
+</li>
+<li><p>重新标记：为了修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，需要停顿。</p>
+</li>
+<li><p>并发清除：不需要停顿。</p>
+<p>在整个过程中耗时最长的并发标记和并发清除过程中，收集器线程都可以与用户线程一起工作，不需要进行停顿。</p>
+<p>具有以下缺点：</p>
+</li>
+<li><p>吞吐量低：低停顿时间是以牺牲吞吐量为代价的，导致 CPU 利用率不够高。</p>
+</li>
+<li><p>无法处理浮动垃圾，可能出现 Concurrent Mode Failure。浮动垃圾是指并发清除阶段由于用户线程继续运行而产生的垃圾，这部分垃圾只能到下一次 GC 时才能进行回收。由于浮动垃圾的存在，因此需要预留出一部分内存，意味着 CMS 收集不能像其它收集器那样等待老年代快满的时候再回收。如果预留的内存不够存放浮动垃圾，就会出现 Concurrent Mode Failure，这时虚拟机将临时启用 Serial Old 来替代 CMS。</p>
+</li>
+<li><p>标记 - 清除算法导致的空间碎片，往往出现老年代空间剩余，但无法找到足够大连续空间来分配当前对象，不得不提前触发一次 Full GC。</p>
+<h3 id="7-G1-收集器"><a href="#7-G1-收集器" class="headerlink" title="7. G1 收集器"></a>7. G1 收集器</h3><p><img src="/uploads/java/jvm/CMS%E6%94%B6%E9%9B%86%E5%99%A8.jpg" alt="CMS收集器"><br>G1（Garbage-First），它是一款面向<strong>服务端应用</strong>的垃圾收集器，在多 CPU 和大内存的场景下有很好的性能。HotSpot 开发团队赋予它的使命是未来可以替换掉 CMS 收集器。</p>
+<p>堆被分为新生代和老年代，其它收集器进行收集的范围都是整个新生代或者老年代，而 G1 可以直接对新生代和老年代一起回收。</p>
+<p><img src="/uploads/java/jvm/HotspotHeapStructure.png" alt="HotspotHeapStructure"><br>G1 把堆划分成多个大小相等的独立区域（Region），新生代和老年代不再物理隔离。         </p>
+<p><img src="/uploads/java/jvm/G1HeapAllocation.png" alt="G1HeapAllocation"></p>
+<p>通过引入 Region 的概念，从而将原来的一整块内存空间划分成多个的小空间，使得每个小空间可以单独进行垃圾回收。这种划分方法带来了很大的灵活性，使得可预测的停顿时间模型成为可能。通过记录每个 Region 垃圾回收时间以及回收所获得的空间（这两个值是通过过去回收的经验获得），并维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的 Region。</p>
+<p>每个 Region 都有一个 Remembered Set，用来记录该 Region 对象的引用对象所在的 Region。通过使用 Remembered Set，在做可达性分析的时候就可以避免全堆扫描。</p>
+<p><img src="/uploads/java/jvm/G1%E6%94%B6%E9%9B%86%E5%99%A8.jpg" alt="G1收集器">   </p>
+<p>如果不计算维护 Remembered Set 的操作，G1 收集器的运作大致可划分为以下几个步骤：</p>
+</li>
+<li><p>初始标记</p>
+</li>
+<li><p>并发标记</p>
+</li>
+<li><p>重新标记：为了修正在并发标记期间因用户程序继续运作而导致标记产生变动的那一部分标记记录，虚拟机将这段时间对象变化记录在线程的 Remembered Set Logs 里面，最终标记阶段需要把 Remembered Set Logs 的数据合并到 Remembered Set 中。这阶段需要停顿线程，但是可并行执行。</p>
+</li>
+<li><p>并发清除：首先对各个 Region 中的回收价值和成本进行排序，根据用户所期望的 GC 停顿时间来制定回收计划。此阶段其实也可以做到与用户程序一起并发执行，但是因为只回收一部分 Region，时间是用户可控制的，而且停顿用户线程将大幅度提高收集效率。</p>
+<p>具备如下特点：</p>
+</li>
+<li><p>空间整合：整体来看是基于“标记 - 整理”算法实现的收集器，从局部（两个 Region 之间）上来看是基于“复制”算法实现的，这意味着运行期间不会产生内存空间碎片。</p>
+</li>
+<li><p>可预测的停顿：能让使用者明确指定在一个长度为 M 毫秒的时间片段内，消耗在 GC 上的时间不得超过 N 毫秒。Full GC。</p>
+</li>
+</ul>
+<h1 id="四：内存分配与回收策略"><a href="#四：内存分配与回收策略" class="headerlink" title="四：内存分配与回收策略"></a>四：内存分配与回收策略</h1><h2 id="Minor-GC-和-Full-GC"><a href="#Minor-GC-和-Full-GC" class="headerlink" title="Minor GC 和 Full GC"></a>Minor GC 和 Full GC</h2><ul>
+<li>Minor GC：发生在新生代上，因为新生代对象存活时间很短，因此 Minor GC 会频繁执行，执行的速度一般也会比较快。</li>
+<li>Full GC：发生在老年代上，老年代对象其存活时间长，因此 Full GC 很少执行，执行速度会比 Minor GC 慢很多。</li>
+</ul>
+<h2 id="内存分配策略"><a href="#内存分配策略" class="headerlink" title="内存分配策略"></a>内存分配策略</h2><h3 id="1-对象优先在Eden分配"><a href="#1-对象优先在Eden分配" class="headerlink" title="1.对象优先在Eden分配"></a>1.对象优先在Eden分配</h3><p>   大多数情况下，对象在新生代 Eden 区分配，当 Eden 区空间不够时，发起 Minor GC。</p>
+<h3 id="2-大对象直接进入老年代"><a href="#2-大对象直接进入老年代" class="headerlink" title="2.大对象直接进入老年代"></a>2.大对象直接进入老年代</h3><p>   大对象是指需要连续内存空间的对象，最典型的大对象是那种很长的字符串以及数组。</p>
+<p>   经常出现大对象会提前触发垃圾收集以获取足够的连续空间分配给大对象。</p>
+<p>   -XX:PretenureSizeThreshold，大于此值的对象直接在老年代分配，避免在 Eden 区和 Survivor 区之间的大量内存复制。</p>
+<h3 id="3-长期存活的对象进入老年代"><a href="#3-长期存活的对象进入老年代" class="headerlink" title="3.长期存活的对象进入老年代"></a>3.长期存活的对象进入老年代</h3><p>   为对象定义年龄计数器，对象在 Eden 出生并经过 Minor GC 依然存活，将移动到 Survivor 中，年龄就增加 1 岁，增加到一定年龄则移动到老年代中。</p>
+<p>   -XX:MaxTenuringThreshold 用来定义年龄的阈值。</p>
+<h3 id="4-动态对象年龄判定"><a href="#4-动态对象年龄判定" class="headerlink" title="4.动态对象年龄判定"></a>4.动态对象年龄判定</h3><p>   虚拟机并不是永远地要求对象的年龄必须达到 MaxTenuringThreshold 才能晋升老年代，如果在 Survivor 中相同年龄所有对象大小的总和大于 Survivor 空间的一半，则年龄大于或等于该年龄的对象可以直接进入老年代，无需等到 MaxTenuringThreshold 中要求的年龄。</p>
+<h3 id="5-空间分配担保"><a href="#5-空间分配担保" class="headerlink" title="5.空间分配担保"></a>5.空间分配担保</h3><p>   在发生 Minor GC 之前，虚拟机先检查老年代最大可用的连续空间是否大于新生代所有对象总空间，如果条件成立的话，那么 Minor GC 可以确认是安全的。</p>
+<p>   如果不成立的话虚拟机会查看 HandlePromotionFailure 设置值是否允许担保失败，如果允许那么就会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小，如果大于，将尝试着进行一次 Minor GC；如果小于，或者 HandlePromotionFailure 设置不允许冒险，那么就要进行一次 Full GC。</p>
+<h2 id="Full-GC-的触发条件"><a href="#Full-GC-的触发条件" class="headerlink" title="Full GC 的触发条件"></a>Full GC 的触发条件</h2><p>   对于 Minor GC，其触发条件非常简单，当 Eden 空间满时，就将触发一次 Minor GC。而 Full GC 则相对复杂，有以下条件： </p>
+<h5 id="1-调用-System-gc"><a href="#1-调用-System-gc" class="headerlink" title="1.调用 System.gc()"></a>1.调用 System.gc()</h5><p>   只是建议虚拟机执行 Full GC，<strong>但是虚拟机不一定真正去执行</strong>。不建议使用这种方式，而是让虚拟机管理内存。</p>
+<h3 id="2-老年代空间不足"><a href="#2-老年代空间不足" class="headerlink" title="2.老年代空间不足"></a>2.老年代空间不足</h3><p>   老年代空间不足的常见场景为前文所讲的大对象直接进入老年代、长期存活的对象进入老年代等。</p>
+<p>   为了避免以上原因引起的 Full GC，应当尽量不要创建过大的对象以及数组。除此之外，可以通过 -Xmn 虚拟机参数<strong>调大新生代的大小</strong>，让对象尽量在新生代被回收掉，不进入老年代。还可以通过 -XX:MaxTenuringThreshold <strong>调大对象进入老年代的年龄</strong>，让对象在新生代多存活一段时间。</p>
+<h3 id="3-空间分配担保失败"><a href="#3-空间分配担保失败" class="headerlink" title="3.空间分配担保失败"></a>3.空间分配担保失败</h3><p>   使用复制算法的 Minor GC 需要老年代的内存空间作担保，如果担保失败会执行一次 Full GC。   </p>
+<h3 id="4-JDK-1-7-及以前的永久代空间不足"><a href="#4-JDK-1-7-及以前的永久代空间不足" class="headerlink" title="4.JDK 1.7 及以前的永久代空间不足"></a>4.JDK 1.7 及以前的永久代空间不足</h3><p>   在 JDK 1.7 及以前，HotSpot 虚拟机中的方法区是用永久代实现的，永久代中存放的为一些 Class 的信息、常量、静态变量等数据。</p>
+<p>   当系统中要加载的类、反射的类和调用的方法较多时，永久代可能会被占满，在未配置为采用 CMS GC 的情况下也会执行 Full GC。如果经过 Full GC 仍然回收不了，那么虚拟机会抛出 java.lang.OutOfMemoryError。</p>
+<p>   为避免以上原因引起的 Full GC，可采用的方法为增大永久代空间或转为使用 CMS GC。</p>
+<h3 id="5-Concurrent-Mode-Failure"><a href="#5-Concurrent-Mode-Failure" class="headerlink" title="5.Concurrent Mode Failure"></a>5.Concurrent Mode Failure</h3><p>   执行 CMS GC 的过程中同时有对象要放入老年代，而此时老年代空间不足（可能是 GC 过程中浮动垃圾过多导致暂时性的空间不足），便会报 Concurrent Mode Failure 错误，并触发 Full GC。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2018/10/29/linux-command/rm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/29/linux-command/rm/" itemprop="url">rm特殊删除</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-29T00:00:00+00:00">
+                2018-10-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux-command/" itemprop="url" rel="index">
+                    <span itemprop="name">linux-command</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  57 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="特殊删除"><a href="#特殊删除" class="headerlink" title="特殊删除"></a>特殊删除</h1><h2 id="删除所有-p开头的文件"><a href="#删除所有-p开头的文件" class="headerlink" title="删除所有-p开头的文件"></a>删除所有-p开头的文件</h2><p>rm – -P.* </p>
+<p>需要用–进行特殊处理</p>
+<h2 id="自定义回收站功能"><a href="#自定义回收站功能" class="headerlink" title="自定义回收站功能"></a>自定义回收站功能</h2><p>myrm(){ D=/tmp/$(date +%Y%m%d%H%M%S); mkdir -p $D;  mv “$@” $D &amp;&amp; echo “moved to $D ok”; }</p>
+<p>alias rm=’myrm’</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2018/09/05/database/2.mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/05/database/2.mysql/" itemprop="url">mysql概要</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-05T00:00:00+00:00">
+                2018-09-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/database/" itemprop="url" rel="index">
+                    <span itemprop="name">database</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  855 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>提到mysql等数据库，当然绕不开它最基本的概念，数据结构，数据库的索引就是数据结构最好的应用。<br><a href="/2019/01/04/datastructure/index/">对数据结构没有概念的同学请点击</a></p>
+<h1 id="一：存储引擎（存储引擎提供不同的存储机制、索引技巧、锁定水平等功能）"><a href="#一：存储引擎（存储引擎提供不同的存储机制、索引技巧、锁定水平等功能）" class="headerlink" title="一：存储引擎（存储引擎提供不同的存储机制、索引技巧、锁定水平等功能）"></a>一：存储引擎（存储引擎提供不同的存储机制、索引技巧、锁定水平等功能）</h1><h2 id="InnoDB与MYISAM比较"><a href="#InnoDB与MYISAM比较" class="headerlink" title="InnoDB与MYISAM比较"></a>InnoDB与MYISAM比较</h2><table>
+<thead>
+<tr>
+<th align="center">功 能</th>
+<th align="center">MYISAM</th>
+<th align="center">InnoDB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">存储限制</td>
+<td align="center">256TB</td>
+<td align="center">64TB</td>
+</tr>
+<tr>
+<td align="center">支持事物</td>
+<td align="center">不支持</td>
+<td align="center">支持</td>
+</tr>
+<tr>
+<td align="center">支持锁级别</td>
+<td align="center">表级锁</td>
+<td align="center">表级锁，行级锁</td>
+</tr>
+<tr>
+<td align="center">支持外键</td>
+<td align="center">不支持</td>
+<td align="center">支持</td>
+</tr>
+<tr>
+<td align="center">支持全文索引</td>
+<td align="center">支持</td>
+<td align="center">不支持</td>
+</tr>
+<tr>
+<td align="center">支持数索引</td>
+<td align="center">支持</td>
+<td align="center">支持</td>
+</tr>
+<tr>
+<td align="center">支持哈希索引</td>
+<td align="center">不支持</td>
+<td align="center">不支持</td>
+</tr>
+<tr>
+<td align="center">支持数据缓存</td>
+<td align="center">不支持</td>
+<td align="center">支持</td>
+</tr>
+</tbody></table>
+<h1 id="二：索引"><a href="#二：索引" class="headerlink" title="二：索引"></a>二：索引</h1><p>索引是在存储引擎层实现的，而不是在服务器层实现的，所以不同存储引擎具有不同的索引类型和实现。</p>
+<h2 id="1-B-Tree-索引"><a href="#1-B-Tree-索引" class="headerlink" title="1. B+Tree 索引"></a>1. B+Tree 索引</h2><p>是大多数 MySQL 存储引擎的默认索引类型。</p>
+<p>因为不再需要进行全表扫描，只需要<strong>对树进行搜索</strong>即可，所以查找速度快很多。</p>
+<p>除了用于查找，还可以用于排序和分组。</p>
+<p>可以指定多个列作为索引列，多个索引列共同组成键。</p>
+<p>适用于全键值、键值范围和键前缀查找，其中键前缀查找只适用于最左前缀查找。如果不是按照索引列的顺序进行查找，则无法使用索引。</p>
+<p>InnoDB 的 B+Tree 索引分为主索引和辅助索引。主索引的叶子节点 data 域记录着完整的数据记录，这种索引方式被称为聚簇索引。因为无法把数据行存放在两个不同的地方，所以一个表只能有一个聚簇索引。</p>
+<p>辅助索引的叶子节点的 data 域记录着主键的值，因此在使用辅助索引进行查找时，需要先查找到主键值，然后再到主索引中进行查找。</p>
+<h2 id="2-哈希索引"><a href="#2-哈希索引" class="headerlink" title="2. 哈希索引"></a>2. 哈希索引</h2><p>哈希索引能以 O(1) 时间进行查找，但是失去了有序性：</p>
+<ul>
+<li>无法用于排序与分组；</li>
+<li>只支持精确查找，无法用于部分查找和范围查找。</li>
+<li>数据量大时，会产生hash冲突，性能降低。</li>
+</ul>
+<p>InnoDB 存储引擎有一个特殊的功能叫“自适应哈希索引”，当某个索引值被使用的非常频繁时，会在 B+Tree 索引之上再创建一个哈希索引，这样就让 B+Tree 索引具有哈希索引的一些优点，比如快速的哈希查找。</p>
+<h2 id="3-全文索引"><a href="#3-全文索引" class="headerlink" title="3. 全文索引"></a>3. 全文索引</h2><p>MyISAM 存储引擎支持全文索引，用于查找文本中的关键词，而不是直接比较是否相等。</p>
+<p>查找条件使用 MATCH AGAINST，而不是普通的 WHERE。</p>
+<p>全文索引使用倒排索引实现，它记录着关键词到其所在文档的映射。</p>
+<p>InnoDB 存储引擎在 MySQL 5.6.4 版本中也开始支持全文索引。</p>
+<h2 id="4-空间数据索引"><a href="#4-空间数据索引" class="headerlink" title="4. 空间数据索引"></a>4. 空间数据索引</h2><p>MyISAM 存储引擎支持空间数据索引（R-Tree），可以用于地理数据存储。空间数据索引会从所有维度来索引数据，可以有效地使用任意维度来进行组合查询。</p>
+<p>必须使用 GIS 相关的函数来维护数据。</p>
+<h1 id="三：数据库拆分"><a href="#三：数据库拆分" class="headerlink" title="三：数据库拆分"></a>三：数据库拆分</h1><h1 id="四：数据库主从与读写分离"><a href="#四：数据库主从与读写分离" class="headerlink" title="四：数据库主从与读写分离"></a>四：数据库主从与读写分离</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2018/08/28/java/javase/regularExpression/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/28/java/javase/regularExpression/" itemprop="url">java正则表达式例子</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-28T00:00:00+00:00">
+                2018-08-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaSE</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  570 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="正则表达式-文本框输入内容控制"><a href="#正则表达式-文本框输入内容控制" class="headerlink" title="[正则表达式]文本框输入内容控制"></a>[正则表达式]文本框输入内容控制</h1><ul>
+<li>整数或者小数：^[0-9]+.{0,1}[0-9]{0,2}$</li>
+<li>只能输入数字：”^[0-9]*$”。</li>
+<li>只能输入n位的数字：”^\d{n}$”。</li>
+<li>只能输入至少n位的数字：”^\d{n,}$”。</li>
+<li>只能输入m~n位的数字：。”^\d{m,n}$”</li>
+<li>只能输入零和非零开头的数字：”^(0|[1-9][0-9]*)$”。</li>
+<li>只能输入有两位小数的正实数：”^[0-9]+(.[0-9]{2})?$”。</li>
+<li>只能输入有1~3位小数的正实数：”^[0-9]+(.[0-9]{1,3})?$”。</li>
+<li>只能输入非零的正整数：”^+?[1-9][0-9]*$”。</li>
+<li>只能输入非零的负整数：”^-[1-9][]0-9”*$。</li>
+<li>只能输入长度为3的字符：”^.{3}$”。</li>
+<li>只能输入由26个英文字母组成的字符串：”^[A-Za-z]+$”。</li>
+<li>只能输入由26个大写英文字母组成的字符串：”^[A-Z]+$”。</li>
+<li>只能输入由26个小写英文字母组成的字符串：”^[a-z]+$”。</li>
+<li>只能输入由数字和26个英文字母组成的字符串：”^[A-Za-z0-9]+$”。</li>
+<li>只能输入由数字、26个英文字母或者下划线组成的字符串：”^\w+$”。</li>
+<li>验证用户密码：”^[a-zA-Z]\w{5,17}$”正确格式为：以字母开头，长度在6~18之间，只能包含字符、数字和下划线。</li>
+<li>验证是否含有^%&amp;’,;=?$&quot;等字符：”[^%&amp;’,;=?$\x22]+”。</li>
+<li>只能输入汉字：”^[\u4e00-\u9fa5]{0,}$”</li>
+<li>验证Email地址：”^\w+([-+.]\w+)<em>@\w+([-.]\w+)*.\w+([-.]\w+)</em>$”。</li>
+<li>验证InternetURL：”^http://([\w-]+.)+[\w-]+(/[\w-./?%&amp;=]*)?$”。</li>
+<li>验证电话号码：”^((\d{3,4}-)|\d{3.4}-)?\d{7,8}$”正确格式为：”XXX-XXXXXXX”、”XXXX-XXXXXXXX”、”XXX-XXXXXXX”、”XXX-XXXXXXXX”、”XXXXXXX”和”XXXXXXXX”。</li>
+<li>验证身份证号（15位或18位数字）：”^\d{15}|\d{18}$”。</li>
+<li>验证一年的12个月：”^(0?[1-9]|1[0-2])$”正确格式为：”01”～”09”和”1”～”12”。</li>
+<li>验证一个月的31天：”^((0?[1-9])|((1|2)[0-9])|30|31)$”正确格式为；”01”～”09”和”1”～”31”。</li>
+<li>匹配中文字符的正则表达式： [\u4e00-\u9fa5]</li>
+<li>匹配双字节字符(包括汉字在内)：[^\x00-\xff]</li>
+<li>应用：计算字符串的长度（一个双字节字符长度计2，ASCII字符计1）</li>
+<li>String.prototype.len=function(){return this.replace(/[^\x00-\xff]/g,”aa”).length;}</li>
+<li>匹配空行的正则表达式：\n[\s| ]*\r</li>
+<li>匹配html标签的正则表达式：&lt;(.<em>)&gt;(.</em>)&lt;/(.<em>)&gt;|&lt;(.</em>)/&gt;</li>
+<li>匹配首尾空格的正则表达式：(^\s<em>)|(\s</em>$)</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2018/08/08/java/javase/exception/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/08/java/javase/exception/" itemprop="url">java异常体系结构</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-08T00:00:00+00:00">
+                2018-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaSE</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  509 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="java异常体系结构图"><a href="#java异常体系结构图" class="headerlink" title="java异常体系结构图"></a>java异常体系结构图</h1><p><img src="/uploads/java/javase/%E5%BC%82%E5%B8%B8%E7%BB%93%E6%9E%84%E4%BD%93%E7%B3%BB.png" alt="java异常体系结构"></p>
+<p>从图中可以发现（列出要点，简要说明）：</p>
+<ul>
+<li>所以异常类的父类为Throwable类（表示可抛出），直接继承为Error和Exception两个子类，Error也是异常的一种。</li>
+<li>Error是程序无法处理的错误，它是由JVM产生和抛出的，比如OutOfMemoryError、ThreadDeath等。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。Exception是程序本身可以处理的异常，这种异常分两大类运行时异常和非运行时异常。程序中应当尽可能去处理这些异常。</li>
+<li>RuntimeException（也称不检查异常）：即可以编译通过，一般由程序的逻辑错误引起，开发过程中应尽量避免。例如：NullPointerException，IndexOutOfBoundsException等。<strong>自定义异常一般继承此类</strong>。</li>
+<li>RuntimeException以外的异常（IOException）：编译器在编译阶段进行处理，程序必须处理此类异常否则无法通过编译。</li>
+</ul>
+<h1 id="try-catch-finally-return"><a href="#try-catch-finally-return" class="headerlink" title="try-catch-finally-return"></a>try-catch-finally-return</h1><p>具体例子见(个人demo):</p>
+<blockquote>
+<p><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java" target="_blank" rel="noopener">https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java</a></p>
+</blockquote>
+<h1 id="自定义全局异常处理（配套源码）"><a href="#自定义全局异常处理（配套源码）" class="headerlink" title="自定义全局异常处理（配套源码）"></a>自定义全局异常处理（配套源码）</h1><blockquote>
+<p><a href="https://github.com/MarchNineteen/spring-example/tree/master/spring-example-exception" target="_blank" rel="noopener">https://github.com/MarchNineteen/spring-example/tree/master/spring-example-exception</a></p>
+</blockquote>
+<h1 id="常见的异常打印信息"><a href="#常见的异常打印信息" class="headerlink" title="常见的异常打印信息"></a>常见的异常打印信息</h1><ul>
+<li>getMessage(): 返回此throwable的详细消息字符串，只会获得具体的异常名称，比如说NullPoint 空指针,就告诉你说是空指针。</li>
+<li>printStackTrace():提供对打印的堆栈跟踪信息的编程访问,会打出详细异常,异常名称,出错位置,便于调试用。</li>
+<li>toString():返回此throwable的简短描述。</li>
+</ul>
+<h2 id="注意要点："><a href="#注意要点：" class="headerlink" title="注意要点："></a>注意要点：</h2><ul>
+<li>多个catch模块，子类在先，为了保证所有的catch都有存在的意义</li>
+<li>finally模块在try-catch的return或者异常处理之前执行</li>
+<li>在以下4种特殊情况下，finally块不会被执行：<br>1）在finally语句块中抛出了异常且未处理。<br>2）在前面的代码中用了System.exit()退出程序。<br>3）程序所在的线程死亡。<br>4）CPU出现异常被关闭。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2018/05/17/java/javase/dataType/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/17/java/javase/dataType/" itemprop="url">java数据类型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-17T00:00:00+00:00">
+                2018-05-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaSE</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.7k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-Java-八大基本数据类型及其封装器类（位数为二进制位）"><a href="#1-Java-八大基本数据类型及其封装器类（位数为二进制位）" class="headerlink" title="1.Java 八大基本数据类型及其封装器类（位数为二进制位）"></a>1.Java 八大基本数据类型及其封装器类（位数为二进制位）</h1><h2 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h2><p>char：默认值：\u0000，16位，数据范围：\u0000 - u\ffff，存储Unicode码，用单引号赋值。封装类：Character</p>
+<h2 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h2><p>boolean：默认值：false，1位，只有true和false两个取值。封装类：Boolean</p>
+<h2 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h2><p>整数类型：(最大存储容量为2的n次方减一，范围为负数2的n减一次方至2的n减一次方减一，n为位数，原理见计算机组成原理无符号数与有符号数)</p>
+<p>byte：默认值：0，8位，字节，最大存储数据量是255，存放的数据范围是-128~127之间。封装类：Byte</p>
+<p>short：默认值：0，16位，最大数据存储量是65536，数据范围是-32768~32767之间。封装类：Short</p>
+<p>int：默认值：0，32位，最大数据存储容量是2的32次方减1，数据范围是负的2的31次方到正的2的31次方减1。封装类：Integer</p>
+<p>long：默认值：0，64位，最大数据存储容量是2的64次方减1，数据范围为负的2的63次方到正的2的63次方减1。封装类：Long</p>
+<p>浮点数类型：</p>
+<p>float：默认值：0.0f，32位，数据范围在3.4e-45~1.4e38，直接赋值时必须在数字后加上f或F。封装类：Float</p>
+<p>double：默认值：0.0d，64位，数据范围在4.9e-324~1.8e308，赋值时可以加d或D也可以不加。封装类：Double</p>
+<p>对于数值类型的基本类型的取值范围，我们无需强制去记忆，因为它们的值都已经以常量的形式定义在对应的包装类中了。如：</p>
+<p>基本类型byte 二进制位数：Byte.SIZE最小值：Byte.MIN_VALUE最大值：Byte.MAX_VALUE</p>
+<p>基本类型short二进制位数：Short.SIZE最小值：Short.MIN_VALUE最大值：Short.MAX_VALUE</p>
+<p>基本类型char二进制位数：Character.SIZE最小值：Character.MIN_VALUE最大值：Character.MAX_VALUE</p>
+<p>基本类型double 二进制位数：Double.SIZE最小值：Double.MIN_VALUE最大值：Double.MAX_VALUE</p>
+<blockquote>
+<p>注意：float、double两种类型的最小值与Float.MIN_VALUE、 Double.MIN_VALUE的值并不相同，实际上Float.MIN_VALUE和Double.MIN_VALUE分别指的是 float和double类型所能表示的最小正数。也就是说存在这样一种情况，0到±Float.MIN_VALUE之间的值float类型无法表示，0 到±Double.MIN_VALUE之间的值double类型无法表示。这并没有什么好奇怪的，因为这些范围内的数值超出了它们的精度范围。</p>
+</blockquote>
+<h1 id="2-数据类型之间的转换："><a href="#2-数据类型之间的转换：" class="headerlink" title="2.数据类型之间的转换："></a>2.数据类型之间的转换：</h1><h2 id="简单类型数据间的转换"><a href="#简单类型数据间的转换" class="headerlink" title="简单类型数据间的转换"></a>简单类型数据间的转换</h2><p>自动转换：运算或者方法调用时，低精度自动转化为高精度，从低到高顺序：(byte，short，char)–int–long–float—double；<br>        特例：int到float，long到float，long到double 是不会自动转换的，不然将会丢失精度。</p>
+<p>强制转换：高精度转为低精度，可以使用强制转换；即你必须采用下面这种语句格式： int n=(int)3.14159/2;可以想象，这种转换肯定可能会导致溢出或精度的下降。</p>
+<h2 id="表达式的数据类型自动提升"><a href="#表达式的数据类型自动提升" class="headerlink" title="表达式的数据类型自动提升"></a>表达式的数据类型自动提升</h2><p>注意一下规则：</p>
+<pre><code>①所有的byte,short,char型的值将被提升为int型；
+②如果有一个操作数是long型，计算结果是long型；
+③如果有一个操作数是float型，计算结果是float型；
+④如果有一个操作数是double型，计算结果是double型；
+例， byte b; b=3; b=(byte)(b*3);//必须声明byte。 </code></pre><h2 id="包装类过渡类型转换"><a href="#包装类过渡类型转换" class="headerlink" title="包装类过渡类型转换"></a>包装类过渡类型转换</h2><ul>
+<li>简单类型的变量转换为相应的包装类，可以利用包装类的构造函数。即：Boolean(boolean value)、Character(char value)、Integer(int value)、Long(long value)、Float(float value)、Double(double value)</li>
+<li>在各个包装类中，总有形为××Value()的方法，来得到其对应的简单类型数据。利用这种方法，也可以实现不同数值型变量间的转换，例如，对于一个双精度实型类，intValue()可以得到其对应的整型变量，而doubleValue()可以得到其对应的双精度实型变量</li>
+</ul>
+<h2 id="字符串与其它类型间的转换"><a href="#字符串与其它类型间的转换" class="headerlink" title="字符串与其它类型间的转换"></a>字符串与其它类型间的转换</h2><p>其它类型向字符串的转换：</p>
+<pre><code>①调用类的串转换方法:X.toString();
+②自动转换:X+&quot;&quot;;
+③使用String的方法:String.valueOf(X);</code></pre><p>字符串作为值,向其它类型的转换：</p>
+<pre><code>①先转换成相应的封装器实例,再调用对应的方法转换成其它类型。例：new Float(&quot;11&quot;).doubleValue()
+②静态parseXXX方法。
+    String s = &quot;1&quot;;
+    byte b = Byte.parseByte( s );
+    short t = Short.parseShort( s );
+    int i = Integer.parseInt( s );
+    long l = Long.parseLong( s );
+    Float f = Float.parseFloat( s );
+    Double d = Double.parseDouble( s );
+③Character的getNumericValue(char ch)方法</code></pre><h2 id="自动拆箱与自动装箱"><a href="#自动拆箱与自动装箱" class="headerlink" title="自动拆箱与自动装箱"></a><strong>自动拆箱与自动装箱</strong></h2><p>自动装箱：把基本类型用它们对应的包装类包装起来，使它们具有对象的特质，可以调用所对应的包装类所定义的方法，比如toString()等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Integer i0 &#x3D; new Integer(0);&#x2F;&#x2F;基本的创建封装类对象</span><br><span class="line">Integer i1 &#x3D; 2;&#x2F;&#x2F;自动装箱</span><br><span class="line">Integer i1_ &#x3D; Integer.valueOf(2);&#x2F;&#x2F;自动装箱的本质，调用XX.valueof()方法</span><br><span class="line">&#96;&#96;&#96;    </span><br><span class="line"></span><br><span class="line">自动拆箱：跟自动装箱的方向相反，将Integer及Double这样的包装类的对象重新简化为基本类型的数据(自动拆箱时，一定要确保包装类的引用不为空)</span><br></pre></td></tr></table></figure>
+<p>System.out.println(i1+2);<br>//i1是我们上面通过自动装箱得到的一个integer对象，而这个对象是不能直接进行四则运算的，但是我们却给它+2，<br>这样就必须将integer对象转变为基本数据类型（int），这个过程就是自动拆箱的过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">jdk装箱池（方法区中的常量池）：java的八种基本类型（Byte Short、Integer、Long、Character、Boolean、Float、Double），除Float及Double意外，其它六种都实现了常量池，但是他们只在大于等于-128且小于等于127时才能使用常量池，如果不在此范围内，则会new一个出来，保存在堆内存中。</span><br><span class="line"></span><br><span class="line">例子：</span><br></pre></td></tr></table></figure>
+<pre><code>Integer a = 1;
+Integer b = 1;
+Integer c = 144;
+Integer d = 144;
+Integer a1 = new Integer(1);
+Integer b1 = new Integer(1);
+System.out.println(a == b);         //true
+System.out.println(a.equals(b));    //true
+System.out.println(a1 == b1);       //false
+System.out.println(a1.equals(b1));  //true
+System.out.println(c == d);         //false
+System.out.println(c.equals(d));    //true</code></pre><pre><code>
+在进行==比较的时候，在自动装箱池范围内的数据的引用是相同的，范围外的是不同的。 
+
+# 3.Java引用类型
+Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
+引申：Java中的堆内存、栈内存、静态存储区
+&gt; http://www.cnblogs.com/mingziday/p/4899212.html
+
+栈（stack）存放基础数据类型以及对象的对象的引用
+
+堆（heap）存放由new创建的对象和数组，即堆主要是用来存储对象的
+
+方法区中的静态存储区存储static声明的静态变量
+
+# 4.java字符编码
+&gt; http://kxjhlele.iteye.com/blog/333211
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2018/05/16/java/javase/javaKeyWord/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1180,539 +2668,11 @@ default                    do
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2017/03/16/java/javase/collection/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/03/16/java/javase/collection/" itemprop="url">java集合框架</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-16T00:00:00+00:00">
-                2017-03-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaSE</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.9k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Collection"><a href="#Collection" class="headerlink" title="Collection"></a>Collection</h1><p><img src="http://upload-images.jianshu.io/upload_images/4942449-cc7c288a15f6c092?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="集合框架体系图"></p>
-<h2 id="Set-extends-Collection"><a href="#Set-extends-Collection" class="headerlink" title="Set (extends Collection)"></a>Set (extends Collection)</h2><p>Set是最简单的一种集合。集合中的对象不按特定的方式排序，并且没有重复对象。 Set接口主要实现了两个实现类：</p>
-<ul>
-<li>HashSet： HashSet类按照哈希算法来存取集合中的对象，存取速度比较快</li>
-<li>TreeSet ：TreeSet类实现了SortedSet接口，能够对集合中的对象进行排序。</li>
-<li>LinkedHashSet：具有HashSet的查询速度，且内部使用链表维护元素的顺序(插入的次序)。于是在使用迭代器遍历Set时，结果会按元素插入的次序显示。</li>
-</ul>
-<h2 id="List-extends-Collection"><a href="#List-extends-Collection" class="headerlink" title="List (extends Collection)"></a>List (extends Collection)</h2><p>实际上有两种List: 一种是基本的ArrayList,其优点在于随机访问元素，另一种是更强大的LinkedList,它并不是为快速随机访问设计的，而是具有一套更通用的方法。</p>
-<p>List : 次序是List最重要的特点：它保证维护元素特定的顺序。List为Collection添加了许多方法，使得能够向List中间插入与移除元素(这只推荐LinkedList使用。)一个List可以生成ListIterator,使用它可以从两个方向遍历List,也可以从List中间插入和移除元素。</p>
-<ul>
-<li>ArrayList : 由数组实现的List。允许对元素进行快速随机访问，但是向List中间插入与移除元素的速度很慢。ListIterator只应该用来由后向前遍历ArrayList,而不是用来插入和移除元素。因为那比LinkedList开销要大很多。</li>
-<li>LinkedList : 对顺序访问进行了优化，向List中间插入与删除的开销并不大。随机访问则相对较慢。(使用ArrayList代替。)还具有下列方法：addFirst(), addLast(), getFirst(), getLast(), removeFirst() 和 removeLast(), 这些方法 (没有在任何接口或基类中定义过)使得LinkedList可以当作堆栈、队列和双向队列使用。</li>
-</ul>
-<h2 id="Queen-extends-Collection"><a href="#Queen-extends-Collection" class="headerlink" title="Queen (extends Collection)"></a>Queen (extends Collection)</h2><h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><p>方法put(Object key, Object value)添加一个“值”(想要得东西)和与“值”相关联的“键”(key)(使用它来查找)。方法get(Object key)返回与给定“键”相关联的“值”。可以用containsKey()和containsValue()测试Map中是否包含某个“键”或“值”。标准的Java类库中包含了几种不同的Map：HashMap, TreeMap, LinkedHashMap, WeakHashMap, IdentityHashMap。它们都有同样的基本接口Map，但是行为、效率、排序策略、保存对象的生命周期和判定“键”等价的策略等各不相同。</p>
-<p>执行效率是Map的一个大问题。看看get()要做哪些事，就会明白为什么在ArrayList中搜索“键”是相当慢的。而这正是HashMap提高速度的地方。HashMap使用了特殊的值，称为“散列码”(hash code)，来取代对键的缓慢搜索。“散列码”是“相对唯一”用以代表对象的int值，它是通过将该对象的某些信息进行转换而生成的。所有Java对象都能产生散列码，因为hashCode()是定义在基类Object中的方法。</p>
-<p>HashMap就是使用对象的hashCode()进行快速查询的。此方法能够显着提高性能</p>
-<p>Map : 维护“键值对”的关联性，使你可以通过“键”查找“值”</p>
-<ul>
-<li>HashMap : Map基于散列表的实现。插入和查询“键值对”的开销是固定的。可以通过构造器设置容量capacity和负载因子load factor，以调整容器的性能。</li>
-<li>LinkedHashMap : 类似于HashMap，但是迭代遍历它时，取得“键值对”的顺序是其插入次序，或者是最近最少使用(LRU)的次序。只比HashMap慢一点。而在迭代访问时发而更快，因为它使用链表维护内部次序。</li>
-<li>TreeMap : 基于红黑树数据结构的实现。查看“键”或“键值对”时，它们会被排序(次序由Comparabel或Comparator决定)。TreeMap的特点在于，你得到的结果是经过排序的。TreeMap是唯一的带有subMap()方法的Map，它可以返回一个子树。</li>
-<li>WeakHashMao : 弱键(weak key)Map，Map中使用的对象也被允许释放: 这是为解决特殊问题设计的。如果没有map之外的引用指向某个“键”，则此“键”可以被垃圾收集器回收。</li>
-<li>IdentifyHashMap : 使用==代替equals()对“键”作比较的hash map。专为解决特殊问题而设计</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-9e051ab63d770a2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<h2 id="总结如下："><a href="#总结如下：" class="headerlink" title="总结如下："></a>总结如下：</h2><p><img src="http://upload-images.jianshu.io/upload_images/4942449-51c43e347a13527d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<ul>
-<li>他们之间的区别：<br><img src="http://upload-images.jianshu.io/upload_images/4942449-6c1ae30630a5a608.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></li>
-</ul>
-<h1 id="集合框架初始化容量和扩容比较："><a href="#集合框架初始化容量和扩容比较：" class="headerlink" title="集合框架初始化容量和扩容比较："></a>集合框架初始化容量和扩容比较：</h1><table>
-<thead>
-<tr>
-<th align="left"></th>
-<th align="left">ArrayList</th>
-<th align="left">LinkList</th>
-<th align="left">HashMap</th>
-<th align="left">HashTable</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">jdk1.7</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">初始容量</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">扩容条件</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">扩容大小</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">最大容量</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">jdk1.8</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">初始容量</td>
-<td align="left">10</td>
-<td align="left"></td>
-<td align="left">1 &lt;&lt; 4(16)</td>
-<td align="left">11</td>
-</tr>
-<tr>
-<td align="left">扩容条件</td>
-<td align="left">在第一次add时扩容检测</td>
-<td align="left"></td>
-<td align="left">扩容加载因子为(0.75)，第一个临界点在当HashMap中元素的数量大于table数组长度<em>加载因子（16</em>0.75=12）</td>
-<td align="left">扩容加载因子(0.75)，当超出默认长度（int）（11*0.75）=8时</td>
-</tr>
-<tr>
-<td align="left">扩容大小</td>
-<td align="left">oldCapacity + (oldCapacity &gt;&gt; 1)，即大约原集合长度的1.5倍</td>
-<td align="left"></td>
-<td align="left">oldThr &lt;&lt; 1(原长度*2)</td>
-<td align="left">old*2+1(代码int newCapacity = (oldCapacity &lt;&lt; 1) + 1)</td>
-</tr>
-<tr>
-<td align="left">最大容量</td>
-<td align="left">Integer.MAX_VALUE - 8</td>
-<td align="left"></td>
-<td align="left">1 &lt;&lt; 30</td>
-<td align="left">Integer.MAX_VALUE - 8</td>
-</tr>
-</tbody></table>
-<p>对于java中的各种集合类，根据底层的具体实现，小结了一下大致有3种扩容的方式：</p>
-<p>1、对于以散列表为底层数据结构实现的，（譬如hashset，hashmap，hashtable等），扩容方式为当链表数组的非空元素除以数组大小超过加载因子时，链表数组长度变大（乘以2+1），然后进行重新散列。</p>
-<p>2、对于以数组为底层数据结构实现的，譬如ArrayList，当数组满了之后，数组长度变大 oldCapacity + (oldCapacity &gt;&gt; 1)，然后将原数组中的数据复制到新数组中。</p>
-<p>3、对于以链表结构实现的，譬如TreeSet，TreeMap，则是动态增加元素~~即每次加１即可。</p>
-<h2 id="注意点："><a href="#注意点：" class="headerlink" title="注意点："></a>注意点：</h2><p><strong>为啥arrayList最大值是Integer.MAX_VALUE - 8</strong>：<br>数组作为一个对象，需要一定的内存存储对象头信息，对象头信息最大占用内存不可超过8字节。</p>
-<h2 id="部分源码实现过程："><a href="#部分源码实现过程：" class="headerlink" title="部分源码实现过程："></a>部分源码实现过程：</h2><h3 id="hashMap-put过程"><a href="#hashMap-put过程" class="headerlink" title="hashMap put过程"></a>hashMap put过程</h3><p>1.判断hash表是否为空，为空resize()方法创建表<br>2.根据hash值获得hash表中桶的头结点，若头结点为空直接调用newNode()添加结点<br>3.如果发生了hash冲突，先得到头结点进行比较，如果相同，替换节点值<br>4.如果头结点头结点不相同，且此时已处于红黑树状态，调用putTreeVal()添加入树中<br>5.如果还是处于链表状态，从头开始遍历链表，一旦找到相同的结点，就跳出循环，若到链表末尾，则添加一个结点<br>6.若添加后达到红黑树的阈值，则转换为红黑树(从treeifyBin方法可以看到，当容量小于64时，不会进行红黑树转换，只会扩容)<br>7.如果是添加一个数据，size将加一，如果达到阈值，则resize()扩容</p>
-<h3 id="hashMap-resize"><a href="#hashMap-resize" class="headerlink" title="hashMap resize"></a>hashMap resize</h3><p>首先获取新容量以及新阈值，然后根据新容量创建新表。如果是扩容操作，则需要进行rehash操作，通过e.hash&amp;oldCap将链表分为两列，更好地均匀分布在新表中。 </p>
-<h3 id="linkList-中间插入过程"><a href="#linkList-中间插入过程" class="headerlink" title="linkList 中间插入过程"></a>linkList 中间插入过程</h3><p>例：在A，B两个连续结点中插入C结点,形成ACB</p>
-<p>1.创建一个新结点，将新节点的后继指针指向B，前继指针指向A<br>2.将B的前指针指向C<br>3.根据A是否为空判断，A为空该节点为头结点，重置first结点；不为空A的后指针指向C</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2017/02/28/servlet/filter/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/02/28/servlet/filter/" itemprop="url">Filter详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-28T00:00:00+00:00">
-                2017-02-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/servlet/" itemprop="url" rel="index">
-                    <span itemprop="name">servlet</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  725 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="web-xml中元素执行的顺序listener-gt-filter-gt-struts拦截器-gt-servlet。"><a href="#web-xml中元素执行的顺序listener-gt-filter-gt-struts拦截器-gt-servlet。" class="headerlink" title="web.xml中元素执行的顺序listener-&gt;filter-&gt;struts拦截器-&gt;servlet。"></a>web.xml中元素执行的顺序listener-&gt;filter-&gt;struts拦截器-&gt;servlet。</h1><ul>
-<li>1.过滤器的概念</li>
-</ul>
-<p>Java中的Filter 并不是一个标准的Servlet ，它不能处理用户请求，也不能对客户端生成响应。 主要用于对HttpServletRequest 进行预处理，也可以对HttpServletResponse 进行后处理，是个典型的处理链。</p>
-<p>优点：过滤链的好处是，执行过程中任何时候都可以打断，只要不执行chain.doFilter()就不会再执行后面的过滤器和请求的内容。而在实际使用时，就要特别注意过滤链的执行顺序问题</p>
-<ul>
-<li>2.过滤器的作用描述</li>
-</ul>
-<p>在HttpServletRequest 到达Servlet 之前，拦截客户的HttpServletRequest 。根据需要检查HttpServletRequest ，也可以修改HttpServletRequest 头和数据。在HttpServletResponse 到达客户端之前，拦截HttpServletResponse 。根据需要检查HttpServletResponse ，可以修改HttpServletResponse 头和数据。</p>
-<ul>
-<li>3.过滤器的执行流程</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-1824dc9cb75ad1b0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<ul>
-<li>4.Filter接口</li>
-</ul>
-<p>4.1 如何驱动</p>
-<p>在 web 应用程序启动时，web 服务器将根据 web.xml 文件中的配置信息来创建每个注册的 Filter 实例对象，并将其保存在服务器的内存中</p>
-<p>4.2 方法介绍</p>
-<p>init()  Init 方法在 Filter 生命周期中仅执行一次，web 容器在调用 init 方法时   tomcat启动时出调用</p>
-<p>doFilter()  Filter 链的执行  过滤方法在请求发出后立即调用，过滤特定的URL</p>
-<p>destory()  在Web容器卸载 Filter 对象之前被调用。该方法在Filter的生命周期中仅执行一次。在这个方法中，可以释放过滤器使用的资源。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-cdddc0cc56b94c13.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<ul>
-<li>5.FilterChain接口</li>
-</ul>
-<p>5.1 如何实例化    代表当前 Filter 链的对象。由容器实现，容器将其实例作为参数传入过滤器对象的doFilter()方法中</p>
-<p>5.2 作用   调用过滤器链中的下一个过滤器</p>
-<ul>
-<li>filter实例：</li>
-</ul>
-<p>web.xml配置:<br><img src="http://upload-images.jianshu.io/upload_images/4942449-d4cbf63d54949495.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>编码拦截器：<br><img src="http://upload-images.jianshu.io/upload_images/4942449-8e160d51f7cc6291.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>日志拦截器：<br><img src="http://upload-images.jianshu.io/upload_images/4942449-37a534181fd5c6ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>HelloServlet类：<br><img src="http://upload-images.jianshu.io/upload_images/4942449-19a6c30a4c2d5be0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>结果：<br><img src="http://upload-images.jianshu.io/upload_images/4942449-38eda2225f71a42c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<ul>
-<li>总结：</li>
-</ul>
-<p>1.过滤器执行流程</p>
-<p>2.常用过滤器</p>
-<h1 id="FilterConfig接口"><a href="#FilterConfig接口" class="headerlink" title="FilterConfig接口"></a>FilterConfig接口</h1><p>1、与普通的Servlet程序一样，Filter程序也很可能需要访问Servlet容器。Servlet规范将代表ServletContext对象和Filter的配置参数信息都封装到一个称为FilterConfig的对象中。</p>
-<p>2、FilterConfig接口则用于定义FilterConfig对象应该对外提供的方法，以便在Filter程序中可以调用这些方法来获取ServletContext对象，以及获取在web.xml文件中为Filter设置的友好名称和初始化参数。</p>
-<p>3、FilterConfig接口定义的各个方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public interfaceFilterConfig &#123;</span><br><span class="line"></span><br><span class="line">    String getFilterName();</span><br><span class="line"></span><br><span class="line">    ServletContext getServletContext();</span><br><span class="line"></span><br><span class="line">    String getInitParameter(String var1);</span><br><span class="line"></span><br><span class="line">    Enumeration getInitParameterNames();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>getFilterName方法，返回元素的设置值。</p>
-<p>getServletContext方法，返回FilterConfig对象中所包装的ServletContext对象的引用。</p>
-<p>getInitParameter方法，用于返回在web.xml文件中为Filter所设置的某个名称的初始化的参数值。</p>
-<p>getInitParameterNames方法，返回一个Enumeration集合对象。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+    <a class="extend prev" rel="prev" href="/page/5/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/">&gt;</a>
   </nav>
 
 
@@ -1762,7 +2722,7 @@ default                    do
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-count">62</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1874,7 +2834,7 @@ default                    do
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">65.6k</span>
+    <span title="Site words total count">72.6k</span>
   
 </div>
 
@@ -1901,7 +2861,7 @@ default                    do
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共65.6k字</span>
+  <span class="post-count">博客全站共72.6k字</span>
 </div>
 
         

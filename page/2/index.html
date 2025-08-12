@@ -299,6 +299,1255 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/10/31/java/coucurrent/3.CountDownLatch&Semaphore/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/31/java/coucurrent/3.CountDownLatch&Semaphore/" itemprop="url">CountDownLatch&Semaphore-共享锁</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-31T00:00:00+00:00">
+                2021-10-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  35 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-Semaphore-是什么？"><a href="#1-Semaphore-是什么？" class="headerlink" title="1. Semaphore 是什么？"></a>1. Semaphore 是什么？</h1><p>Semaphore 字面意思是信号量的意思，它的作用是控制访问特定资源的线程数目。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/10/31/java/jvm/jvm%E8%B0%83%E4%BC%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/31/java/jvm/jvm%E8%B0%83%E4%BC%98/" itemprop="url">JVM调优</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-31T00:00:00+00:00">
+                2021-10-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.3k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p><a href="https://www.cnblogs.com/likehua/p/3369823.html" target="_blank" rel="noopener">https://www.cnblogs.com/likehua/p/3369823.html</a></p>
+</blockquote>
+<blockquote>
+<p>实战<a href="https://juejin.cn/post/7025410482341150751?utm_source=gold_browser_extension#heading-8" target="_blank" rel="noopener">https://juejin.cn/post/7025410482341150751?utm_source=gold_browser_extension#heading-8</a><br><a href="https://blog.csdn.net/weixin_42081445/article/details/144562955" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42081445/article/details/144562955</a></p>
+</blockquote>
+<h1 id="1-堆大小设置"><a href="#1-堆大小设置" class="headerlink" title="1.堆大小设置"></a>1.堆大小设置</h1><p>典型设置</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k</p>
+<ul>
+<li><p>-Xmx3550m:设置JVM最大可用内存为3550M</p>
+</li>
+<li><p>-Xms3550m:设置JVM初始内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存</p>
+</li>
+<li><p>-Xmn2g:设置年轻代大小为2G。整个JVM内存大小=年轻代大小 + 年老代大小 + 持久代大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。<br>此值对系统性能影响较大，Sun官方推荐配置为整个堆的3/8</p>
+</li>
+<li><p>-Xss128k：设置每个线程的堆栈大小。JDK5.0以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。更具应用的线程所需内存大小进行调整。<br>在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。</p>
+</li>
+</ul>
+<p>java -Xmx3550m -Xms3550m -Xss128k -XX:NewRatio=4 -XX:SurvivorRatio=4 -XX:MaxPermSize=16m -XX:MaxTenuringThreshold=0</p>
+<ul>
+<li><p>-XX:NewRatio=4:设置年轻代（包括Eden和两个Survivor区）与年老代的比值（除去持久代）。设置为4，则年轻代与年老代所占比值为1：4，年轻代占整个堆栈的1/5</p>
+</li>
+<li><p>-XX:SurvivorRatio=4：设置年轻代中Eden区与Survivor区的大小比值。设置为4，则两个Survivor区与一个Eden区的比值为2:4，一个Survivor区占整个年轻代的1/6</p>
+</li>
+<li><p>-XX:MaxPermSize=16m:设置持久代大小为16m。</p>
+</li>
+<li><p>-XX:MaxTenuringThreshold=0：设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代。<br>对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间，<br>增加在年轻代即被回收的概论。</p>
+</li>
+</ul>
+<h1 id="2-回收器选择"><a href="#2-回收器选择" class="headerlink" title="2.回收器选择"></a>2.回收器选择</h1><p>JVM给了三种选择：<strong>串行收集器、并行收集器、并发收集器</strong>，但是串行收集器只适用于小数据量的情况，所以这里的选择主要针对并行收集器和并发收集器。<br>默认情况下，JDK5.0以前都是使用串行收集器，如果想使用其他收集器需要在启动时加入相应参数。JDK5.0以后，JVM会根据当前系统配置进行判断。</p>
+<h2 id="2-1-吞吐量优先的并行收集器"><a href="#2-1-吞吐量优先的并行收集器" class="headerlink" title="2.1 吞吐量优先的并行收集器"></a>2.1 吞吐量优先的并行收集器</h2><p>如上文所述，并行收集器主要以到达一定的吞吐量为目标，适用于科学技术和后台处理等。</p>
+<p>典型配置：<br>java -Xmx3800m -Xms3800m -Xmn2g -Xss128k <strong>-XX:+UseParallelGC -XX:ParallelGCThreads=20</strong></p>
+<p>-XX:+UseParallelGC：选择垃圾收集器为并行收集器。此配置仅对年轻代有效。即上述配置下，年轻代使用并发收集，而年老代仍旧使用串行收集。<br>-XX:ParallelGCThreads=20：配置并行收集器的线程数，即：同时多少个线程一起进行垃圾回收。此值最好配置与处理器数目相等。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20 <strong>-XX:+UseParallelOldGC</strong><br>-XX:+UseParallelOldGC：配置年老代垃圾收集方式为并行收集。JDK6.0支持对年老代并行收集。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k <strong>-XX:+UseParallelGC  -XX:MaxGCPauseMillis=100</strong><br>-XX:MaxGCPauseMillis=100:设置每次年轻代垃圾回收的最长时间，如果无法满足此时间，JVM会自动调整年轻代大小，以满足此值。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC  -XX:MaxGCPauseMillis=100 <strong>-XX:+UseAdaptiveSizePolicy</strong><br>-XX:+UseAdaptiveSizePolicy：设置此选项后，并行收集器会自动选择年轻代区大小和相应的Survivor区比例，以达到目标系统规定的最低相应时间或者收集频率等，此值建议使用并行收集器时，一直打开。</p>
+<h2 id="2-2-响应时间优先的并发收集器"><a href="#2-2-响应时间优先的并发收集器" class="headerlink" title="2.2 响应时间优先的并发收集器"></a>2.2 响应时间优先的并发收集器</h2><p>如上文所述，并发收集器主要是保证系统的响应时间，减少垃圾收集时的停顿时间。适用于应用服务器、电信领域等。</p>
+<p>典型配置：<br>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:ParallelGCThreads=20 <strong>-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</strong><br>-XX:+UseConcMarkSweepGC：设置年老代为并发收集。测试中配置这个以后，-XX:NewRatio=4的配置失效了，原因不明。所以，此时年轻代大小最好用-Xmn设置。<br>-XX:+UseParNewGC:设置年轻代为并行收集。可与CMS收集同时使用。JDK5.0以上，JVM会根据系统配置自行设置，所以无需再设置此值。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseConcMarkSweepGC <strong>-XX:CMSFullGCsBeforeCompaction=5 -XX:+UseCMSCompactAtFullCollection</strong><br>-XX:CMSFullGCsBeforeCompaction：由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此值设置运行多少次GC以后对内存空间进行压缩、整理。<br>-XX:+UseCMSCompactAtFullCollection：打开对年老代的压缩。可能会影响性能，但是可以消除碎片</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/10/11/active/appH5Token/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/11/active/appH5Token/" itemprop="url">app嵌入H5如何同步登录状态</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-11T00:00:00+00:00">
+                2021-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/active/" itemprop="url" rel="index">
+                    <span itemprop="name">active</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  149 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
+<p>优化的方向：<br>A.APP登陆状态的变化是请求页面，登录后使用webview调用对应域名下的接口实现H5的登录B.每次请求H5url增加get登陆的信息，例如访问 index.php变成index.php？a=xxx通过附加信息同步登录状态<br>优化的方案不知道那个更好一点</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/10/11/active/pay/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/11/active/pay/" itemprop="url">支付系统可能遇到的问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-11T00:00:00+00:00">
+                2021-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/active/" itemprop="url" rel="index">
+                    <span itemprop="name">active</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  157 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>(资源)</p>
+<p>资源不可用</p>
+<p>资源响应超时</p>
+<p>(外部服务)</p>
+<p>通信中断</p>
+<p>服务不可用</p>
+<p>外部服务器响应超时</p>
+<p>外部服务违背功能契约</p>
+<p>应对方式(参考)：原则：避免发生，降低概率，控制影响，快速恢复。</p>
+<table>
+<thead>
+<tr>
+<th>故障条件</th>
+<th>应对方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>超量请求</td>
+<td>配额控制，如订单号提前生成，控制额度</td>
+</tr>
+<tr>
+<td>重复请求</td>
+<td>幂等控制</td>
+</tr>
+<tr>
+<td>并发请求</td>
+<td>并发控制netty、mina等</td>
+</tr>
+<tr>
+<td>请求积压</td>
+<td>请求丢弃</td>
+</tr>
+<tr>
+<td>服务/资源响应超时</td>
+<td>时间控制</td>
+</tr>
+<tr>
+<td>可恢复通信故障</td>
+<td>合理重试</td>
+</tr>
+<tr>
+<td>处理中断</td>
+<td>事务/补偿机制</td>
+</tr>
+</tbody></table>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" itemprop="url">dubbo注册中心</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
+                2021-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  520 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="注册中心的作用"><a href="#注册中心的作用" class="headerlink" title="注册中心的作用"></a>注册中心的作用</h1><p>为了达到服务器动态扩容的目的，注册中心存储的服务器的地址信息和可用状态，并实时推送给订阅了相关服务的客户端。</p>
+<p>一个完整的注册中心需要实现以下功能：</p>
+<p>1.接收服务端的注册和客户端的引用，即 将服务与消费相关联，并支持多对多。<br>2.支持服务端宕机后能即时清楚其状态。<br>3.注册中心重启后，可以自动恢复注册的数据和订阅的请求。<br>4.注册中心自身的集群。</p>
+<h1 id="Dubbo所支持的注册中心"><a href="#Dubbo所支持的注册中心" class="headerlink" title="Dubbo所支持的注册中心"></a>Dubbo所支持的注册中心</h1><p>1.Multicast注册中心:</p>
+<ul>
+<li>基于组网广播技术，只能用在局域网内，一般用于简单的测试服务</li>
+</ul>
+<p>2.zookeeper 注册中心(推荐)</p>
+<p>3.Redis注册中心</p>
+<p>4.Simple注册中心</p>
+<h1 id="Redis-注册中心"><a href="#Redis-注册中心" class="headerlink" title="Redis 注册中心"></a>Redis 注册中心</h1><p>关于Redis注册中心我们需要了解两点，</p>
+<ol>
+<li>如何存储服务的注册与订阅关系</li>
+<li>是当服务状态改变时如何即时更新</li>
+</ol>
+<h2 id="如何存储服务的注册与订阅关系"><a href="#如何存储服务的注册与订阅关系" class="headerlink" title="如何存储服务的注册与订阅关系"></a>如何存储服务的注册与订阅关系</h2><p>使用redis的发布订阅(pub/sub)模型。</p>
+<p>redis中存储的数据结构。</p>
+<p>服务端：<br>Reids中增加了一个Hash 类型的记录，其key为/dubbo/tuling.dubbo.server.UserService/providers。Value中分别存储了两个服务提供者的URL和有效期。</p>
+<p><img src="/uploads/dubbo/Redis%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E5%9E%8B.png" alt="Redis服务端模型.png"></p>
+<p>客户端:<br>主 Key 为服务名和类型 </p>
+<p>Map 中的 Key 为 URL 地址</p>
+<p>Map 中的 Value 为过期时间，用于判断脏数据，脏数据由监控中心删除</p>
+<h2 id="是当服务状态改变时如何即时更新"><a href="#是当服务状态改变时如何即时更新" class="headerlink" title="是当服务状态改变时如何即时更新"></a>是当服务状态改变时如何即时更新</h2><p>这里Dubbo采用的是定时心跳的机制 来维护服务URL的有效期，默认每30秒更新一次有效期。即URL对应的毫秒值。<br>具体代码参见：com.alibaba.dubbo.registry.redis.RedisRegistry#expireExecutor</p>
+<p><img src="/uploads/dubbo/Redis%E5%BF%83%E8%B7%B3.png" alt="Redis心跳.png"></p>
+<p>com.alibaba.dubbo.registry.redis.RedisRegistry#deferExpired<br>com.alibaba.dubbo.registry.integration.RegistryDirectory<br>com.alibaba.dubbo.registry.support.ProviderConsumerRegTable</p>
+<h1 id="Zookeeper-注册中心"><a href="#Zookeeper-注册中心" class="headerlink" title="Zookeeper 注册中心"></a>Zookeeper 注册中心</h1><p>Zookeper是一个树型的目录服务，本身支持变更推送相比redis的实现Publish/Subscribe功能更稳定。</p>
+<p>结构：<br><img src="/uploads/dubbo/Zookeeper%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83.png" alt="Zookeeper注册中心.png"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo调用模块</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
+                2021-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.3k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一、Dubbo-调用模块基本组成"><a href="#一、Dubbo-调用模块基本组成" class="headerlink" title="一、Dubbo 调用模块基本组成"></a>一、Dubbo 调用模块基本组成</h2><ol>
+<li>透明代理：通过动态代理技术，屏蔽远程调用细节以提高编程友好性。</li>
+<li>负载均衡：当有多个提供者是，如何选择哪个进行调用的负载算法。</li>
+<li>容错机制：当服务调用失败时采取的策略</li>
+<li>调用方式：支持同步调用、异步调用</li>
+</ol>
+<p><img src="/uploads/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97.png" alt="调用模块.png"></p>
+<h3 id="透明代理"><a href="#透明代理" class="headerlink" title="透明代理"></a>透明代理</h3><p>参见源码：<br>com.alibaba.dubbo.config.ReferenceConfig#createProxy<br>com.alibaba.dubbo.common.bytecode.ClassGenerator<br>com.alibaba.dubbo.rpc.proxy.javassist.JavassistProxyFactory</p>
+<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>Dubbo 目前官方支持以下负载均衡策略：</p>
+<ol>
+<li>随机(random)：按权重设置随机概率。此为默认算法.</li>
+<li>轮循(roundrobin):按公约后的权重设置轮循比率。</li>
+<li>最少活跃调用数(leastactive):相同活跃数的随机，活跃数指调用前后计数差。</li>
+<li>一致性Hash(consistenthash ):相同的参数总是发到同一台机器</li>
+</ol>
+<p>设置方式支持如下四种方式设置，优先级由低至高:</p>
+<!-- 服务端级别-->
+<p>&lt;dubbo:service interface=”…” loadbalance=”roundrobin” /&gt;</p>
+<!-- 客户端级别-->
+<p>&lt;dubbo:reference interface=”…” loadbalance=”roundrobin” /&gt;</p>
+<!-- 服务端方法级别-->
+<p>&lt;dubbo:service interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
+<!-- 客户端方法级别-->
+<p>&lt;dubbo:reference interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
+<p>一至性hash 算法详解：<br><img src="/uploads/dubbo/%E4%B8%80%E8%87%B3%E6%80%A7hash.png" alt="一至性hash.png"></p>
+<h3 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h3><p>Dubbo 官方目前支持以下容错策略：</p>
+<ol>
+<li>失败自动切换：调用失败后基于retries=“2”属性重试其它服务器</li>
+<li>快速失败：快速失败，只发起一次调用，失败立即报错。</li>
+<li>勿略失败：失败后勿略，不抛出异常给客户端。</li>
+<li>失败重试：失败自动恢复，后台记录失败请求，定时重发。通常用于消息通知操作</li>
+<li>并行调用:只要一个成功即返回，并行调用指定数量机器，可通过 forks=”2”来设置最大并行数。</li>
+<li>广播调用：广播调用所有提供者，逐个调用，任意一台报错则报错 设置方式支持如下两种方式设置，优先级由低至高<br>&lt;!–<br>Failover 失败自动切换 retries=”1” 切换次数<br>Failfast 快速失败<br>Failsafe 勿略失败<br>Failback 失败重试，5秒后仅重试一次<br>Forking 并行调用 forks=”2” 最大并行数<br>Broadcast 广播调用</li>
+</ol>
+<p>–&gt;<br>&lt;dubbo:service interface=”…” cluster=”broadcast” /&gt;<br>&lt;dubbo:reference interface=”…” cluster=”broadcast”/ &gt;<br>注：容错机制 在基于 API设置时无效 如 referenceConfig.setCluster(“failback”); 经测试不启作用 </p>
+<h3 id="异步调用"><a href="#异步调用" class="headerlink" title="异步调用"></a>异步调用</h3><p>异步调用是指发起远程调用之后获取结果的方式。</p>
+<ol>
+<li>同步等待结果返回（默认）</li>
+<li>异步等待结果返回</li>
+<li>不需要返回结果</li>
+</ol>
+<p>Dubbo 中关于异步等待结果返回的实现流程如下图：</p>
+<p><img src="/uploads/dubbo/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8.png" alt="异步调用.png"></p>
+<p>异步调用配置:<br>&lt;dubbo:reference id=”asyncDemoService”<br>interface=”com.tuling.teach.service.async.AsyncDemoService”&gt;</p>
+<!-- 异步调async：true 异步调用 false 同步调用-->
+<p>&lt;dubbo:method name=”sayHello1” async=”false”/&gt;<br>&lt;dubbo:method name=”sayHello2” async=”false”/&gt;<br>&lt;dubbo:method name=”notReturn” return=”false”/&gt;<br></p>
+<p>注：在进行异步调用时 容错机制不能为  cluster=”forking” 或  cluster=”broadcast”</p>
+<h2 id="二、Dubbo-调用非典型使用场景"><a href="#二、Dubbo-调用非典型使用场景" class="headerlink" title="二、Dubbo 调用非典型使用场景"></a>二、Dubbo 调用非典型使用场景</h2><h3 id="泛化提供-amp-引用"><a href="#泛化提供-amp-引用" class="headerlink" title="泛化提供&amp;引用"></a>泛化提供&amp;引用</h3><p>泛化提供<br>是指不通过接口的方式直接将服务暴露出去。通常用于Mock框架或服务降级框架实现。</p>
+<p>泛化引用<br>是指不通过常规接口的方式去引用服务，通常用于测试框架</p>
+<h3 id="隐示传参"><a href="#隐示传参" class="headerlink" title="隐示传参"></a>隐示传参</h3><p>是指通过非常方法参数传递参数，类似于http 调用当中添加cookie值。通常用于分布式追踪框架的实现。使用方式如下 ：<br>//客户端隐示设置值<br>RpcContext.getContext().setAttachment(“index”, “1”); // 隐式传参，后面的远程调用都会隐<br>//服务端隐示获取值<br>String index = RpcContext.getContext().getAttachment(“index”);</p>
+<h3 id="令牌验证"><a href="#令牌验证" class="headerlink" title="令牌验证"></a>令牌验证</h3><p>通过令牌验证在注册中心控制权限，以决定要不要下发令牌给消费者，可以防止消费者绕过注册中心访问提供者，<br>另外通过注册中心可灵活改变授权方式，而不需修改或升级提供者</p>
+<h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><p>类似于 WEB 中的Filter ，Dubbo本身提供了Filter 功能用于拦截远程方法的调用。其支持自定义过滤器与官方的过滤器使用：</p>
+<p>演示添加日志访问过滤:</p>
+<p>&lt;dubbo:provider filter=”accesslog” accesslog=”logs/dubbo.log”/&gt;<br>以上配置 就是 为 服务提供者 添加 日志记录过滤器， 所有访问日志将会集中打印至 accesslog 当中</p>
+<h2 id="三、Dubbo调用流程"><a href="#三、Dubbo调用流程" class="headerlink" title="三、Dubbo调用流程"></a>三、Dubbo调用流程</h2><p><img src="/uploads/dubbo/Dubbo%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png" alt="Dubbo调用流程.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//------ 6协议 调用</span></span><br><span class="line">doInvoke:<span class="number">77</span>, DubboInvoker &#123;org.apache.dubbo.rpc.protocol.dubbo&#125;</span><br><span class="line">invoke:<span class="number">155</span>, AbstractInvoker &#123;org.apache.dubbo.rpc.protocol&#125;</span><br><span class="line"><span class="comment">//------ 5异步转同步</span></span><br><span class="line">invoke:<span class="number">52</span>, AsyncToSyncInvoker &#123;org.apache.dubbo.rpc.protocol&#125; <span class="comment">// 异步转同步 ,返回结果之前进行阻塞调用线程</span></span><br><span class="line"><span class="comment">//----- 4过滤器链</span></span><br><span class="line">invoke:<span class="number">92</span>, MonitorFilter &#123;org.apache.dubbo.monitor.support&#125;  <span class="comment">// 过滤链-&gt; 监控器</span></span><br><span class="line">invoke:<span class="number">54</span>, FutureFilter &#123;org.apache.dubbo.rpc.protocol.dubbo.filter&#125;    <span class="comment">//过滤链-&gt; 回调参数</span></span><br><span class="line">invoke:<span class="number">14</span>, ProviderHelloFilter &#123;com.wyb.dubbo&#125;  <span class="comment">// 过滤链-&gt; 自定义过滤器</span></span><br><span class="line">invoke:<span class="number">60</span>, ConsumerContextFilter &#123;org.apache.dubbo.rpc.filter&#125; <span class="comment">// 过滤链-&gt; 消费者环境初始化</span></span><br><span class="line"><span class="comment">//------3集群处理</span></span><br><span class="line">doInvoke:<span class="number">82</span>, FailoverClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">// 集服-失败重试</span></span><br><span class="line">invoke:<span class="number">248</span>, AbstractClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">//</span></span><br><span class="line"><span class="comment">//----- Mock服务</span></span><br><span class="line">invoke:<span class="number">78</span>, MockClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support.wrapper&#125; <span class="comment">// mock 服务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//----- 2动态代理 --透明化</span></span><br><span class="line">invoke:<span class="number">55</span>, InvokerInvocationHandler &#123;org.apache.dubbo.rpc.proxy&#125;<span class="comment">// 代理的中间接口</span></span><br><span class="line">getUser:-<span class="number">1</span>, proxy0 &#123;org.apache.dubbo.common.bytecode&#125; <span class="comment">// 代理对象</span></span><br><span class="line"><span class="comment">//----- 1调用客户端</span></span><br><span class="line">main:<span class="number">53</span>, DubboClient &#123;com.wyb.dubbo&#125;  <span class="comment">// 客户端</span></span><br><span class="line"></span><br><span class="line">RegistryProtocol --&gt; Cluster --&gt; MockClusterInvoker:ClusterInvoker-&gt;DubboProtocol-&gt;FilterChain:AsyncToSyncInvoker:DubboInvoker</span><br><span class="line">协议--》(注册协议)---&gt;MockClusterInvoker ---》ClusterInvoker---&gt; RegistryDirectory ---&gt;(DubboProtcol)-&gt;FilterChain--&gt;DubboInvoker</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -616,448 +1865,6 @@
 <p><strong>Dubbo 协议编解码实现过程*</strong>(源码来源于<em>*dubbo2.5.8 )</em></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、DubboCodec.encodeRequestData() 116L &#x2F;&#x2F; 编码request</span><br><span class="line">2、DecodeableRpcInvocation.decode()  89L   &#x2F;&#x2F; 解码request</span><br><span class="line">3、DubboCodec.encodeResponseData()   184L  &#x2F;&#x2F; 编码response    </span><br><span class="line">4、DecodeableRpcResult.decode()      73L   &#x2F;&#x2F; 解码response</span><br></pre></td></tr></table></figure>
 
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo调用模块</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
-                2021-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.3k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  5 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一、Dubbo-调用模块基本组成"><a href="#一、Dubbo-调用模块基本组成" class="headerlink" title="一、Dubbo 调用模块基本组成"></a>一、Dubbo 调用模块基本组成</h2><ol>
-<li>透明代理：通过动态代理技术，屏蔽远程调用细节以提高编程友好性。</li>
-<li>负载均衡：当有多个提供者是，如何选择哪个进行调用的负载算法。</li>
-<li>容错机制：当服务调用失败时采取的策略</li>
-<li>调用方式：支持同步调用、异步调用</li>
-</ol>
-<p><img src="/uploads/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97.png" alt="调用模块.png"></p>
-<h3 id="透明代理"><a href="#透明代理" class="headerlink" title="透明代理"></a>透明代理</h3><p>参见源码：<br>com.alibaba.dubbo.config.ReferenceConfig#createProxy<br>com.alibaba.dubbo.common.bytecode.ClassGenerator<br>com.alibaba.dubbo.rpc.proxy.javassist.JavassistProxyFactory</p>
-<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>Dubbo 目前官方支持以下负载均衡策略：</p>
-<ol>
-<li>随机(random)：按权重设置随机概率。此为默认算法.</li>
-<li>轮循(roundrobin):按公约后的权重设置轮循比率。</li>
-<li>最少活跃调用数(leastactive):相同活跃数的随机，活跃数指调用前后计数差。</li>
-<li>一致性Hash(consistenthash ):相同的参数总是发到同一台机器</li>
-</ol>
-<p>设置方式支持如下四种方式设置，优先级由低至高:</p>
-<!-- 服务端级别-->
-<p>&lt;dubbo:service interface=”…” loadbalance=”roundrobin” /&gt;</p>
-<!-- 客户端级别-->
-<p>&lt;dubbo:reference interface=”…” loadbalance=”roundrobin” /&gt;</p>
-<!-- 服务端方法级别-->
-<p>&lt;dubbo:service interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
-<!-- 客户端方法级别-->
-<p>&lt;dubbo:reference interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
-<p>一至性hash 算法详解：<br><img src="/uploads/dubbo/%E4%B8%80%E8%87%B3%E6%80%A7hash.png" alt="一至性hash.png"></p>
-<h3 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h3><p>Dubbo 官方目前支持以下容错策略：</p>
-<ol>
-<li>失败自动切换：调用失败后基于retries=“2”属性重试其它服务器</li>
-<li>快速失败：快速失败，只发起一次调用，失败立即报错。</li>
-<li>勿略失败：失败后勿略，不抛出异常给客户端。</li>
-<li>失败重试：失败自动恢复，后台记录失败请求，定时重发。通常用于消息通知操作</li>
-<li>并行调用:只要一个成功即返回，并行调用指定数量机器，可通过 forks=”2”来设置最大并行数。</li>
-<li>广播调用：广播调用所有提供者，逐个调用，任意一台报错则报错 设置方式支持如下两种方式设置，优先级由低至高<br>&lt;!–<br>Failover 失败自动切换 retries=”1” 切换次数<br>Failfast 快速失败<br>Failsafe 勿略失败<br>Failback 失败重试，5秒后仅重试一次<br>Forking 并行调用 forks=”2” 最大并行数<br>Broadcast 广播调用</li>
-</ol>
-<p>–&gt;<br>&lt;dubbo:service interface=”…” cluster=”broadcast” /&gt;<br>&lt;dubbo:reference interface=”…” cluster=”broadcast”/ &gt;<br>注：容错机制 在基于 API设置时无效 如 referenceConfig.setCluster(“failback”); 经测试不启作用 </p>
-<h3 id="异步调用"><a href="#异步调用" class="headerlink" title="异步调用"></a>异步调用</h3><p>异步调用是指发起远程调用之后获取结果的方式。</p>
-<ol>
-<li>同步等待结果返回（默认）</li>
-<li>异步等待结果返回</li>
-<li>不需要返回结果</li>
-</ol>
-<p>Dubbo 中关于异步等待结果返回的实现流程如下图：</p>
-<p><img src="/uploads/dubbo/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8.png" alt="异步调用.png"></p>
-<p>异步调用配置:<br>&lt;dubbo:reference id=”asyncDemoService”<br>interface=”com.tuling.teach.service.async.AsyncDemoService”&gt;</p>
-<!-- 异步调async：true 异步调用 false 同步调用-->
-<p>&lt;dubbo:method name=”sayHello1” async=”false”/&gt;<br>&lt;dubbo:method name=”sayHello2” async=”false”/&gt;<br>&lt;dubbo:method name=”notReturn” return=”false”/&gt;<br></p>
-<p>注：在进行异步调用时 容错机制不能为  cluster=”forking” 或  cluster=”broadcast”</p>
-<h2 id="二、Dubbo-调用非典型使用场景"><a href="#二、Dubbo-调用非典型使用场景" class="headerlink" title="二、Dubbo 调用非典型使用场景"></a>二、Dubbo 调用非典型使用场景</h2><h3 id="泛化提供-amp-引用"><a href="#泛化提供-amp-引用" class="headerlink" title="泛化提供&amp;引用"></a>泛化提供&amp;引用</h3><p>泛化提供<br>是指不通过接口的方式直接将服务暴露出去。通常用于Mock框架或服务降级框架实现。</p>
-<p>泛化引用<br>是指不通过常规接口的方式去引用服务，通常用于测试框架</p>
-<h3 id="隐示传参"><a href="#隐示传参" class="headerlink" title="隐示传参"></a>隐示传参</h3><p>是指通过非常方法参数传递参数，类似于http 调用当中添加cookie值。通常用于分布式追踪框架的实现。使用方式如下 ：<br>//客户端隐示设置值<br>RpcContext.getContext().setAttachment(“index”, “1”); // 隐式传参，后面的远程调用都会隐<br>//服务端隐示获取值<br>String index = RpcContext.getContext().getAttachment(“index”);</p>
-<h3 id="令牌验证"><a href="#令牌验证" class="headerlink" title="令牌验证"></a>令牌验证</h3><p>通过令牌验证在注册中心控制权限，以决定要不要下发令牌给消费者，可以防止消费者绕过注册中心访问提供者，<br>另外通过注册中心可灵活改变授权方式，而不需修改或升级提供者</p>
-<h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><p>类似于 WEB 中的Filter ，Dubbo本身提供了Filter 功能用于拦截远程方法的调用。其支持自定义过滤器与官方的过滤器使用：</p>
-<p>演示添加日志访问过滤:</p>
-<p>&lt;dubbo:provider filter=”accesslog” accesslog=”logs/dubbo.log”/&gt;<br>以上配置 就是 为 服务提供者 添加 日志记录过滤器， 所有访问日志将会集中打印至 accesslog 当中</p>
-<h2 id="三、Dubbo调用流程"><a href="#三、Dubbo调用流程" class="headerlink" title="三、Dubbo调用流程"></a>三、Dubbo调用流程</h2><p><img src="/uploads/dubbo/Dubbo%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png" alt="Dubbo调用流程.png"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//------ 6协议 调用</span></span><br><span class="line">doInvoke:<span class="number">77</span>, DubboInvoker &#123;org.apache.dubbo.rpc.protocol.dubbo&#125;</span><br><span class="line">invoke:<span class="number">155</span>, AbstractInvoker &#123;org.apache.dubbo.rpc.protocol&#125;</span><br><span class="line"><span class="comment">//------ 5异步转同步</span></span><br><span class="line">invoke:<span class="number">52</span>, AsyncToSyncInvoker &#123;org.apache.dubbo.rpc.protocol&#125; <span class="comment">// 异步转同步 ,返回结果之前进行阻塞调用线程</span></span><br><span class="line"><span class="comment">//----- 4过滤器链</span></span><br><span class="line">invoke:<span class="number">92</span>, MonitorFilter &#123;org.apache.dubbo.monitor.support&#125;  <span class="comment">// 过滤链-&gt; 监控器</span></span><br><span class="line">invoke:<span class="number">54</span>, FutureFilter &#123;org.apache.dubbo.rpc.protocol.dubbo.filter&#125;    <span class="comment">//过滤链-&gt; 回调参数</span></span><br><span class="line">invoke:<span class="number">14</span>, ProviderHelloFilter &#123;com.wyb.dubbo&#125;  <span class="comment">// 过滤链-&gt; 自定义过滤器</span></span><br><span class="line">invoke:<span class="number">60</span>, ConsumerContextFilter &#123;org.apache.dubbo.rpc.filter&#125; <span class="comment">// 过滤链-&gt; 消费者环境初始化</span></span><br><span class="line"><span class="comment">//------3集群处理</span></span><br><span class="line">doInvoke:<span class="number">82</span>, FailoverClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">// 集服-失败重试</span></span><br><span class="line">invoke:<span class="number">248</span>, AbstractClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">//</span></span><br><span class="line"><span class="comment">//----- Mock服务</span></span><br><span class="line">invoke:<span class="number">78</span>, MockClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support.wrapper&#125; <span class="comment">// mock 服务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//----- 2动态代理 --透明化</span></span><br><span class="line">invoke:<span class="number">55</span>, InvokerInvocationHandler &#123;org.apache.dubbo.rpc.proxy&#125;<span class="comment">// 代理的中间接口</span></span><br><span class="line">getUser:-<span class="number">1</span>, proxy0 &#123;org.apache.dubbo.common.bytecode&#125; <span class="comment">// 代理对象</span></span><br><span class="line"><span class="comment">//----- 1调用客户端</span></span><br><span class="line">main:<span class="number">53</span>, DubboClient &#123;com.wyb.dubbo&#125;  <span class="comment">// 客户端</span></span><br><span class="line"></span><br><span class="line">RegistryProtocol --&gt; Cluster --&gt; MockClusterInvoker:ClusterInvoker-&gt;DubboProtocol-&gt;FilterChain:AsyncToSyncInvoker:DubboInvoker</span><br><span class="line">协议--》(注册协议)---&gt;MockClusterInvoker ---》ClusterInvoker---&gt; RegistryDirectory ---&gt;(DubboProtcol)-&gt;FilterChain--&gt;DubboInvoker</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" itemprop="url">dubbo注册中心</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
-                2021-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  520 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="注册中心的作用"><a href="#注册中心的作用" class="headerlink" title="注册中心的作用"></a>注册中心的作用</h1><p>为了达到服务器动态扩容的目的，注册中心存储的服务器的地址信息和可用状态，并实时推送给订阅了相关服务的客户端。</p>
-<p>一个完整的注册中心需要实现以下功能：</p>
-<p>1.接收服务端的注册和客户端的引用，即 将服务与消费相关联，并支持多对多。<br>2.支持服务端宕机后能即时清楚其状态。<br>3.注册中心重启后，可以自动恢复注册的数据和订阅的请求。<br>4.注册中心自身的集群。</p>
-<h1 id="Dubbo所支持的注册中心"><a href="#Dubbo所支持的注册中心" class="headerlink" title="Dubbo所支持的注册中心"></a>Dubbo所支持的注册中心</h1><p>1.Multicast注册中心:</p>
-<ul>
-<li>基于组网广播技术，只能用在局域网内，一般用于简单的测试服务</li>
-</ul>
-<p>2.zookeeper 注册中心(推荐)</p>
-<p>3.Redis注册中心</p>
-<p>4.Simple注册中心</p>
-<h1 id="Redis-注册中心"><a href="#Redis-注册中心" class="headerlink" title="Redis 注册中心"></a>Redis 注册中心</h1><p>关于Redis注册中心我们需要了解两点，</p>
-<ol>
-<li>如何存储服务的注册与订阅关系</li>
-<li>是当服务状态改变时如何即时更新</li>
-</ol>
-<h2 id="如何存储服务的注册与订阅关系"><a href="#如何存储服务的注册与订阅关系" class="headerlink" title="如何存储服务的注册与订阅关系"></a>如何存储服务的注册与订阅关系</h2><p>使用redis的发布订阅(pub/sub)模型。</p>
-<p>redis中存储的数据结构。</p>
-<p>服务端：<br>Reids中增加了一个Hash 类型的记录，其key为/dubbo/tuling.dubbo.server.UserService/providers。Value中分别存储了两个服务提供者的URL和有效期。</p>
-<p><img src="/uploads/dubbo/Redis%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E5%9E%8B.png" alt="Redis服务端模型.png"></p>
-<p>客户端:<br>主 Key 为服务名和类型 </p>
-<p>Map 中的 Key 为 URL 地址</p>
-<p>Map 中的 Value 为过期时间，用于判断脏数据，脏数据由监控中心删除</p>
-<h2 id="是当服务状态改变时如何即时更新"><a href="#是当服务状态改变时如何即时更新" class="headerlink" title="是当服务状态改变时如何即时更新"></a>是当服务状态改变时如何即时更新</h2><p>这里Dubbo采用的是定时心跳的机制 来维护服务URL的有效期，默认每30秒更新一次有效期。即URL对应的毫秒值。<br>具体代码参见：com.alibaba.dubbo.registry.redis.RedisRegistry#expireExecutor</p>
-<p><img src="/uploads/dubbo/Redis%E5%BF%83%E8%B7%B3.png" alt="Redis心跳.png"></p>
-<p>com.alibaba.dubbo.registry.redis.RedisRegistry#deferExpired<br>com.alibaba.dubbo.registry.integration.RegistryDirectory<br>com.alibaba.dubbo.registry.support.ProviderConsumerRegTable</p>
-<h1 id="Zookeeper-注册中心"><a href="#Zookeeper-注册中心" class="headerlink" title="Zookeeper 注册中心"></a>Zookeeper 注册中心</h1><p>Zookeper是一个树型的目录服务，本身支持变更推送相比redis的实现Publish/Subscribe功能更稳定。</p>
-<p>结构：<br><img src="/uploads/dubbo/Zookeeper%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83.png" alt="Zookeeper注册中心.png"></p>
 
           
         
@@ -1998,937 +2805,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2020/01/11/java/javase/streamApiAction/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/01/11/java/javase/streamApiAction/" itemprop="url">java 1.8  steam流操作</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-11T00:00:00+00:00">
-                2020-01-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaSE</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.1k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  4 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/java8/StreamApiAction.java" target="_blank" rel="noopener">相应源码地址</a></p>
-<h2 id="流操作类型"><a href="#流操作类型" class="headerlink" title="流操作类型"></a>流操作类型</h2><h3 id="中间操作"><a href="#中间操作" class="headerlink" title="中间操作"></a>中间操作</h3><p>目的是打开一个流，做出一些操作或者映射后，会返回一个新的流交给下个操作。lazy的，在调用方式时并没有真正执行。</p>
-<h3 id="终止操作"><a href="#终止操作" class="headerlink" title="终止操作"></a>终止操作</h3><p>在执行这个操作后，流被使用，在出现终止操作时才会调用之前的所有方法。</p>
-<h3 id="short-circuiting"><a href="#short-circuiting" class="headerlink" title="short-circuiting"></a>short-circuiting</h3><p>对于一个 intermediate 操作，如果它接受的是一个无限大（infinite/unbounded）的 Stream，但返回一个有限的新 Stream。<br>对于一个 terminal 操作，如果它接受的是一个无限大的 Stream，但能在有限的时间计算出结果。</p>
-<h2 id="具体流操作"><a href="#具体流操作" class="headerlink" title="具体流操作"></a>具体流操作</h2><h3 id="中间操作-1"><a href="#中间操作-1" class="headerlink" title="中间操作"></a>中间操作</h3><ul>
-<li>map (mapToInt, flatMap 等)</li>
-</ul>
-<p>把input Stream 的每一个元素，映射成 output Stream 的另外一个元素。</p>
-<p>map一对一</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;list中数的平方</span><br><span class="line">list.stream().map(v -&gt; v * v)</span><br></pre></td></tr></table></figure>
-
-<p>flatMap一对多 多对多 映射,把流扁平化，多个流转化成流里所有元素的单个流。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list1 &#x3D; Arrays.asList(1, 2, 3, 4, 5);</span><br><span class="line">List&lt;Integer&gt; list2 &#x3D; Arrays.asList(6, 7, 8, 9, 10);</span><br><span class="line">List&lt;List&lt;Integer&gt;&gt; allList &#x3D; new ArrayList&lt;&gt;();</span><br><span class="line">allList.add(list1);</span><br><span class="line">allList.add(list2);</span><br><span class="line">        </span><br><span class="line">allList.stream().flatMap(v -&gt; v.stream()).forEach(System.out::println);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>filter </li>
-</ul>
-<p>过滤,对元素进行某种条件过滤，留下符合的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 留下偶数</span><br><span class="line">list.stream().filter(v -&gt; v % 2 &#x3D;&#x3D; 0).forEach(System.out::println);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>distinct </li>
-</ul>
-<p>去重，不接收方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.stream().distinct().forEach(System.out::println);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>sorted</li>
-</ul>
-<p>排序，接受一个Comparator，或者默认顺序</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list.stream().sorted()</span><br><span class="line">list.stream().sorted((o1, o2) -&gt; -1)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>peek</li>
-</ul>
-<p>peek 对每个元素执行操作并返回一个新的 Stream。类似foreach，foreach是终止操作</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list &#x3D; list.stream().peek(System.out::println).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>limit</li>
-</ul>
-<p>返回 Stream 的前面 n 个元素</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.stream().limit(2).forEach(System.out::println);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>skip</li>
-</ul>
-<p>扔掉前 n 个元素（它是由一个叫 subStream 的方法改名而来）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.stream().skip(2).forEach(System.out::println);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>parallel</li>
-</ul>
-<p>转行成并行流，进行多线程操作，顺序会改变。可以使用forEachOrdered，固定顺序</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">list.stream().parallel().forEach(System.out::println);</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">1</span><br><span class="line">5</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>sequential</li>
-</ul>
-<p>并行流转为串行流</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list.parallelStream().forEach(System.out::println);</span><br><span class="line">list.parallelStream().sequential().forEach(System.out::println);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>unordered</li>
-</ul>
-<p><strong>消除了必须保持有序的流的约束</strong>,返回一个无序的等效的Stream，可能返回的是Stream本身，因为该Stream已经是无序的，或者该Stream的底层状态被修改为了无序.<br>一般用于并行的时候。例如TreeSet，或者流操作中指定顺序，会取消排序和指定顺序无效。</p>
-<h3 id="终止操作-1"><a href="#终止操作-1" class="headerlink" title="终止操作"></a>终止操作</h3><ul>
-<li>forEach</li>
-</ul>
-<p>forEach 不能修改自己包含的本地变量值，也不能用 break/return 之类的关键字提前结束循环。</p>
-<ul>
-<li><p>forEachOrdered</p>
-</li>
-<li><p>toArray</p>
-</li>
-<li><p>reduce</p>
-</li>
-</ul>
-<p>这个方法的主要作用是把 Stream 元素组合起来。它提供一个起始值（种子），然后依照运算规则（BinaryOperator），和前面 Stream 的第一个、第二个、第 n 个元素组合。<br>从这个意义上说，字符串拼接、数值的 sum、min、max、average 都是特殊的 reduce。</p>
-<p>注意：没有起始值，返回对象为Optional</p>
-<ul>
-<li>collect</li>
-</ul>
-<p>两个方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;R&gt; R collect(Supplier&lt;R&gt; supplier,</span><br><span class="line">                  BiConsumer&lt;R, ? super T&gt; accumulator,</span><br><span class="line">                  BiConsumer&lt;R, R&gt; combiner);</span><br><span class="line">                  </span><br><span class="line">IntStream i &#x3D; IntStream.of(6,5,7,1, 2, 3, 3);</span><br><span class="line">  List&lt;Integer&gt; v &#x3D; i</span><br><span class="line">      .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);</span><br><span class="line">  </span><br><span class="line">  System.out.println(v);</span><br><span class="line"></span><br><span class="line">&lt;R, A&gt; R collect(Collector&lt;? super T, A, R&gt; collector);</span><br></pre></td></tr></table></figure>
-
-<p>Collector在后面重点讲解</p>
-<ul>
-<li><p>min</p>
-</li>
-<li><p>max</p>
-</li>
-<li><p>count</p>
-</li>
-<li><p>anyMatch</p>
-</li>
-<li><p>allMatch</p>
-</li>
-<li><p>noneMatch</p>
-</li>
-<li><p>findFirst</p>
-</li>
-<li><p>findAny</p>
-</li>
-<li><p>iterator</p>
-</li>
-</ul>
-<h3 id="Short-circuiting"><a href="#Short-circuiting" class="headerlink" title="Short-circuiting"></a>Short-circuiting</h3><ul>
-<li><p>anyMatch</p>
-</li>
-<li><p>allMatch </p>
-</li>
-<li><p>noneMatch</p>
-</li>
-<li><p>findFirst </p>
-</li>
-<li><p>findAny </p>
-</li>
-<li><p>limit</p>
-</li>
-</ul>
-<h2 id="Collectors"><a href="#Collectors" class="headerlink" title="Collectors"></a>Collectors</h2><p>要作用就是辅助进行各类有用的 reduction 操作，例如转变输出为 Collection，把 Stream 元素进行归组。</p>
-<ul>
-<li>类型归纳 </li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Collectors.toList();</span><br><span class="line">Collectors.toMap();</span><br><span class="line">Collectors.toSet();</span><br><span class="line">Collectors.toCollection();</span><br><span class="line">Collectors.toConcurrentMap();</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>joining</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; strList = Arrays.asList(<span class="string">"aa"</span>, <span class="string">"bb"</span>, <span class="string">"cc"</span>, <span class="string">"dd"</span>, <span class="string">"ee"</span>);</span><br><span class="line">String s = strList.stream().collect(Collectors.joining());</span><br><span class="line">System.out.println(s);</span><br><span class="line"><span class="comment">// 逗号连接</span></span><br><span class="line">s = strList.stream().collect(Collectors.joining(<span class="string">","</span>));</span><br><span class="line">System.out.println(s);</span><br><span class="line"><span class="comment">// 逗号连接</span></span><br><span class="line">s = strList.stream().collect(Collectors.joining(<span class="string">","</span>, <span class="string">"["</span>, <span class="string">"]"</span>));</span><br><span class="line">System.out.println(s);</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">- collectingAndThen</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">s = strList.stream().collect(Collectors.collectingAndThen(Collectors.joining(<span class="string">","</span>), String::toUpperCase));</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>groupingBy groupingByConcurrent</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;String&gt;&gt; map = strList.stream().collect(Collectors.groupingBy(String::length));</span><br><span class="line">map.keySet().forEach(v -&gt; map.get(v).forEach(System.out::println));</span><br><span class="line">    </span><br><span class="line">Map&lt;Integer, Set&lt;String&gt;&gt; map1 = strList.stream().collect(Collectors.groupingBy(String::length, Collectors.toSet();</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>partitioningBy</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;Boolean, List&lt;Integer&gt;&gt; mapBoolean = list.stream().collect(Collectors.partitioningBy(v -&gt; v % <span class="number">2</span> == <span class="number">0</span>));</span><br><span class="line">mapBoolean.keySet().forEach(v -&gt; mapBoolean.get(v).forEach(System.out::println));</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>summingInt/Double/Long summarizingInt/Double/Long</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/12/20/active/miaosha/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/20/active/miaosha/" itemprop="url">秒杀场景</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-20T00:00:00+00:00">
-                2019-12-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/active/" itemprop="url" rel="index">
-                    <span itemprop="name">active</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  703 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="秒杀场景可能遇到的问题（用户流程角度）"><a href="#秒杀场景可能遇到的问题（用户流程角度）" class="headerlink" title="秒杀场景可能遇到的问题（用户流程角度）"></a>秒杀场景可能遇到的问题（用户流程角度）</h1><ul>
-<li><p>问题一.即将到秒杀时间，同时请求网页过多，打开网页速度慢</p>
-</li>
-<li><p>问题二.进入页面后，未到秒杀时间，用户一直点击购买按钮，一直发起请求</p>
-</li>
-<li><p>问题三.用户拿到接口地址，恶意请求（用脚本）</p>
-</li>
-<li><p>问题四.超卖现象</p>
-</li>
-<li><p>问题五.数据库请求过多，数据库奔溃</p>
-</li>
-</ul>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h2><ul>
-<li><p>针对于动态页面（jsp，ftl）可以把整个页面存储在redis中，避免页面渲染。</p>
-</li>
-<li><p>前后端分离项目，页面单独部署，使用cdn加速，资源静态</p>
-</li>
-<li><p>打开网页速度慢，除了页面的原因外，后台请求返回慢也有很大的关系，简单说就是后台高并发能力不足，一遇到此类场景，cpu，内存飚升，程序响应慢。单台tomcat并发量不足，可以集群部署然后使用nginx做负载均衡，恶意请求也可以在此拦截。</p>
-</li>
-<li><p>后台对请求限流</p>
-</li>
-</ul>
-<h2 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h2><ul>
-<li>页面按钮控制，未到时间按钮不能点击，需要页面定时请求后台获取最新的北京时间，不能以页面本地时间为准</li>
-<li>在用户点击过后，再把按钮设置无效，防止无效重复点击</li>
-</ul>
-<h2 id="问题三"><a href="#问题三" class="headerlink" title="问题三"></a>问题三</h2><p>接口地址动态化，通过MD5之类的加密算法加密随机的字符串去做url，然后通过前端代码获取url后台校验才能通过</p>
-<h2 id="问题四"><a href="#问题四" class="headerlink" title="问题四"></a>问题四</h2><h3 id="处理流程："><a href="#处理流程：" class="headerlink" title="处理流程："></a>处理流程：</h3><p>典型的读多先少场景，使用mysql等nosql，把库存存入redis中，进行库存预热。通过三级缓冲保证数据库压力，本地内存标记，库存修改在redis中进行预存，接着通过mq进行异步下单，处理数据库。若下单成功，页面轮询接口返回订单处理状态。</p>
-<h3 id="解决超卖方案"><a href="#解决超卖方案" class="headerlink" title="解决超卖方案"></a>解决超卖方案</h3><ul>
-<li>防止数据库内存为0，在修改时进行库存判断，大于0才更新。</li>
-<li>用户id与商品id建立唯一所以，防止同一用户重复购买同一件商品。</li>
-<li>实现乐观锁，商品信息中年增加version字段。每次更新时version+1，更新时候带上版本号，当提交前版本号等于更新前版本号，说明此时没有被其他线程影响到，正常更新，如果冲突了则不会进行提交更新。当库存是足够的情况下发生乐观锁冲突就进行一定次数的重试。</li>
-</ul>
-<p>一整套解决方案</p>
-<p><img src="https://user-gold-cdn.xitu.io/2019/11/16/16e72d24415cb009?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="秒杀"></p>
-<h2 id="产生更多的问题"><a href="#产生更多的问题" class="headerlink" title="产生更多的问题"></a>产生更多的问题</h2><ul>
-<li>redis集群，数据同步,分布式锁等</li>
-<li>mq高可用</li>
-<li>限流&amp;降级&amp;熔断&amp;隔离</li>
-<li>分布式服务，事务处理。</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/12/06/spring/springLoadXml/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/06/spring/springLoadXml/" itemprop="url">Spring 加载XML文件的六种方式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-06T00:00:00+00:00">
-                2019-12-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring/" itemprop="url" rel="index">
-                    <span itemprop="name">spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  559 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  3 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="一-XmlBeanFactory-引用资源"><a href="#一-XmlBeanFactory-引用资源" class="headerlink" title="一: XmlBeanFactory 引用资源"></a>一: XmlBeanFactory 引用资源</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Resource resource &#x3D; new ClassPathResource(&quot;appcontext.xml&quot;);</span><br><span class="line">BeanFactory factory &#x3D; new XmlBeanFactory(resource);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) factory.getBean(&quot;baseEntity1&quot;);</span><br><span class="line">System.out.println(&quot;XmlBeanFactory 获取 bean ：&quot; + entity.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="二-ClassPathXmlApplicationContext-编译路径"><a href="#二-ClassPathXmlApplicationContext-编译路径" class="headerlink" title="二: ClassPathXmlApplicationContext  编译路径"></a>二: ClassPathXmlApplicationContext  编译路径</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 单个文件</span><br><span class="line">ApplicationContext applicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 多个文件</span><br><span class="line">ApplicationContext multiApplicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;, &quot;classpath:appcontext2.xml&quot;);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) applicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) multiApplicationContext.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean2 ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="三-用文件系统的路径"><a href="#三-用文件系统的路径" class="headerlink" title="三: 用文件系统的路径"></a>三: 用文件系统的路径</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; classPath</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext &#x3D; new FileSystemXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 文件系统</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext2 &#x3D; new FileSystemXmlApplicationContext(&quot;spring-example-test&#x2F;src&#x2F;main&#x2F;resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext3 &#x3D; new FileSystemXmlApplicationContext(&quot;file:E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext4 &#x3D; new FileSystemXmlApplicationContext(&quot;E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) fileSystemXmlApplicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) fileSystemXmlApplicationContext2.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity3 &#x3D; (BaseEntity) fileSystemXmlApplicationContext3.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity4 &#x3D; (BaseEntity) fileSystemXmlApplicationContext4.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="四-XmlWebApplicationContext是专为Web工程定制的。"><a href="#四-XmlWebApplicationContext是专为Web工程定制的。" class="headerlink" title="四: XmlWebApplicationContext是专为Web工程定制的。"></a>四: XmlWebApplicationContext是专为Web工程定制的。</h1><p>ServletContext servletContext = request.getSession().getServletContext();<br>ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(servletContext ); </p>
-<h1 id="五-使用BeanFactory"><a href="#五-使用BeanFactory" class="headerlink" title="五: 使用BeanFactory"></a>五: 使用BeanFactory</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">BeanDefinitionRegistry reg &#x3D; new DefaultListableBeanFactory();</span><br><span class="line">XmlBeanDefinitionReader reader &#x3D; new XmlBeanDefinitionReader(reg);</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext.xml&quot;));</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext2.xml&quot;));</span><br><span class="line">BeanFactory bf &#x3D; (BeanFactory) reg;</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity&quot;);</span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="六：Web-应用启动时加载多个配置文件"><a href="#六：Web-应用启动时加载多个配置文件" class="headerlink" title="六：Web 应用启动时加载多个配置文件"></a>六：Web 应用启动时加载多个配置文件</h1><p>通过ContextLoaderListener 也可加载多个配置文件，在web.xml文件中利用<br><context-pararn>元素来指定多个配置文件位置，其配置如下: </context-pararn></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;context-param&gt;  </span><br><span class="line">    &lt;!-- Context Configuration locations for Spring XML files --&gt;  </span><br><span class="line">       &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;  </span><br><span class="line">       &lt;param-value&gt;  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;Appserver-resources.xml,  </span><br><span class="line">       classpath:config&#x2F;aer&#x2F;aerContext.xml,  </span><br><span class="line">       classpath:org&#x2F;codehaus&#x2F;xfire&#x2F;spring&#x2F;xfire.xml,  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;*.spring.xml  </span><br><span class="line">       &lt;&#x2F;param-value&gt;  </span><br><span class="line">   &lt;&#x2F;context-param&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这个方法加载配置文件的前提是已经知道配置文件在哪里，虽然可以利用“*”通配符，但灵活度有限。 </p>
-<h1 id="获取配套代码"><a href="#获取配套代码" class="headerlink" title="获取配套代码"></a><a href="https://github.com/MarchNineteen/spring-example/tree/master/spring-example-test/src/main/java/com/wyb/test/spring/loadXml" target="_blank" rel="noopener">获取配套代码</a></h1>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/12/06/spring/beanLifeCycle/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/06/spring/beanLifeCycle/" itemprop="url">Spring Bean 生命周期</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-06T00:00:00+00:00">
-                2019-12-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring/" itemprop="url" rel="index">
-                    <span itemprop="name">spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  264 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p><img src="/uploads/spring/springBeanLifeCycle.png" alt="生命周期"></p>
-<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p><img src="/uploads/spring/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="单例模式生命周期"></p>
-<h1 id="多例模式"><a href="#多例模式" class="headerlink" title="多例模式"></a>多例模式</h1><p>需求主动调用才会创建对象，原因见下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LifeCycle lifeCycle &#x3D; (LifeCycle) applicationContext.getBean(&quot;lifeCycle&quot;);</span><br></pre></td></tr></table></figure>
-
-
-<p><img src="/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
-<h1 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h1><h2 id="单例模式-1"><a href="#单例模式-1" class="headerlink" title="单例模式"></a>单例模式</h2><p>bean在单例模式下，spring容器启动时解析xml文件发现该bean标签后，直接创建该bean对象存入内部map中保存，<br>此后无论调用多少次getBean()获取该bean都是从map中获取该对象返回，一直是一个对象。<br>此对象一直被spring容器持有，直到容器推出时，随着容器的退出对象被销毁。</p>
-<h2 id="多例模式-1"><a href="#多例模式-1" class="headerlink" title="多例模式"></a>多例模式</h2><p>bean在多例模式下，spring容器启动时解析xml发下该bean标签后，只是将该bean进行管理，并不会创建对象，<br>此后每层使用getBean()获取该bean时，spring都会重新创建该对象返回，每层都是一个新的对象。<br>这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。</p>
-<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/">&lt;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/">&lt;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">&gt;</a>
   </nav>
 
 
@@ -2978,7 +2859,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-count">62</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3090,7 +2971,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">65.6k</span>
+    <span title="Site words total count">72.6k</span>
   
 </div>
 
@@ -3117,7 +2998,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共65.6k字</span>
+  <span class="post-count">博客全站共72.6k字</span>
 </div>
 
         
