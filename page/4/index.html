@@ -299,6 +299,256 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/08/27/tool/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/27/tool/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" itemprop="url">git常用指令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-27T00:00:00+00:00">
+                2019-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tool/" itemprop="url" rel="index">
+                    <span itemprop="name">tool</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  976 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="工作区与暂存区"><a href="#工作区与暂存区" class="headerlink" title="工作区与暂存区"></a>工作区与暂存区</h1><ul>
+<li>版本回退：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git log (git log --pretty&#x3D;oneline) 查看提交日志</span><br><span class="line">git log --graph --pretty&#x3D;oneline --abbrev-commit 简化查看日志</span><br><span class="line">git reset --hard commitid(HEAD^ HEAD表示当前版本 ^表示上个版本 以此类推,也可以使用~num,num表示几个^) (windows命令行下需要git reset --hard &quot;HEAD^&quot; ) </span><br><span class="line">git reflog 查看命令历史</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>管理修改：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git add xx 把文件添加到版本库</span><br><span class="line">git status 查看当前版本库状态</span><br><span class="line">git commit -m &quot;msg&quot; 提交修改 -m表示提交注释 ps:若使用命令行提交，每次commit都需add</span><br><span class="line">git diff </span><br><span class="line">git diff HEAD -- xx.file 查看工作区和版本库里面最新版本的区别 (HEAD^ 与版本回退同理)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>撤销修改：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- xx 把文件在工作区的修改全部撤销。第一种情况修改后未被放入暂存区，撤销修改与版本库一致，第二种已经添加到了暂存区，又作了修改，撤销修改回到add时的状态。让这个文件回到最近一次git commit或git add时的状态</span><br><span class="line"></span><br><span class="line">git reset HEAD &lt;file&gt; 把暂存区的修改回退到工作区,适用于add未commit</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除文件：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm 用于删除一个文件</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>取消文件跟踪：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached xx.txt 删除readme1.txt的跟踪，并保留在本地。之后git commit </span><br><span class="line"></span><br><span class="line">git rm --f xx.txt 删除readme1.txt的跟踪，并且删除本地文件。之后git commit</span><br></pre></td></tr></table></figure>
+
+<h1 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h1><ul>
+<li>添加远程库：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin xx.git 添加远程仓库地址</span><br><span class="line">git push -u origin master 由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令</span><br><span class="line">git push origin master推送最新修改</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>从远程库克隆：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone xx.git</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>多人协作：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git remote -v 查看远程库信息</span><br><span class="line">git fetch origin &lt;branch-name&gt; 从远程拉去分支代码</span><br><span class="line">git merge 合并代码</span><br><span class="line">git pull &#x3D; git fetch + git merge</span><br><span class="line">git push origin &lt;branch-name&gt; 推送修改</span><br><span class="line">git checkout -b &lt;branch-name&gt; origin&#x2F;&lt;branch-name&gt; 本地创建和远程分支对应的分支,名称最好一致</span><br><span class="line">git branch --set-upstream &lt;branch-name&gt; origin&#x2F;&lt;branch-name&gt; 建立本地分支和远程分支的关联</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>git放弃本地修改，强制更新：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch --all 下载远程仓库最新内容，不做合并</span><br><span class="line">git reset --hard origin&#x2F;master 把HEAD指向master最新版本</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
+
+<h1 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h1><ul>
+<li>创建与合并分支：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git branch dev 创建dev分支</span><br><span class="line">git checkout dev 切换至dev分支</span><br><span class="line">git checkout -b dev 创建并切换至dev分支</span><br><span class="line">git branch 查看当前分支</span><br><span class="line">git merge dev 合并dev分支代码至当前分支</span><br><span class="line">git branch -d dev 删除dev分支</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>解决冲突：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --graph 命令可以看到分支合并图</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Bug分支：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git stash 暂存当前工作区代码</span><br><span class="line">git stash list 查看暂存代码记录</span><br><span class="line">git stash apply 恢复代码至工作区，但不删除暂存内容</span><br><span class="line">git stash drop 删除暂存内容</span><br><span class="line">git stash pop &#x3D; git stash apply + git stash drop 恢复代码至工作区并删除暂存内容</span><br><span class="line">git cherry-pick &lt;commitid&gt; 复制某一次提交代码至当前分支</span><br></pre></td></tr></table></figure>
+
+<h1 id="标签管理"><a href="#标签管理" class="headerlink" title="标签管理"></a>标签管理</h1><ul>
+<li>创建标签：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git tag &lt;tagname&gt; 用于新建一个标签，默认为HEAD，也可以指定一个commit id</span><br><span class="line">git tag -a &lt;tagname&gt; -m &quot;msg&quot; 可以指定标签信息</span><br><span class="line">git tag 查看所有标签</span><br><span class="line">git show &lt;tagname&gt; 查看说明</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>操作标签：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git tag -d &lt;tagname&gt; 删除一个本地标签</span><br><span class="line">git push origin :refs&#x2F;tags&#x2F;&lt;tagname&gt; 删除一个远程标签</span><br><span class="line">git push origin &lt;tagname&gt; 推送标签至远程</span><br><span class="line">git push origin --tags 一次性推送全部尚未推送到远程的本地标签</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/05/30/tool/maven-dependence/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1984,6 +2234,192 @@ Using index condition
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/03/02/java/coucurrent/ThreadLocal/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/02/java/coucurrent/ThreadLocal/" itemprop="url">ThreadLocal</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-02T00:00:00+00:00">
+                2019-03-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaSE</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  694 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="类图："><a href="#类图：" class="headerlink" title="类图："></a>类图：</h1><h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p><img src="/.io//uploads/java/concurrent/ThreadLocal.png" alt="ThreadLocal"></p>
+<h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h2><p><img src="/.io//uploads/java/concurrent/Thread.png" alt="Thread"></p>
+<h1 id="源码："><a href="#源码：" class="headerlink" title="源码："></a>源码：</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The entries in this hash map extend WeakReference, using</span></span><br><span class="line"><span class="comment">         * its main ref field as the key (which is always a</span></span><br><span class="line"><span class="comment">         * ThreadLocal object).  Note that null keys (i.e. entry.get()</span></span><br><span class="line"><span class="comment">         * == null) mean that the key is no longer referenced, so the</span></span><br><span class="line"><span class="comment">         * entry can be expunged from table.  Such entries are referred to</span></span><br><span class="line"><span class="comment">         * as "stale entries" in the code that follows.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">            <span class="comment">/** The value associated with this ThreadLocal. */</span></span><br><span class="line">            Object value;</span><br><span class="line"></span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="keyword">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The initial capacity -- MUST be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> INITIAL_CAPACITY = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The table, resized as necessary.</span></span><br><span class="line"><span class="comment">         * table.length MUST always be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br></pre></td></tr></table></figure>
+<h3 id="Thread-1"><a href="#Thread-1" class="headerlink" title="Thread"></a>Thread</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">ThreadLocal.ThreadLocalMap inheritableThreadLocals = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+<h1 id="流程-先讲一下作用，再说自己看过源码，讲下源码"><a href="#流程-先讲一下作用，再说自己看过源码，讲下源码" class="headerlink" title="流程  先讲一下作用，再说自己看过源码，讲下源码"></a>流程  先讲一下作用，再说自己看过源码，讲下源码</h1><p>ThreadLocal就是让线程有一份自己的数据副本，因此不需要考虑线程安全问题。<br>在我做过的项目中一般用来存储用户信息。因为后台中每一个请求都是一个线程，我们在后续需要这个数据的时候就可以很方便的获取这个信息。<br>ThreadLocal中有一个静态内部类ThreadLocalMap，这个Map里面的key是ThreadLocal这个对象，value就是我们要存储的值。<br>而ThreadLocalMap里面其实是维护了一个Entry数组，而Entry类是ThreadLocalMap的静态内部类，其中key存储的是弱引用的ThreadLocal，value存储的就是要存储的数据。<br>而在每条线程Thread内部有一个ThreadLocal.ThreadLocalMap类型的成员变量threadLocals，<br>这个threadLocals就是每条线程用来存储数据副本的，key值为ThreadLocal对象，value为变量副本。<br>所以ThreadLocal和里面的静态内部类ThreadLocalMap其实是为每一个线程来服务的。在ThreadLocal源码中也可以看到，每次执行get和set方法的时候<br>，都要先获取当前访问的线程，然后再从当前线程获取该线程的ThreadLocalMap属性然后再来操作。</p>
+<p>ThreadLocal可能出现的问题？<br>ThreadLocal会发生内存泄漏的问题。<br>ThreadLocalMap里面维护了一个Entry数组，而每个Entry类的key是弱引用的ThreadLocal，value是数据。<br>如果一个ThreadLocal对象没有外部的强引用来指向它，那么堆内存不足的时候会被GC掉这些弱引用的Key，那么就会出现key为null但是value不为null的情况，但是此时的value会一直存在一个强引用链，也就是Thread当前线程-&gt;ThreadLocalMap-&gt;Entry-&gt;Value，导致GC无法回收造成内存的泄漏，这个value就是泄漏的对象。<br>但是ThreadLocalMap在执行get、set、remove的时候会自动清理key为null的Entry，<br>但是更优雅的做法还是在使用完ThreadLocal之后调用ThreadLocal中的remove方法清空ThreadLocal变量副本解决该问题，<br>在我做的项目中，会在过滤器的最后执行ThreadLocal中的remove方法进行手动释放。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/03/02/java/javase/thread/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2170,6 +2606,464 @@ Using index condition
 <li>JMX框架下的系统级管理类 ThreadMXBean</li>
 </ul>
 
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/structure/flyweight/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/flyweight/" itemprop="url">Java设计模式：享元模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  415 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>利用共享的方式来支持大量细粒度的对象，这些对象一部分内部状态是相同的。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>在享元接口中 定义一个方法，即为对象的外部状态，每个对象的外部状态都不同<br>在接口的实现类中添加一个成员变量作为识别标志，在创建工厂类中添加一个Map以识别标志为key，即以对象内部相同状态为key，<br>调用方法即可改变其它状态</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组享元接口 拥有改变外部对象的方法</p>
+<pre><code>public interface Flyweight {
+
+    /**
+     * 外部状态，每个享元对象的外部状态不同
+     *
+     * @param extrinsicState
+     */
+    public void extrinsicState(String extrinsicState);
+}</code></pre><p>   定义一个享元接口实现类，内部状态为成员变量，提供外部状态实现</p>
+<pre><code>public class ConcreteFlyweight implements Flyweight {
+
+    private String intrinsicState;
+
+    public ConcreteFlyweight(String intrinsicState) {
+        this.intrinsicState = intrinsicState;
+    }
+
+    @Override
+    public void extrinsicState(String extrinsicState) {
+        System.out.println(&quot;Object address: &quot; + System.identityHashCode(this));
+        System.out.println(&quot;IntrinsicState: &quot; + intrinsicState);
+        System.out.println(&quot;ExtrinsicState: &quot; + extrinsicState);
+    }
+}</code></pre><p>   定义享元对象工厂类，定义一个全局变量map存储享元对象。</p>
+<pre><code>public class FlyweightFactory {
+
+    private HashMap&lt;String, Flyweight&gt; flyweights = new HashMap&lt;&gt;();
+
+    public Flyweight getFlyweight(String intrinsicState) {
+        if (!flyweights.containsKey(intrinsicState)) {
+            Flyweight flyweight = new ConcreteFlyweight(intrinsicState);
+            flyweights.put(intrinsicState, flyweight);
+        }
+        return flyweights.get(intrinsicState);
+    }
+}  </code></pre><p>   测试</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        FlyweightFactory factory = new FlyweightFactory();
+        Flyweight flyweight1 = factory.getFlyweight(&quot;aa&quot;);
+        Flyweight flyweight2 = factory.getFlyweight(&quot;aa&quot;);
+        flyweight1.extrinsicState(&quot;x&quot;);
+        flyweight2.extrinsicState(&quot;y&quot;);
+    }
+}</code></pre><p>   结果</p>
+<pre><code>Object address: 985934102
+IntrinsicState: aa
+ExtrinsicState: x
+Object address: 985934102
+IntrinsicState: aa
+ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" class="headerlink" title="JDK使用："></a>JDK使用：</h3><p>Java 利用缓存来加速大量小对象的访问时间。</p>
+<ul>
+<li>java.lang.Integer#valueOf(int)</li>
+<li>java.lang.Boolean#valueOf(boolean)</li>
+<li>java.lang.Byte#valueOf(byte)</li>
+<li>java.lang.Character#valueOf(char)</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/structure/facade/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/facade/" itemprop="url">Java设计模式：外观模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  244 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>提供了一个统一的接口，用来访问子系统中的一群接口，从而让子系统更容易使用。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义一个外观对象，在内部进行功能的封装，功能具体是在都在外观类的内部，其它方法要使用该功能<br>调用外观对象的方法即可。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个电影播放系统，方法代表需要功能所需步骤</p>
+<pre><code>public class SubSystem {
+
+    public void turnOnTV() {
+        System.out.println(&quot;turnOnTV()&quot;);
+    }
+
+    public void setCD(String cd) {
+        System.out.println(&quot;setCD( &quot; + cd + &quot; )&quot;);
+    }
+
+    public void starWatching() {
+        System.out.println(&quot;starWatching()&quot;);
+    }
+
+}</code></pre><p>   定义一个外观类，封装了看电影的三步骤，客户端只需调用外观类的方法即可实现功能</p>
+<pre><code>public class Facade {
+
+    private SubSystem subSystem = new SubSystem();
+
+    public void watchMovie(String name) {
+        subSystem.turnOnTV();
+        subSystem.setCD(name);
+        subSystem.starWatching();
+    }
+}</code></pre><p>   测试：</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        Facade facade = new Facade();
+        facade.watchMovie(&quot;家有喜事&quot;);
+    }
+}</code></pre><p>   测试：</p>
+<pre><code>turnOnTV()
+setCD( 家有喜事 )
+starWatching()</code></pre>
           
         
       
@@ -2744,967 +3638,6 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/structure/facade/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/facade/" itemprop="url">Java设计模式：外观模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  244 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>提供了一个统一的接口，用来访问子系统中的一群接口，从而让子系统更容易使用。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义一个外观对象，在内部进行功能的封装，功能具体是在都在外观类的内部，其它方法要使用该功能<br>调用外观对象的方法即可。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个电影播放系统，方法代表需要功能所需步骤</p>
-<pre><code>public class SubSystem {
-
-    public void turnOnTV() {
-        System.out.println(&quot;turnOnTV()&quot;);
-    }
-
-    public void setCD(String cd) {
-        System.out.println(&quot;setCD( &quot; + cd + &quot; )&quot;);
-    }
-
-    public void starWatching() {
-        System.out.println(&quot;starWatching()&quot;);
-    }
-
-}</code></pre><p>   定义一个外观类，封装了看电影的三步骤，客户端只需调用外观类的方法即可实现功能</p>
-<pre><code>public class Facade {
-
-    private SubSystem subSystem = new SubSystem();
-
-    public void watchMovie(String name) {
-        subSystem.turnOnTV();
-        subSystem.setCD(name);
-        subSystem.starWatching();
-    }
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        Facade facade = new Facade();
-        facade.watchMovie(&quot;家有喜事&quot;);
-    }
-}</code></pre><p>   测试：</p>
-<pre><code>turnOnTV()
-setCD( 家有喜事 )
-starWatching()</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/behavioral/observer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/observer/" itemprop="url">Java设计模式：观察者模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  564 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义对象之间的一对多依赖，当一个对象状态改变时，它的所有依赖都会收到通知并且自动更新状态。</p>
-<p>主题（Subject）是被观察的对象，而其所有依赖者（Observer）称为观察者。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>主题依赖了观察者的一个集合，观察者依赖了一个主题，生成一个观察者需要在主题进行注册，主题更新后对每个观察者进行推送</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义主题接口，拥有对观察者的操作方法</p>
-<pre><code>public interface Subject {
-
-    // 注册观察者
-    public void registerObserver(Observer observer);
-
-    // 移除观察者
-    public void removeObserver(Observer observer);
-
-    // 提醒观察者
-    public void notifyObserver();
-}</code></pre><p>   定义一个观察者接口，提供一个操作接口，方便主题更新时对观察者进行操作</p>
-<pre><code>public interface Observer {
-
-    void update(float temp, float humidity, float pressure);
-}</code></pre><p>   定义主题接口实现类，依赖了一个观察者集合，当对主题进行更新时，循环通知各个观察者</p>
-<pre><code>public class WeatherSubject implements Subject {
-
-    private List&lt;Observer&gt; observers;
-    private float temperature;
-    private float humidity;
-    private float pressure;
-
-    public WeatherSubject() {
-        observers = new ArrayList&lt;&gt;();
-    }
-
-    public void setMeasurements(float temperature, float humidity, float pressure) {
-        this.temperature = temperature;
-        this.humidity = humidity;
-        this.pressure = pressure;
-        notifyObserver();
-    }
-
-    @Override
-    public void registerObserver(Observer observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(Observer observer) {
-        int i = observers.indexOf(observer);
-        if (i &gt;= 0) {
-            observers.remove(i);
-        }
-    }
-
-    @Override
-    public void notifyObserver() {
-        for (Observer o : observers) {
-            o.update(temperature, humidity, pressure);
-        }
-    }
-}</code></pre><p>   定义观察者实现类，每个观察者通过构造方法传入它所订阅的主题，并在主题中注册该观察者</p>
-<pre><code>public class StatisticsDisplay implements Observer {
-
-    public StatisticsDisplay(Subject weatherData) {
-        weatherData.registerObserver(this);
-    }
-
-    @Override
-    public void update(float temp, float humidity, float pressure) {
-        System.out.println(&quot;StatisticsDisplay.update: &quot; + temp + &quot; &quot; + humidity + &quot; &quot; + pressure);
-    }
-}</code></pre><p>   定义另一个观察者实现类</p>
-<pre><code>public class CurrentConditionsDisplay implements Observer {
-
-    public CurrentConditionsDisplay(Subject weatherData) {
-        weatherData.registerObserver(this);
-    }
-
-    @Override
-    public void update(float temp, float humidity, float pressure) {
-        System.out.println(&quot;CurrentConditionsDisplay.update: &quot; + temp + &quot; &quot; + humidity + &quot; &quot; + pressure);
-    }
-
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        WeatherSubject subject = new WeatherSubject();
-        Observer statis = new StatisticsDisplay(subject);
-        Observer current = new CurrentConditionsDisplay(subject);
-        subject.setMeasurements(22f, 29f, 100f);
-    }
-}</code></pre><p>   输出：</p>
-<pre><code>StatisticsDisplay.update: 22.0 29.0 100.0
-CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><p>第一眼看到这个模式就感觉这不就是java的监听器嘛，其实监听器就是通过这种模式实现的。</p>
-<ul>
-<li>java.util.Observer</li>
-<li>java.util.EventListener</li>
-<li>javax.servlet.http.HttpSessionBindingListener</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/24/java/java-design/structure/flyweight/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/flyweight/" itemprop="url">Java设计模式：享元模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  415 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>利用共享的方式来支持大量细粒度的对象，这些对象一部分内部状态是相同的。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>在享元接口中 定义一个方法，即为对象的外部状态，每个对象的外部状态都不同<br>在接口的实现类中添加一个成员变量作为识别标志，在创建工厂类中添加一个Map以识别标志为key，即以对象内部相同状态为key，<br>调用方法即可改变其它状态</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组享元接口 拥有改变外部对象的方法</p>
-<pre><code>public interface Flyweight {
-
-    /**
-     * 外部状态，每个享元对象的外部状态不同
-     *
-     * @param extrinsicState
-     */
-    public void extrinsicState(String extrinsicState);
-}</code></pre><p>   定义一个享元接口实现类，内部状态为成员变量，提供外部状态实现</p>
-<pre><code>public class ConcreteFlyweight implements Flyweight {
-
-    private String intrinsicState;
-
-    public ConcreteFlyweight(String intrinsicState) {
-        this.intrinsicState = intrinsicState;
-    }
-
-    @Override
-    public void extrinsicState(String extrinsicState) {
-        System.out.println(&quot;Object address: &quot; + System.identityHashCode(this));
-        System.out.println(&quot;IntrinsicState: &quot; + intrinsicState);
-        System.out.println(&quot;ExtrinsicState: &quot; + extrinsicState);
-    }
-}</code></pre><p>   定义享元对象工厂类，定义一个全局变量map存储享元对象。</p>
-<pre><code>public class FlyweightFactory {
-
-    private HashMap&lt;String, Flyweight&gt; flyweights = new HashMap&lt;&gt;();
-
-    public Flyweight getFlyweight(String intrinsicState) {
-        if (!flyweights.containsKey(intrinsicState)) {
-            Flyweight flyweight = new ConcreteFlyweight(intrinsicState);
-            flyweights.put(intrinsicState, flyweight);
-        }
-        return flyweights.get(intrinsicState);
-    }
-}  </code></pre><p>   测试</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        FlyweightFactory factory = new FlyweightFactory();
-        Flyweight flyweight1 = factory.getFlyweight(&quot;aa&quot;);
-        Flyweight flyweight2 = factory.getFlyweight(&quot;aa&quot;);
-        flyweight1.extrinsicState(&quot;x&quot;);
-        flyweight2.extrinsicState(&quot;y&quot;);
-    }
-}</code></pre><p>   结果</p>
-<pre><code>Object address: 985934102
-IntrinsicState: aa
-ExtrinsicState: x
-Object address: 985934102
-IntrinsicState: aa
-ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" class="headerlink" title="JDK使用："></a>JDK使用：</h3><p>Java 利用缓存来加速大量小对象的访问时间。</p>
-<ul>
-<li>java.lang.Integer#valueOf(int)</li>
-<li>java.lang.Boolean#valueOf(boolean)</li>
-<li>java.lang.Byte#valueOf(byte)</li>
-<li>java.lang.Character#valueOf(char)</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/adapter/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/adapter/" itemprop="url">Java设计模式：适配器</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  362 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>适配器就是一种适配中间件，它存在于不匹配的二者之间，用于连接二者，将不匹配变得匹配，简单点理解就是平常所见的转接头，转换器之类的存在。</p>
-<p>把一个类接口转换成另一个用户需要的接口。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
-<li>通过组合的方式。</li>
-<li>通过继承来实现适配器功能。</li>
-</ul>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个鸭接口 方法为鸭子叫</p>
-<pre><code>public interface Duck {
-
-    void quack();</code></pre><p>   定义一个火鸡接口 方法为鸡叫</p>
-<pre><code>public interface Turkey {
-
-   void gobble();    </code></pre><p>   鸭子实现类</p>
-<pre><code>public class WildDuck implements Duck {
-
-    @Override
-    public void quack() {
-        System.out.println(&quot;鸭子叫&quot;);
-    }
-}    </code></pre><p>   火鸡实现类</p>
-<pre><code>public class WildTurkey implements Turkey {
-
-    @Override
-    public void gobble() {
-        System.out.println(&quot;火鸡叫&quot;);
-    }
-} </code></pre><p>   现在鸭子只能发出鸭子叫，鸡只能发出鸡叫，我们想要鸭子发出鸡的叫声。添加鸭子适配器。</p>
-<pre><code>public class DuckAdapter implements Turkey {
-
-   Duck duck;
-
-   public DuckAdapter(Duck duck) {
-       this.duck = duck;
-   }
-
-   @Override
-   public void gobble() {
-       duck.quack();
-   }
-}</code></pre><p>   组合方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
-<pre><code>public class DuckAdapter extends Turkey WildTurkey implements Turkey {
-
-      @Override
-      public void gobble() {
-          gobble.quack();
-      }
-   }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3759,7 +3692,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3871,7 +3804,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">72.6k</span>
+    <span title="Site words total count">73.9k</span>
   
 </div>
 
@@ -3898,7 +3831,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共72.6k字</span>
+  <span class="post-count">博客全站共73.9k字</span>
 </div>
 
         

@@ -1036,6 +1036,210 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/12/06/spring/Aop%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/12/06/spring/Aop%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B/" itemprop="url">Spring Bean 生命周期</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-06T00:00:00+00:00">
+                2019-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  585 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><p><img src="/.io//uploads/spring/aop/aop%E7%B1%BB%E5%9B%BE.png" alt="类图"></p>
+<h1 id="aop功能代码分析图"><a href="#aop功能代码分析图" class="headerlink" title="aop功能代码分析图"></a>aop功能代码分析图</h1><p><img src="/.io//uploads/spring/aop/aop%E5%8A%9F%E8%83%BD%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%9B%BE.png" alt="aop功能代码分析图"></p>
+<h3 id="重点关注-InstantiationAwareBeanPostProcessor-和-postProcessBeforeInstantiation-后置处理。"><a href="#重点关注-InstantiationAwareBeanPostProcessor-和-postProcessBeforeInstantiation-后置处理。" class="headerlink" title="重点关注 InstantiationAwareBeanPostProcessor 和 postProcessBeforeInstantiation() 后置处理。"></a>重点关注 InstantiationAwareBeanPostProcessor 和 postProcessBeforeInstantiation() 后置处理。</h3><h1 id="1-InstantiationAwareBeanPostProcessor-类的实例化之前执行"><a href="#1-InstantiationAwareBeanPostProcessor-类的实例化之前执行" class="headerlink" title="1.InstantiationAwareBeanPostProcessor(类的实例化之前执行)"></a>1.InstantiationAwareBeanPostProcessor(类的实例化之前执行)</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.</span></span><br><span class="line">    <span class="comment">// 给bean的后置处理器一个机会来生成一个代理对象返回,在aop模块进行详细讲解</span></span><br><span class="line">    <span class="comment">// 由于bean未实例化，所以并未实际创建代理对象，只是如果对象有切面的话，找到对象切面并缓存</span></span><br><span class="line">    Object bean = resolveBeforeInstantiation(beanName, mbdToUse);</span><br><span class="line">    <span class="keyword">if</span> (bean != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 真正进行主要的业务逻辑方法来进行创建bean</span></span><br><span class="line">    Object beanInstance = doCreateBean(beanName, mbdToUse, args);</span><br><span class="line">    <span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">        logger.trace(<span class="string">"Finished creating instance of bean '"</span> + beanName + <span class="string">"'"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> beanInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口"><a href="#AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口" class="headerlink" title="AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口"></a>AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口</h2><h3 id="主要作用"><a href="#主要作用" class="headerlink" title="主要作用"></a>主要作用</h3><p>1.预测 Bean 类型：</p>
+<ul>
+<li>predictBeanType()方法允许在 Bean 实际创建之前预测其类型</li>
+</ul>
+<p>2.确定候选构造函数：</p>
+<ul>
+<li>determineCandidateConstructors()方法可以影响 Spring 选择哪个构造函数来实例化 Bean</li>
+</ul>
+<p>3.取早期 Bean 引用：</p>
+<ul>
+<li>getEarlyBeanReference()方法在 Bean 完全初始化前提供引用，用于解决循环依赖问题</li>
+</ul>
+<h3 id="典型应用场景"><a href="#典型应用场景" class="headerlink" title="典型应用场景"></a>典型应用场景</h3><ul>
+<li>AOP 代理：Spring AOP 使用它来预测代理对象的类型</li>
+<li>循环依赖解决：在构造器注入循环依赖时发挥作用</li>
+<li>自定义实例化逻辑：当需要特殊处理 Bean 的实例化过程时</li>
+</ul>
+<h3 id="执行流程-postProcessBeforeInstantiation"><a href="#执行流程-postProcessBeforeInstantiation" class="headerlink" title="执行流程 postProcessBeforeInstantiation"></a>执行流程 postProcessBeforeInstantiation</h3><h1 id="2-postProcessBeforeInstantiation-类的初始化之前或者之后执行"><a href="#2-postProcessBeforeInstantiation-类的初始化之前或者之后执行" class="headerlink" title="2.postProcessBeforeInstantiation(类的初始化之前或者之后执行)"></a>2.postProcessBeforeInstantiation(类的初始化之前或者之后执行)</h1><p><img src="/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
+<h1 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h1><h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p>bean在单例模式下，spring容器启动时解析xml文件发现该bean标签后，直接创建该bean对象存入内部map中保存，<br>此后无论调用多少次getBean()获取该bean都是从map中获取该对象返回，一直是一个对象。<br>此对象一直被spring容器持有，直到容器推出时，随着容器的退出对象被销毁。</p>
+<h2 id="多例模式"><a href="#多例模式" class="headerlink" title="多例模式"></a>多例模式</h2><p>bean在多例模式下，spring容器启动时解析xml发下该bean标签后，只是将该bean进行管理，并不会创建对象，<br>此后每层使用getBean()获取该bean时，spring都会重新创建该对象返回，每层都是一个新的对象。<br>这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。</p>
+<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/12/06/spring/beanLifeCycle/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2372,256 +2576,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/08/27/tool/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/27/tool/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" itemprop="url">git常用指令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-27T00:00:00+00:00">
-                2019-08-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/tool/" itemprop="url" rel="index">
-                    <span itemprop="name">tool</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  976 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  4 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="工作区与暂存区"><a href="#工作区与暂存区" class="headerlink" title="工作区与暂存区"></a>工作区与暂存区</h1><ul>
-<li>版本回退：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git log (git log --pretty&#x3D;oneline) 查看提交日志</span><br><span class="line">git log --graph --pretty&#x3D;oneline --abbrev-commit 简化查看日志</span><br><span class="line">git reset --hard commitid(HEAD^ HEAD表示当前版本 ^表示上个版本 以此类推,也可以使用~num,num表示几个^) (windows命令行下需要git reset --hard &quot;HEAD^&quot; ) </span><br><span class="line">git reflog 查看命令历史</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>管理修改：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git add xx 把文件添加到版本库</span><br><span class="line">git status 查看当前版本库状态</span><br><span class="line">git commit -m &quot;msg&quot; 提交修改 -m表示提交注释 ps:若使用命令行提交，每次commit都需add</span><br><span class="line">git diff </span><br><span class="line">git diff HEAD -- xx.file 查看工作区和版本库里面最新版本的区别 (HEAD^ 与版本回退同理)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>撤销修改：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- xx 把文件在工作区的修改全部撤销。第一种情况修改后未被放入暂存区，撤销修改与版本库一致，第二种已经添加到了暂存区，又作了修改，撤销修改回到add时的状态。让这个文件回到最近一次git commit或git add时的状态</span><br><span class="line"></span><br><span class="line">git reset HEAD &lt;file&gt; 把暂存区的修改回退到工作区,适用于add未commit</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>删除文件：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm 用于删除一个文件</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>取消文件跟踪：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached xx.txt 删除readme1.txt的跟踪，并保留在本地。之后git commit </span><br><span class="line"></span><br><span class="line">git rm --f xx.txt 删除readme1.txt的跟踪，并且删除本地文件。之后git commit</span><br></pre></td></tr></table></figure>
-
-<h1 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h1><ul>
-<li>添加远程库：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin xx.git 添加远程仓库地址</span><br><span class="line">git push -u origin master 由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令</span><br><span class="line">git push origin master推送最新修改</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>从远程库克隆：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone xx.git</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>多人协作：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git remote -v 查看远程库信息</span><br><span class="line">git fetch origin &lt;branch-name&gt; 从远程拉去分支代码</span><br><span class="line">git merge 合并代码</span><br><span class="line">git pull &#x3D; git fetch + git merge</span><br><span class="line">git push origin &lt;branch-name&gt; 推送修改</span><br><span class="line">git checkout -b &lt;branch-name&gt; origin&#x2F;&lt;branch-name&gt; 本地创建和远程分支对应的分支,名称最好一致</span><br><span class="line">git branch --set-upstream &lt;branch-name&gt; origin&#x2F;&lt;branch-name&gt; 建立本地分支和远程分支的关联</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>git放弃本地修改，强制更新：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch --all 下载远程仓库最新内容，不做合并</span><br><span class="line">git reset --hard origin&#x2F;master 把HEAD指向master最新版本</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
-
-<h1 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h1><ul>
-<li>创建与合并分支：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git branch dev 创建dev分支</span><br><span class="line">git checkout dev 切换至dev分支</span><br><span class="line">git checkout -b dev 创建并切换至dev分支</span><br><span class="line">git branch 查看当前分支</span><br><span class="line">git merge dev 合并dev分支代码至当前分支</span><br><span class="line">git branch -d dev 删除dev分支</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>解决冲突：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --graph 命令可以看到分支合并图</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Bug分支：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git stash 暂存当前工作区代码</span><br><span class="line">git stash list 查看暂存代码记录</span><br><span class="line">git stash apply 恢复代码至工作区，但不删除暂存内容</span><br><span class="line">git stash drop 删除暂存内容</span><br><span class="line">git stash pop &#x3D; git stash apply + git stash drop 恢复代码至工作区并删除暂存内容</span><br><span class="line">git cherry-pick &lt;commitid&gt; 复制某一次提交代码至当前分支</span><br></pre></td></tr></table></figure>
-
-<h1 id="标签管理"><a href="#标签管理" class="headerlink" title="标签管理"></a>标签管理</h1><ul>
-<li>创建标签：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git tag &lt;tagname&gt; 用于新建一个标签，默认为HEAD，也可以指定一个commit id</span><br><span class="line">git tag -a &lt;tagname&gt; -m &quot;msg&quot; 可以指定标签信息</span><br><span class="line">git tag 查看所有标签</span><br><span class="line">git show &lt;tagname&gt; 查看说明</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>操作标签：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git tag -d &lt;tagname&gt; 删除一个本地标签</span><br><span class="line">git push origin :refs&#x2F;tags&#x2F;&lt;tagname&gt; 删除一个远程标签</span><br><span class="line">git push origin &lt;tagname&gt; 推送标签至远程</span><br><span class="line">git push origin --tags 一次性推送全部尚未推送到远程的本地标签</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2676,7 +2630,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2788,7 +2742,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">72.6k</span>
+    <span title="Site words total count">73.9k</span>
   
 </div>
 
@@ -2815,7 +2769,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共72.6k字</span>
+  <span class="post-count">博客全站共73.9k字</span>
 </div>
 
         
