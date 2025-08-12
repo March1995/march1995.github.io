@@ -832,7 +832,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/bridge/">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/composite/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -851,7 +851,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/bridge/" itemprop="url">Java设计模式：桥接器</a></h1>
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/composite/" itemprop="url">Java设计模式：组合模式</a></h1>
         
 
         <div class="post-meta">
@@ -917,7 +917,285 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  427 字
+                  496 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将对象组合成树形结构来表示“整体/部分”层次关系，允许用户以相同的方式处理单独对象和组合对象。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>组件（Component）类是组合类（Composite）和叶子类（Leaf）的父类，可以把组合类看成是树的中间节点。<br>组合对象拥有一个或多个组件对象，因此组合对象的操作可以委托给组件对象去处理，而组件对象可以是另一个组合对象或者叶子对象。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组件抽象类</p>
+<pre><code>public abstract class Component {
+
+    protected String name;
+
+    public Component(String name) {
+        this.name = name;
+    }
+
+    public void print() {
+        print(0);
+    }
+    public abstract void print(int level);
+
+    public abstract void add(Component component);
+
+    public abstract void remove(Component component);
+}</code></pre><p>   定义一个组合类，继承组件类，并依赖了组件类，依赖的组件类可以是另一个组合对象或者叶子对象</p>
+<pre><code>public class Composite extends Component {
+
+    private List&lt;Component&gt; child;
+
+    public Composite(String name) {
+        super(name);
+        child = new ArrayList&lt;&gt;();
+    }
+
+    @Override
+    public void print(int level) {
+        for (int i = 0; i &lt; level; i++) {
+            System.out.print(&quot;--&quot;);
+        }
+        System.out.println(&quot;Composite:&quot; + name);
+        for (Component component : child) {
+            component.print(level + 1);
+        }
+    }
+
+    @Override
+    public void add(Component component) {
+        child.add(component);
+    }
+
+    @Override
+    public void remove(Component component) {
+        child.remove(component);
+    }
+}</code></pre><p>   定义一个叶子类，继承组件类。</p>
+<pre><code>public class Leaf extends Component{
+
+    public Leaf(String name) {
+        super(name);
+    }
+
+    @Override
+    public void print(int level) {
+        for (int i = 0; i &lt; level; i++) {
+            System.out.print(&quot;--&quot;);
+        }
+        System.out.println(&quot;left:&quot; + name);
+    }
+
+    @Override
+    public void add(Component component) {
+        throw new UnsupportedOperationException(); // 牺牲透明性换取单一职责原则，这样就不用考虑是叶子节点还是组合节点
+    }
+
+    @Override
+    public void remove(Component component) {
+        throw new UnsupportedOperationException();
+    }  </code></pre><p>   测试</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        Composite root = new Composite(&quot;root&quot;);
+        Component node1 = new Leaf(&quot;1&quot;);
+        Component node2 = new Composite(&quot;2&quot;);
+        Component node3 = new Leaf(&quot;3&quot;);
+        root.add(node1);
+        root.add(node2);
+        root.add(node3);
+        Component node21 = new Leaf(&quot;21&quot;);
+        Component node22 = new Composite(&quot;22&quot;);
+        node2.add(node21);
+        node2.add(node22);
+        Component node221 = new Leaf(&quot;221&quot;);
+        node22.add(node221);
+        root.print();
+    }
+}</code></pre><p>   结果</p>
+<pre><code>Composite:root
+--left:1
+--Composite:2
+----left:21
+----Composite:22
+------left:221
+--left:3</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/adapter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/adapter/" itemprop="url">Java设计模式：适配器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
+                2019-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  362 字
                 </span>
               
 
@@ -956,81 +1234,54 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将抽象与实现分离开来，使它们可以独立变化。</p>
-<p>抽象与实现解耦，例如一个生产线的机器，将参数设定与具体生产的过程实现分离开，使整个生产线更加灵活，用一套参数也可以使用不同的工作模式。</p>
-<p>其中参数设定与生产过程属于两种不同的维度，桥接模式所做的事情就是将不同的维度联结在一起！</p>
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>适配器就是一种适配中间件，它存在于不匹配的二者之间，用于连接二者，将不匹配变得匹配，简单点理解就是平常所见的转接头，转换器之类的存在。</p>
+<p>把一个类接口转换成另一个用户需要的接口。</p>
 <h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
-<li>在一个类中通过组合另一个对象，调用时只需在当前类调用对象方法即可，实现解耦。</li>
+<li>通过组合的方式。</li>
+<li>通过继承来实现适配器功能。</li>
 </ul>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义电视机抽象类,拥有3个方法。</p>
-<pre><code>public abstract class Tv {
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个鸭接口 方法为鸭子叫</p>
+<pre><code>public interface Duck {
 
-    public abstract void on();
+    void quack();</code></pre><p>   定义一个火鸡接口 方法为鸡叫</p>
+<pre><code>public interface Turkey {
 
-    public abstract void off();
-
-    public abstract void tuneTunnel();</code></pre><p>   定义一个电视机的实现类，Sony电视机。</p>
-<pre><code>public class SonyTv extends Tv {
-
-    @Override
-    public void on() {
-        System.out.println(&quot;SonyTv,on&quot;);
-    }
+   void gobble();    </code></pre><p>   鸭子实现类</p>
+<pre><code>public class WildDuck implements Duck {
 
     @Override
-    public void off() {
-        System.out.println(&quot;SonyTv,off&quot;);
+    public void quack() {
+        System.out.println(&quot;鸭子叫&quot;);
     }
+}    </code></pre><p>   火鸡实现类</p>
+<pre><code>public class WildTurkey implements Turkey {
 
     @Override
-    public void tuneTunnel() {
-        System.out.println(&quot;SonyTv,tuneTunnel&quot;);
-    }</code></pre><p>   定义一个遥控器抽象类。组合了一个电视机对象。</p>
-<pre><code>protected Tv tv;
-
-    public RemoteControl(Tv tv) {
-        this.tv = tv;
+    public void gobble() {
+        System.out.println(&quot;火鸡叫&quot;);
     }
+} </code></pre><p>   现在鸭子只能发出鸭子叫，鸡只能发出鸡叫，我们想要鸭子发出鸡的叫声。添加鸭子适配器。</p>
+<pre><code>public class DuckAdapter implements Turkey {
 
-    public abstract void on();
+   Duck duck;
 
-    public abstract void off();
-
-    public abstract void tuneTunnel();   </code></pre><p>   定义一个遥控器的实现类，Sony电视机遥控器。</p>
-<pre><code>public class SonyRemoteControl extends RemoteControl {
-
-    public SonyRemoteControl(Tv tv) {
-        super(tv);
-    }
-
-    @Override
-    public void on() {
-        System.out.println(&quot;sonyRemoteControl,on&quot;);
-        tv.on();
-    }
-
-    @Override
-    public void off() {
-        System.out.println(&quot;sonyRemoteControl,off&quot;);
-        tv.off();
-    }
-
-    @Override
-    public void tuneTunnel() {
-        System.out.println(&quot;sonyRemoteControl,tuneTunnel&quot;);
-        tv.off();
-    }
-} </code></pre><p>   在生成sony电视机遥控器时，传入一个sony电视机对象，即可使用该遥控器实现该电视机的状态变换。</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-       Tv sonyTv = new SonyTv();
-       SonyRemoteControl sonyRemoteControl = new SonyRemoteControl(sonyTv);
-       sonyRemoteControl.on();
-       sonyRemoteControl.off();
-       sonyRemoteControl.tuneTunnel();
+   public DuckAdapter(Duck duck) {
+       this.duck = duck;
    }
-}</code></pre>
+
+   @Override
+   public void gobble() {
+       duck.quack();
+   }
+}</code></pre><p>   组合方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
+<pre><code>public class DuckAdapter extends Turkey WildTurkey implements Turkey {
+
+      @Override
+      public void gobble() {
+          gobble.quack();
+      }
+   }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
+
           
         
       
@@ -1322,7 +1573,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/adapter/">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/bridge/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -1341,7 +1592,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/adapter/" itemprop="url">Java设计模式：适配器</a></h1>
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/bridge/" itemprop="url">Java设计模式：桥接器</a></h1>
         
 
         <div class="post-meta">
@@ -1407,7 +1658,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  362 字
+                  427 字
                 </span>
               
 
@@ -1446,332 +1697,81 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>适配器就是一种适配中间件，它存在于不匹配的二者之间，用于连接二者，将不匹配变得匹配，简单点理解就是平常所见的转接头，转换器之类的存在。</p>
-<p>把一个类接口转换成另一个用户需要的接口。</p>
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将抽象与实现分离开来，使它们可以独立变化。</p>
+<p>抽象与实现解耦，例如一个生产线的机器，将参数设定与具体生产的过程实现分离开，使整个生产线更加灵活，用一套参数也可以使用不同的工作模式。</p>
+<p>其中参数设定与生产过程属于两种不同的维度，桥接模式所做的事情就是将不同的维度联结在一起！</p>
 <h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
-<li>通过组合的方式。</li>
-<li>通过继承来实现适配器功能。</li>
+<li>在一个类中通过组合另一个对象，调用时只需在当前类调用对象方法即可，实现解耦。</li>
 </ul>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个鸭接口 方法为鸭子叫</p>
-<pre><code>public interface Duck {
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义电视机抽象类,拥有3个方法。</p>
+<pre><code>public abstract class Tv {
 
-    void quack();</code></pre><p>   定义一个火鸡接口 方法为鸡叫</p>
-<pre><code>public interface Turkey {
+    public abstract void on();
 
-   void gobble();    </code></pre><p>   鸭子实现类</p>
-<pre><code>public class WildDuck implements Duck {
+    public abstract void off();
 
-    @Override
-    public void quack() {
-        System.out.println(&quot;鸭子叫&quot;);
-    }
-}    </code></pre><p>   火鸡实现类</p>
-<pre><code>public class WildTurkey implements Turkey {
+    public abstract void tuneTunnel();</code></pre><p>   定义一个电视机的实现类，Sony电视机。</p>
+<pre><code>public class SonyTv extends Tv {
 
     @Override
-    public void gobble() {
-        System.out.println(&quot;火鸡叫&quot;);
-    }
-} </code></pre><p>   现在鸭子只能发出鸭子叫，鸡只能发出鸡叫，我们想要鸭子发出鸡的叫声。添加鸭子适配器。</p>
-<pre><code>public class DuckAdapter implements Turkey {
-
-   Duck duck;
-
-   public DuckAdapter(Duck duck) {
-       this.duck = duck;
-   }
-
-   @Override
-   public void gobble() {
-       duck.quack();
-   }
-}</code></pre><p>   组合方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
-<pre><code>public class DuckAdapter extends Turkey WildTurkey implements Turkey {
-
-      @Override
-      public void gobble() {
-          gobble.quack();
-      }
-   }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/01/08/java/java-design/structure/composite/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/composite/" itemprop="url">Java设计模式：组合模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  496 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将对象组合成树形结构来表示“整体/部分”层次关系，允许用户以相同的方式处理单独对象和组合对象。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>组件（Component）类是组合类（Composite）和叶子类（Leaf）的父类，可以把组合类看成是树的中间节点。<br>组合对象拥有一个或多个组件对象，因此组合对象的操作可以委托给组件对象去处理，而组件对象可以是另一个组合对象或者叶子对象。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组件抽象类</p>
-<pre><code>public abstract class Component {
-
-    protected String name;
-
-    public Component(String name) {
-        this.name = name;
-    }
-
-    public void print() {
-        print(0);
-    }
-    public abstract void print(int level);
-
-    public abstract void add(Component component);
-
-    public abstract void remove(Component component);
-}</code></pre><p>   定义一个组合类，继承组件类，并依赖了组件类，依赖的组件类可以是另一个组合对象或者叶子对象</p>
-<pre><code>public class Composite extends Component {
-
-    private List&lt;Component&gt; child;
-
-    public Composite(String name) {
-        super(name);
-        child = new ArrayList&lt;&gt;();
+    public void on() {
+        System.out.println(&quot;SonyTv,on&quot;);
     }
 
     @Override
-    public void print(int level) {
-        for (int i = 0; i &lt; level; i++) {
-            System.out.print(&quot;--&quot;);
-        }
-        System.out.println(&quot;Composite:&quot; + name);
-        for (Component component : child) {
-            component.print(level + 1);
-        }
+    public void off() {
+        System.out.println(&quot;SonyTv,off&quot;);
     }
 
     @Override
-    public void add(Component component) {
-        child.add(component);
+    public void tuneTunnel() {
+        System.out.println(&quot;SonyTv,tuneTunnel&quot;);
+    }</code></pre><p>   定义一个遥控器抽象类。组合了一个电视机对象。</p>
+<pre><code>protected Tv tv;
+
+    public RemoteControl(Tv tv) {
+        this.tv = tv;
+    }
+
+    public abstract void on();
+
+    public abstract void off();
+
+    public abstract void tuneTunnel();   </code></pre><p>   定义一个遥控器的实现类，Sony电视机遥控器。</p>
+<pre><code>public class SonyRemoteControl extends RemoteControl {
+
+    public SonyRemoteControl(Tv tv) {
+        super(tv);
     }
 
     @Override
-    public void remove(Component component) {
-        child.remove(component);
-    }
-}</code></pre><p>   定义一个叶子类，继承组件类。</p>
-<pre><code>public class Leaf extends Component{
-
-    public Leaf(String name) {
-        super(name);
+    public void on() {
+        System.out.println(&quot;sonyRemoteControl,on&quot;);
+        tv.on();
     }
 
     @Override
-    public void print(int level) {
-        for (int i = 0; i &lt; level; i++) {
-            System.out.print(&quot;--&quot;);
-        }
-        System.out.println(&quot;left:&quot; + name);
+    public void off() {
+        System.out.println(&quot;sonyRemoteControl,off&quot;);
+        tv.off();
     }
 
     @Override
-    public void add(Component component) {
-        throw new UnsupportedOperationException(); // 牺牲透明性换取单一职责原则，这样就不用考虑是叶子节点还是组合节点
+    public void tuneTunnel() {
+        System.out.println(&quot;sonyRemoteControl,tuneTunnel&quot;);
+        tv.off();
     }
-
-    @Override
-    public void remove(Component component) {
-        throw new UnsupportedOperationException();
-    }  </code></pre><p>   测试</p>
+} </code></pre><p>   在生成sony电视机遥控器时，传入一个sony电视机对象，即可使用该遥控器实现该电视机的状态变换。</p>
 <pre><code>public class Client {
 
-    public static void main(String[] args) {
-        Composite root = new Composite(&quot;root&quot;);
-        Component node1 = new Leaf(&quot;1&quot;);
-        Component node2 = new Composite(&quot;2&quot;);
-        Component node3 = new Leaf(&quot;3&quot;);
-        root.add(node1);
-        root.add(node2);
-        root.add(node3);
-        Component node21 = new Leaf(&quot;21&quot;);
-        Component node22 = new Composite(&quot;22&quot;);
-        node2.add(node21);
-        node2.add(node22);
-        Component node221 = new Leaf(&quot;221&quot;);
-        node22.add(node221);
-        root.print();
-    }
-}</code></pre><p>   结果</p>
-<pre><code>Composite:root
---left:1
---Composite:2
-----left:21
-----Composite:22
-------left:221
---left:3</code></pre>
+   public static void main(String[] args) {
+       Tv sonyTv = new SonyTv();
+       SonyRemoteControl sonyRemoteControl = new SonyRemoteControl(sonyTv);
+       sonyRemoteControl.on();
+       sonyRemoteControl.off();
+       sonyRemoteControl.tuneTunnel();
+   }
+}</code></pre>
           
         
       
@@ -3054,7 +3054,7 @@ chmod 751 file 给file的属主分配读、写、执行(7)的权限，给file的
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
