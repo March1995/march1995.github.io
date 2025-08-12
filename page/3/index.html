@@ -520,7 +520,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/12/06/spring/springLoadXml/">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/12/06/spring/Aop%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -539,7 +539,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/12/06/spring/springLoadXml/" itemprop="url">Spring 加载XML文件的六种方式</a></h1>
+                <a class="post-title-link" href="/2019/12/06/spring/Aop%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B/" itemprop="url">Spring AOP模块</a></h1>
         
 
         <div class="post-meta">
@@ -574,8 +574,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring/" itemprop="url" rel="index">
-                    <span itemprop="name">spring</span>
+                  <a href="/categories/Spring-AOP/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring AOP</span>
                   </a>
                 </span>
 
@@ -605,7 +605,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  559 字
+                  585 字
                 </span>
               
 
@@ -621,7 +621,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  3 分钟
+                  2 分钟
                 </span>
               
             </div>
@@ -644,20 +644,31 @@
       
         
           
-            <h1 id="一-XmlBeanFactory-引用资源"><a href="#一-XmlBeanFactory-引用资源" class="headerlink" title="一: XmlBeanFactory 引用资源"></a>一: XmlBeanFactory 引用资源</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Resource resource &#x3D; new ClassPathResource(&quot;appcontext.xml&quot;);</span><br><span class="line">BeanFactory factory &#x3D; new XmlBeanFactory(resource);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) factory.getBean(&quot;baseEntity1&quot;);</span><br><span class="line">System.out.println(&quot;XmlBeanFactory 获取 bean ：&quot; + entity.getId());</span><br></pre></td></tr></table></figure>
+            <h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><p><img src="/.io//uploads/spring/aop/aop%E7%B1%BB%E5%9B%BE.png" alt="类图"></p>
+<h1 id="aop功能代码分析图"><a href="#aop功能代码分析图" class="headerlink" title="aop功能代码分析图"></a>aop功能代码分析图</h1><p><img src="/.io//uploads/spring/aop/aop%E5%8A%9F%E8%83%BD%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%9B%BE.png" alt="aop功能代码分析图"></p>
+<h3 id="重点关注-InstantiationAwareBeanPostProcessor-和-postProcessBeforeInstantiation-后置处理。"><a href="#重点关注-InstantiationAwareBeanPostProcessor-和-postProcessBeforeInstantiation-后置处理。" class="headerlink" title="重点关注 InstantiationAwareBeanPostProcessor 和 postProcessBeforeInstantiation() 后置处理。"></a>重点关注 InstantiationAwareBeanPostProcessor 和 postProcessBeforeInstantiation() 后置处理。</h3><h1 id="1-InstantiationAwareBeanPostProcessor-类的实例化之前执行"><a href="#1-InstantiationAwareBeanPostProcessor-类的实例化之前执行" class="headerlink" title="1.InstantiationAwareBeanPostProcessor(类的实例化之前执行)"></a>1.InstantiationAwareBeanPostProcessor(类的实例化之前执行)</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.</span></span><br><span class="line">    <span class="comment">// 给bean的后置处理器一个机会来生成一个代理对象返回,在aop模块进行详细讲解</span></span><br><span class="line">    <span class="comment">// 由于bean未实例化，所以并未实际创建代理对象，只是如果对象有切面的话，找到对象切面并缓存</span></span><br><span class="line">    Object bean = resolveBeforeInstantiation(beanName, mbdToUse);</span><br><span class="line">    <span class="keyword">if</span> (bean != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 真正进行主要的业务逻辑方法来进行创建bean</span></span><br><span class="line">    Object beanInstance = doCreateBean(beanName, mbdToUse, args);</span><br><span class="line">    <span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">        logger.trace(<span class="string">"Finished creating instance of bean '"</span> + beanName + <span class="string">"'"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> beanInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="二-ClassPathXmlApplicationContext-编译路径"><a href="#二-ClassPathXmlApplicationContext-编译路径" class="headerlink" title="二: ClassPathXmlApplicationContext  编译路径"></a>二: ClassPathXmlApplicationContext  编译路径</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 单个文件</span><br><span class="line">ApplicationContext applicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 多个文件</span><br><span class="line">ApplicationContext multiApplicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;, &quot;classpath:appcontext2.xml&quot;);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) applicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) multiApplicationContext.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean2 ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="三-用文件系统的路径"><a href="#三-用文件系统的路径" class="headerlink" title="三: 用文件系统的路径"></a>三: 用文件系统的路径</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; classPath</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext &#x3D; new FileSystemXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 文件系统</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext2 &#x3D; new FileSystemXmlApplicationContext(&quot;spring-example-test&#x2F;src&#x2F;main&#x2F;resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext3 &#x3D; new FileSystemXmlApplicationContext(&quot;file:E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext4 &#x3D; new FileSystemXmlApplicationContext(&quot;E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) fileSystemXmlApplicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) fileSystemXmlApplicationContext2.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity3 &#x3D; (BaseEntity) fileSystemXmlApplicationContext3.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity4 &#x3D; (BaseEntity) fileSystemXmlApplicationContext4.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="四-XmlWebApplicationContext是专为Web工程定制的。"><a href="#四-XmlWebApplicationContext是专为Web工程定制的。" class="headerlink" title="四: XmlWebApplicationContext是专为Web工程定制的。"></a>四: XmlWebApplicationContext是专为Web工程定制的。</h1><p>ServletContext servletContext = request.getSession().getServletContext();<br>ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(servletContext ); </p>
-<h1 id="五-使用BeanFactory"><a href="#五-使用BeanFactory" class="headerlink" title="五: 使用BeanFactory"></a>五: 使用BeanFactory</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">BeanDefinitionRegistry reg &#x3D; new DefaultListableBeanFactory();</span><br><span class="line">XmlBeanDefinitionReader reader &#x3D; new XmlBeanDefinitionReader(reg);</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext.xml&quot;));</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext2.xml&quot;));</span><br><span class="line">BeanFactory bf &#x3D; (BeanFactory) reg;</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity&quot;);</span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="六：Web-应用启动时加载多个配置文件"><a href="#六：Web-应用启动时加载多个配置文件" class="headerlink" title="六：Web 应用启动时加载多个配置文件"></a>六：Web 应用启动时加载多个配置文件</h1><p>通过ContextLoaderListener 也可加载多个配置文件，在web.xml文件中利用<br><context-pararn>元素来指定多个配置文件位置，其配置如下: </context-pararn></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;context-param&gt;  </span><br><span class="line">    &lt;!-- Context Configuration locations for Spring XML files --&gt;  </span><br><span class="line">       &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;  </span><br><span class="line">       &lt;param-value&gt;  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;Appserver-resources.xml,  </span><br><span class="line">       classpath:config&#x2F;aer&#x2F;aerContext.xml,  </span><br><span class="line">       classpath:org&#x2F;codehaus&#x2F;xfire&#x2F;spring&#x2F;xfire.xml,  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;*.spring.xml  </span><br><span class="line">       &lt;&#x2F;param-value&gt;  </span><br><span class="line">   &lt;&#x2F;context-param&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这个方法加载配置文件的前提是已经知道配置文件在哪里，虽然可以利用“*”通配符，但灵活度有限。 </p>
-<h1 id="获取配套代码"><a href="#获取配套代码" class="headerlink" title="获取配套代码"></a><a href="https://github.com/MarchNineteen/spring-example/tree/master/spring-example-test/src/main/java/com/wyb/test/spring/loadXml" target="_blank" rel="noopener">获取配套代码</a></h1>
+<h2 id="AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口"><a href="#AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口" class="headerlink" title="AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口"></a>AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口</h2><h3 id="主要作用"><a href="#主要作用" class="headerlink" title="主要作用"></a>主要作用</h3><p>1.预测 Bean 类型：</p>
+<ul>
+<li>predictBeanType()方法允许在 Bean 实际创建之前预测其类型</li>
+</ul>
+<p>2.确定候选构造函数：</p>
+<ul>
+<li>determineCandidateConstructors()方法可以影响 Spring 选择哪个构造函数来实例化 Bean</li>
+</ul>
+<p>3.取早期 Bean 引用：</p>
+<ul>
+<li>getEarlyBeanReference()方法在 Bean 完全初始化前提供引用，用于解决循环依赖问题</li>
+</ul>
+<h3 id="典型应用场景"><a href="#典型应用场景" class="headerlink" title="典型应用场景"></a>典型应用场景</h3><ul>
+<li>AOP 代理：Spring AOP 使用它来预测代理对象的类型</li>
+<li>循环依赖解决：在构造器注入循环依赖时发挥作用</li>
+<li>自定义实例化逻辑：当需要特殊处理 Bean 的实例化过程时</li>
+</ul>
+<h3 id="执行流程-postProcessBeforeInstantiation"><a href="#执行流程-postProcessBeforeInstantiation" class="headerlink" title="执行流程 postProcessBeforeInstantiation"></a>执行流程 postProcessBeforeInstantiation</h3><h1 id="2-postProcessBeforeInstantiation-类的初始化之前或者之后执行"><a href="#2-postProcessBeforeInstantiation-类的初始化之前或者之后执行" class="headerlink" title="2.postProcessBeforeInstantiation(类的初始化之前或者之后执行)"></a>2.postProcessBeforeInstantiation(类的初始化之前或者之后执行)</h1><p><img src="/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
+<h1 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h1><h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p>bean在单例模式下，spring容器启动时解析xml文件发现该bean标签后，直接创建该bean对象存入内部map中保存，<br>此后无论调用多少次getBean()获取该bean都是从map中获取该对象返回，一直是一个对象。<br>此对象一直被spring容器持有，直到容器推出时，随着容器的退出对象被销毁。</p>
+<h2 id="多例模式"><a href="#多例模式" class="headerlink" title="多例模式"></a>多例模式</h2><p>bean在多例模式下，spring容器启动时解析xml发下该bean标签后，只是将该bean进行管理，并不会创建对象，<br>此后每层使用getBean()获取该bean时，spring都会重新创建该对象返回，每层都是一个新的对象。<br>这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。</p>
+<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>
           
         
       
@@ -902,6 +913,199 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/12/06/spring/springLoadXml/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/12/06/spring/springLoadXml/" itemprop="url">Spring 加载XML文件的六种方式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-06T00:00:00+00:00">
+                2019-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  559 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一-XmlBeanFactory-引用资源"><a href="#一-XmlBeanFactory-引用资源" class="headerlink" title="一: XmlBeanFactory 引用资源"></a>一: XmlBeanFactory 引用资源</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Resource resource &#x3D; new ClassPathResource(&quot;appcontext.xml&quot;);</span><br><span class="line">BeanFactory factory &#x3D; new XmlBeanFactory(resource);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) factory.getBean(&quot;baseEntity1&quot;);</span><br><span class="line">System.out.println(&quot;XmlBeanFactory 获取 bean ：&quot; + entity.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="二-ClassPathXmlApplicationContext-编译路径"><a href="#二-ClassPathXmlApplicationContext-编译路径" class="headerlink" title="二: ClassPathXmlApplicationContext  编译路径"></a>二: ClassPathXmlApplicationContext  编译路径</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 单个文件</span><br><span class="line">ApplicationContext applicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 多个文件</span><br><span class="line">ApplicationContext multiApplicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;, &quot;classpath:appcontext2.xml&quot;);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) applicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) multiApplicationContext.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean2 ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="三-用文件系统的路径"><a href="#三-用文件系统的路径" class="headerlink" title="三: 用文件系统的路径"></a>三: 用文件系统的路径</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; classPath</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext &#x3D; new FileSystemXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 文件系统</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext2 &#x3D; new FileSystemXmlApplicationContext(&quot;spring-example-test&#x2F;src&#x2F;main&#x2F;resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext3 &#x3D; new FileSystemXmlApplicationContext(&quot;file:E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext4 &#x3D; new FileSystemXmlApplicationContext(&quot;E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) fileSystemXmlApplicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) fileSystemXmlApplicationContext2.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity3 &#x3D; (BaseEntity) fileSystemXmlApplicationContext3.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity4 &#x3D; (BaseEntity) fileSystemXmlApplicationContext4.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="四-XmlWebApplicationContext是专为Web工程定制的。"><a href="#四-XmlWebApplicationContext是专为Web工程定制的。" class="headerlink" title="四: XmlWebApplicationContext是专为Web工程定制的。"></a>四: XmlWebApplicationContext是专为Web工程定制的。</h1><p>ServletContext servletContext = request.getSession().getServletContext();<br>ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(servletContext ); </p>
+<h1 id="五-使用BeanFactory"><a href="#五-使用BeanFactory" class="headerlink" title="五: 使用BeanFactory"></a>五: 使用BeanFactory</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">BeanDefinitionRegistry reg &#x3D; new DefaultListableBeanFactory();</span><br><span class="line">XmlBeanDefinitionReader reader &#x3D; new XmlBeanDefinitionReader(reg);</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext.xml&quot;));</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext2.xml&quot;));</span><br><span class="line">BeanFactory bf &#x3D; (BeanFactory) reg;</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity&quot;);</span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="六：Web-应用启动时加载多个配置文件"><a href="#六：Web-应用启动时加载多个配置文件" class="headerlink" title="六：Web 应用启动时加载多个配置文件"></a>六：Web 应用启动时加载多个配置文件</h1><p>通过ContextLoaderListener 也可加载多个配置文件，在web.xml文件中利用<br><context-pararn>元素来指定多个配置文件位置，其配置如下: </context-pararn></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;context-param&gt;  </span><br><span class="line">    &lt;!-- Context Configuration locations for Spring XML files --&gt;  </span><br><span class="line">       &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;  </span><br><span class="line">       &lt;param-value&gt;  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;Appserver-resources.xml,  </span><br><span class="line">       classpath:config&#x2F;aer&#x2F;aerContext.xml,  </span><br><span class="line">       classpath:org&#x2F;codehaus&#x2F;xfire&#x2F;spring&#x2F;xfire.xml,  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;*.spring.xml  </span><br><span class="line">       &lt;&#x2F;param-value&gt;  </span><br><span class="line">   &lt;&#x2F;context-param&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法加载配置文件的前提是已经知道配置文件在哪里，虽然可以利用“*”通配符，但灵活度有限。 </p>
+<h1 id="获取配套代码"><a href="#获取配套代码" class="headerlink" title="获取配套代码"></a><a href="https://github.com/MarchNineteen/spring-example/tree/master/spring-example-test/src/main/java/com/wyb/test/spring/loadXml" target="_blank" rel="noopener">获取配套代码</a></h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/11/27/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/springMVC&swagger/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1046,252 +1250,6 @@
 <p>这样添加之后，我们需要去直接访问自己的页面地址，而不是访问swagger-ui.html，例如/swagger/index.html。<br>如果采用<em>.htm或者</em>.do这种方式，可能会出现页面访问得到的，提示/v2/api-docs接口无法请求。解决方案是配置把swagger或者数据的接口置入dispatcherServlet中</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet-mapping&gt;</span><br><span class="line">    &lt;servlet-name&gt;SpringmvcDispatcherServlet&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;&#x2F;v2&#x2F;api-docs&lt;&#x2F;url-pattern&gt;</span><br><span class="line">&lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
 
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/10/25/cache/index/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/25/cache/index/" itemprop="url">缓存概要</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-25T00:00:00+00:00">
-                2019-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cache/" itemprop="url" rel="index">
-                    <span itemprop="name">cache</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.9k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="一、缓存特征"><a href="#一、缓存特征" class="headerlink" title="一、缓存特征"></a>一、缓存特征</h1><h2 id="命中率"><a href="#命中率" class="headerlink" title="命中率"></a>命中率</h2><p>当某个请求能够通过访问缓存而得到响应时，称为缓存命中。</p>
-<p>缓存命中率越高，缓存的利用率也就越高。</p>
-<h2 id="最大空间"><a href="#最大空间" class="headerlink" title="最大空间"></a>最大空间</h2><p>缓存通常位于内存中，内存的空间通常比磁盘空间小的多，因此缓存的最大空间不可能非常大。</p>
-<p>当缓存存放的数据量超过最大空间时，就需要淘汰部分数据来存放新到达的数据。</p>
-<h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><ul>
-<li><p>FIFO（First In First Out）：先进先出策略，在实时性的场景下，需要经常访问最新的数据，那么就可以使用 FIFO，使得最先进入的数据（最晚的数据）被淘汰。</p>
-</li>
-<li><p>LRU（Least Recently Used）：最近最久未使用策略，优先淘汰最久未使用的数据，也就是上次被访问时间距离现在最久的数据。该策略可以保证内存中的数据都是热点数据，也就是经常被访问的数据，从而保证缓存命中率。</p>
-</li>
-<li><p>LFU（Least Frequently Used）：最不经常使用策略，优先淘汰一段时间内使用次数最少的数据。</p>
-</li>
-</ul>
-<h1 id="二、LRU"><a href="#二、LRU" class="headerlink" title="二、LRU"></a>二、LRU</h1><p>以下是基于 双向链表 + HashMap 的 LRU 算法实现，对算法的解释如下：</p>
-<p>访问某个节点时，将其从原来的位置删除，并重新插入到链表头部。这样就能保证链表尾部存储的就是最近最久未使用的节点，当节点数量大于缓存最大空间时就淘汰链表尾部的节点。<br>为了使删除操作时间复杂度为 O(1)，就不能采用遍历的方式找到某个节点。HashMap 存储着 Key 到节点的映射，通过 Key 就能以 O(1) 的时间得到节点，然后再以 O(1) 的时间将其从双向队列中删除。</p>
-<p><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/algorithms/cache/LRU.java" target="_blank" rel="noopener">LRU实现</a></p>
-<h1 id="三、CDN"><a href="#三、CDN" class="headerlink" title="三、CDN"></a>三、CDN</h1><p>内容分发网络（Content distribution network，CDN）是一种互连的网络系统，它利用更靠近用户的服务器从而更快更可靠地将 HTML、CSS、JavaScript、音乐、图片、视频等静态资源分发给用户。</p>
-<p>CDN 主要有以下优点：</p>
-<ul>
-<li>更快地将数据分发给用户；</li>
-<li>通过部署多台服务器，从而提高系统整体的带宽性能；</li>
-<li>多台服务器可以看成是一种冗余机制，从而具有高可用性。</li>
-</ul>
-<h1 id="四、缓存问题"><a href="#四、缓存问题" class="headerlink" title="四、缓存问题"></a>四、缓存问题</h1><h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>指对某一个一定不存在的数据进行请求，该请求会将穿透缓存到达数据库。</p>
-<p>解决方案：</p>
-<ul>
-<li>对这些不存在的数据缓存一个空数据</li>
-<li>对这类请求进行过滤</li>
-</ul>
-<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>指的是由于数据没有被加载到缓存中，或者缓存数据在同一时间大面积失效（过期），又或者缓存服务器宕机，导致大量的请求都到达数据库。</p>
-<p>在有缓存的系统中，系统非常依赖于缓存，缓存分担了很大一部分的数据请求。当发生缓存雪崩时，数据库无法处理这么大的请求，导致数据库崩溃。</p>
-<p>解决方案：</p>
-<ul>
-<li>为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；</li>
-<li>为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存，分布式缓存中每一个节点只缓存部分的数据，当某个节点宕机时可以保证其它节点的缓存仍然可用。</li>
-<li>也可以进行缓存预热，避免在系统刚启动不久由于还未将大量数据进行缓存而导致缓存雪崩。</li>
-</ul>
-<h2 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h2><p>缓存一致性要求数据更新的同时缓存数据也能够实时更新。</p>
-<p>解决方案：</p>
-<ul>
-<li>在数据更新的同时立即去更新缓存；</li>
-<li>在读缓存之前先判断缓存是否是最新的，如果不是最新的先进行更新。</li>
-</ul>
-<h2 id="缓存-“无底洞”-现象"><a href="#缓存-“无底洞”-现象" class="headerlink" title="缓存 “无底洞” 现象"></a>缓存 “无底洞” 现象</h2><p>指的是为了满足业务要求添加了大量缓存节点，但是性能不但没有好转反而下降了的现象。</p>
-<p>产生原因：缓存系统通常采用 hash 函数将 key 映射到对应的缓存节点，随着缓存节点数目的增加，键值分布到更多的节点上，导致客户端一次批量操作会涉及多次网络操作，这意味着批量操作的耗时会随着节点数目的增加而不断增大。此外，网络连接数变多，对节点的性能也有一定影响。</p>
-<p>解决方案：</p>
-<ul>
-<li>优化批量数据操作命令；</li>
-<li>减少网络通信次数；</li>
-<li>降低接入成本，使用长连接 / 连接池，NIO 等。</li>
-</ul>
-<h1 id="五、数据分布"><a href="#五、数据分布" class="headerlink" title="五、数据分布"></a>五、数据分布</h1><h2 id="哈希分布"><a href="#哈希分布" class="headerlink" title="哈希分布"></a>哈希分布</h2><p>哈希分布就是将数据计算哈希值之后，按照哈希值分配到不同的节点上。例如有 N 个节点，数据的主键为 key，则将该数据分配的节点序号为：hash(key)%N。</p>
-<p>传统的哈希分布算法存在一个问题：当节点数量变化时，也就是 N 值变化，那么几乎所有的数据都需要重新分布，将导致大量的数据迁移。</p>
-<h2 id="顺序分布"><a href="#顺序分布" class="headerlink" title="顺序分布"></a>顺序分布</h2><p>将数据划分为多个连续的部分，按数据的 ID 或者时间分布到不同节点上。例如 User 表的 ID 范围为 1 ~ 7000，使用顺序分布可以将其划分成多个子表，对应的主键范围为 1 ~ 1000，1001 ~ 2000，…，6001 ~ 7000。</p>
-<p>顺序分布相比于哈希分布的主要优点如下：</p>
-<ul>
-<li>能保持数据原有的顺序；</li>
-<li>并且能够准确控制每台服务器存储的数据量，从而使得存储空间的利用率最大。</li>
-</ul>
-<h1 id="六、一致性哈希"><a href="#六、一致性哈希" class="headerlink" title="六、一致性哈希"></a>六、一致性哈希</h1><p>Distributed Hash Table（DHT） 是一种哈希分布方式，其目的是为了克服传统哈希分布在服务器节点数量变化时大量数据迁移的问题。</p>
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>将哈希空间 [0, 2n-1] 看成一个哈希环，每个服务器节点都配置到哈希环上。每个数据对象通过哈希取模得到哈希值之后，存放到哈希环中顺时针方向第一个大于等于该哈希值的节点上。</p>
-<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="一致性hash原理图"></p>
-<p>一致性哈希在增加或者删除节点时只会影响到哈希环中相邻的节点，例如下图中新增节点 X，只需要将它前一个节点 C 上的数据重新进行分布即可，对于节点 A、B、D 都没有影响。</p>
-<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="一致性hash增加节点示意图"></p>
-<h2 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h2><p>上面描述的一致性哈希存在数据分布不均匀的问题，节点存储的数据量有可能会存在很大的不同。</p>
-<p>数据不均匀主要是因为节点在哈希环上分布的不均匀，这种情况在节点数量很少的情况下尤其明显。</p>
-<p>解决方式是通过增加虚拟节点，然后将虚拟节点映射到真实节点上。虚拟节点的数量比真实节点来得多，那么虚拟节点在哈希环上分布的均匀性就会比原来的真实节点好，从而使得数据分布也更加均匀。</p>
 
           
         
@@ -1617,6 +1575,252 @@
 <li>代理分片：将客户端请求发送到代理上，由代理转发请求到正确的节点上。</li>
 <li>服务器分片：Redis Cluster。</li>
 </ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/10/25/cache/index/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/25/cache/index/" itemprop="url">缓存概要</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-25T00:00:00+00:00">
+                2019-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cache/" itemprop="url" rel="index">
+                    <span itemprop="name">cache</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.9k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一、缓存特征"><a href="#一、缓存特征" class="headerlink" title="一、缓存特征"></a>一、缓存特征</h1><h2 id="命中率"><a href="#命中率" class="headerlink" title="命中率"></a>命中率</h2><p>当某个请求能够通过访问缓存而得到响应时，称为缓存命中。</p>
+<p>缓存命中率越高，缓存的利用率也就越高。</p>
+<h2 id="最大空间"><a href="#最大空间" class="headerlink" title="最大空间"></a>最大空间</h2><p>缓存通常位于内存中，内存的空间通常比磁盘空间小的多，因此缓存的最大空间不可能非常大。</p>
+<p>当缓存存放的数据量超过最大空间时，就需要淘汰部分数据来存放新到达的数据。</p>
+<h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><ul>
+<li><p>FIFO（First In First Out）：先进先出策略，在实时性的场景下，需要经常访问最新的数据，那么就可以使用 FIFO，使得最先进入的数据（最晚的数据）被淘汰。</p>
+</li>
+<li><p>LRU（Least Recently Used）：最近最久未使用策略，优先淘汰最久未使用的数据，也就是上次被访问时间距离现在最久的数据。该策略可以保证内存中的数据都是热点数据，也就是经常被访问的数据，从而保证缓存命中率。</p>
+</li>
+<li><p>LFU（Least Frequently Used）：最不经常使用策略，优先淘汰一段时间内使用次数最少的数据。</p>
+</li>
+</ul>
+<h1 id="二、LRU"><a href="#二、LRU" class="headerlink" title="二、LRU"></a>二、LRU</h1><p>以下是基于 双向链表 + HashMap 的 LRU 算法实现，对算法的解释如下：</p>
+<p>访问某个节点时，将其从原来的位置删除，并重新插入到链表头部。这样就能保证链表尾部存储的就是最近最久未使用的节点，当节点数量大于缓存最大空间时就淘汰链表尾部的节点。<br>为了使删除操作时间复杂度为 O(1)，就不能采用遍历的方式找到某个节点。HashMap 存储着 Key 到节点的映射，通过 Key 就能以 O(1) 的时间得到节点，然后再以 O(1) 的时间将其从双向队列中删除。</p>
+<p><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/algorithms/cache/LRU.java" target="_blank" rel="noopener">LRU实现</a></p>
+<h1 id="三、CDN"><a href="#三、CDN" class="headerlink" title="三、CDN"></a>三、CDN</h1><p>内容分发网络（Content distribution network，CDN）是一种互连的网络系统，它利用更靠近用户的服务器从而更快更可靠地将 HTML、CSS、JavaScript、音乐、图片、视频等静态资源分发给用户。</p>
+<p>CDN 主要有以下优点：</p>
+<ul>
+<li>更快地将数据分发给用户；</li>
+<li>通过部署多台服务器，从而提高系统整体的带宽性能；</li>
+<li>多台服务器可以看成是一种冗余机制，从而具有高可用性。</li>
+</ul>
+<h1 id="四、缓存问题"><a href="#四、缓存问题" class="headerlink" title="四、缓存问题"></a>四、缓存问题</h1><h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>指对某一个一定不存在的数据进行请求，该请求会将穿透缓存到达数据库。</p>
+<p>解决方案：</p>
+<ul>
+<li>对这些不存在的数据缓存一个空数据</li>
+<li>对这类请求进行过滤</li>
+</ul>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>指的是由于数据没有被加载到缓存中，或者缓存数据在同一时间大面积失效（过期），又或者缓存服务器宕机，导致大量的请求都到达数据库。</p>
+<p>在有缓存的系统中，系统非常依赖于缓存，缓存分担了很大一部分的数据请求。当发生缓存雪崩时，数据库无法处理这么大的请求，导致数据库崩溃。</p>
+<p>解决方案：</p>
+<ul>
+<li>为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；</li>
+<li>为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存，分布式缓存中每一个节点只缓存部分的数据，当某个节点宕机时可以保证其它节点的缓存仍然可用。</li>
+<li>也可以进行缓存预热，避免在系统刚启动不久由于还未将大量数据进行缓存而导致缓存雪崩。</li>
+</ul>
+<h2 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h2><p>缓存一致性要求数据更新的同时缓存数据也能够实时更新。</p>
+<p>解决方案：</p>
+<ul>
+<li>在数据更新的同时立即去更新缓存；</li>
+<li>在读缓存之前先判断缓存是否是最新的，如果不是最新的先进行更新。</li>
+</ul>
+<h2 id="缓存-“无底洞”-现象"><a href="#缓存-“无底洞”-现象" class="headerlink" title="缓存 “无底洞” 现象"></a>缓存 “无底洞” 现象</h2><p>指的是为了满足业务要求添加了大量缓存节点，但是性能不但没有好转反而下降了的现象。</p>
+<p>产生原因：缓存系统通常采用 hash 函数将 key 映射到对应的缓存节点，随着缓存节点数目的增加，键值分布到更多的节点上，导致客户端一次批量操作会涉及多次网络操作，这意味着批量操作的耗时会随着节点数目的增加而不断增大。此外，网络连接数变多，对节点的性能也有一定影响。</p>
+<p>解决方案：</p>
+<ul>
+<li>优化批量数据操作命令；</li>
+<li>减少网络通信次数；</li>
+<li>降低接入成本，使用长连接 / 连接池，NIO 等。</li>
+</ul>
+<h1 id="五、数据分布"><a href="#五、数据分布" class="headerlink" title="五、数据分布"></a>五、数据分布</h1><h2 id="哈希分布"><a href="#哈希分布" class="headerlink" title="哈希分布"></a>哈希分布</h2><p>哈希分布就是将数据计算哈希值之后，按照哈希值分配到不同的节点上。例如有 N 个节点，数据的主键为 key，则将该数据分配的节点序号为：hash(key)%N。</p>
+<p>传统的哈希分布算法存在一个问题：当节点数量变化时，也就是 N 值变化，那么几乎所有的数据都需要重新分布，将导致大量的数据迁移。</p>
+<h2 id="顺序分布"><a href="#顺序分布" class="headerlink" title="顺序分布"></a>顺序分布</h2><p>将数据划分为多个连续的部分，按数据的 ID 或者时间分布到不同节点上。例如 User 表的 ID 范围为 1 ~ 7000，使用顺序分布可以将其划分成多个子表，对应的主键范围为 1 ~ 1000，1001 ~ 2000，…，6001 ~ 7000。</p>
+<p>顺序分布相比于哈希分布的主要优点如下：</p>
+<ul>
+<li>能保持数据原有的顺序；</li>
+<li>并且能够准确控制每台服务器存储的数据量，从而使得存储空间的利用率最大。</li>
+</ul>
+<h1 id="六、一致性哈希"><a href="#六、一致性哈希" class="headerlink" title="六、一致性哈希"></a>六、一致性哈希</h1><p>Distributed Hash Table（DHT） 是一种哈希分布方式，其目的是为了克服传统哈希分布在服务器节点数量变化时大量数据迁移的问题。</p>
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>将哈希空间 [0, 2n-1] 看成一个哈希环，每个服务器节点都配置到哈希环上。每个数据对象通过哈希取模得到哈希值之后，存放到哈希环中顺时针方向第一个大于等于该哈希值的节点上。</p>
+<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="一致性hash原理图"></p>
+<p>一致性哈希在增加或者删除节点时只会影响到哈希环中相邻的节点，例如下图中新增节点 X，只需要将它前一个节点 C 上的数据重新进行分布即可，对于节点 A、B、D 都没有影响。</p>
+<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="一致性hash增加节点示意图"></p>
+<h2 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h2><p>上面描述的一致性哈希存在数据分布不均匀的问题，节点存储的数据量有可能会存在很大的不同。</p>
+<p>数据不均匀主要是因为节点在哈希环上分布的不均匀，这种情况在节点数量很少的情况下尤其明显。</p>
+<p>解决方式是通过增加虚拟节点，然后将虚拟节点映射到真实节点上。虚拟节点的数量比真实节点来得多，那么虚拟节点在哈希环上分布的均匀性就会比原来的真实节点好，从而使得数据分布也更加均匀。</p>
 
           
         
@@ -2299,290 +2503,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://marchnineteen.github.io/2019/05/30/tool/maven-dependence/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/30/tool/maven-dependence/" itemprop="url">maven-dependence</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-30T00:00:00+00:00">
-                2019-05-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/tool/" itemprop="url" rel="index">
-                    <span itemprop="name">tool</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.2k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  4 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="scope参数在dependence中表示依赖的范围。"><a href="#scope参数在dependence中表示依赖的范围。" class="headerlink" title="scope参数在dependence中表示依赖的范围。"></a>scope参数在dependence中表示依赖的范围。</h1><p>首先需要知道，maven在编译项目主代码的时候需要使用一套classpath。例如在编译项目主代码的时候需要用到spring-core，该文件以依赖的方式被引入到classpath中。<br>其次，maven在编译和执行测试的时候会使用另一套classpath，Junit就是一个很好的例子，该文件也以依赖的方式引入到测试使用的classpath中，不同的是这里的依赖<br>范围是test。最后，实际运行maven项目的时候，又会使用一套classpath。</p>
-<p>依赖范围就是用来控制依赖与这三种classpath（编辑classpath、测试classpath、运行classpath）的关系，maven有以下几种依赖范围：</p>
-<p><strong>Compile</strong>：编译依赖范围。如果没有指定，就会默认使用该依赖范围。使用此依赖范围的maven依赖，对于<strong>编译、测试、运行</strong>三种classpath都有效。<br>典型的例子是spring-core，在编译、测试和运行的时候都需要使用该依赖。</p>
-<p><strong>Test</strong>：测试依赖范围。使用此依赖范围的maven依赖，只对于<strong>测试</strong>的classpath有效，在编译主代码或者运行项目的使用时将无法使用此类依赖。典型的例子是Junit，<br>它只有在编辑测试代码及运行测试的时候才需要。</p>
-<p><strong>Provided</strong>：已提供依赖范围。使用此依赖范围的maven依赖，对于<strong>编译</strong>和<strong>测试</strong>classpath有效，但在运行时无效。典型的例子是servlet-api，<br>编译和测试项目的时候需要该依赖，但在运行项目的时候，由于容器已经提供，就不需要maven重复的引入一遍。</p>
-<p><strong>Runtime</strong>：运行时依赖范围。使用该依赖范围的maven依赖，对于测试和运行classpath有效，但在编译主代码时无效。典型的例子是JDBC驱动实现，项目主代码的编译<br>只需要JDK提供的JDBC接口，只有在执行测试或者运行项目的时候才需要实现上述的具体JDBC驱动。</p>
-<p><strong>System</strong>：系统依赖范围。该依赖与三种classpath的关系，<strong>和Provided依赖范围完全一致</strong>。但是，使用System范围的依赖是必须通过systemPath元素显示地指定<br>依赖文件的路径。由于此类依赖不是通过maven仓库解析的，而且往往与本机的系统绑定，可能造成构建的不可移植，因此应该谨慎使用。systemPath元素可以引用环境<br>变量，如：</p>
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;java.sql&lt;/groupId&gt;
-    &lt;artifactId&gt;jdbc-stdext&lt;/artifactId&gt;
-    &lt;version&gt;2.0&lt;/version&gt;
-    &lt;scope&gt;system&lt;/scope&gt;
-    &lt;systemPath&gt;${java.home}/lib/rt.jar&lt;/systemPath&gt;
-&lt;/dependency&gt;</code></pre><p><strong>Import(maven2.0.9及以上)</strong>：导入依赖范围。该依赖范围不会对3中classpath产生实际影响。    </p>
-<p>上述出import依赖的各种依赖范围3中classpath的关系如下表：</p>
-<table>
-<thead>
-<tr>
-<th align="center">依赖范围(scope)</th>
-<th align="left">编译classpath有效</th>
-<th align="left">测试classpath有效</th>
-<th align="left">运行classpath有效</th>
-<th align="left">例子</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">compile</td>
-<td align="left">Y</td>
-<td align="left">Y</td>
-<td align="left">Y</td>
-<td align="left">spring-core</td>
-</tr>
-<tr>
-<td align="center">test</td>
-<td align="left">-</td>
-<td align="left">Y</td>
-<td align="left">-</td>
-<td align="left">junit</td>
-</tr>
-<tr>
-<td align="center">provided</td>
-<td align="left">Y</td>
-<td align="left">Y</td>
-<td align="left">-</td>
-<td align="left">servlet-api</td>
-</tr>
-<tr>
-<td align="center">runtime</td>
-<td align="left">-</td>
-<td align="left">Y</td>
-<td align="left">Y</td>
-<td align="left">JDBC驱动</td>
-</tr>
-<tr>
-<td align="center">system</td>
-<td align="left">Y</td>
-<td align="left">Y</td>
-<td align="left">-</td>
-<td align="left">本地的，maven仓库之外的类库文件</td>
-</tr>
-</tbody></table>
-<h1 id="maven传递性依赖"><a href="#maven传递性依赖" class="headerlink" title="maven传递性依赖"></a>maven传递性依赖</h1><p>传递性依赖和依赖范围：</p>
-<p>依赖范围不仅可以控制依赖与三种classpath的关系，还对传递性依赖产生影响。例，account-email对于spring-core的依赖范围是compile，spring-core对于commons-logging<br>的依赖范围的是compile，那么account-email对于commons-logging这一传递依赖的范围也及时compile。假设A依赖与B，B依赖与C，我们说A对于B的依赖是第一直接依赖，<br>B对于C的依赖为第二直接依赖，A对于C是传递性依赖。第一直接依赖的范围是和第二直接依赖的范围决定了传递性依赖的范围，如下表所示，最左边一行表示第一直接依赖范围，<br>最上面一行便是第二直接依赖范围，中间的交叉单元格则便是传递性依赖范围:</p>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="left">compile</th>
-<th align="left">test</th>
-<th align="left">provided</th>
-<th align="left">runtime</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">compile</td>
-<td align="left">compile</td>
-<td align="left">-</td>
-<td align="left">-</td>
-<td align="left">runtime</td>
-</tr>
-<tr>
-<td align="center">test</td>
-<td align="left">test</td>
-<td align="left">-</td>
-<td align="left">-</td>
-<td align="left">test</td>
-</tr>
-<tr>
-<td align="center">provided</td>
-<td align="left">provided</td>
-<td align="left">-</td>
-<td align="left">provided</td>
-<td align="left">provided</td>
-</tr>
-<tr>
-<td align="center">runtime</td>
-<td align="left">runtime</td>
-<td align="left">-</td>
-<td align="left">-</td>
-<td align="left">runtime</td>
-</tr>
-</tbody></table>
-<p>仔细观察表格，可以发现规律：当第二直接依赖为compile的时候，传递性依赖的范围与第一直接依赖范围一致；当第二直接依赖范围是test的时候，依赖不会得以传递，<br>当第二直接依赖的范围是provided的时候，只传递第一直接依赖范围也为provided的依赖，且传递性依赖的范围同样为provided；当第二传递依赖是runtime的时候，<br>传递性依赖的范围与第一直接依赖的范围一致，丹compile例外，此时传递性依赖的范围为runtime。</p>
-<h2 id="maven可选依赖"><a href="#maven可选依赖" class="headerlink" title="maven可选依赖"></a>maven可选依赖</h2><p>使用<optional>元素表示依赖为可选依赖，只会对当前项目产生影响，当其他项目依赖当前项目时，该依赖不会被传递</optional></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2637,7 +2557,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2648,7 +2568,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2749,7 +2669,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">70.9k</span>
+    <span title="Site words total count">71.5k</span>
   
 </div>
 
@@ -2776,7 +2696,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共70.9k字</span>
+  <span class="post-count">博客全站共71.5k字</span>
 </div>
 
         

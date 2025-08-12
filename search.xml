@@ -1,6 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>app嵌入H5如何同步登录状态</title>
+    <url>/2021/10/11/active/appH5Token/</url>
+    <content><![CDATA[<p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
+<p>优化的方向：<br>A.APP登陆状态的变化是请求页面，登录后使用webview调用对应域名下的接口实现H5的登录B.每次请求H5url增加get登陆的信息，例如访问 index.php变成index.php？a=xxx通过附加信息同步登录状态<br>优化的方案不知道那个更好一点</p>
+]]></content>
+      <categories>
+        <category>active</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>秒杀场景</title>
+    <url>/2019/12/20/active/miaosha/</url>
+    <content><![CDATA[<h1 id="秒杀场景可能遇到的问题（用户流程角度）"><a href="#秒杀场景可能遇到的问题（用户流程角度）" class="headerlink" title="秒杀场景可能遇到的问题（用户流程角度）"></a>秒杀场景可能遇到的问题（用户流程角度）</h1><ul>
+<li><p>问题一.即将到秒杀时间，同时请求网页过多，打开网页速度慢</p>
+</li>
+<li><p>问题二.进入页面后，未到秒杀时间，用户一直点击购买按钮，一直发起请求</p>
+</li>
+<li><p>问题三.用户拿到接口地址，恶意请求（用脚本）</p>
+</li>
+<li><p>问题四.超卖现象</p>
+</li>
+<li><p>问题五.数据库请求过多，数据库奔溃</p>
+</li>
+</ul>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h2><ul>
+<li><p>针对于动态页面（jsp，ftl）可以把整个页面存储在redis中，避免页面渲染。</p>
+</li>
+<li><p>前后端分离项目，页面单独部署，使用cdn加速，资源静态</p>
+</li>
+<li><p>打开网页速度慢，除了页面的原因外，后台请求返回慢也有很大的关系，简单说就是后台高并发能力不足，一遇到此类场景，cpu，内存飚升，程序响应慢。单台tomcat并发量不足，可以集群部署然后使用nginx做负载均衡，恶意请求也可以在此拦截。</p>
+</li>
+<li><p>后台对请求限流</p>
+</li>
+</ul>
+<h2 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h2><ul>
+<li>页面按钮控制，未到时间按钮不能点击，需要页面定时请求后台获取最新的北京时间，不能以页面本地时间为准</li>
+<li>在用户点击过后，再把按钮设置无效，防止无效重复点击</li>
+</ul>
+<h2 id="问题三"><a href="#问题三" class="headerlink" title="问题三"></a>问题三</h2><p>接口地址动态化，通过MD5之类的加密算法加密随机的字符串去做url，然后通过前端代码获取url后台校验才能通过</p>
+<h2 id="问题四"><a href="#问题四" class="headerlink" title="问题四"></a>问题四</h2><h3 id="处理流程："><a href="#处理流程：" class="headerlink" title="处理流程："></a>处理流程：</h3><p>典型的读多先少场景，使用mysql等nosql，把库存存入redis中，进行库存预热。通过三级缓冲保证数据库压力，本地内存标记，库存修改在redis中进行预存，接着通过mq进行异步下单，处理数据库。若下单成功，页面轮询接口返回订单处理状态。</p>
+<h3 id="解决超卖方案"><a href="#解决超卖方案" class="headerlink" title="解决超卖方案"></a>解决超卖方案</h3><ul>
+<li>防止数据库内存为0，在修改时进行库存判断，大于0才更新。</li>
+<li>用户id与商品id建立唯一所以，防止同一用户重复购买同一件商品。</li>
+<li>实现乐观锁，商品信息中年增加version字段。每次更新时version+1，更新时候带上版本号，当提交前版本号等于更新前版本号，说明此时没有被其他线程影响到，正常更新，如果冲突了则不会进行提交更新。当库存是足够的情况下发生乐观锁冲突就进行一定次数的重试。</li>
+</ul>
+<p>一整套解决方案</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/11/16/16e72d24415cb009?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="秒杀"></p>
+<h2 id="产生更多的问题"><a href="#产生更多的问题" class="headerlink" title="产生更多的问题"></a>产生更多的问题</h2><ul>
+<li>redis集群，数据同步,分布式锁等</li>
+<li>mq高可用</li>
+<li>限流&amp;降级&amp;熔断&amp;隔离</li>
+<li>分布式服务，事务处理。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>active</category>
+      </categories>
+  </entry>
+  <entry>
     <title>支付系统可能遇到的问题</title>
     <url>/2021/10/11/active/pay/</url>
     <content><![CDATA[<p>(资源)</p>
@@ -48,16 +107,6 @@
 <td>事务/补偿机制</td>
 </tr>
 </tbody></table>
-]]></content>
-      <categories>
-        <category>active</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>app嵌入H5如何同步登录状态</title>
-    <url>/2021/10/11/active/appH5Token/</url>
-    <content><![CDATA[<p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
-<p>优化的方向：<br>A.APP登陆状态的变化是请求页面，登录后使用webview调用对应域名下的接口实现H5的登录B.每次请求H5url增加get登陆的信息，例如访问 index.php变成index.php？a=xxx通过附加信息同步登录状态<br>优化的方案不知道那个更好一点</p>
 ]]></content>
       <categories>
         <category>active</category>
@@ -288,55 +337,6 @@
 ]]></content>
       <categories>
         <category>cache</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>秒杀场景</title>
-    <url>/2019/12/20/active/miaosha/</url>
-    <content><![CDATA[<h1 id="秒杀场景可能遇到的问题（用户流程角度）"><a href="#秒杀场景可能遇到的问题（用户流程角度）" class="headerlink" title="秒杀场景可能遇到的问题（用户流程角度）"></a>秒杀场景可能遇到的问题（用户流程角度）</h1><ul>
-<li><p>问题一.即将到秒杀时间，同时请求网页过多，打开网页速度慢</p>
-</li>
-<li><p>问题二.进入页面后，未到秒杀时间，用户一直点击购买按钮，一直发起请求</p>
-</li>
-<li><p>问题三.用户拿到接口地址，恶意请求（用脚本）</p>
-</li>
-<li><p>问题四.超卖现象</p>
-</li>
-<li><p>问题五.数据库请求过多，数据库奔溃</p>
-</li>
-</ul>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h2><ul>
-<li><p>针对于动态页面（jsp，ftl）可以把整个页面存储在redis中，避免页面渲染。</p>
-</li>
-<li><p>前后端分离项目，页面单独部署，使用cdn加速，资源静态</p>
-</li>
-<li><p>打开网页速度慢，除了页面的原因外，后台请求返回慢也有很大的关系，简单说就是后台高并发能力不足，一遇到此类场景，cpu，内存飚升，程序响应慢。单台tomcat并发量不足，可以集群部署然后使用nginx做负载均衡，恶意请求也可以在此拦截。</p>
-</li>
-<li><p>后台对请求限流</p>
-</li>
-</ul>
-<h2 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h2><ul>
-<li>页面按钮控制，未到时间按钮不能点击，需要页面定时请求后台获取最新的北京时间，不能以页面本地时间为准</li>
-<li>在用户点击过后，再把按钮设置无效，防止无效重复点击</li>
-</ul>
-<h2 id="问题三"><a href="#问题三" class="headerlink" title="问题三"></a>问题三</h2><p>接口地址动态化，通过MD5之类的加密算法加密随机的字符串去做url，然后通过前端代码获取url后台校验才能通过</p>
-<h2 id="问题四"><a href="#问题四" class="headerlink" title="问题四"></a>问题四</h2><h3 id="处理流程："><a href="#处理流程：" class="headerlink" title="处理流程："></a>处理流程：</h3><p>典型的读多先少场景，使用mysql等nosql，把库存存入redis中，进行库存预热。通过三级缓冲保证数据库压力，本地内存标记，库存修改在redis中进行预存，接着通过mq进行异步下单，处理数据库。若下单成功，页面轮询接口返回订单处理状态。</p>
-<h3 id="解决超卖方案"><a href="#解决超卖方案" class="headerlink" title="解决超卖方案"></a>解决超卖方案</h3><ul>
-<li>防止数据库内存为0，在修改时进行库存判断，大于0才更新。</li>
-<li>用户id与商品id建立唯一所以，防止同一用户重复购买同一件商品。</li>
-<li>实现乐观锁，商品信息中年增加version字段。每次更新时version+1，更新时候带上版本号，当提交前版本号等于更新前版本号，说明此时没有被其他线程影响到，正常更新，如果冲突了则不会进行提交更新。当库存是足够的情况下发生乐观锁冲突就进行一定次数的重试。</li>
-</ul>
-<p>一整套解决方案</p>
-<p><img src="https://user-gold-cdn.xitu.io/2019/11/16/16e72d24415cb009?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="秒杀"></p>
-<h2 id="产生更多的问题"><a href="#产生更多的问题" class="headerlink" title="产生更多的问题"></a>产生更多的问题</h2><ul>
-<li>redis集群，数据同步,分布式锁等</li>
-<li>mq高可用</li>
-<li>限流&amp;降级&amp;熔断&amp;隔离</li>
-<li>分布式服务，事务处理。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>active</category>
       </categories>
   </entry>
   <entry>
@@ -580,24 +580,6 @@ chmod 751 file 给file的属主分配读、写、执行(7)的权限，给file的
       </categories>
   </entry>
   <entry>
-    <title>chown指令学习</title>
-    <url>/2018/11/29/linux-command/chown/</url>
-    <content><![CDATA[<h1 id="命令格式："><a href="#命令格式：" class="headerlink" title="命令格式："></a>命令格式：</h1><p>chown [选项]… [所有者][:[组]] 文件…</p>
-<h1 id="命令功能："><a href="#命令功能：" class="headerlink" title="命令功能："></a>命令功能：</h1><p>通过chown改变文件的拥有者和群组。在更改文件的所有者或所属群组时，可以使用用户名称和用户识别码设置。普通用户不能将自己的文件改变成其他的拥有者。其操作权限一般为管理员。</p>
-<h1 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h1><h2 id="必要参数："><a href="#必要参数：" class="headerlink" title="必要参数："></a>必要参数：</h2><pre><code>-c 显示更改的部分的信息
--f 忽略错误信息
--h 修复符号链接
--R 处理指定目录以及其子目录下的所有文件
--v 显示详细的处理信息
--deference 作用于符号链接的指向，而不是链接文件本身</code></pre><h2 id="选择参数："><a href="#选择参数：" class="headerlink" title="选择参数："></a>选择参数：</h2><pre><code>--reference=&lt;目录或文件&gt; 把指定的目录/文件作为参考，把操作的文件/目录设置成参考文件/目录相同拥有者和群组
---from=&lt;当前用户：当前群组&gt; 只有当前用户和群组跟指定的用户和群组相同时才进行改变
---help 显示帮助信息
---version 显示版本信息</code></pre>]]></content>
-      <categories>
-        <category>linux-command</category>
-      </categories>
-  </entry>
-  <entry>
     <title>ls指令学习</title>
     <url>/2017/07/05/linux-command/ls/</url>
     <content><![CDATA[<h1 id="命令格式："><a href="#命令格式：" class="headerlink" title="命令格式："></a>命令格式：</h1><p>ls [选项] [目录名]</p>
@@ -687,6 +669,24 @@ chmod 751 file 给file的属主分配读、写、执行(7)的权限，给file的
       </categories>
   </entry>
   <entry>
+    <title>chown指令学习</title>
+    <url>/2018/11/29/linux-command/chown/</url>
+    <content><![CDATA[<h1 id="命令格式："><a href="#命令格式：" class="headerlink" title="命令格式："></a>命令格式：</h1><p>chown [选项]… [所有者][:[组]] 文件…</p>
+<h1 id="命令功能："><a href="#命令功能：" class="headerlink" title="命令功能："></a>命令功能：</h1><p>通过chown改变文件的拥有者和群组。在更改文件的所有者或所属群组时，可以使用用户名称和用户识别码设置。普通用户不能将自己的文件改变成其他的拥有者。其操作权限一般为管理员。</p>
+<h1 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h1><h2 id="必要参数："><a href="#必要参数：" class="headerlink" title="必要参数："></a>必要参数：</h2><pre><code>-c 显示更改的部分的信息
+-f 忽略错误信息
+-h 修复符号链接
+-R 处理指定目录以及其子目录下的所有文件
+-v 显示详细的处理信息
+-deference 作用于符号链接的指向，而不是链接文件本身</code></pre><h2 id="选择参数："><a href="#选择参数：" class="headerlink" title="选择参数："></a>选择参数：</h2><pre><code>--reference=&lt;目录或文件&gt; 把指定的目录/文件作为参考，把操作的文件/目录设置成参考文件/目录相同拥有者和群组
+--from=&lt;当前用户：当前群组&gt; 只有当前用户和群组跟指定的用户和群组相同时才进行改变
+--help 显示帮助信息
+--version 显示版本信息</code></pre>]]></content>
+      <categories>
+        <category>linux-command</category>
+      </categories>
+  </entry>
+  <entry>
     <title>rm特殊删除</title>
     <url>/2018/10/29/linux-command/rm/</url>
     <content><![CDATA[<h1 id="特殊删除"><a href="#特殊删除" class="headerlink" title="特殊删除"></a>特殊删除</h1><h2 id="删除所有-p开头的文件"><a href="#删除所有-p开头的文件" class="headerlink" title="删除所有-p开头的文件"></a>删除所有-p开头的文件</h2><p>rm – -P.* </p>
@@ -752,15 +752,6 @@ chmod 751 file 给file的属主分配读、写、执行(7)的权限，给file的
 -V 显示程式的版本讯息  </code></pre>]]></content>
       <categories>
         <category>linux-command</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>杭州地铁规划2025</title>
-    <url>/2020/04/10/other/hangzhoumetro2025/</url>
-    <content><![CDATA[<h1 id="杭州地铁规划2025"><a href="#杭州地铁规划2025" class="headerlink" title="杭州地铁规划2025"></a>杭州地铁规划2025</h1><p><img src="/uploads/other/%E6%9D%AD%E5%B7%9E%E5%9C%B0%E9%93%81%E8%A7%84%E5%88%922025.jpg" alt="杭州地铁规划2025.jpg"></p>
-]]></content>
-      <categories>
-        <category>other</category>
       </categories>
   </entry>
   <entry>
@@ -922,6 +913,15 @@ http {
       </categories>
   </entry>
   <entry>
+    <title>杭州地铁规划2025</title>
+    <url>/2020/04/10/other/hangzhoumetro2025/</url>
+    <content><![CDATA[<h1 id="杭州地铁规划2025"><a href="#杭州地铁规划2025" class="headerlink" title="杭州地铁规划2025"></a>杭州地铁规划2025</h1><p><img src="/uploads/other/%E6%9D%AD%E5%B7%9E%E5%9C%B0%E9%93%81%E8%A7%84%E5%88%922025.jpg" alt="杭州地铁规划2025.jpg"></p>
+]]></content>
+      <categories>
+        <category>other</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Filter详解</title>
     <url>/2017/02/28/servlet/filter/</url>
     <content><![CDATA[<h1 id="web-xml中元素执行的顺序listener-gt-filter-gt-struts拦截器-gt-servlet。"><a href="#web-xml中元素执行的顺序listener-gt-filter-gt-struts拦截器-gt-servlet。" class="headerlink" title="web.xml中元素执行的顺序listener-&gt;filter-&gt;struts拦截器-&gt;servlet。"></a>web.xml中元素执行的顺序listener-&gt;filter-&gt;struts拦截器-&gt;servlet。</h1><ul>
@@ -976,6 +976,55 @@ http {
 ]]></content>
       <categories>
         <category>servlet</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Spring AOP模块</title>
+    <url>/2019/12/06/spring/Aop%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><p><img src="/.io//uploads/spring/aop/aop%E7%B1%BB%E5%9B%BE.png" alt="类图"></p>
+<h1 id="aop功能代码分析图"><a href="#aop功能代码分析图" class="headerlink" title="aop功能代码分析图"></a>aop功能代码分析图</h1><p><img src="/.io//uploads/spring/aop/aop%E5%8A%9F%E8%83%BD%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%9B%BE.png" alt="aop功能代码分析图"></p>
+<h3 id="重点关注-InstantiationAwareBeanPostProcessor-和-postProcessBeforeInstantiation-后置处理。"><a href="#重点关注-InstantiationAwareBeanPostProcessor-和-postProcessBeforeInstantiation-后置处理。" class="headerlink" title="重点关注 InstantiationAwareBeanPostProcessor 和 postProcessBeforeInstantiation() 后置处理。"></a>重点关注 InstantiationAwareBeanPostProcessor 和 postProcessBeforeInstantiation() 后置处理。</h3><h1 id="1-InstantiationAwareBeanPostProcessor-类的实例化之前执行"><a href="#1-InstantiationAwareBeanPostProcessor-类的实例化之前执行" class="headerlink" title="1.InstantiationAwareBeanPostProcessor(类的实例化之前执行)"></a>1.InstantiationAwareBeanPostProcessor(类的实例化之前执行)</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.</span></span><br><span class="line">    <span class="comment">// 给bean的后置处理器一个机会来生成一个代理对象返回,在aop模块进行详细讲解</span></span><br><span class="line">    <span class="comment">// 由于bean未实例化，所以并未实际创建代理对象，只是如果对象有切面的话，找到对象切面并缓存</span></span><br><span class="line">    Object bean = resolveBeforeInstantiation(beanName, mbdToUse);</span><br><span class="line">    <span class="keyword">if</span> (bean != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 真正进行主要的业务逻辑方法来进行创建bean</span></span><br><span class="line">    Object beanInstance = doCreateBean(beanName, mbdToUse, args);</span><br><span class="line">    <span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">        logger.trace(<span class="string">"Finished creating instance of bean '"</span> + beanName + <span class="string">"'"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> beanInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口"><a href="#AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口" class="headerlink" title="AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口"></a>AbstractAutoProxyCreator实现了SmartInstantiationAwareBeanPostProcessor接口</h2><h3 id="主要作用"><a href="#主要作用" class="headerlink" title="主要作用"></a>主要作用</h3><p>1.预测 Bean 类型：</p>
+<ul>
+<li>predictBeanType()方法允许在 Bean 实际创建之前预测其类型</li>
+</ul>
+<p>2.确定候选构造函数：</p>
+<ul>
+<li>determineCandidateConstructors()方法可以影响 Spring 选择哪个构造函数来实例化 Bean</li>
+</ul>
+<p>3.取早期 Bean 引用：</p>
+<ul>
+<li>getEarlyBeanReference()方法在 Bean 完全初始化前提供引用，用于解决循环依赖问题</li>
+</ul>
+<h3 id="典型应用场景"><a href="#典型应用场景" class="headerlink" title="典型应用场景"></a>典型应用场景</h3><ul>
+<li>AOP 代理：Spring AOP 使用它来预测代理对象的类型</li>
+<li>循环依赖解决：在构造器注入循环依赖时发挥作用</li>
+<li>自定义实例化逻辑：当需要特殊处理 Bean 的实例化过程时</li>
+</ul>
+<h3 id="执行流程-postProcessBeforeInstantiation"><a href="#执行流程-postProcessBeforeInstantiation" class="headerlink" title="执行流程 postProcessBeforeInstantiation"></a>执行流程 postProcessBeforeInstantiation</h3><h1 id="2-postProcessBeforeInstantiation-类的初始化之前或者之后执行"><a href="#2-postProcessBeforeInstantiation-类的初始化之前或者之后执行" class="headerlink" title="2.postProcessBeforeInstantiation(类的初始化之前或者之后执行)"></a>2.postProcessBeforeInstantiation(类的初始化之前或者之后执行)</h1><p><img src="/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
+<h1 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h1><h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p>bean在单例模式下，spring容器启动时解析xml文件发现该bean标签后，直接创建该bean对象存入内部map中保存，<br>此后无论调用多少次getBean()获取该bean都是从map中获取该对象返回，一直是一个对象。<br>此对象一直被spring容器持有，直到容器推出时，随着容器的退出对象被销毁。</p>
+<h2 id="多例模式"><a href="#多例模式" class="headerlink" title="多例模式"></a>多例模式</h2><p>bean在多例模式下，spring容器启动时解析xml发下该bean标签后，只是将该bean进行管理，并不会创建对象，<br>此后每层使用getBean()获取该bean时，spring都会重新创建该对象返回，每层都是一个新的对象。<br>这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。</p>
+<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>]]></content>
+      <categories>
+        <category>Spring AOP</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Spring Bean 生命周期</title>
+    <url>/2019/12/06/spring/beanLifeCycle/</url>
+    <content><![CDATA[<h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p><img src="/uploads/spring/springBeanLifeCycle.png" alt="生命周期"></p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p><img src="/uploads/spring/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="单例模式生命周期"></p>
+<h1 id="多例模式"><a href="#多例模式" class="headerlink" title="多例模式"></a>多例模式</h1><p>需求主动调用才会创建对象，原因见下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">LifeCycle lifeCycle &#x3D; (LifeCycle) applicationContext.getBean(&quot;lifeCycle&quot;);</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
+<h1 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h1><h2 id="单例模式-1"><a href="#单例模式-1" class="headerlink" title="单例模式"></a>单例模式</h2><p>bean在单例模式下，spring容器启动时解析xml文件发现该bean标签后，直接创建该bean对象存入内部map中保存，<br>此后无论调用多少次getBean()获取该bean都是从map中获取该对象返回，一直是一个对象。<br>此对象一直被spring容器持有，直到容器推出时，随着容器的退出对象被销毁。</p>
+<h2 id="多例模式-1"><a href="#多例模式-1" class="headerlink" title="多例模式"></a>多例模式</h2><p>bean在多例模式下，spring容器启动时解析xml发下该bean标签后，只是将该bean进行管理，并不会创建对象，<br>此后每层使用getBean()获取该bean时，spring都会重新创建该对象返回，每层都是一个新的对象。<br>这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。</p>
+<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>]]></content>
+      <categories>
+        <category>spring</category>
       </categories>
   </entry>
   <entry>
@@ -1056,23 +1105,6 @@ http {
 <p><img src="http://upload-images.jianshu.io/upload_images/4942449-e87ee2b5f0532d77.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
 <p><img src="http://upload-images.jianshu.io/upload_images/4942449-20e2d37ed4275474.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
 ]]></content>
-      <categories>
-        <category>spring</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Spring Bean 生命周期</title>
-    <url>/2019/12/06/spring/beanLifeCycle/</url>
-    <content><![CDATA[<h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p><img src="/uploads/spring/springBeanLifeCycle.png" alt="生命周期"></p>
-<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p><img src="/uploads/spring/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="单例模式生命周期"></p>
-<h1 id="多例模式"><a href="#多例模式" class="headerlink" title="多例模式"></a>多例模式</h1><p>需求主动调用才会创建对象，原因见下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">LifeCycle lifeCycle &#x3D; (LifeCycle) applicationContext.getBean(&quot;lifeCycle&quot;);</span><br></pre></td></tr></table></figure>
-
-
-<p><img src="/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
-<h1 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h1><h2 id="单例模式-1"><a href="#单例模式-1" class="headerlink" title="单例模式"></a>单例模式</h2><p>bean在单例模式下，spring容器启动时解析xml文件发现该bean标签后，直接创建该bean对象存入内部map中保存，<br>此后无论调用多少次getBean()获取该bean都是从map中获取该对象返回，一直是一个对象。<br>此对象一直被spring容器持有，直到容器推出时，随着容器的退出对象被销毁。</p>
-<h2 id="多例模式-1"><a href="#多例模式-1" class="headerlink" title="多例模式"></a>多例模式</h2><p>bean在多例模式下，spring容器启动时解析xml发下该bean标签后，只是将该bean进行管理，并不会创建对象，<br>此后每层使用getBean()获取该bean时，spring都会重新创建该对象返回，每层都是一个新的对象。<br>这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。</p>
-<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>]]></content>
       <categories>
         <category>spring</category>
       </categories>
@@ -1347,34 +1379,6 @@ http {
       </categories>
   </entry>
   <entry>
-    <title>springmvc整合swagger（非springboot项目）</title>
-    <url>/2019/11/27/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/springMVC&amp;swagger/</url>
-    <content><![CDATA[<h1 id="项目需求"><a href="#项目需求" class="headerlink" title="项目需求"></a>项目需求</h1><p>公司原来的项目是struts2，然后想要改成前后端分离项目，又不想完全抛去原来的一些东西，选择了单独的springmvc，没有使用springboot，这就开启了我的难受之旅。</p>
-<h1 id="需要依赖"><a href="#需要依赖" class="headerlink" title="需要依赖"></a>需要依赖</h1><p>万万没想到啊，还不是maven项目，jar包需要自己去探索到底需要哪些jar包，然后还得避免jar包冲突，我太南了…<br>过程中guava库需要升级 jackson库必须存在</p>
-<p>最后根据maven项目的所引入的依赖分析，然后自己测试，需要jar包如下：</p>
-<p><img src="/uploads/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/swagger%E6%89%80%E9%9C%80jar.jpg" alt="swagger所需jar"></p>
-<p><a href="/uploads/日常问题记录/swagger.rar">下载</a></p>
-<h1 id="过程遇到的问题"><a href="#过程遇到的问题" class="headerlink" title="过程遇到的问题"></a>过程遇到的问题</h1><p>上述过程完成后，好不容易项目启动不报错了，但是访问swagger-ui.html，会出现弹框提示错误，这个错误网上随便一搜就会知道是swagger-ui的页面没有映射出来，需要加个静态资源映射。<br>但是并没有那么简单。</p>
-<p>网上搜索大部分搜索出来的都是在xml文件中添加swagger文件的映射，例如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;mvc:resources mapping&#x3D;&quot;swagger-ui.html&quot; location&#x3D;&quot;classpath*:&#x2F;META-INF&#x2F;resources&#x2F;&quot;&#x2F;&gt;</span><br><span class="line">&lt;mvc:resources mapping&#x3D;&quot;webjars&#x2F;**&quot; location&#x3D;&quot;classpath*:&#x2F;META-INF&#x2F;resources&#x2F;webjars&#x2F;&quot;&#x2F;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>但是在我的工程中没有效果，我也不知道为什么。</p>
-<p>解决办法一：</p>
-<p>由于项目还是采用web.xml格式配置，dispatcherServlet需拦截所有请求，如果加*.htm这种类型，生成的文档接口也必须手动修改访问路径，因为swagger是根据mapping去生成请求路径的。</p>
-<p>这样配置之后静态资源也会访问springMVC的servlet，这是我们不需要的，所以我们需要在springmvc.xml添加<a href="mvc:default-servlet-handler/">mvc:default-servlet-handler/</a>,添加一个默认servlet，会自动过滤静态资源请求。</p>
-<p>解决办法二：</p>
-<p>去swagger的网站下载zip包，把dist文件目录copy至自己的页面下，修改index.htm文件中的url地址, /v2/api-docs即为swagger访问数据的地址。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">window.onload &#x3D; function() &#123;</span><br><span class="line">  &#x2F;&#x2F; Begin Swagger UI call region</span><br><span class="line">  const ui &#x3D; SwaggerUIBundle(&#123;</span><br><span class="line">    &#x2F;&#x2F; url: &quot;https:&#x2F;&#x2F;petstore.swagger.io&#x2F;v2&#x2F;swagger.json&quot;,</span><br><span class="line">    url: &quot;http:&#x2F;&#x2F;xx.xx.xx&#x2F;v2&#x2F;api-docs&quot;,</span><br><span class="line">    dom_id: &#39;#swagger-ui&#39;,</span><br><span class="line">    deepLinking: true,</span><br><span class="line">    presets: [</span><br><span class="line">      SwaggerUIBundle.presets.apis,</span><br><span class="line">      SwaggerUIStandalonePreset</span><br><span class="line">    ],</span><br><span class="line">    plugins: [</span><br><span class="line">      SwaggerUIBundle.plugins.DownloadUrl</span><br><span class="line">    ],</span><br><span class="line">    layout: &quot;StandaloneLayout&quot;</span><br><span class="line">  &#125;)</span><br><span class="line">  &#x2F;&#x2F; End Swagger UI call region</span><br><span class="line"></span><br><span class="line">  window.ui &#x3D; ui</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这样添加之后，我们需要去直接访问自己的页面地址，而不是访问swagger-ui.html，例如/swagger/index.html。<br>如果采用<em>.htm或者</em>.do这种方式，可能会出现页面访问得到的，提示/v2/api-docs接口无法请求。解决方案是配置把swagger或者数据的接口置入dispatcherServlet中</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;servlet-mapping&gt;</span><br><span class="line">    &lt;servlet-name&gt;SpringmvcDispatcherServlet&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;&#x2F;v2&#x2F;api-docs&lt;&#x2F;url-pattern&gt;</span><br><span class="line">&lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>日常问题记录</category>
-      </categories>
-  </entry>
-  <entry>
     <title>数据库死锁问题</title>
     <url>/2025/06/05/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h3 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE SchRSolutionRosterWarning (</span><br><span class="line">    id INT PRIMARY KEY AUTO_INCREMENT,</span><br><span class="line">    task_id INT NOT NULL,</span><br><span class="line">    person_id INT NOT NULL,</span><br><span class="line">    task_date DATE NOT NULL,</span><br><span class="line">    solution_id INT NOT NULL</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO SchRSolutionRosterWarning (task_id, person_id, task_date, solution_id) VALUES</span><br><span class="line">(1, 101, &#39;2025-07-01&#39;, 100),  -- 记录A：被事务1的taskIds和事务2的personIds命中</span><br><span class="line">(2, 102, &#39;2025-07-02&#39;, 100);  -- 记录B：被事务1的personIds和事务2的taskIds命中</span><br></pre></td></tr></table></figure>
@@ -1445,6 +1449,34 @@ http {
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果在事务中，就不去用线程池去读了，会读不到未提交的  </span></span><br><span class="line"><span class="keyword">if</span> (CollectionUtils.isNotEmpty(taskIds)) &#123;  </span><br><span class="line">    List&lt;Collection&lt;String&gt;&gt; splitList = MathUtil.batchList(taskIds, <span class="number">2000</span>);  </span><br><span class="line">    splitList.parallelStream().forEach(list -&gt; &#123;  </span><br><span class="line">        LambdaQueryWrapper&lt;SchRSolutionRosterWarning&gt; queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;SchRSolutionRosterWarning&gt;().lambda()  </span><br><span class="line">                .in(SchRSolutionRosterWarning::getTaskId, list)  </span><br><span class="line">                .eq(SchRSolutionRosterWarning::getSolutionId, SolutionIdHolder.threadLocal.get())  </span><br><span class="line">                .eq(SchRSolutionRosterWarning::getModuleFlag, ModuleFlagHolder.threadLocal.get())  </span><br><span class="line">                .in(CollUtil.isNotEmpty(ruleIdList), SchRSolutionRosterWarning::getRuleId, ruleIdList);  </span><br><span class="line">        queryWrapper.select(SchRSolutionRosterWarning::getId);  </span><br><span class="line">        warningIds.addAll(baseMapper.selectList(queryWrapper).stream().map(SchRSolutionRosterWarning::getId).collect(Collectors.toSet()));  </span><br><span class="line">    &#125;);  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span> (CollectionUtils.isNotEmpty(personIds)) &#123;  </span><br><span class="line">    List&lt;Collection&lt;String&gt;&gt; splitList = MathUtil.batchList(personIds, <span class="number">2000</span>);  </span><br><span class="line">    splitList.parallelStream().forEach(list -&gt; &#123;  </span><br><span class="line">        LambdaQueryWrapper&lt;SchRSolutionRosterWarning&gt; queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;SchRSolutionRosterWarning&gt;().lambda()  </span><br><span class="line">                .in(SchRSolutionRosterWarning::getPersonId, list)  </span><br><span class="line">                .eq(SchRSolutionRosterWarning::getSolutionId, SolutionIdHolder.threadLocal.get())  </span><br><span class="line">                .eq(SchRSolutionRosterWarning::getModuleFlag, ModuleFlagHolder.threadLocal.get())  </span><br><span class="line">                .ge(SchRSolutionRosterWarning::getTaskDate, startDate)  </span><br><span class="line">                .in(CollUtil.isNotEmpty(ruleIdList), SchRSolutionRosterWarning::getRuleId, ruleIdList);  </span><br><span class="line">        queryWrapper.select(SchRSolutionRosterWarning::getId);  </span><br><span class="line">        warningIds.addAll(baseMapper.selectList(queryWrapper).stream().map(SchRSolutionRosterWarning::getId).collect(Collectors.toSet()));  </span><br><span class="line">    &#125;);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span> (CollUtil.isNotEmpty(warningIds)) &#123;  </span><br><span class="line">    List&lt;Collection&lt;String&gt;&gt; splitList = MathUtil.batchList(warningIds, <span class="number">5000</span>);  </span><br><span class="line">    splitList.parallelStream().forEach(list -&gt; &#123;  </span><br><span class="line">        baseMapper.deleteBatchIds(list);  </span><br><span class="line">    &#125;);  </span><br><span class="line">  </span><br><span class="line">&#125;tt(schRosterQuery);  </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <p>或者</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (CollectionUtils.isNotEmpty(taskIds) || CollectionUtils.isNotEmpty(personIds)) &#123;</span><br><span class="line">    baseMapper.delete(<span class="keyword">new</span> QueryWrapper&lt;SchRSolutionRosterWarning&gt;().lambda()</span><br><span class="line">        .and(wrapper -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (CollectionUtils.isNotEmpty(taskIds)) &#123;</span><br><span class="line">                wrapper.in(SchRSolutionRosterWarning::getTaskId, taskIds);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (CollectionUtils.isNotEmpty(personIds)) &#123;</span><br><span class="line">                wrapper.or().in(SchRSolutionRosterWarning::getPersonId, personIds)</span><br><span class="line">                       .ge(SchRSolutionRosterWarning::getTaskDate, startDate);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .eq(SchRSolutionRosterWarning::getSolutionId, SolutionIdHolder.threadLocal.get())</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>日常问题记录</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>springmvc整合swagger（非springboot项目）</title>
+    <url>/2019/11/27/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/springMVC&amp;swagger/</url>
+    <content><![CDATA[<h1 id="项目需求"><a href="#项目需求" class="headerlink" title="项目需求"></a>项目需求</h1><p>公司原来的项目是struts2，然后想要改成前后端分离项目，又不想完全抛去原来的一些东西，选择了单独的springmvc，没有使用springboot，这就开启了我的难受之旅。</p>
+<h1 id="需要依赖"><a href="#需要依赖" class="headerlink" title="需要依赖"></a>需要依赖</h1><p>万万没想到啊，还不是maven项目，jar包需要自己去探索到底需要哪些jar包，然后还得避免jar包冲突，我太南了…<br>过程中guava库需要升级 jackson库必须存在</p>
+<p>最后根据maven项目的所引入的依赖分析，然后自己测试，需要jar包如下：</p>
+<p><img src="/uploads/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/swagger%E6%89%80%E9%9C%80jar.jpg" alt="swagger所需jar"></p>
+<p><a href="/uploads/日常问题记录/swagger.rar">下载</a></p>
+<h1 id="过程遇到的问题"><a href="#过程遇到的问题" class="headerlink" title="过程遇到的问题"></a>过程遇到的问题</h1><p>上述过程完成后，好不容易项目启动不报错了，但是访问swagger-ui.html，会出现弹框提示错误，这个错误网上随便一搜就会知道是swagger-ui的页面没有映射出来，需要加个静态资源映射。<br>但是并没有那么简单。</p>
+<p>网上搜索大部分搜索出来的都是在xml文件中添加swagger文件的映射，例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;mvc:resources mapping&#x3D;&quot;swagger-ui.html&quot; location&#x3D;&quot;classpath*:&#x2F;META-INF&#x2F;resources&#x2F;&quot;&#x2F;&gt;</span><br><span class="line">&lt;mvc:resources mapping&#x3D;&quot;webjars&#x2F;**&quot; location&#x3D;&quot;classpath*:&#x2F;META-INF&#x2F;resources&#x2F;webjars&#x2F;&quot;&#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>但是在我的工程中没有效果，我也不知道为什么。</p>
+<p>解决办法一：</p>
+<p>由于项目还是采用web.xml格式配置，dispatcherServlet需拦截所有请求，如果加*.htm这种类型，生成的文档接口也必须手动修改访问路径，因为swagger是根据mapping去生成请求路径的。</p>
+<p>这样配置之后静态资源也会访问springMVC的servlet，这是我们不需要的，所以我们需要在springmvc.xml添加<a href="mvc:default-servlet-handler/">mvc:default-servlet-handler/</a>,添加一个默认servlet，会自动过滤静态资源请求。</p>
+<p>解决办法二：</p>
+<p>去swagger的网站下载zip包，把dist文件目录copy至自己的页面下，修改index.htm文件中的url地址, /v2/api-docs即为swagger访问数据的地址。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">window.onload &#x3D; function() &#123;</span><br><span class="line">  &#x2F;&#x2F; Begin Swagger UI call region</span><br><span class="line">  const ui &#x3D; SwaggerUIBundle(&#123;</span><br><span class="line">    &#x2F;&#x2F; url: &quot;https:&#x2F;&#x2F;petstore.swagger.io&#x2F;v2&#x2F;swagger.json&quot;,</span><br><span class="line">    url: &quot;http:&#x2F;&#x2F;xx.xx.xx&#x2F;v2&#x2F;api-docs&quot;,</span><br><span class="line">    dom_id: &#39;#swagger-ui&#39;,</span><br><span class="line">    deepLinking: true,</span><br><span class="line">    presets: [</span><br><span class="line">      SwaggerUIBundle.presets.apis,</span><br><span class="line">      SwaggerUIStandalonePreset</span><br><span class="line">    ],</span><br><span class="line">    plugins: [</span><br><span class="line">      SwaggerUIBundle.plugins.DownloadUrl</span><br><span class="line">    ],</span><br><span class="line">    layout: &quot;StandaloneLayout&quot;</span><br><span class="line">  &#125;)</span><br><span class="line">  &#x2F;&#x2F; End Swagger UI call region</span><br><span class="line"></span><br><span class="line">  window.ui &#x3D; ui</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样添加之后，我们需要去直接访问自己的页面地址，而不是访问swagger-ui.html，例如/swagger/index.html。<br>如果采用<em>.htm或者</em>.do这种方式，可能会出现页面访问得到的，提示/v2/api-docs接口无法请求。解决方案是配置把swagger或者数据的接口置入dispatcherServlet中</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;servlet-mapping&gt;</span><br><span class="line">    &lt;servlet-name&gt;SpringmvcDispatcherServlet&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;&#x2F;v2&#x2F;api-docs&lt;&#x2F;url-pattern&gt;</span><br><span class="line">&lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
+
+]]></content>
       <categories>
         <category>日常问题记录</category>
       </categories>
@@ -2541,6 +2573,54 @@ Using index condition
       </categories>
   </entry>
   <entry>
+    <title>CountDownLatch&amp;Semaphore-共享锁</title>
+    <url>/2021/10/31/java/coucurrent/3.CountDownLatch&amp;Semaphore/</url>
+    <content><![CDATA[<h1 id="1-Semaphore-是什么？"><a href="#1-Semaphore-是什么？" class="headerlink" title="1. Semaphore 是什么？"></a>1. Semaphore 是什么？</h1><p>Semaphore 字面意思是信号量的意思，它的作用是控制访问特定资源的线程数目。</p>
+]]></content>
+      <categories>
+        <category>并发编程</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Atomic&amp;Unsafe魔法类详解</title>
+    <url>/2021/11/05/java/coucurrent/4.Atomic&amp;Unsafe%E9%AD%94%E6%B3%95%E7%B1%BB%E8%AF%A6%E8%A7%A3/</url>
+    <content><![CDATA[<h1 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h1><p>处理器自动保证基本内存操作的原子性，如对同一个缓存行里进行16/32/64位的操作是原子的。<br>复杂的内存操作处理器不能自动保证其原子性，比如跨总线宽度，跨多个缓存行，跨页表的访问。</p>
+<p>缓存加锁</p>
+<p>总线加锁</p>
+<h1 id="Atomic"><a href="#Atomic" class="headerlink" title="Atomic"></a>Atomic</h1><p>在Atomic包里一共有12个类，四种原子更新方式,原子更新基本类型,原子更新数组,原子更新引用,原子更新字段, Atomic包里的类基本都是使用Unsafe实现的包装类。</p>
+<p>基本类：AtomicInteger、AtomicLong、AtomicBoolean；</p>
+<p>引用类型：AtomicReference、AtomicReference的ABA实例、AtomicStampedRerence、AtomicMarkableReference；</p>
+<p>数组类型：AtomicIntegerArray、AtomicLongArray、AtomicReferenceArray</p>
+<p>属性原子修改器（Updater）：AtomicIntegerFieldUpdater、AtomicLongFieldUpdater、AtomicReferenceFieldUpdater</p>
+<h1 id="Unsafe"><a href="#Unsafe" class="headerlink" title="Unsafe"></a>Unsafe</h1><p>Unsafe是位于sun.misc包下的一个类，主要提供一些用于执行低级别、不安全操作的方法，如直接访问系统内存资源、自主管理内存资源等，这些方法在提升Java运行效率、<br>增强Java语言底层资源操作能力方面起到了很大的作用。</p>
+<p>Unsafe类为一单例实现，提供静态方法getUnsafe获取Unsafe实例，当且仅当调用getUnsafe方法的类为引导类加载器所加载时才合法，<br>否则抛出SecurityException异常。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Unsafe</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 单例对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Unsafe theUnsafe;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Unsafe</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    <span class="meta">@CallerSensitive</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Unsafe <span class="title">getUnsafe</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Class var0 = Reflection.getCallerClass();       </span><br><span class="line">        <span class="comment">// 仅在引导类加载器`BootstrapClassLoader`加载时才合法       </span></span><br><span class="line">        <span class="keyword">if</span>(!VM.isSystemDomainLoader(var0.getClassLoader())) &#123;           </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> SecurityException(<span class="string">"Unsafe"</span>);       </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;           </span><br><span class="line">            <span class="keyword">return</span> theUnsafe;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何获取Unsafe"><a href="#如何获取Unsafe" class="headerlink" title="如何获取Unsafe"></a>如何获取Unsafe</h2><p>1、把调用Unsafe相关方法的类Demo所在jar包路径追加到默认的bootstrap路径中，使得A被引导类加载器加载</p>
+<ul>
+<li>java -Xbootclasspath/Demo:${path} // 其中path为调用Unsafe相关方法的类所在jar包路径 </li>
+</ul>
+<p>2、通过反射获取单例对象theUnsafe</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnsafeInstance</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Unsafe <span class="title">reflectGetUnsafe</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Field field = Unsafe.class.getDeclaredField("theUnsafe");</span><br><span class="line">            field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">return</span> (Unsafe) field.get(<span class="keyword">null</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Unsafe功能"><a href="#Unsafe功能" class="headerlink" title="Unsafe功能"></a>Unsafe功能</h2><p><img src="/uploads/java/concurrent/Unsafe%E5%8A%9F%E8%83%BD.png" alt="Unsafe功能.png"></p>
+<h2 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * CAS</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> o         包含要修改field的对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> offset    对象中某field的偏移量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> expected  期望值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> update    更新值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>          true | false</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapObject</span><span class="params">(Object var1, <span class="keyword">long</span> var2, Object var4, Object var5)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapInt</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">int</span> var4, <span class="keyword">int</span> var5)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapLong</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">long</span> var4, <span class="keyword">long</span> var6)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/uploads/java/concurrent/CAS.png" alt="CAS.png"></p>
+<h2 id="线程调度"><a href="#线程调度" class="headerlink" title="线程调度"></a>线程调度</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//取消阻塞线程</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">unpark</span><span class="params">(Object thread)</span></span>;</span><br><span class="line"><span class="comment">//阻塞线程</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">park</span><span class="params">(<span class="keyword">boolean</span> isAbsolute, <span class="keyword">long</span> time)</span></span>;</span><br><span class="line"><span class="comment">//获得对象锁（可重入锁）</span></span><br><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">monitorEnter</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="comment">//释放对象锁</span></span><br><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">monitorExit</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="comment">//尝试获取对象锁</span></span><br><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">tryMonitorEnter</span><span class="params">(Object o)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//内存屏障，禁止load操作重排序。屏障前的load操作不能被重排序到屏障后，屏障后的load操作不能被重排序到屏障前</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">loadFence</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//内存屏障，禁止store操作重排序。屏障前的store操作不能被重排序到屏障后，屏障后的store操作不能被重排序到屏障前</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">storeFence</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//内存屏障，禁止load、store操作重排序</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">fullFence</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">典型应用</span><br><span class="line">StampedLock的validate()方法使用内存屏障，防止指令重排</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">validate</span><span class="params">(<span class="keyword">long</span> stamp)</span> </span>&#123;</span><br><span class="line">    U.loadFence();<span class="comment">// 内存屏障</span></span><br><span class="line">    reture (stamp &amp; SBITS) == (state &amp; SBITS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/uploads/java/concurrent/%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C.png" alt="内存屏障.png"></p>
+]]></content>
+      <categories>
+        <category>并发编程</category>
+      </categories>
+  </entry>
+  <entry>
     <title>synchronized&amp;Lock&amp;AQS</title>
     <url>/2021/06/09/java/coucurrent/2.synchronized&amp;Lock&amp;AQS/</url>
     <content><![CDATA[<h1 id="并发同步器"><a href="#并发同步器" class="headerlink" title="并发同步器"></a>并发同步器</h1><p>多线程编程中，有可能会出现多个线程同时访问同一个共享、可变资源的情况；这种资源可能是：对象、变量、文件等。</p>
@@ -2636,40 +2716,9 @@ Using index condition
       </categories>
   </entry>
   <entry>
-    <title>Atomic&amp;Unsafe魔法类详解</title>
-    <url>/2021/11/05/java/coucurrent/4.Atomic&amp;Unsafe%E9%AD%94%E6%B3%95%E7%B1%BB%E8%AF%A6%E8%A7%A3/</url>
-    <content><![CDATA[<h1 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h1><p>处理器自动保证基本内存操作的原子性，如对同一个缓存行里进行16/32/64位的操作是原子的。<br>复杂的内存操作处理器不能自动保证其原子性，比如跨总线宽度，跨多个缓存行，跨页表的访问。</p>
-<p>缓存加锁</p>
-<p>总线加锁</p>
-<h1 id="Atomic"><a href="#Atomic" class="headerlink" title="Atomic"></a>Atomic</h1><p>在Atomic包里一共有12个类，四种原子更新方式,原子更新基本类型,原子更新数组,原子更新引用,原子更新字段, Atomic包里的类基本都是使用Unsafe实现的包装类。</p>
-<p>基本类：AtomicInteger、AtomicLong、AtomicBoolean；</p>
-<p>引用类型：AtomicReference、AtomicReference的ABA实例、AtomicStampedRerence、AtomicMarkableReference；</p>
-<p>数组类型：AtomicIntegerArray、AtomicLongArray、AtomicReferenceArray</p>
-<p>属性原子修改器（Updater）：AtomicIntegerFieldUpdater、AtomicLongFieldUpdater、AtomicReferenceFieldUpdater</p>
-<h1 id="Unsafe"><a href="#Unsafe" class="headerlink" title="Unsafe"></a>Unsafe</h1><p>Unsafe是位于sun.misc包下的一个类，主要提供一些用于执行低级别、不安全操作的方法，如直接访问系统内存资源、自主管理内存资源等，这些方法在提升Java运行效率、<br>增强Java语言底层资源操作能力方面起到了很大的作用。</p>
-<p>Unsafe类为一单例实现，提供静态方法getUnsafe获取Unsafe实例，当且仅当调用getUnsafe方法的类为引导类加载器所加载时才合法，<br>否则抛出SecurityException异常。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Unsafe</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 单例对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Unsafe theUnsafe;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Unsafe</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    <span class="meta">@CallerSensitive</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Unsafe <span class="title">getUnsafe</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Class var0 = Reflection.getCallerClass();       </span><br><span class="line">        <span class="comment">// 仅在引导类加载器`BootstrapClassLoader`加载时才合法       </span></span><br><span class="line">        <span class="keyword">if</span>(!VM.isSystemDomainLoader(var0.getClassLoader())) &#123;           </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> SecurityException(<span class="string">"Unsafe"</span>);       </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;           </span><br><span class="line">            <span class="keyword">return</span> theUnsafe;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="如何获取Unsafe"><a href="#如何获取Unsafe" class="headerlink" title="如何获取Unsafe"></a>如何获取Unsafe</h2><p>1、把调用Unsafe相关方法的类Demo所在jar包路径追加到默认的bootstrap路径中，使得A被引导类加载器加载</p>
-<ul>
-<li>java -Xbootclasspath/Demo:${path} // 其中path为调用Unsafe相关方法的类所在jar包路径 </li>
-</ul>
-<p>2、通过反射获取单例对象theUnsafe</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnsafeInstance</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Unsafe <span class="title">reflectGetUnsafe</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Field field = Unsafe.class.getDeclaredField("theUnsafe");</span><br><span class="line">            field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">return</span> (Unsafe) field.get(<span class="keyword">null</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Unsafe功能"><a href="#Unsafe功能" class="headerlink" title="Unsafe功能"></a>Unsafe功能</h2><p><img src="/uploads/java/concurrent/Unsafe%E5%8A%9F%E8%83%BD.png" alt="Unsafe功能.png"></p>
-<h2 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * CAS</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> o         包含要修改field的对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> offset    对象中某field的偏移量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> expected  期望值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> update    更新值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>          true | false</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapObject</span><span class="params">(Object var1, <span class="keyword">long</span> var2, Object var4, Object var5)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapInt</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">int</span> var4, <span class="keyword">int</span> var5)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapLong</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">long</span> var4, <span class="keyword">long</span> var6)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/uploads/java/concurrent/CAS.png" alt="CAS.png"></p>
-<h2 id="线程调度"><a href="#线程调度" class="headerlink" title="线程调度"></a>线程调度</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//取消阻塞线程</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">unpark</span><span class="params">(Object thread)</span></span>;</span><br><span class="line"><span class="comment">//阻塞线程</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">park</span><span class="params">(<span class="keyword">boolean</span> isAbsolute, <span class="keyword">long</span> time)</span></span>;</span><br><span class="line"><span class="comment">//获得对象锁（可重入锁）</span></span><br><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">monitorEnter</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="comment">//释放对象锁</span></span><br><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">monitorExit</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="comment">//尝试获取对象锁</span></span><br><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">tryMonitorEnter</span><span class="params">(Object o)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//内存屏障，禁止load操作重排序。屏障前的load操作不能被重排序到屏障后，屏障后的load操作不能被重排序到屏障前</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">loadFence</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//内存屏障，禁止store操作重排序。屏障前的store操作不能被重排序到屏障后，屏障后的store操作不能被重排序到屏障前</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">storeFence</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//内存屏障，禁止load、store操作重排序</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">fullFence</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">典型应用</span><br><span class="line">StampedLock的validate()方法使用内存屏障，防止指令重排</span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">validate</span><span class="params">(<span class="keyword">long</span> stamp)</span> </span>&#123;</span><br><span class="line">    U.loadFence();<span class="comment">// 内存屏障</span></span><br><span class="line">    reture (stamp &amp; SBITS) == (state &amp; SBITS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/uploads/java/concurrent/%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C.png" alt="内存屏障.png"></p>
-]]></content>
+    <title>定时任务&amp;定时线程池</title>
+    <url>/2021/11/09/java/coucurrent/7.%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1&amp;%E5%AE%9A%E6%97%B6%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
+    <content><![CDATA[]]></content>
       <categories>
         <category>并发编程</category>
       </categories>
@@ -2690,23 +2739,6 @@ Using index condition
       </categories>
   </entry>
   <entry>
-    <title>CountDownLatch&amp;Semaphore-共享锁</title>
-    <url>/2021/10/31/java/coucurrent/3.CountDownLatch&amp;Semaphore/</url>
-    <content><![CDATA[<h1 id="1-Semaphore-是什么？"><a href="#1-Semaphore-是什么？" class="headerlink" title="1. Semaphore 是什么？"></a>1. Semaphore 是什么？</h1><p>Semaphore 字面意思是信号量的意思，它的作用是控制访问特定资源的线程数目。</p>
-]]></content>
-      <categories>
-        <category>并发编程</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>定时任务&amp;定时线程池</title>
-    <url>/2021/11/09/java/coucurrent/7.%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1&amp;%E5%AE%9A%E6%97%B6%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>并发编程</category>
-      </categories>
-  </entry>
-  <entry>
     <title>ThreadLocal</title>
     <url>/2019/03/02/java/coucurrent/ThreadLocal/</url>
     <content><![CDATA[<h1 id="类图："><a href="#类图：" class="headerlink" title="类图："></a>类图：</h1><h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p><img src="/.io//uploads/java/concurrent/ThreadLocal.png" alt="ThreadLocal"></p>
@@ -2716,120 +2748,6 @@ Using index condition
 <h1 id="流程-先讲一下作用，再说自己看过源码，讲下源码"><a href="#流程-先讲一下作用，再说自己看过源码，讲下源码" class="headerlink" title="流程  先讲一下作用，再说自己看过源码，讲下源码"></a>流程  先讲一下作用，再说自己看过源码，讲下源码</h1><p>ThreadLocal就是让线程有一份自己的数据副本，因此不需要考虑线程安全问题。<br>在我做过的项目中一般用来存储用户信息。因为后台中每一个请求都是一个线程，我们在后续需要这个数据的时候就可以很方便的获取这个信息。<br>ThreadLocal中有一个静态内部类ThreadLocalMap，这个Map里面的key是ThreadLocal这个对象，value就是我们要存储的值。<br>而ThreadLocalMap里面其实是维护了一个Entry数组，而Entry类是ThreadLocalMap的静态内部类，其中key存储的是弱引用的ThreadLocal，value存储的就是要存储的数据。<br>而在每条线程Thread内部有一个ThreadLocal.ThreadLocalMap类型的成员变量threadLocals，<br>这个threadLocals就是每条线程用来存储数据副本的，key值为ThreadLocal对象，value为变量副本。<br>所以ThreadLocal和里面的静态内部类ThreadLocalMap其实是为每一个线程来服务的。在ThreadLocal源码中也可以看到，每次执行get和set方法的时候<br>，都要先获取当前访问的线程，然后再从当前线程获取该线程的ThreadLocalMap属性然后再来操作。</p>
 <p>ThreadLocal可能出现的问题？<br>ThreadLocal会发生内存泄漏的问题。<br>ThreadLocalMap里面维护了一个Entry数组，而每个Entry类的key是弱引用的ThreadLocal，value是数据。<br>如果一个ThreadLocal对象没有外部的强引用来指向它，那么堆内存不足的时候会被GC掉这些弱引用的Key，那么就会出现key为null但是value不为null的情况，但是此时的value会一直存在一个强引用链，也就是Thread当前线程-&gt;ThreadLocalMap-&gt;Entry-&gt;Value，导致GC无法回收造成内存的泄漏，这个value就是泄漏的对象。<br>但是ThreadLocalMap在执行get、set、remove的时候会自动清理key为null的Entry，<br>但是更优雅的做法还是在使用完ThreadLocal之后调用ThreadLocal中的remove方法清空ThreadLocal变量副本解决该问题，<br>在我做的项目中，会在过滤器的最后执行ThreadLocal中的remove方法进行手动释放。</p>
 ]]></content>
-      <categories>
-        <category>JavaSE</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>java异常体系结构</title>
-    <url>/2018/08/08/java/javase/exception/</url>
-    <content><![CDATA[<h1 id="java异常体系结构图"><a href="#java异常体系结构图" class="headerlink" title="java异常体系结构图"></a>java异常体系结构图</h1><p><img src="/uploads/java/javase/%E5%BC%82%E5%B8%B8%E7%BB%93%E6%9E%84%E4%BD%93%E7%B3%BB.png" alt="java异常体系结构"></p>
-<p>从图中可以发现（列出要点，简要说明）：</p>
-<ul>
-<li>所以异常类的父类为Throwable类（表示可抛出），直接继承为Error和Exception两个子类，Error也是异常的一种。</li>
-<li>Error是程序无法处理的错误，它是由JVM产生和抛出的，比如OutOfMemoryError、ThreadDeath等。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。Exception是程序本身可以处理的异常，这种异常分两大类运行时异常和非运行时异常。程序中应当尽可能去处理这些异常。</li>
-<li>RuntimeException（也称不检查异常）：即可以编译通过，一般由程序的逻辑错误引起，开发过程中应尽量避免。例如：NullPointerException，IndexOutOfBoundsException等。<strong>自定义异常一般继承此类</strong>。</li>
-<li>RuntimeException以外的异常（IOException）：编译器在编译阶段进行处理，程序必须处理此类异常否则无法通过编译。</li>
-</ul>
-<h1 id="try-catch-finally-return"><a href="#try-catch-finally-return" class="headerlink" title="try-catch-finally-return"></a>try-catch-finally-return</h1><p>具体例子见(个人demo):</p>
-<blockquote>
-<p><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java" target="_blank" rel="noopener">https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java</a></p>
-</blockquote>
-<h1 id="自定义全局异常处理（配套源码）"><a href="#自定义全局异常处理（配套源码）" class="headerlink" title="自定义全局异常处理（配套源码）"></a>自定义全局异常处理（配套源码）</h1><blockquote>
-<p><a href="https://github.com/MarchNineteen/spring-example/tree/master/spring-example-exception" target="_blank" rel="noopener">https://github.com/MarchNineteen/spring-example/tree/master/spring-example-exception</a></p>
-</blockquote>
-<h1 id="常见的异常打印信息"><a href="#常见的异常打印信息" class="headerlink" title="常见的异常打印信息"></a>常见的异常打印信息</h1><ul>
-<li>getMessage(): 返回此throwable的详细消息字符串，只会获得具体的异常名称，比如说NullPoint 空指针,就告诉你说是空指针。</li>
-<li>printStackTrace():提供对打印的堆栈跟踪信息的编程访问,会打出详细异常,异常名称,出错位置,便于调试用。</li>
-<li>toString():返回此throwable的简短描述。</li>
-</ul>
-<h2 id="注意要点："><a href="#注意要点：" class="headerlink" title="注意要点："></a>注意要点：</h2><ul>
-<li>多个catch模块，子类在先，为了保证所有的catch都有存在的意义</li>
-<li>finally模块在try-catch的return或者异常处理之前执行</li>
-<li>在以下4种特殊情况下，finally块不会被执行：<br>1）在finally语句块中抛出了异常且未处理。<br>2）在前面的代码中用了System.exit()退出程序。<br>3）程序所在的线程死亡。<br>4）CPU出现异常被关闭。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>JavaSE</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>java数据类型</title>
-    <url>/2018/05/17/java/javase/dataType/</url>
-    <content><![CDATA[<h1 id="1-Java-八大基本数据类型及其封装器类（位数为二进制位）"><a href="#1-Java-八大基本数据类型及其封装器类（位数为二进制位）" class="headerlink" title="1.Java 八大基本数据类型及其封装器类（位数为二进制位）"></a>1.Java 八大基本数据类型及其封装器类（位数为二进制位）</h1><h2 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h2><p>char：默认值：\u0000，16位，数据范围：\u0000 - u\ffff，存储Unicode码，用单引号赋值。封装类：Character</p>
-<h2 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h2><p>boolean：默认值：false，1位，只有true和false两个取值。封装类：Boolean</p>
-<h2 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h2><p>整数类型：(最大存储容量为2的n次方减一，范围为负数2的n减一次方至2的n减一次方减一，n为位数，原理见计算机组成原理无符号数与有符号数)</p>
-<p>byte：默认值：0，8位，字节，最大存储数据量是255，存放的数据范围是-128~127之间。封装类：Byte</p>
-<p>short：默认值：0，16位，最大数据存储量是65536，数据范围是-32768~32767之间。封装类：Short</p>
-<p>int：默认值：0，32位，最大数据存储容量是2的32次方减1，数据范围是负的2的31次方到正的2的31次方减1。封装类：Integer</p>
-<p>long：默认值：0，64位，最大数据存储容量是2的64次方减1，数据范围为负的2的63次方到正的2的63次方减1。封装类：Long</p>
-<p>浮点数类型：</p>
-<p>float：默认值：0.0f，32位，数据范围在3.4e-45~1.4e38，直接赋值时必须在数字后加上f或F。封装类：Float</p>
-<p>double：默认值：0.0d，64位，数据范围在4.9e-324~1.8e308，赋值时可以加d或D也可以不加。封装类：Double</p>
-<p>对于数值类型的基本类型的取值范围，我们无需强制去记忆，因为它们的值都已经以常量的形式定义在对应的包装类中了。如：</p>
-<p>基本类型byte 二进制位数：Byte.SIZE最小值：Byte.MIN_VALUE最大值：Byte.MAX_VALUE</p>
-<p>基本类型short二进制位数：Short.SIZE最小值：Short.MIN_VALUE最大值：Short.MAX_VALUE</p>
-<p>基本类型char二进制位数：Character.SIZE最小值：Character.MIN_VALUE最大值：Character.MAX_VALUE</p>
-<p>基本类型double 二进制位数：Double.SIZE最小值：Double.MIN_VALUE最大值：Double.MAX_VALUE</p>
-<blockquote>
-<p>注意：float、double两种类型的最小值与Float.MIN_VALUE、 Double.MIN_VALUE的值并不相同，实际上Float.MIN_VALUE和Double.MIN_VALUE分别指的是 float和double类型所能表示的最小正数。也就是说存在这样一种情况，0到±Float.MIN_VALUE之间的值float类型无法表示，0 到±Double.MIN_VALUE之间的值double类型无法表示。这并没有什么好奇怪的，因为这些范围内的数值超出了它们的精度范围。</p>
-</blockquote>
-<h1 id="2-数据类型之间的转换："><a href="#2-数据类型之间的转换：" class="headerlink" title="2.数据类型之间的转换："></a>2.数据类型之间的转换：</h1><h2 id="简单类型数据间的转换"><a href="#简单类型数据间的转换" class="headerlink" title="简单类型数据间的转换"></a>简单类型数据间的转换</h2><p>自动转换：运算或者方法调用时，低精度自动转化为高精度，从低到高顺序：(byte，short，char)–int–long–float—double；<br>        特例：int到float，long到float，long到double 是不会自动转换的，不然将会丢失精度。</p>
-<p>强制转换：高精度转为低精度，可以使用强制转换；即你必须采用下面这种语句格式： int n=(int)3.14159/2;可以想象，这种转换肯定可能会导致溢出或精度的下降。</p>
-<h2 id="表达式的数据类型自动提升"><a href="#表达式的数据类型自动提升" class="headerlink" title="表达式的数据类型自动提升"></a>表达式的数据类型自动提升</h2><p>注意一下规则：</p>
-<pre><code>①所有的byte,short,char型的值将被提升为int型；
-②如果有一个操作数是long型，计算结果是long型；
-③如果有一个操作数是float型，计算结果是float型；
-④如果有一个操作数是double型，计算结果是double型；
-例， byte b; b=3; b=(byte)(b*3);//必须声明byte。 </code></pre><h2 id="包装类过渡类型转换"><a href="#包装类过渡类型转换" class="headerlink" title="包装类过渡类型转换"></a>包装类过渡类型转换</h2><ul>
-<li>简单类型的变量转换为相应的包装类，可以利用包装类的构造函数。即：Boolean(boolean value)、Character(char value)、Integer(int value)、Long(long value)、Float(float value)、Double(double value)</li>
-<li>在各个包装类中，总有形为××Value()的方法，来得到其对应的简单类型数据。利用这种方法，也可以实现不同数值型变量间的转换，例如，对于一个双精度实型类，intValue()可以得到其对应的整型变量，而doubleValue()可以得到其对应的双精度实型变量</li>
-</ul>
-<h2 id="字符串与其它类型间的转换"><a href="#字符串与其它类型间的转换" class="headerlink" title="字符串与其它类型间的转换"></a>字符串与其它类型间的转换</h2><p>其它类型向字符串的转换：</p>
-<pre><code>①调用类的串转换方法:X.toString();
-②自动转换:X+&quot;&quot;;
-③使用String的方法:String.valueOf(X);</code></pre><p>字符串作为值,向其它类型的转换：</p>
-<pre><code>①先转换成相应的封装器实例,再调用对应的方法转换成其它类型。例：new Float(&quot;11&quot;).doubleValue()
-②静态parseXXX方法。
-    String s = &quot;1&quot;;
-    byte b = Byte.parseByte( s );
-    short t = Short.parseShort( s );
-    int i = Integer.parseInt( s );
-    long l = Long.parseLong( s );
-    Float f = Float.parseFloat( s );
-    Double d = Double.parseDouble( s );
-③Character的getNumericValue(char ch)方法</code></pre><h2 id="自动拆箱与自动装箱"><a href="#自动拆箱与自动装箱" class="headerlink" title="自动拆箱与自动装箱"></a><strong>自动拆箱与自动装箱</strong></h2><p>自动装箱：把基本类型用它们对应的包装类包装起来，使它们具有对象的特质，可以调用所对应的包装类所定义的方法，比如toString()等。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Integer i0 &#x3D; new Integer(0);&#x2F;&#x2F;基本的创建封装类对象</span><br><span class="line">Integer i1 &#x3D; 2;&#x2F;&#x2F;自动装箱</span><br><span class="line">Integer i1_ &#x3D; Integer.valueOf(2);&#x2F;&#x2F;自动装箱的本质，调用XX.valueof()方法</span><br><span class="line">&#96;&#96;&#96;    </span><br><span class="line"></span><br><span class="line">自动拆箱：跟自动装箱的方向相反，将Integer及Double这样的包装类的对象重新简化为基本类型的数据(自动拆箱时，一定要确保包装类的引用不为空)</span><br></pre></td></tr></table></figure>
-<p>System.out.println(i1+2);<br>//i1是我们上面通过自动装箱得到的一个integer对象，而这个对象是不能直接进行四则运算的，但是我们却给它+2，<br>这样就必须将integer对象转变为基本数据类型（int），这个过程就是自动拆箱的过程</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">jdk装箱池（方法区中的常量池）：java的八种基本类型（Byte Short、Integer、Long、Character、Boolean、Float、Double），除Float及Double意外，其它六种都实现了常量池，但是他们只在大于等于-128且小于等于127时才能使用常量池，如果不在此范围内，则会new一个出来，保存在堆内存中。</span><br><span class="line"></span><br><span class="line">例子：</span><br></pre></td></tr></table></figure>
-<pre><code>Integer a = 1;
-Integer b = 1;
-Integer c = 144;
-Integer d = 144;
-Integer a1 = new Integer(1);
-Integer b1 = new Integer(1);
-System.out.println(a == b);         //true
-System.out.println(a.equals(b));    //true
-System.out.println(a1 == b1);       //false
-System.out.println(a1.equals(b1));  //true
-System.out.println(c == d);         //false
-System.out.println(c.equals(d));    //true</code></pre><pre><code>
-在进行==比较的时候，在自动装箱池范围内的数据的引用是相同的，范围外的是不同的。 
-
-# 3.Java引用类型
-Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
-引申：Java中的堆内存、栈内存、静态存储区
-&gt; http://www.cnblogs.com/mingziday/p/4899212.html
-
-栈（stack）存放基础数据类型以及对象的对象的引用
-
-堆（heap）存放由new创建的对象和数组，即堆主要是用来存储对象的
-
-方法区中的静态存储区存储static声明的静态变量
-
-# 4.java字符编码
-&gt; http://kxjhlele.iteye.com/blog/333211
-</code></pre>]]></content>
       <categories>
         <category>JavaSE</category>
       </categories>
@@ -2968,41 +2886,113 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
       </categories>
   </entry>
   <entry>
-    <title>java正则表达式例子</title>
-    <url>/2018/08/28/java/javase/regularExpression/</url>
-    <content><![CDATA[<h1 id="正则表达式-文本框输入内容控制"><a href="#正则表达式-文本框输入内容控制" class="headerlink" title="[正则表达式]文本框输入内容控制"></a>[正则表达式]文本框输入内容控制</h1><ul>
-<li>整数或者小数：^[0-9]+.{0,1}[0-9]{0,2}$</li>
-<li>只能输入数字：”^[0-9]*$”。</li>
-<li>只能输入n位的数字：”^\d{n}$”。</li>
-<li>只能输入至少n位的数字：”^\d{n,}$”。</li>
-<li>只能输入m~n位的数字：。”^\d{m,n}$”</li>
-<li>只能输入零和非零开头的数字：”^(0|[1-9][0-9]*)$”。</li>
-<li>只能输入有两位小数的正实数：”^[0-9]+(.[0-9]{2})?$”。</li>
-<li>只能输入有1~3位小数的正实数：”^[0-9]+(.[0-9]{1,3})?$”。</li>
-<li>只能输入非零的正整数：”^+?[1-9][0-9]*$”。</li>
-<li>只能输入非零的负整数：”^-[1-9][]0-9”*$。</li>
-<li>只能输入长度为3的字符：”^.{3}$”。</li>
-<li>只能输入由26个英文字母组成的字符串：”^[A-Za-z]+$”。</li>
-<li>只能输入由26个大写英文字母组成的字符串：”^[A-Z]+$”。</li>
-<li>只能输入由26个小写英文字母组成的字符串：”^[a-z]+$”。</li>
-<li>只能输入由数字和26个英文字母组成的字符串：”^[A-Za-z0-9]+$”。</li>
-<li>只能输入由数字、26个英文字母或者下划线组成的字符串：”^\w+$”。</li>
-<li>验证用户密码：”^[a-zA-Z]\w{5,17}$”正确格式为：以字母开头，长度在6~18之间，只能包含字符、数字和下划线。</li>
-<li>验证是否含有^%&amp;’,;=?$&quot;等字符：”[^%&amp;’,;=?$\x22]+”。</li>
-<li>只能输入汉字：”^[\u4e00-\u9fa5]{0,}$”</li>
-<li>验证Email地址：”^\w+([-+.]\w+)<em>@\w+([-.]\w+)*.\w+([-.]\w+)</em>$”。</li>
-<li>验证InternetURL：”^http://([\w-]+.)+[\w-]+(/[\w-./?%&amp;=]*)?$”。</li>
-<li>验证电话号码：”^((\d{3,4}-)|\d{3.4}-)?\d{7,8}$”正确格式为：”XXX-XXXXXXX”、”XXXX-XXXXXXXX”、”XXX-XXXXXXX”、”XXX-XXXXXXXX”、”XXXXXXX”和”XXXXXXXX”。</li>
-<li>验证身份证号（15位或18位数字）：”^\d{15}|\d{18}$”。</li>
-<li>验证一年的12个月：”^(0?[1-9]|1[0-2])$”正确格式为：”01”～”09”和”1”～”12”。</li>
-<li>验证一个月的31天：”^((0?[1-9])|((1|2)[0-9])|30|31)$”正确格式为；”01”～”09”和”1”～”31”。</li>
-<li>匹配中文字符的正则表达式： [\u4e00-\u9fa5]</li>
-<li>匹配双字节字符(包括汉字在内)：[^\x00-\xff]</li>
-<li>应用：计算字符串的长度（一个双字节字符长度计2，ASCII字符计1）</li>
-<li>String.prototype.len=function(){return this.replace(/[^\x00-\xff]/g,”aa”).length;}</li>
-<li>匹配空行的正则表达式：\n[\s| ]*\r</li>
-<li>匹配html标签的正则表达式：&lt;(.<em>)&gt;(.</em>)&lt;/(.<em>)&gt;|&lt;(.</em>)/&gt;</li>
-<li>匹配首尾空格的正则表达式：(^\s<em>)|(\s</em>$)</li>
+    <title>java数据类型</title>
+    <url>/2018/05/17/java/javase/dataType/</url>
+    <content><![CDATA[<h1 id="1-Java-八大基本数据类型及其封装器类（位数为二进制位）"><a href="#1-Java-八大基本数据类型及其封装器类（位数为二进制位）" class="headerlink" title="1.Java 八大基本数据类型及其封装器类（位数为二进制位）"></a>1.Java 八大基本数据类型及其封装器类（位数为二进制位）</h1><h2 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h2><p>char：默认值：\u0000，16位，数据范围：\u0000 - u\ffff，存储Unicode码，用单引号赋值。封装类：Character</p>
+<h2 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h2><p>boolean：默认值：false，1位，只有true和false两个取值。封装类：Boolean</p>
+<h2 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h2><p>整数类型：(最大存储容量为2的n次方减一，范围为负数2的n减一次方至2的n减一次方减一，n为位数，原理见计算机组成原理无符号数与有符号数)</p>
+<p>byte：默认值：0，8位，字节，最大存储数据量是255，存放的数据范围是-128~127之间。封装类：Byte</p>
+<p>short：默认值：0，16位，最大数据存储量是65536，数据范围是-32768~32767之间。封装类：Short</p>
+<p>int：默认值：0，32位，最大数据存储容量是2的32次方减1，数据范围是负的2的31次方到正的2的31次方减1。封装类：Integer</p>
+<p>long：默认值：0，64位，最大数据存储容量是2的64次方减1，数据范围为负的2的63次方到正的2的63次方减1。封装类：Long</p>
+<p>浮点数类型：</p>
+<p>float：默认值：0.0f，32位，数据范围在3.4e-45~1.4e38，直接赋值时必须在数字后加上f或F。封装类：Float</p>
+<p>double：默认值：0.0d，64位，数据范围在4.9e-324~1.8e308，赋值时可以加d或D也可以不加。封装类：Double</p>
+<p>对于数值类型的基本类型的取值范围，我们无需强制去记忆，因为它们的值都已经以常量的形式定义在对应的包装类中了。如：</p>
+<p>基本类型byte 二进制位数：Byte.SIZE最小值：Byte.MIN_VALUE最大值：Byte.MAX_VALUE</p>
+<p>基本类型short二进制位数：Short.SIZE最小值：Short.MIN_VALUE最大值：Short.MAX_VALUE</p>
+<p>基本类型char二进制位数：Character.SIZE最小值：Character.MIN_VALUE最大值：Character.MAX_VALUE</p>
+<p>基本类型double 二进制位数：Double.SIZE最小值：Double.MIN_VALUE最大值：Double.MAX_VALUE</p>
+<blockquote>
+<p>注意：float、double两种类型的最小值与Float.MIN_VALUE、 Double.MIN_VALUE的值并不相同，实际上Float.MIN_VALUE和Double.MIN_VALUE分别指的是 float和double类型所能表示的最小正数。也就是说存在这样一种情况，0到±Float.MIN_VALUE之间的值float类型无法表示，0 到±Double.MIN_VALUE之间的值double类型无法表示。这并没有什么好奇怪的，因为这些范围内的数值超出了它们的精度范围。</p>
+</blockquote>
+<h1 id="2-数据类型之间的转换："><a href="#2-数据类型之间的转换：" class="headerlink" title="2.数据类型之间的转换："></a>2.数据类型之间的转换：</h1><h2 id="简单类型数据间的转换"><a href="#简单类型数据间的转换" class="headerlink" title="简单类型数据间的转换"></a>简单类型数据间的转换</h2><p>自动转换：运算或者方法调用时，低精度自动转化为高精度，从低到高顺序：(byte，short，char)–int–long–float—double；<br>        特例：int到float，long到float，long到double 是不会自动转换的，不然将会丢失精度。</p>
+<p>强制转换：高精度转为低精度，可以使用强制转换；即你必须采用下面这种语句格式： int n=(int)3.14159/2;可以想象，这种转换肯定可能会导致溢出或精度的下降。</p>
+<h2 id="表达式的数据类型自动提升"><a href="#表达式的数据类型自动提升" class="headerlink" title="表达式的数据类型自动提升"></a>表达式的数据类型自动提升</h2><p>注意一下规则：</p>
+<pre><code>①所有的byte,short,char型的值将被提升为int型；
+②如果有一个操作数是long型，计算结果是long型；
+③如果有一个操作数是float型，计算结果是float型；
+④如果有一个操作数是double型，计算结果是double型；
+例， byte b; b=3; b=(byte)(b*3);//必须声明byte。 </code></pre><h2 id="包装类过渡类型转换"><a href="#包装类过渡类型转换" class="headerlink" title="包装类过渡类型转换"></a>包装类过渡类型转换</h2><ul>
+<li>简单类型的变量转换为相应的包装类，可以利用包装类的构造函数。即：Boolean(boolean value)、Character(char value)、Integer(int value)、Long(long value)、Float(float value)、Double(double value)</li>
+<li>在各个包装类中，总有形为××Value()的方法，来得到其对应的简单类型数据。利用这种方法，也可以实现不同数值型变量间的转换，例如，对于一个双精度实型类，intValue()可以得到其对应的整型变量，而doubleValue()可以得到其对应的双精度实型变量</li>
+</ul>
+<h2 id="字符串与其它类型间的转换"><a href="#字符串与其它类型间的转换" class="headerlink" title="字符串与其它类型间的转换"></a>字符串与其它类型间的转换</h2><p>其它类型向字符串的转换：</p>
+<pre><code>①调用类的串转换方法:X.toString();
+②自动转换:X+&quot;&quot;;
+③使用String的方法:String.valueOf(X);</code></pre><p>字符串作为值,向其它类型的转换：</p>
+<pre><code>①先转换成相应的封装器实例,再调用对应的方法转换成其它类型。例：new Float(&quot;11&quot;).doubleValue()
+②静态parseXXX方法。
+    String s = &quot;1&quot;;
+    byte b = Byte.parseByte( s );
+    short t = Short.parseShort( s );
+    int i = Integer.parseInt( s );
+    long l = Long.parseLong( s );
+    Float f = Float.parseFloat( s );
+    Double d = Double.parseDouble( s );
+③Character的getNumericValue(char ch)方法</code></pre><h2 id="自动拆箱与自动装箱"><a href="#自动拆箱与自动装箱" class="headerlink" title="自动拆箱与自动装箱"></a><strong>自动拆箱与自动装箱</strong></h2><p>自动装箱：把基本类型用它们对应的包装类包装起来，使它们具有对象的特质，可以调用所对应的包装类所定义的方法，比如toString()等。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Integer i0 &#x3D; new Integer(0);&#x2F;&#x2F;基本的创建封装类对象</span><br><span class="line">Integer i1 &#x3D; 2;&#x2F;&#x2F;自动装箱</span><br><span class="line">Integer i1_ &#x3D; Integer.valueOf(2);&#x2F;&#x2F;自动装箱的本质，调用XX.valueof()方法</span><br><span class="line">&#96;&#96;&#96;    </span><br><span class="line"></span><br><span class="line">自动拆箱：跟自动装箱的方向相反，将Integer及Double这样的包装类的对象重新简化为基本类型的数据(自动拆箱时，一定要确保包装类的引用不为空)</span><br></pre></td></tr></table></figure>
+<p>System.out.println(i1+2);<br>//i1是我们上面通过自动装箱得到的一个integer对象，而这个对象是不能直接进行四则运算的，但是我们却给它+2，<br>这样就必须将integer对象转变为基本数据类型（int），这个过程就是自动拆箱的过程</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">jdk装箱池（方法区中的常量池）：java的八种基本类型（Byte Short、Integer、Long、Character、Boolean、Float、Double），除Float及Double意外，其它六种都实现了常量池，但是他们只在大于等于-128且小于等于127时才能使用常量池，如果不在此范围内，则会new一个出来，保存在堆内存中。</span><br><span class="line"></span><br><span class="line">例子：</span><br></pre></td></tr></table></figure>
+<pre><code>Integer a = 1;
+Integer b = 1;
+Integer c = 144;
+Integer d = 144;
+Integer a1 = new Integer(1);
+Integer b1 = new Integer(1);
+System.out.println(a == b);         //true
+System.out.println(a.equals(b));    //true
+System.out.println(a1 == b1);       //false
+System.out.println(a1.equals(b1));  //true
+System.out.println(c == d);         //false
+System.out.println(c.equals(d));    //true</code></pre><pre><code>
+在进行==比较的时候，在自动装箱池范围内的数据的引用是相同的，范围外的是不同的。 
+
+# 3.Java引用类型
+Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
+引申：Java中的堆内存、栈内存、静态存储区
+&gt; http://www.cnblogs.com/mingziday/p/4899212.html
+
+栈（stack）存放基础数据类型以及对象的对象的引用
+
+堆（heap）存放由new创建的对象和数组，即堆主要是用来存储对象的
+
+方法区中的静态存储区存储static声明的静态变量
+
+# 4.java字符编码
+&gt; http://kxjhlele.iteye.com/blog/333211
+</code></pre>]]></content>
+      <categories>
+        <category>JavaSE</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>java异常体系结构</title>
+    <url>/2018/08/08/java/javase/exception/</url>
+    <content><![CDATA[<h1 id="java异常体系结构图"><a href="#java异常体系结构图" class="headerlink" title="java异常体系结构图"></a>java异常体系结构图</h1><p><img src="/uploads/java/javase/%E5%BC%82%E5%B8%B8%E7%BB%93%E6%9E%84%E4%BD%93%E7%B3%BB.png" alt="java异常体系结构"></p>
+<p>从图中可以发现（列出要点，简要说明）：</p>
+<ul>
+<li>所以异常类的父类为Throwable类（表示可抛出），直接继承为Error和Exception两个子类，Error也是异常的一种。</li>
+<li>Error是程序无法处理的错误，它是由JVM产生和抛出的，比如OutOfMemoryError、ThreadDeath等。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。Exception是程序本身可以处理的异常，这种异常分两大类运行时异常和非运行时异常。程序中应当尽可能去处理这些异常。</li>
+<li>RuntimeException（也称不检查异常）：即可以编译通过，一般由程序的逻辑错误引起，开发过程中应尽量避免。例如：NullPointerException，IndexOutOfBoundsException等。<strong>自定义异常一般继承此类</strong>。</li>
+<li>RuntimeException以外的异常（IOException）：编译器在编译阶段进行处理，程序必须处理此类异常否则无法通过编译。</li>
+</ul>
+<h1 id="try-catch-finally-return"><a href="#try-catch-finally-return" class="headerlink" title="try-catch-finally-return"></a>try-catch-finally-return</h1><p>具体例子见(个人demo):</p>
+<blockquote>
+<p><a href="https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java" target="_blank" rel="noopener">https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java</a></p>
+</blockquote>
+<h1 id="自定义全局异常处理（配套源码）"><a href="#自定义全局异常处理（配套源码）" class="headerlink" title="自定义全局异常处理（配套源码）"></a>自定义全局异常处理（配套源码）</h1><blockquote>
+<p><a href="https://github.com/MarchNineteen/spring-example/tree/master/spring-example-exception" target="_blank" rel="noopener">https://github.com/MarchNineteen/spring-example/tree/master/spring-example-exception</a></p>
+</blockquote>
+<h1 id="常见的异常打印信息"><a href="#常见的异常打印信息" class="headerlink" title="常见的异常打印信息"></a>常见的异常打印信息</h1><ul>
+<li>getMessage(): 返回此throwable的详细消息字符串，只会获得具体的异常名称，比如说NullPoint 空指针,就告诉你说是空指针。</li>
+<li>printStackTrace():提供对打印的堆栈跟踪信息的编程访问,会打出详细异常,异常名称,出错位置,便于调试用。</li>
+<li>toString():返回此throwable的简短描述。</li>
+</ul>
+<h2 id="注意要点："><a href="#注意要点：" class="headerlink" title="注意要点："></a>注意要点：</h2><ul>
+<li>多个catch模块，子类在先，为了保证所有的catch都有存在的意义</li>
+<li>finally模块在try-catch的return或者异常处理之前执行</li>
+<li>在以下4种特殊情况下，finally块不会被执行：<br>1）在finally语句块中抛出了异常且未处理。<br>2）在前面的代码中用了System.exit()退出程序。<br>3）程序所在的线程死亡。<br>4）CPU出现异常被关闭。</li>
 </ul>
 ]]></content>
       <categories>
@@ -3061,6 +3051,48 @@ default                    do
  finalize:
  使用finalize在垃圾收集器确定这个对象未被引用时调用，表示在垃圾收集器将对象从内存中清除出去之前做一些清理工作。
  子类可以覆盖该方法以实现资源清理工作，GC在回收对象之前调用该方法</code></pre>]]></content>
+      <categories>
+        <category>JavaSE</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>java正则表达式例子</title>
+    <url>/2018/08/28/java/javase/regularExpression/</url>
+    <content><![CDATA[<h1 id="正则表达式-文本框输入内容控制"><a href="#正则表达式-文本框输入内容控制" class="headerlink" title="[正则表达式]文本框输入内容控制"></a>[正则表达式]文本框输入内容控制</h1><ul>
+<li>整数或者小数：^[0-9]+.{0,1}[0-9]{0,2}$</li>
+<li>只能输入数字：”^[0-9]*$”。</li>
+<li>只能输入n位的数字：”^\d{n}$”。</li>
+<li>只能输入至少n位的数字：”^\d{n,}$”。</li>
+<li>只能输入m~n位的数字：。”^\d{m,n}$”</li>
+<li>只能输入零和非零开头的数字：”^(0|[1-9][0-9]*)$”。</li>
+<li>只能输入有两位小数的正实数：”^[0-9]+(.[0-9]{2})?$”。</li>
+<li>只能输入有1~3位小数的正实数：”^[0-9]+(.[0-9]{1,3})?$”。</li>
+<li>只能输入非零的正整数：”^+?[1-9][0-9]*$”。</li>
+<li>只能输入非零的负整数：”^-[1-9][]0-9”*$。</li>
+<li>只能输入长度为3的字符：”^.{3}$”。</li>
+<li>只能输入由26个英文字母组成的字符串：”^[A-Za-z]+$”。</li>
+<li>只能输入由26个大写英文字母组成的字符串：”^[A-Z]+$”。</li>
+<li>只能输入由26个小写英文字母组成的字符串：”^[a-z]+$”。</li>
+<li>只能输入由数字和26个英文字母组成的字符串：”^[A-Za-z0-9]+$”。</li>
+<li>只能输入由数字、26个英文字母或者下划线组成的字符串：”^\w+$”。</li>
+<li>验证用户密码：”^[a-zA-Z]\w{5,17}$”正确格式为：以字母开头，长度在6~18之间，只能包含字符、数字和下划线。</li>
+<li>验证是否含有^%&amp;’,;=?$&quot;等字符：”[^%&amp;’,;=?$\x22]+”。</li>
+<li>只能输入汉字：”^[\u4e00-\u9fa5]{0,}$”</li>
+<li>验证Email地址：”^\w+([-+.]\w+)<em>@\w+([-.]\w+)*.\w+([-.]\w+)</em>$”。</li>
+<li>验证InternetURL：”^http://([\w-]+.)+[\w-]+(/[\w-./?%&amp;=]*)?$”。</li>
+<li>验证电话号码：”^((\d{3,4}-)|\d{3.4}-)?\d{7,8}$”正确格式为：”XXX-XXXXXXX”、”XXXX-XXXXXXXX”、”XXX-XXXXXXX”、”XXX-XXXXXXXX”、”XXXXXXX”和”XXXXXXXX”。</li>
+<li>验证身份证号（15位或18位数字）：”^\d{15}|\d{18}$”。</li>
+<li>验证一年的12个月：”^(0?[1-9]|1[0-2])$”正确格式为：”01”～”09”和”1”～”12”。</li>
+<li>验证一个月的31天：”^((0?[1-9])|((1|2)[0-9])|30|31)$”正确格式为；”01”～”09”和”1”～”31”。</li>
+<li>匹配中文字符的正则表达式： [\u4e00-\u9fa5]</li>
+<li>匹配双字节字符(包括汉字在内)：[^\x00-\xff]</li>
+<li>应用：计算字符串的长度（一个双字节字符长度计2，ASCII字符计1）</li>
+<li>String.prototype.len=function(){return this.replace(/[^\x00-\xff]/g,”aa”).length;}</li>
+<li>匹配空行的正则表达式：\n[\s| ]*\r</li>
+<li>匹配html标签的正则表达式：&lt;(.<em>)&gt;(.</em>)&lt;/(.<em>)&gt;|&lt;(.</em>)/&gt;</li>
+<li>匹配首尾空格的正则表达式：(^\s<em>)|(\s</em>$)</li>
+</ul>
+]]></content>
       <categories>
         <category>JavaSE</category>
       </categories>
@@ -4720,110 +4752,6 @@ obj = null;</code></pre><h2 id="垃圾收集算法（怎么回收）"><a href="#
       </categories>
   </entry>
   <entry>
-    <title>Java设计模式：观察者模式</title>
-    <url>/2019/01/24/java/java-design/behavioral/observer/</url>
-    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义对象之间的一对多依赖，当一个对象状态改变时，它的所有依赖都会收到通知并且自动更新状态。</p>
-<p>主题（Subject）是被观察的对象，而其所有依赖者（Observer）称为观察者。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>主题依赖了观察者的一个集合，观察者依赖了一个主题，生成一个观察者需要在主题进行注册，主题更新后对每个观察者进行推送</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义主题接口，拥有对观察者的操作方法</p>
-<pre><code>public interface Subject {
-
-    // 注册观察者
-    public void registerObserver(Observer observer);
-
-    // 移除观察者
-    public void removeObserver(Observer observer);
-
-    // 提醒观察者
-    public void notifyObserver();
-}</code></pre><p>   定义一个观察者接口，提供一个操作接口，方便主题更新时对观察者进行操作</p>
-<pre><code>public interface Observer {
-
-    void update(float temp, float humidity, float pressure);
-}</code></pre><p>   定义主题接口实现类，依赖了一个观察者集合，当对主题进行更新时，循环通知各个观察者</p>
-<pre><code>public class WeatherSubject implements Subject {
-
-    private List&lt;Observer&gt; observers;
-    private float temperature;
-    private float humidity;
-    private float pressure;
-
-    public WeatherSubject() {
-        observers = new ArrayList&lt;&gt;();
-    }
-
-    public void setMeasurements(float temperature, float humidity, float pressure) {
-        this.temperature = temperature;
-        this.humidity = humidity;
-        this.pressure = pressure;
-        notifyObserver();
-    }
-
-    @Override
-    public void registerObserver(Observer observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(Observer observer) {
-        int i = observers.indexOf(observer);
-        if (i &gt;= 0) {
-            observers.remove(i);
-        }
-    }
-
-    @Override
-    public void notifyObserver() {
-        for (Observer o : observers) {
-            o.update(temperature, humidity, pressure);
-        }
-    }
-}</code></pre><p>   定义观察者实现类，每个观察者通过构造方法传入它所订阅的主题，并在主题中注册该观察者</p>
-<pre><code>public class StatisticsDisplay implements Observer {
-
-    public StatisticsDisplay(Subject weatherData) {
-        weatherData.registerObserver(this);
-    }
-
-    @Override
-    public void update(float temp, float humidity, float pressure) {
-        System.out.println(&quot;StatisticsDisplay.update: &quot; + temp + &quot; &quot; + humidity + &quot; &quot; + pressure);
-    }
-}</code></pre><p>   定义另一个观察者实现类</p>
-<pre><code>public class CurrentConditionsDisplay implements Observer {
-
-    public CurrentConditionsDisplay(Subject weatherData) {
-        weatherData.registerObserver(this);
-    }
-
-    @Override
-    public void update(float temp, float humidity, float pressure) {
-        System.out.println(&quot;CurrentConditionsDisplay.update: &quot; + temp + &quot; &quot; + humidity + &quot; &quot; + pressure);
-    }
-
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        WeatherSubject subject = new WeatherSubject();
-        Observer statis = new StatisticsDisplay(subject);
-        Observer current = new CurrentConditionsDisplay(subject);
-        subject.setMeasurements(22f, 29f, 100f);
-    }
-}</code></pre><p>   输出：</p>
-<pre><code>StatisticsDisplay.update: 22.0 29.0 100.0
-CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><p>第一眼看到这个模式就感觉这不就是java的监听器嘛，其实监听器就是通过这种模式实现的。</p>
-<ul>
-<li>java.util.Observer</li>
-<li>java.util.EventListener</li>
-<li>javax.servlet.http.HttpSessionBindingListener</li>
-</ul>
-]]></content>
-      <categories>
-        <category>java-design-patterns</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Java设计模式：责任链模式</title>
     <url>/2019/01/24/java/java-design/behavioral/chainOfResponsibility/</url>
     <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些对象连成一条链，并沿着这条链发送该请求，直到有一个对象处理它为止。</p>
@@ -4945,6 +4873,165 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
     }
 }</code></pre><p>   输出：最外层的Handler即调用所有类型的处理请求</p>
 <pre><code>request1 is handle by ConcreteHandler1</code></pre>]]></content>
+      <categories>
+        <category>java-design-patterns</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Java设计模式：观察者模式</title>
+    <url>/2019/01/24/java/java-design/behavioral/observer/</url>
+    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义对象之间的一对多依赖，当一个对象状态改变时，它的所有依赖都会收到通知并且自动更新状态。</p>
+<p>主题（Subject）是被观察的对象，而其所有依赖者（Observer）称为观察者。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>主题依赖了观察者的一个集合，观察者依赖了一个主题，生成一个观察者需要在主题进行注册，主题更新后对每个观察者进行推送</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义主题接口，拥有对观察者的操作方法</p>
+<pre><code>public interface Subject {
+
+    // 注册观察者
+    public void registerObserver(Observer observer);
+
+    // 移除观察者
+    public void removeObserver(Observer observer);
+
+    // 提醒观察者
+    public void notifyObserver();
+}</code></pre><p>   定义一个观察者接口，提供一个操作接口，方便主题更新时对观察者进行操作</p>
+<pre><code>public interface Observer {
+
+    void update(float temp, float humidity, float pressure);
+}</code></pre><p>   定义主题接口实现类，依赖了一个观察者集合，当对主题进行更新时，循环通知各个观察者</p>
+<pre><code>public class WeatherSubject implements Subject {
+
+    private List&lt;Observer&gt; observers;
+    private float temperature;
+    private float humidity;
+    private float pressure;
+
+    public WeatherSubject() {
+        observers = new ArrayList&lt;&gt;();
+    }
+
+    public void setMeasurements(float temperature, float humidity, float pressure) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        notifyObserver();
+    }
+
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        int i = observers.indexOf(observer);
+        if (i &gt;= 0) {
+            observers.remove(i);
+        }
+    }
+
+    @Override
+    public void notifyObserver() {
+        for (Observer o : observers) {
+            o.update(temperature, humidity, pressure);
+        }
+    }
+}</code></pre><p>   定义观察者实现类，每个观察者通过构造方法传入它所订阅的主题，并在主题中注册该观察者</p>
+<pre><code>public class StatisticsDisplay implements Observer {
+
+    public StatisticsDisplay(Subject weatherData) {
+        weatherData.registerObserver(this);
+    }
+
+    @Override
+    public void update(float temp, float humidity, float pressure) {
+        System.out.println(&quot;StatisticsDisplay.update: &quot; + temp + &quot; &quot; + humidity + &quot; &quot; + pressure);
+    }
+}</code></pre><p>   定义另一个观察者实现类</p>
+<pre><code>public class CurrentConditionsDisplay implements Observer {
+
+    public CurrentConditionsDisplay(Subject weatherData) {
+        weatherData.registerObserver(this);
+    }
+
+    @Override
+    public void update(float temp, float humidity, float pressure) {
+        System.out.println(&quot;CurrentConditionsDisplay.update: &quot; + temp + &quot; &quot; + humidity + &quot; &quot; + pressure);
+    }
+
+}</code></pre><p>   测试：</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        WeatherSubject subject = new WeatherSubject();
+        Observer statis = new StatisticsDisplay(subject);
+        Observer current = new CurrentConditionsDisplay(subject);
+        subject.setMeasurements(22f, 29f, 100f);
+    }
+}</code></pre><p>   输出：</p>
+<pre><code>StatisticsDisplay.update: 22.0 29.0 100.0
+CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><p>第一眼看到这个模式就感觉这不就是java的监听器嘛，其实监听器就是通过这种模式实现的。</p>
+<ul>
+<li>java.util.Observer</li>
+<li>java.util.EventListener</li>
+<li>javax.servlet.http.HttpSessionBindingListener</li>
+</ul>
+]]></content>
+      <categories>
+        <category>java-design-patterns</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Java设计模式：适配器</title>
+    <url>/2019/01/08/java/java-design/structure/adapter/</url>
+    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>适配器就是一种适配中间件，它存在于不匹配的二者之间，用于连接二者，将不匹配变得匹配，简单点理解就是平常所见的转接头，转换器之类的存在。</p>
+<p>把一个类接口转换成另一个用户需要的接口。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
+<li>通过组合的方式。</li>
+<li>通过继承来实现适配器功能。</li>
+</ul>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个鸭接口 方法为鸭子叫</p>
+<pre><code>public interface Duck {
+
+    void quack();</code></pre><p>   定义一个火鸡接口 方法为鸡叫</p>
+<pre><code>public interface Turkey {
+
+   void gobble();    </code></pre><p>   鸭子实现类</p>
+<pre><code>public class WildDuck implements Duck {
+
+    @Override
+    public void quack() {
+        System.out.println(&quot;鸭子叫&quot;);
+    }
+}    </code></pre><p>   火鸡实现类</p>
+<pre><code>public class WildTurkey implements Turkey {
+
+    @Override
+    public void gobble() {
+        System.out.println(&quot;火鸡叫&quot;);
+    }
+} </code></pre><p>   现在鸭子只能发出鸭子叫，鸡只能发出鸡叫，我们想要鸭子发出鸡的叫声。添加鸭子适配器。</p>
+<pre><code>public class DuckAdapter implements Turkey {
+
+   Duck duck;
+
+   public DuckAdapter(Duck duck) {
+       this.duck = duck;
+   }
+
+   @Override
+   public void gobble() {
+       duck.quack();
+   }
+}</code></pre><p>   组合方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
+<pre><code>public class DuckAdapter extends Turkey WildTurkey implements Turkey {
+
+      @Override
+      public void gobble() {
+          gobble.quack();
+      }
+   }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
+]]></content>
       <categories>
         <category>java-design-patterns</category>
       </categories>
@@ -5195,61 +5282,6 @@ public class Squeak implements CallBehavior {
 ----Composite:22
 ------left:221
 --left:3</code></pre>]]></content>
-      <categories>
-        <category>java-design-patterns</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Java设计模式：适配器</title>
-    <url>/2019/01/08/java/java-design/structure/adapter/</url>
-    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>适配器就是一种适配中间件，它存在于不匹配的二者之间，用于连接二者，将不匹配变得匹配，简单点理解就是平常所见的转接头，转换器之类的存在。</p>
-<p>把一个类接口转换成另一个用户需要的接口。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
-<li>通过组合的方式。</li>
-<li>通过继承来实现适配器功能。</li>
-</ul>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个鸭接口 方法为鸭子叫</p>
-<pre><code>public interface Duck {
-
-    void quack();</code></pre><p>   定义一个火鸡接口 方法为鸡叫</p>
-<pre><code>public interface Turkey {
-
-   void gobble();    </code></pre><p>   鸭子实现类</p>
-<pre><code>public class WildDuck implements Duck {
-
-    @Override
-    public void quack() {
-        System.out.println(&quot;鸭子叫&quot;);
-    }
-}    </code></pre><p>   火鸡实现类</p>
-<pre><code>public class WildTurkey implements Turkey {
-
-    @Override
-    public void gobble() {
-        System.out.println(&quot;火鸡叫&quot;);
-    }
-} </code></pre><p>   现在鸭子只能发出鸭子叫，鸡只能发出鸡叫，我们想要鸭子发出鸡的叫声。添加鸭子适配器。</p>
-<pre><code>public class DuckAdapter implements Turkey {
-
-   Duck duck;
-
-   public DuckAdapter(Duck duck) {
-       this.duck = duck;
-   }
-
-   @Override
-   public void gobble() {
-       duck.quack();
-   }
-}</code></pre><p>   组合方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
-<pre><code>public class DuckAdapter extends Turkey WildTurkey implements Turkey {
-
-      @Override
-      public void gobble() {
-          gobble.quack();
-      }
-   }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
-]]></content>
       <categories>
         <category>java-design-patterns</category>
       </categories>
