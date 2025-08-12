@@ -1,9 +1,9 @@
 ---
-title: Spring Bean 生命周期
+title: Spring AOP模块 
 date: 2019-12-06 
 desc:
-keywords: spring Bean
-categories: [spring]
+keywords: Spring AOP
+categories: [spring][AOP]
 ---
 
 # 类图
