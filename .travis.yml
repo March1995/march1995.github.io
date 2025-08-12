@@ -27,4 +27,4 @@ branches:
     - hexo
 env:
   global:
-    - GH_REF: github.com/MarchNineteen/MarchNineteen.github.io.git
+    - GH_REF: github.com/march1995/march1995.github.io.git

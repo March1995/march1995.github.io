@@ -3,7 +3,7 @@ title: ThreadLocal
 date: 2019-03-02 
 desc: java线程,多线程解析
 keywords: thread
-categories: [JavaSE]
+categories: [并发编程]
 ---
 
 # 类图：

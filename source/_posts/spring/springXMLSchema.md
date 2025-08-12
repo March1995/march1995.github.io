@@ -3,7 +3,7 @@ title: springXMLSchema
 date: 2017-07-05 
 desc:
 keywords: springmvc
-categories: [spring]
+categories: [Spring]
 ---
 
 >出处 http://www.jianshu.com/p/1e35c15d0cb8

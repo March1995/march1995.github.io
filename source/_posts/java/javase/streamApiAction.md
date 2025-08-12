@@ -6,7 +6,7 @@ keywords: java steam Collectors
 categories: [JavaSE]
 ---
 
-[相应源码地址](https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/java8/StreamApiAction.java)
+[相应源码地址](https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/java8/StreamApiAction.java)
 
 ## 流操作类型
 

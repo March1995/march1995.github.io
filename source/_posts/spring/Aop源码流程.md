@@ -1,18 +1,18 @@
 ---
 title: Spring AOP模块 
-date: 2019-12-06 
+date: 2025-06-06 
 desc:
 keywords: Spring AOP
-categories: [spring]
+categories: [Spring]
 ---
 
 # 类图
 
-![类图](/source/uploads/spring/aop/aop类图.png)
+![类图](https://march1995.github.io/uploads/spring/aop/aop类图.png)
 
 # aop功能代码分析图
 
-![aop功能代码分析图](/source/uploads/spring/aop/aop功能代码分析图.png)
+![aop功能代码分析图](https://march1995.github.io/uploads/spring/aop/aop功能代码分析图.png)
 
 ### 重点关注 InstantiationAwareBeanPostProcessor 和 postProcessBeforeInstantiation() 后置处理。
 
@@ -79,4 +79,4 @@ bean在多例模式下，spring容器启动时解析xml发下该bean标签后，
 这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。
 
 
-# [相应测试源码](https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java)
+# [相应测试源码](https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java)

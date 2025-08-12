@@ -3,7 +3,7 @@ title: Spring 加载XML文件的六种方式
 date: 2019-12-06 
 desc:
 keywords: spring xml
-categories: [spring]
+categories: [Spring]
 ---
 
 # 一: XmlBeanFactory 引用资源 
@@ -85,4 +85,4 @@ System.out.println("ClassPathXmlApplicationContext 获取 bean ：" + entity2.ge
 
 这个方法加载配置文件的前提是已经知道配置文件在哪里，虽然可以利用“*”通配符，但灵活度有限。 
 
-# [获取配套代码](https://github.com/MarchNineteen/spring-example/tree/master/spring-example-test/src/main/java/com/wyb/test/spring/loadXml)
+# [获取配套代码](https://github.com/march1995/spring-example/tree/master/spring-example-test/src/main/java/com/wyb/test/spring/loadXml)

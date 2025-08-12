@@ -44,7 +44,7 @@ List 是一个双向链表，可以通过 lpush 和 rpop 写入和读取消息
 
 不过最好使用 Kafka、RabbitMQ 等消息中间件。
 
-[redis 实现 点对点  发布/订阅 消息队列 ](https://github.com/MarchNineteen/spring-example/blob/master/spring-example-cache/src/test/java/com/wyb/cache/RedisMqTests.java)
+[redis 实现 点对点  发布/订阅 消息队列 ](https://github.com/march1995/spring-example/blob/master/spring-example-cache/src/test/java/com/wyb/cache/RedisMqTests.java)
 
 ## 会话缓存
 

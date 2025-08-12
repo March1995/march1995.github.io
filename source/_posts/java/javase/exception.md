@@ -18,11 +18,11 @@ categories: [JavaSE]
 # try-catch-finally-return
 
 具体例子见(个人demo):
-> https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java
+> https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java
 
 # 自定义全局异常处理（配套源码）
 
-> https://github.com/MarchNineteen/spring-example/tree/master/spring-example-exception
+> https://github.com/march1995/spring-example/tree/master/spring-example-exception
 
 # 常见的异常打印信息
 

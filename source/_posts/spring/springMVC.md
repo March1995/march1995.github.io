@@ -3,7 +3,7 @@ title: Spring MVC入门
 date: 2017-07-05 
 desc:
 keywords: springmvc
-categories: [spring]
+categories: [Spring]
 ---
 # 1.架构
 

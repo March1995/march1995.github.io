@@ -34,7 +34,7 @@ categories: [cache]
 访问某个节点时，将其从原来的位置删除，并重新插入到链表头部。这样就能保证链表尾部存储的就是最近最久未使用的节点，当节点数量大于缓存最大空间时就淘汰链表尾部的节点。
 为了使删除操作时间复杂度为 O(1)，就不能采用遍历的方式找到某个节点。HashMap 存储着 Key 到节点的映射，通过 Key 就能以 O(1) 的时间得到节点，然后再以 O(1) 的时间将其从双向队列中删除。
 
-[LRU实现](https://github.com/MarchNineteen/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/algorithms/cache/LRU.java)
+[LRU实现](https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/algorithms/cache/LRU.java)
 
 # 三、CDN
 

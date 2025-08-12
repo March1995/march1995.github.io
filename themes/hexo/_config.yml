@@ -127,7 +127,7 @@ scheme: Mist
 # Value before `||` delimeter is the target permalink.
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, globe icon will be loaded.
 social:
-  GitHub: https://github.com/MarchNineteen || github
+  GitHub: https://github.com/march1995 || github
   E-Mail: mailto:1501987783@qq.com || envelope
   简书: https://www.jianshu.com/u/324b61a4193e
 #  Google: https://plus.google.com/yourname || google
@@ -151,8 +151,8 @@ links_title: Links
 #links_layout: block
 links_layout: inline
 links:
-  spring-example: https://github.com/MarchNineteen/spring-example
-  jvm: https://marchnineteen.github.io/2018/10/31/java/jvm/jvm/
+  spring-example: https://github.com/march1995/spring-example
+  jvm: https://march1995.github.io/2018/10/31/java/jvm/jvm/
 
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.gif

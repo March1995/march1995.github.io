@@ -16,7 +16,7 @@ categories: [JavaSE]
 - volatile：多线程的内存模型：main memory（主存）、working memory（线程栈），在处理数据时，线程会把值从主存load到本地栈，完成操作后再save回去(volatile关键词的作用：每次针对该变量的操作都激发一次load and save)。
 针对多线程使用的变量如果不是volatile或者final修饰的，很有可能产生不可预知的结果（另一个线程修改了这个值，但是之后在某线程看到的是修改之前的值）。其实道理上讲同一实例的同一属性本身只有一个副本。但是多线程是会缓存值的，本质上，volatile就是不去缓存，直接取值。在线程安全的情况下加volatile会牺牲性能。
 
-![多线程内存原型](https://github.com/MarchNineteen/spring-example/blob/master/spring-example-thread/src/main/resources/static/多线程内存原型.jpg) 
+![多线程内存原型](https://github.com/march1995/spring-example/blob/master/spring-example-thread/src/main/resources/static/多线程内存原型.jpg) 
 
 
 # 线程状态&状态切换
@@ -28,7 +28,7 @@ categories: [JavaSE]
 - notify():从对象的等待池中移走一个任意的线程并放到锁标志等待池中，只有锁标志等待池中线程能够获取锁标志；如果锁标志等待池中没有线程，则notify()不起作用。
 - notifyAll(): notifyAll()则从对象等待池中移走所有等待那个对象的线程并放到锁标志等待池中。
 
-注意点：[源码](https://github.com/MarchNineteen/spring-example/blob/master/spring-example-thread/src/main/java/com/wyb/thread/base/synchronize)
+注意点：[源码](https://github.com/march1995/spring-example/blob/master/spring-example-thread/src/main/java/com/wyb/thread/base/synchronize)
 - **wait()当前线程立即释放对象锁，notify() notifyAll() 之后 才会执行剩下代码**
 - **notify() notifyAll() 本身不会释放锁，仅仅是通知，当同步块执行完毕之后才会释放锁**。
 
@@ -60,7 +60,7 @@ return unsafe.compareAndSwapInt(this, valueOffset, expect, update);
 - Condition
 - ReentrantLock
 
-![非公平锁获取锁过程](https://github.com/MarchNineteen/spring-example/blob/master/spring-example-thread/src/main/resources/static/非公平锁获取锁过程.jpg)
+![非公平锁获取锁过程](https://github.com/march1995/spring-example/blob/master/spring-example-thread/src/main/resources/static/非公平锁获取锁过程.jpg)
 
 公平锁和非公平锁不同之处在于，公平锁在获取锁的时候，不会先去检查state状态，而是直接执行aqcuire(1),即直接进入队列
 
