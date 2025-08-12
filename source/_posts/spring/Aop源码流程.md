@@ -3,7 +3,7 @@ title: Spring AOP模块
 date: 2019-12-06 
 desc:
 keywords: Spring AOP
-categories: [spring][AOP]
+categories: [Spring AOP]
 ---
 
 # 类图
