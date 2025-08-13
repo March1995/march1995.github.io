@@ -1,59 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>支付系统可能遇到的问题</title>
-    <url>/2021/10/11/active/pay/</url>
-    <content><![CDATA[<p>(资源)</p>
-<p>资源不可用</p>
-<p>资源响应超时</p>
-<p>(外部服务)</p>
-<p>通信中断</p>
-<p>服务不可用</p>
-<p>外部服务器响应超时</p>
-<p>外部服务违背功能契约</p>
-<p>应对方式(参考)：原则：避免发生，降低概率，控制影响，快速恢复。</p>
-<table>
-<thead>
-<tr>
-<th>故障条件</th>
-<th>应对方式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>超量请求</td>
-<td>配额控制，如订单号提前生成，控制额度</td>
-</tr>
-<tr>
-<td>重复请求</td>
-<td>幂等控制</td>
-</tr>
-<tr>
-<td>并发请求</td>
-<td>并发控制netty、mina等</td>
-</tr>
-<tr>
-<td>请求积压</td>
-<td>请求丢弃</td>
-</tr>
-<tr>
-<td>服务/资源响应超时</td>
-<td>时间控制</td>
-</tr>
-<tr>
-<td>可恢复通信故障</td>
-<td>合理重试</td>
-</tr>
-<tr>
-<td>处理中断</td>
-<td>事务/补偿机制</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>active</category>
-      </categories>
-  </entry>
-  <entry>
     <title>app嵌入H5如何同步登录状态</title>
     <url>/2021/10/11/active/appH5Token/</url>
     <content><![CDATA[<p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
@@ -110,80 +57,6 @@
 ]]></content>
       <categories>
         <category>active</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>缓存概要</title>
-    <url>/2019/10/25/cache/index/</url>
-    <content><![CDATA[<h1 id="一、缓存特征"><a href="#一、缓存特征" class="headerlink" title="一、缓存特征"></a>一、缓存特征</h1><h2 id="命中率"><a href="#命中率" class="headerlink" title="命中率"></a>命中率</h2><p>当某个请求能够通过访问缓存而得到响应时，称为缓存命中。</p>
-<p>缓存命中率越高，缓存的利用率也就越高。</p>
-<h2 id="最大空间"><a href="#最大空间" class="headerlink" title="最大空间"></a>最大空间</h2><p>缓存通常位于内存中，内存的空间通常比磁盘空间小的多，因此缓存的最大空间不可能非常大。</p>
-<p>当缓存存放的数据量超过最大空间时，就需要淘汰部分数据来存放新到达的数据。</p>
-<h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><ul>
-<li><p>FIFO（First In First Out）：先进先出策略，在实时性的场景下，需要经常访问最新的数据，那么就可以使用 FIFO，使得最先进入的数据（最晚的数据）被淘汰。</p>
-</li>
-<li><p>LRU（Least Recently Used）：最近最久未使用策略，优先淘汰最久未使用的数据，也就是上次被访问时间距离现在最久的数据。该策略可以保证内存中的数据都是热点数据，也就是经常被访问的数据，从而保证缓存命中率。</p>
-</li>
-<li><p>LFU（Least Frequently Used）：最不经常使用策略，优先淘汰一段时间内使用次数最少的数据。</p>
-</li>
-</ul>
-<h1 id="二、LRU"><a href="#二、LRU" class="headerlink" title="二、LRU"></a>二、LRU</h1><p>以下是基于 双向链表 + HashMap 的 LRU 算法实现，对算法的解释如下：</p>
-<p>访问某个节点时，将其从原来的位置删除，并重新插入到链表头部。这样就能保证链表尾部存储的就是最近最久未使用的节点，当节点数量大于缓存最大空间时就淘汰链表尾部的节点。<br>为了使删除操作时间复杂度为 O(1)，就不能采用遍历的方式找到某个节点。HashMap 存储着 Key 到节点的映射，通过 Key 就能以 O(1) 的时间得到节点，然后再以 O(1) 的时间将其从双向队列中删除。</p>
-<p><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/algorithms/cache/LRU.java" target="_blank" rel="noopener">LRU实现</a></p>
-<h1 id="三、CDN"><a href="#三、CDN" class="headerlink" title="三、CDN"></a>三、CDN</h1><p>内容分发网络（Content distribution network，CDN）是一种互连的网络系统，它利用更靠近用户的服务器从而更快更可靠地将 HTML、CSS、JavaScript、音乐、图片、视频等静态资源分发给用户。</p>
-<p>CDN 主要有以下优点：</p>
-<ul>
-<li>更快地将数据分发给用户；</li>
-<li>通过部署多台服务器，从而提高系统整体的带宽性能；</li>
-<li>多台服务器可以看成是一种冗余机制，从而具有高可用性。</li>
-</ul>
-<h1 id="四、缓存问题"><a href="#四、缓存问题" class="headerlink" title="四、缓存问题"></a>四、缓存问题</h1><h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>指对某一个一定不存在的数据进行请求，该请求会将穿透缓存到达数据库。</p>
-<p>解决方案：</p>
-<ul>
-<li>对这些不存在的数据缓存一个空数据</li>
-<li>对这类请求进行过滤</li>
-</ul>
-<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>指的是由于数据没有被加载到缓存中，或者缓存数据在同一时间大面积失效（过期），又或者缓存服务器宕机，导致大量的请求都到达数据库。</p>
-<p>在有缓存的系统中，系统非常依赖于缓存，缓存分担了很大一部分的数据请求。当发生缓存雪崩时，数据库无法处理这么大的请求，导致数据库崩溃。</p>
-<p>解决方案：</p>
-<ul>
-<li>为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；</li>
-<li>为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存，分布式缓存中每一个节点只缓存部分的数据，当某个节点宕机时可以保证其它节点的缓存仍然可用。</li>
-<li>也可以进行缓存预热，避免在系统刚启动不久由于还未将大量数据进行缓存而导致缓存雪崩。</li>
-</ul>
-<h2 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h2><p>缓存一致性要求数据更新的同时缓存数据也能够实时更新。</p>
-<p>解决方案：</p>
-<ul>
-<li>在数据更新的同时立即去更新缓存；</li>
-<li>在读缓存之前先判断缓存是否是最新的，如果不是最新的先进行更新。</li>
-</ul>
-<h2 id="缓存-“无底洞”-现象"><a href="#缓存-“无底洞”-现象" class="headerlink" title="缓存 “无底洞” 现象"></a>缓存 “无底洞” 现象</h2><p>指的是为了满足业务要求添加了大量缓存节点，但是性能不但没有好转反而下降了的现象。</p>
-<p>产生原因：缓存系统通常采用 hash 函数将 key 映射到对应的缓存节点，随着缓存节点数目的增加，键值分布到更多的节点上，导致客户端一次批量操作会涉及多次网络操作，这意味着批量操作的耗时会随着节点数目的增加而不断增大。此外，网络连接数变多，对节点的性能也有一定影响。</p>
-<p>解决方案：</p>
-<ul>
-<li>优化批量数据操作命令；</li>
-<li>减少网络通信次数；</li>
-<li>降低接入成本，使用长连接 / 连接池，NIO 等。</li>
-</ul>
-<h1 id="五、数据分布"><a href="#五、数据分布" class="headerlink" title="五、数据分布"></a>五、数据分布</h1><h2 id="哈希分布"><a href="#哈希分布" class="headerlink" title="哈希分布"></a>哈希分布</h2><p>哈希分布就是将数据计算哈希值之后，按照哈希值分配到不同的节点上。例如有 N 个节点，数据的主键为 key，则将该数据分配的节点序号为：hash(key)%N。</p>
-<p>传统的哈希分布算法存在一个问题：当节点数量变化时，也就是 N 值变化，那么几乎所有的数据都需要重新分布，将导致大量的数据迁移。</p>
-<h2 id="顺序分布"><a href="#顺序分布" class="headerlink" title="顺序分布"></a>顺序分布</h2><p>将数据划分为多个连续的部分，按数据的 ID 或者时间分布到不同节点上。例如 User 表的 ID 范围为 1 ~ 7000，使用顺序分布可以将其划分成多个子表，对应的主键范围为 1 ~ 1000，1001 ~ 2000，…，6001 ~ 7000。</p>
-<p>顺序分布相比于哈希分布的主要优点如下：</p>
-<ul>
-<li>能保持数据原有的顺序；</li>
-<li>并且能够准确控制每台服务器存储的数据量，从而使得存储空间的利用率最大。</li>
-</ul>
-<h1 id="六、一致性哈希"><a href="#六、一致性哈希" class="headerlink" title="六、一致性哈希"></a>六、一致性哈希</h1><p>Distributed Hash Table（DHT） 是一种哈希分布方式，其目的是为了克服传统哈希分布在服务器节点数量变化时大量数据迁移的问题。</p>
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>将哈希空间 [0, 2n-1] 看成一个哈希环，每个服务器节点都配置到哈希环上。每个数据对象通过哈希取模得到哈希值之后，存放到哈希环中顺时针方向第一个大于等于该哈希值的节点上。</p>
-<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="一致性hash原理图"></p>
-<p>一致性哈希在增加或者删除节点时只会影响到哈希环中相邻的节点，例如下图中新增节点 X，只需要将它前一个节点 C 上的数据重新进行分布即可，对于节点 A、B、D 都没有影响。</p>
-<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="一致性hash增加节点示意图"></p>
-<h2 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h2><p>上面描述的一致性哈希存在数据分布不均匀的问题，节点存储的数据量有可能会存在很大的不同。</p>
-<p>数据不均匀主要是因为节点在哈希环上分布的不均匀，这种情况在节点数量很少的情况下尤其明显。</p>
-<p>解决方式是通过增加虚拟节点，然后将虚拟节点映射到真实节点上。虚拟节点的数量比真实节点来得多，那么虚拟节点在哈希环上分布的均匀性就会比原来的真实节点好，从而使得数据分布也更加均匀。</p>
-]]></content>
-      <categories>
-        <category>cache</category>
       </categories>
   </entry>
   <entry>
@@ -340,6 +213,59 @@
       </categories>
   </entry>
   <entry>
+    <title>支付系统可能遇到的问题</title>
+    <url>/2021/10/11/active/pay/</url>
+    <content><![CDATA[<p>(资源)</p>
+<p>资源不可用</p>
+<p>资源响应超时</p>
+<p>(外部服务)</p>
+<p>通信中断</p>
+<p>服务不可用</p>
+<p>外部服务器响应超时</p>
+<p>外部服务违背功能契约</p>
+<p>应对方式(参考)：原则：避免发生，降低概率，控制影响，快速恢复。</p>
+<table>
+<thead>
+<tr>
+<th>故障条件</th>
+<th>应对方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>超量请求</td>
+<td>配额控制，如订单号提前生成，控制额度</td>
+</tr>
+<tr>
+<td>重复请求</td>
+<td>幂等控制</td>
+</tr>
+<tr>
+<td>并发请求</td>
+<td>并发控制netty、mina等</td>
+</tr>
+<tr>
+<td>请求积压</td>
+<td>请求丢弃</td>
+</tr>
+<tr>
+<td>服务/资源响应超时</td>
+<td>时间控制</td>
+</tr>
+<tr>
+<td>可恢复通信故障</td>
+<td>合理重试</td>
+</tr>
+<tr>
+<td>处理中断</td>
+<td>事务/补偿机制</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>active</category>
+      </categories>
+  </entry>
+  <entry>
     <title>mysql概要</title>
     <url>/2018/09/05/database/2.mysql/</url>
     <content><![CDATA[<p>提到mysql等数据库，当然绕不开它最基本的概念，数据结构，数据库的索引就是数据结构最好的应用。<br><a href="/2019/01/04/datastructure/index/">对数据结构没有概念的同学请点击</a></p>
@@ -416,6 +342,80 @@
 <h1 id="三：数据库拆分"><a href="#三：数据库拆分" class="headerlink" title="三：数据库拆分"></a>三：数据库拆分</h1><h1 id="四：数据库主从与读写分离"><a href="#四：数据库主从与读写分离" class="headerlink" title="四：数据库主从与读写分离"></a>四：数据库主从与读写分离</h1>]]></content>
       <categories>
         <category>database</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>缓存概要</title>
+    <url>/2019/10/25/cache/index/</url>
+    <content><![CDATA[<h1 id="一、缓存特征"><a href="#一、缓存特征" class="headerlink" title="一、缓存特征"></a>一、缓存特征</h1><h2 id="命中率"><a href="#命中率" class="headerlink" title="命中率"></a>命中率</h2><p>当某个请求能够通过访问缓存而得到响应时，称为缓存命中。</p>
+<p>缓存命中率越高，缓存的利用率也就越高。</p>
+<h2 id="最大空间"><a href="#最大空间" class="headerlink" title="最大空间"></a>最大空间</h2><p>缓存通常位于内存中，内存的空间通常比磁盘空间小的多，因此缓存的最大空间不可能非常大。</p>
+<p>当缓存存放的数据量超过最大空间时，就需要淘汰部分数据来存放新到达的数据。</p>
+<h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><ul>
+<li><p>FIFO（First In First Out）：先进先出策略，在实时性的场景下，需要经常访问最新的数据，那么就可以使用 FIFO，使得最先进入的数据（最晚的数据）被淘汰。</p>
+</li>
+<li><p>LRU（Least Recently Used）：最近最久未使用策略，优先淘汰最久未使用的数据，也就是上次被访问时间距离现在最久的数据。该策略可以保证内存中的数据都是热点数据，也就是经常被访问的数据，从而保证缓存命中率。</p>
+</li>
+<li><p>LFU（Least Frequently Used）：最不经常使用策略，优先淘汰一段时间内使用次数最少的数据。</p>
+</li>
+</ul>
+<h1 id="二、LRU"><a href="#二、LRU" class="headerlink" title="二、LRU"></a>二、LRU</h1><p>以下是基于 双向链表 + HashMap 的 LRU 算法实现，对算法的解释如下：</p>
+<p>访问某个节点时，将其从原来的位置删除，并重新插入到链表头部。这样就能保证链表尾部存储的就是最近最久未使用的节点，当节点数量大于缓存最大空间时就淘汰链表尾部的节点。<br>为了使删除操作时间复杂度为 O(1)，就不能采用遍历的方式找到某个节点。HashMap 存储着 Key 到节点的映射，通过 Key 就能以 O(1) 的时间得到节点，然后再以 O(1) 的时间将其从双向队列中删除。</p>
+<p><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/algorithms/cache/LRU.java" target="_blank" rel="noopener">LRU实现</a></p>
+<h1 id="三、CDN"><a href="#三、CDN" class="headerlink" title="三、CDN"></a>三、CDN</h1><p>内容分发网络（Content distribution network，CDN）是一种互连的网络系统，它利用更靠近用户的服务器从而更快更可靠地将 HTML、CSS、JavaScript、音乐、图片、视频等静态资源分发给用户。</p>
+<p>CDN 主要有以下优点：</p>
+<ul>
+<li>更快地将数据分发给用户；</li>
+<li>通过部署多台服务器，从而提高系统整体的带宽性能；</li>
+<li>多台服务器可以看成是一种冗余机制，从而具有高可用性。</li>
+</ul>
+<h1 id="四、缓存问题"><a href="#四、缓存问题" class="headerlink" title="四、缓存问题"></a>四、缓存问题</h1><h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>指对某一个一定不存在的数据进行请求，该请求会将穿透缓存到达数据库。</p>
+<p>解决方案：</p>
+<ul>
+<li>对这些不存在的数据缓存一个空数据</li>
+<li>对这类请求进行过滤</li>
+</ul>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>指的是由于数据没有被加载到缓存中，或者缓存数据在同一时间大面积失效（过期），又或者缓存服务器宕机，导致大量的请求都到达数据库。</p>
+<p>在有缓存的系统中，系统非常依赖于缓存，缓存分担了很大一部分的数据请求。当发生缓存雪崩时，数据库无法处理这么大的请求，导致数据库崩溃。</p>
+<p>解决方案：</p>
+<ul>
+<li>为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；</li>
+<li>为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存，分布式缓存中每一个节点只缓存部分的数据，当某个节点宕机时可以保证其它节点的缓存仍然可用。</li>
+<li>也可以进行缓存预热，避免在系统刚启动不久由于还未将大量数据进行缓存而导致缓存雪崩。</li>
+</ul>
+<h2 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h2><p>缓存一致性要求数据更新的同时缓存数据也能够实时更新。</p>
+<p>解决方案：</p>
+<ul>
+<li>在数据更新的同时立即去更新缓存；</li>
+<li>在读缓存之前先判断缓存是否是最新的，如果不是最新的先进行更新。</li>
+</ul>
+<h2 id="缓存-“无底洞”-现象"><a href="#缓存-“无底洞”-现象" class="headerlink" title="缓存 “无底洞” 现象"></a>缓存 “无底洞” 现象</h2><p>指的是为了满足业务要求添加了大量缓存节点，但是性能不但没有好转反而下降了的现象。</p>
+<p>产生原因：缓存系统通常采用 hash 函数将 key 映射到对应的缓存节点，随着缓存节点数目的增加，键值分布到更多的节点上，导致客户端一次批量操作会涉及多次网络操作，这意味着批量操作的耗时会随着节点数目的增加而不断增大。此外，网络连接数变多，对节点的性能也有一定影响。</p>
+<p>解决方案：</p>
+<ul>
+<li>优化批量数据操作命令；</li>
+<li>减少网络通信次数；</li>
+<li>降低接入成本，使用长连接 / 连接池，NIO 等。</li>
+</ul>
+<h1 id="五、数据分布"><a href="#五、数据分布" class="headerlink" title="五、数据分布"></a>五、数据分布</h1><h2 id="哈希分布"><a href="#哈希分布" class="headerlink" title="哈希分布"></a>哈希分布</h2><p>哈希分布就是将数据计算哈希值之后，按照哈希值分配到不同的节点上。例如有 N 个节点，数据的主键为 key，则将该数据分配的节点序号为：hash(key)%N。</p>
+<p>传统的哈希分布算法存在一个问题：当节点数量变化时，也就是 N 值变化，那么几乎所有的数据都需要重新分布，将导致大量的数据迁移。</p>
+<h2 id="顺序分布"><a href="#顺序分布" class="headerlink" title="顺序分布"></a>顺序分布</h2><p>将数据划分为多个连续的部分，按数据的 ID 或者时间分布到不同节点上。例如 User 表的 ID 范围为 1 ~ 7000，使用顺序分布可以将其划分成多个子表，对应的主键范围为 1 ~ 1000，1001 ~ 2000，…，6001 ~ 7000。</p>
+<p>顺序分布相比于哈希分布的主要优点如下：</p>
+<ul>
+<li>能保持数据原有的顺序；</li>
+<li>并且能够准确控制每台服务器存储的数据量，从而使得存储空间的利用率最大。</li>
+</ul>
+<h1 id="六、一致性哈希"><a href="#六、一致性哈希" class="headerlink" title="六、一致性哈希"></a>六、一致性哈希</h1><p>Distributed Hash Table（DHT） 是一种哈希分布方式，其目的是为了克服传统哈希分布在服务器节点数量变化时大量数据迁移的问题。</p>
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>将哈希空间 [0, 2n-1] 看成一个哈希环，每个服务器节点都配置到哈希环上。每个数据对象通过哈希取模得到哈希值之后，存放到哈希环中顺时针方向第一个大于等于该哈希值的节点上。</p>
+<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="一致性hash原理图"></p>
+<p>一致性哈希在增加或者删除节点时只会影响到哈希环中相邻的节点，例如下图中新增节点 X，只需要将它前一个节点 C 上的数据重新进行分布即可，对于节点 A、B、D 都没有影响。</p>
+<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="一致性hash增加节点示意图"></p>
+<h2 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h2><p>上面描述的一致性哈希存在数据分布不均匀的问题，节点存储的数据量有可能会存在很大的不同。</p>
+<p>数据不均匀主要是因为节点在哈希环上分布的不均匀，这种情况在节点数量很少的情况下尤其明显。</p>
+<p>解决方式是通过增加虚拟节点，然后将虚拟节点映射到真实节点上。虚拟节点的数量比真实节点来得多，那么虚拟节点在哈希环上分布的均匀性就会比原来的真实节点好，从而使得数据分布也更加均匀。</p>
+]]></content>
+      <categories>
+        <category>cache</category>
       </categories>
   </entry>
   <entry>
@@ -598,18 +598,6 @@ chmod 751 file 给file的属主分配读、写、执行(7)的权限，给file的
       </categories>
   </entry>
   <entry>
-    <title>rm特殊删除</title>
-    <url>/2018/10/29/linux-command/rm/</url>
-    <content><![CDATA[<h1 id="特殊删除"><a href="#特殊删除" class="headerlink" title="特殊删除"></a>特殊删除</h1><h2 id="删除所有-p开头的文件"><a href="#删除所有-p开头的文件" class="headerlink" title="删除所有-p开头的文件"></a>删除所有-p开头的文件</h2><p>rm – -P.* </p>
-<p>需要用–进行特殊处理</p>
-<h2 id="自定义回收站功能"><a href="#自定义回收站功能" class="headerlink" title="自定义回收站功能"></a>自定义回收站功能</h2><p>myrm(){ D=/tmp/$(date +%Y%m%d%H%M%S); mkdir -p $D;  mv “$@” $D &amp;&amp; echo “moved to $D ok”; }</p>
-<p>alias rm=’myrm’</p>
-]]></content>
-      <categories>
-        <category>linux-command</category>
-      </categories>
-  </entry>
-  <entry>
     <title>ls指令学习</title>
     <url>/2017/07/05/linux-command/ls/</url>
     <content><![CDATA[<h1 id="命令格式："><a href="#命令格式：" class="headerlink" title="命令格式："></a>命令格式：</h1><p>ls [选项] [目录名]</p>
@@ -693,6 +681,18 @@ chmod 751 file 给file的属主分配读、写、执行(7)的权限，给file的
 <li><p>–version 显示版本信息并离开</p>
 </li>
 </ul>
+]]></content>
+      <categories>
+        <category>linux-command</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>rm特殊删除</title>
+    <url>/2018/10/29/linux-command/rm/</url>
+    <content><![CDATA[<h1 id="特殊删除"><a href="#特殊删除" class="headerlink" title="特殊删除"></a>特殊删除</h1><h2 id="删除所有-p开头的文件"><a href="#删除所有-p开头的文件" class="headerlink" title="删除所有-p开头的文件"></a>删除所有-p开头的文件</h2><p>rm – -P.* </p>
+<p>需要用–进行特殊处理</p>
+<h2 id="自定义回收站功能"><a href="#自定义回收站功能" class="headerlink" title="自定义回收站功能"></a>自定义回收站功能</h2><p>myrm(){ D=/tmp/$(date +%Y%m%d%H%M%S); mkdir -p $D;  mv “$@” $D &amp;&amp; echo “moved to $D ok”; }</p>
+<p>alias rm=’myrm’</p>
 ]]></content>
       <categories>
         <category>linux-command</category>
@@ -979,6 +979,23 @@ http {
       </categories>
   </entry>
   <entry>
+    <title>Spring Bean 生命周期</title>
+    <url>/2019/12/06/spring/beanLifeCycle/</url>
+    <content><![CDATA[<h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p><img src="/uploads/spring/springBeanLifeCycle.png" alt="生命周期"></p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p><img src="/uploads/spring/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="单例模式生命周期"></p>
+<h1 id="多例模式"><a href="#多例模式" class="headerlink" title="多例模式"></a>多例模式</h1><p>需求主动调用才会创建对象，原因见下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">LifeCycle lifeCycle &#x3D; (LifeCycle) applicationContext.getBean(&quot;lifeCycle&quot;);</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
+<h1 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h1><h2 id="单例模式-1"><a href="#单例模式-1" class="headerlink" title="单例模式"></a>单例模式</h2><p>bean在单例模式下，spring容器启动时解析xml文件发现该bean标签后，直接创建该bean对象存入内部map中保存，<br>此后无论调用多少次getBean()获取该bean都是从map中获取该对象返回，一直是一个对象。<br>此对象一直被spring容器持有，直到容器推出时，随着容器的退出对象被销毁。</p>
+<h2 id="多例模式-1"><a href="#多例模式-1" class="headerlink" title="多例模式"></a>多例模式</h2><p>bean在多例模式下，spring容器启动时解析xml发下该bean标签后，只是将该bean进行管理，并不会创建对象，<br>此后每层使用getBean()获取该bean时，spring都会重新创建该对象返回，每层都是一个新的对象。<br>这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。</p>
+<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Spring AOP模块</title>
     <url>/2025/06/06/spring/Aop%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><p><img src="https://march1995.github.io/uploads/spring/aop/aop%E7%B1%BB%E5%9B%BE.png" alt="类图"></p>
@@ -1011,44 +1028,6 @@ http {
       </categories>
   </entry>
   <entry>
-    <title>Spring Bean 生命周期</title>
-    <url>/2019/12/06/spring/beanLifeCycle/</url>
-    <content><![CDATA[<h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p><img src="/uploads/spring/springBeanLifeCycle.png" alt="生命周期"></p>
-<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p><img src="/uploads/spring/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="单例模式生命周期"></p>
-<h1 id="多例模式"><a href="#多例模式" class="headerlink" title="多例模式"></a>多例模式</h1><p>需求主动调用才会创建对象，原因见下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">LifeCycle lifeCycle &#x3D; (LifeCycle) applicationContext.getBean(&quot;lifeCycle&quot;);</span><br></pre></td></tr></table></figure>
-
-
-<p><img src="/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
-<h1 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h1><h2 id="单例模式-1"><a href="#单例模式-1" class="headerlink" title="单例模式"></a>单例模式</h2><p>bean在单例模式下，spring容器启动时解析xml文件发现该bean标签后，直接创建该bean对象存入内部map中保存，<br>此后无论调用多少次getBean()获取该bean都是从map中获取该对象返回，一直是一个对象。<br>此对象一直被spring容器持有，直到容器推出时，随着容器的退出对象被销毁。</p>
-<h2 id="多例模式-1"><a href="#多例模式-1" class="headerlink" title="多例模式"></a>多例模式</h2><p>bean在多例模式下，spring容器启动时解析xml发下该bean标签后，只是将该bean进行管理，并不会创建对象，<br>此后每层使用getBean()获取该bean时，spring都会重新创建该对象返回，每层都是一个新的对象。<br>这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。</p>
-<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Spring 加载XML文件的六种方式</title>
-    <url>/2019/12/06/spring/springLoadXml/</url>
-    <content><![CDATA[<h1 id="一-XmlBeanFactory-引用资源"><a href="#一-XmlBeanFactory-引用资源" class="headerlink" title="一: XmlBeanFactory 引用资源"></a>一: XmlBeanFactory 引用资源</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Resource resource &#x3D; new ClassPathResource(&quot;appcontext.xml&quot;);</span><br><span class="line">BeanFactory factory &#x3D; new XmlBeanFactory(resource);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) factory.getBean(&quot;baseEntity1&quot;);</span><br><span class="line">System.out.println(&quot;XmlBeanFactory 获取 bean ：&quot; + entity.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="二-ClassPathXmlApplicationContext-编译路径"><a href="#二-ClassPathXmlApplicationContext-编译路径" class="headerlink" title="二: ClassPathXmlApplicationContext  编译路径"></a>二: ClassPathXmlApplicationContext  编译路径</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 单个文件</span><br><span class="line">ApplicationContext applicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 多个文件</span><br><span class="line">ApplicationContext multiApplicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;, &quot;classpath:appcontext2.xml&quot;);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) applicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) multiApplicationContext.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean2 ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="三-用文件系统的路径"><a href="#三-用文件系统的路径" class="headerlink" title="三: 用文件系统的路径"></a>三: 用文件系统的路径</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; classPath</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext &#x3D; new FileSystemXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 文件系统</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext2 &#x3D; new FileSystemXmlApplicationContext(&quot;spring-example-test&#x2F;src&#x2F;main&#x2F;resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext3 &#x3D; new FileSystemXmlApplicationContext(&quot;file:E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext4 &#x3D; new FileSystemXmlApplicationContext(&quot;E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) fileSystemXmlApplicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) fileSystemXmlApplicationContext2.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity3 &#x3D; (BaseEntity) fileSystemXmlApplicationContext3.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity4 &#x3D; (BaseEntity) fileSystemXmlApplicationContext4.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="四-XmlWebApplicationContext是专为Web工程定制的。"><a href="#四-XmlWebApplicationContext是专为Web工程定制的。" class="headerlink" title="四: XmlWebApplicationContext是专为Web工程定制的。"></a>四: XmlWebApplicationContext是专为Web工程定制的。</h1><p>ServletContext servletContext = request.getSession().getServletContext();<br>ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(servletContext ); </p>
-<h1 id="五-使用BeanFactory"><a href="#五-使用BeanFactory" class="headerlink" title="五: 使用BeanFactory"></a>五: 使用BeanFactory</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">BeanDefinitionRegistry reg &#x3D; new DefaultListableBeanFactory();</span><br><span class="line">XmlBeanDefinitionReader reader &#x3D; new XmlBeanDefinitionReader(reg);</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext.xml&quot;));</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext2.xml&quot;));</span><br><span class="line">BeanFactory bf &#x3D; (BeanFactory) reg;</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity&quot;);</span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
-
-<h1 id="六：Web-应用启动时加载多个配置文件"><a href="#六：Web-应用启动时加载多个配置文件" class="headerlink" title="六：Web 应用启动时加载多个配置文件"></a>六：Web 应用启动时加载多个配置文件</h1><p>通过ContextLoaderListener 也可加载多个配置文件，在web.xml文件中利用<br><context-pararn>元素来指定多个配置文件位置，其配置如下: </context-pararn></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;context-param&gt;  </span><br><span class="line">    &lt;!-- Context Configuration locations for Spring XML files --&gt;  </span><br><span class="line">       &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;  </span><br><span class="line">       &lt;param-value&gt;  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;Appserver-resources.xml,  </span><br><span class="line">       classpath:config&#x2F;aer&#x2F;aerContext.xml,  </span><br><span class="line">       classpath:org&#x2F;codehaus&#x2F;xfire&#x2F;spring&#x2F;xfire.xml,  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;*.spring.xml  </span><br><span class="line">       &lt;&#x2F;param-value&gt;  </span><br><span class="line">   &lt;&#x2F;context-param&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这个方法加载配置文件的前提是已经知道配置文件在哪里，虽然可以利用“*”通配符，但灵活度有限。 </p>
-<h1 id="获取配套代码"><a href="#获取配套代码" class="headerlink" title="获取配套代码"></a><a href="https://github.com/march1995/spring-example/tree/master/spring-example-test/src/main/java/com/wyb/test/spring/loadXml" target="_blank" rel="noopener">获取配套代码</a></h1>]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Spring MVC入门</title>
     <url>/2017/07/05/spring/springMVC/</url>
     <content><![CDATA[<h1 id="1-架构"><a href="#1-架构" class="headerlink" title="1.架构"></a>1.架构</h1><ul>
@@ -1069,41 +1048,6 @@ http {
 <p>9.ViewReslover解析后返回具体View</p>
 <p>10.DispatcherServlet对View进行渲染视图（即将模型数据填充至视图中）。</p>
 <p>11.DispatcherServlet响应用户</p>
-]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>springXMLSchema</title>
-    <url>/2017/07/05/spring/springXMLSchema/</url>
-    <content><![CDATA[<blockquote>
-<p>出处 <a href="http://www.jianshu.com/p/1e35c15d0cb8" target="_blank" rel="noopener">http://www.jianshu.com/p/1e35c15d0cb8</a></p>
-</blockquote>
-<blockquote>
-<p>参考资料 <a href="http://www.w3school.com.cn/schema/index.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/schema/index.asp</a></p>
-</blockquote>
-<h1 id="自己理解整理："><a href="#自己理解整理：" class="headerlink" title="自己理解整理："></a>自己理解整理：</h1><ul>
-<li>基本概念：</li>
-</ul>
-<p>XML Schema也被称为XML Schema定义（XML Schema Definition，XSD）。和DTD一样，Schema也是XML的约束，同样用于定义合法的XML文档构建模块。与DTD不同的是，XML Schema是用一套预先定义好的XML元素和属性创建的，这些元素和属性规定了XML文档的结构和内容模式，且XML Schema规定XML文档实例的结构和每一个元素或属性的数据类型。另外，Schema相对于DTD有一个明显的好处就是，Schema是基于XML编写的，自己本身也是一个XML文档（文件后缀名为.xsd），而不是像DTD有自成一套的语法，这也是Schema能比DTD更被广泛应用的原因。</p>
-<ul>
-<li>名称空间：</li>
-</ul>
-<p>在编写了一个XML Schema约束文档后，通常需要把这个文档定义的元素和属性绑定到一个URI地址上，这个地址就叫做名称空间。接着XML文档通过这个名称空间告诉解析引擎，文档中的元素和属性来自哪里。名称空间有什么用呢？就是用来唯一标识元素和属性来自哪个Schema。简单来说，当一个XML实例文档引用了多个Schema的时候，倘若这些Schema定义了同名的元素或属性，名称空间就可以将它们区分开来。</p>
-<p>引用其他Schema</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-bd466d293a47249c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="引用其他Schema"></p>
-<p>自定义schema 给自己的文件命名方便其他文件调用</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-575c97f367170ff5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-09a4197ec412e170.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>xmlns后的属性即表示该文件中的context属性来源于这个ns</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-09a4197ec412e170.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-000dac2e6124f4d4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<ul>
-<li>修改XML实例文档:</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-e87ee2b5f0532d77.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-20e2d37ed4275474.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
 ]]></content>
       <categories>
         <category>Spring</category>
@@ -1185,6 +1129,41 @@ http {
 ]]></content>
       <categories>
         <category>tool</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>springXMLSchema</title>
+    <url>/2017/07/05/spring/springXMLSchema/</url>
+    <content><![CDATA[<blockquote>
+<p>出处 <a href="http://www.jianshu.com/p/1e35c15d0cb8" target="_blank" rel="noopener">http://www.jianshu.com/p/1e35c15d0cb8</a></p>
+</blockquote>
+<blockquote>
+<p>参考资料 <a href="http://www.w3school.com.cn/schema/index.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/schema/index.asp</a></p>
+</blockquote>
+<h1 id="自己理解整理："><a href="#自己理解整理：" class="headerlink" title="自己理解整理："></a>自己理解整理：</h1><ul>
+<li>基本概念：</li>
+</ul>
+<p>XML Schema也被称为XML Schema定义（XML Schema Definition，XSD）。和DTD一样，Schema也是XML的约束，同样用于定义合法的XML文档构建模块。与DTD不同的是，XML Schema是用一套预先定义好的XML元素和属性创建的，这些元素和属性规定了XML文档的结构和内容模式，且XML Schema规定XML文档实例的结构和每一个元素或属性的数据类型。另外，Schema相对于DTD有一个明显的好处就是，Schema是基于XML编写的，自己本身也是一个XML文档（文件后缀名为.xsd），而不是像DTD有自成一套的语法，这也是Schema能比DTD更被广泛应用的原因。</p>
+<ul>
+<li>名称空间：</li>
+</ul>
+<p>在编写了一个XML Schema约束文档后，通常需要把这个文档定义的元素和属性绑定到一个URI地址上，这个地址就叫做名称空间。接着XML文档通过这个名称空间告诉解析引擎，文档中的元素和属性来自哪里。名称空间有什么用呢？就是用来唯一标识元素和属性来自哪个Schema。简单来说，当一个XML实例文档引用了多个Schema的时候，倘若这些Schema定义了同名的元素或属性，名称空间就可以将它们区分开来。</p>
+<p>引用其他Schema</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4942449-bd466d293a47249c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="引用其他Schema"></p>
+<p>自定义schema 给自己的文件命名方便其他文件调用</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4942449-575c97f367170ff5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4942449-09a4197ec412e170.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>xmlns后的属性即表示该文件中的context属性来源于这个ns</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4942449-09a4197ec412e170.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4942449-000dac2e6124f4d4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<ul>
+<li>修改XML实例文档:</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/4942449-e87ee2b5f0532d77.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4942449-20e2d37ed4275474.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+]]></content>
+      <categories>
+        <category>Spring</category>
       </categories>
   </entry>
   <entry>
@@ -1300,6 +1279,27 @@ http {
       </categories>
   </entry>
   <entry>
+    <title>Spring 加载XML文件的六种方式</title>
+    <url>/2019/12/06/spring/springLoadXml/</url>
+    <content><![CDATA[<h1 id="一-XmlBeanFactory-引用资源"><a href="#一-XmlBeanFactory-引用资源" class="headerlink" title="一: XmlBeanFactory 引用资源"></a>一: XmlBeanFactory 引用资源</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Resource resource &#x3D; new ClassPathResource(&quot;appcontext.xml&quot;);</span><br><span class="line">BeanFactory factory &#x3D; new XmlBeanFactory(resource);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) factory.getBean(&quot;baseEntity1&quot;);</span><br><span class="line">System.out.println(&quot;XmlBeanFactory 获取 bean ：&quot; + entity.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="二-ClassPathXmlApplicationContext-编译路径"><a href="#二-ClassPathXmlApplicationContext-编译路径" class="headerlink" title="二: ClassPathXmlApplicationContext  编译路径"></a>二: ClassPathXmlApplicationContext  编译路径</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 单个文件</span><br><span class="line">ApplicationContext applicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 多个文件</span><br><span class="line">ApplicationContext multiApplicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;, &quot;classpath:appcontext2.xml&quot;);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) applicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) multiApplicationContext.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean2 ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="三-用文件系统的路径"><a href="#三-用文件系统的路径" class="headerlink" title="三: 用文件系统的路径"></a>三: 用文件系统的路径</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; classPath</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext &#x3D; new FileSystemXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 文件系统</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext2 &#x3D; new FileSystemXmlApplicationContext(&quot;spring-example-test&#x2F;src&#x2F;main&#x2F;resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext3 &#x3D; new FileSystemXmlApplicationContext(&quot;file:E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext4 &#x3D; new FileSystemXmlApplicationContext(&quot;E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) fileSystemXmlApplicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) fileSystemXmlApplicationContext2.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity3 &#x3D; (BaseEntity) fileSystemXmlApplicationContext3.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity4 &#x3D; (BaseEntity) fileSystemXmlApplicationContext4.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="四-XmlWebApplicationContext是专为Web工程定制的。"><a href="#四-XmlWebApplicationContext是专为Web工程定制的。" class="headerlink" title="四: XmlWebApplicationContext是专为Web工程定制的。"></a>四: XmlWebApplicationContext是专为Web工程定制的。</h1><p>ServletContext servletContext = request.getSession().getServletContext();<br>ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(servletContext ); </p>
+<h1 id="五-使用BeanFactory"><a href="#五-使用BeanFactory" class="headerlink" title="五: 使用BeanFactory"></a>五: 使用BeanFactory</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">BeanDefinitionRegistry reg &#x3D; new DefaultListableBeanFactory();</span><br><span class="line">XmlBeanDefinitionReader reader &#x3D; new XmlBeanDefinitionReader(reg);</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext.xml&quot;));</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext2.xml&quot;));</span><br><span class="line">BeanFactory bf &#x3D; (BeanFactory) reg;</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity&quot;);</span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="六：Web-应用启动时加载多个配置文件"><a href="#六：Web-应用启动时加载多个配置文件" class="headerlink" title="六：Web 应用启动时加载多个配置文件"></a>六：Web 应用启动时加载多个配置文件</h1><p>通过ContextLoaderListener 也可加载多个配置文件，在web.xml文件中利用<br><context-pararn>元素来指定多个配置文件位置，其配置如下: </context-pararn></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;context-param&gt;  </span><br><span class="line">    &lt;!-- Context Configuration locations for Spring XML files --&gt;  </span><br><span class="line">       &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;  </span><br><span class="line">       &lt;param-value&gt;  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;Appserver-resources.xml,  </span><br><span class="line">       classpath:config&#x2F;aer&#x2F;aerContext.xml,  </span><br><span class="line">       classpath:org&#x2F;codehaus&#x2F;xfire&#x2F;spring&#x2F;xfire.xml,  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;*.spring.xml  </span><br><span class="line">       &lt;&#x2F;param-value&gt;  </span><br><span class="line">   &lt;&#x2F;context-param&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法加载配置文件的前提是已经知道配置文件在哪里，虽然可以利用“*”通配符，但灵活度有限。 </p>
+<h1 id="获取配套代码"><a href="#获取配套代码" class="headerlink" title="获取配套代码"></a><a href="https://github.com/march1995/spring-example/tree/master/spring-example-test/src/main/java/com/wyb/test/spring/loadXml" target="_blank" rel="noopener">获取配套代码</a></h1>]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+  </entry>
+  <entry>
     <title>git常用指令</title>
     <url>/2019/08/27/tool/springboot%E4%B8%8Eknife4j%E5%85%BC%E5%AE%B9%E6%80%A7%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<p><a href="https://gitee.com/xiaoym/knife4j/issues/I4JT89" target="_blank" rel="noopener">gitee issue地址 </a></p>
@@ -1315,29 +1315,6 @@ http {
 
 <h3 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h3><p>当updateAllFlightTimeCache方法中数据库为空的时候，线程A和线程B同时调用getFlightTimeFromCache方法，线程A和线程B都会判断SCH_FLIGHT_TIME_CACHE.estimatedSize() == 0，<br>线程A先执行updateAllFlightTimeCache方法，线程B执行getFlightTimeFromCache方法，线程B会判断SCH_FLIGHT_TIME_CACHE.estimatedSize() == 0，此时线程B会再次执行updateAllFlightTimeCache方法，导致线程B会重复执行updateAllFlightTimeCache方法，最终导致缓存中数据重复。</p>
 <h3 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h3>]]></content>
-      <categories>
-        <category>日常问题记录</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Mybatis一级缓存问题</title>
-    <url>/2025/05/05/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/Mybatis%E4%B8%80%E7%BA%A7%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h3 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 根据packageId，获取包下面的规则和参数   ruleChoiceList数据库方法</span></span><br><span class="line">List&lt;RuleChoice&gt; ruleChoiceList = packageRuleService.ruleChoiceList(packageId, ruleType, autoCheckBeforeCalculate);  </span><br><span class="line">  </span><br><span class="line"><span class="comment">// 再加上飞行值勤期里的规则参数  </span></span><br><span class="line">ruleChoiceList.forEach(ruleChoice -&gt; &#123;  </span><br><span class="line">    ruleChoice.setPackageType(packageType);  </span><br><span class="line">    <span class="comment">// 飞值  </span></span><br><span class="line">    <span class="keyword">if</span> (FunctionHolder.clazzFunctionIdMap.get(FuncPairingPilotFlyDutyTime<span class="class">.<span class="keyword">class</span>).<span class="title">contains</span>(<span class="title">ruleChoice</span>.<span class="title">getFunctionId</span>()) )  </span></span><br><span class="line"><span class="class">    ) </span>&#123;  </span><br><span class="line">	    <span class="comment">// 这里第二次进来的时候，第一次add的结果还在</span></span><br><span class="line">        List&lt;RuleParam&gt; ruleParams = dutyTimeService.flyDutyConfigToRule(filialeCode, packageType);  </span><br><span class="line">        ruleChoice.getParamList().addAll(ruleParams);  </span><br><span class="line">    &#125; </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h3 id="分析过程-amp-原因"><a href="#分析过程-amp-原因" class="headerlink" title="分析过程&amp;原因"></a>分析过程&amp;原因</h3><ul>
-<li>参数个数不对，首先怀疑是代码写错了，后面打了日志，发现第一次是好的，第二次进来的时候个数不对。</li>
-<li>怀疑第二次进来的时候 拿到的是第一次的请求结果，也就是第二次拿到的对象是第一次的返回对象，怀疑是mybatis的一级缓存原因。</li>
-<li>特定条件才会出现，不是必须，怀疑是某个接口的问题。</li>
-<li>排查哪个接口请求的时候，会调用2次这个方法，且还是是在同一个sqlsession中，在代码中就是在同一个事务中。因为不同的事务，sqlsession肯定不是同一个，不会出现一级缓存问题。</li>
-<li>排查到有个接口在最外层加了一个大事务。其中在复现问题的过程中，发现内层的方法加上事务注解的时候，该方法不会在事务中，因为用的this调用，所以怀疑是在最外层加的事务。</li>
-<li>log.info(“getRuleChoices 在事务中{}”, TransactionSynchronizationManager.isActualTransactionActive()); 可以打印当前方法是否在事务中。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果在事务中，就不去用线程池去读了，会读不到未提交的  </span></span><br><span class="line"><span class="keyword">if</span> (TransactionSynchronizationManager.isActualTransactionActive()) &#123;  </span><br><span class="line">  </span><br><span class="line">    SchPairingQuery schRosterQuery = <span class="keyword">new</span> SchPairingQuery();  </span><br><span class="line">    schRosterQuery.setPairingIds(pairingIdList);  </span><br><span class="line">    List&lt;SchPairingVO&gt; pairingVOList = <span class="keyword">new</span> ArrayList&lt;&gt;();  </span><br><span class="line">    List&lt;RosterFilialeSheetVO&gt; sheetVOS = <span class="keyword">new</span> ArrayList&lt;&gt;();  </span><br><span class="line">    <span class="keyword">if</span> (CollUtil.isNotEmpty(pairingIdList)) &#123;  </span><br><span class="line">		<span class="comment">// 这里2个方法都去调用了 getPairings(schRosterQuery).getPairings() 里面回去重复计算规则告警 报错了</span></span><br><span class="line">        pairingVOList = coreService.getPairings(schRosterQuery).getPairings();  </span><br><span class="line">        sheetVOS = coreService.getPersonRosterSheet(schRosterQuery);  </span><br><span class="line">    &#125;  </span><br><span class="line">    PersonGanttData ganttData = <span class="keyword">new</span> PersonGanttData();  </span><br><span class="line">    <span class="keyword">if</span> (CollUtil.isNotEmpty(personIdList)) &#123;  </span><br><span class="line">        schRosterQuery = createQuery(pairingIdList, personIdList, startDate, endDate);  </span><br><span class="line">        ganttData = coreService.getRosterGantt(schRosterQuery);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RosterOperResultVO(pairingVOList, sheetVOS, ganttData);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">// 下面是通过线程池去调用，在不同的sqlseesion中，所以不会出问题</span></span><br><span class="line">ThreadPoolExecutor executor = CrewReturnThreadPoolExecutor.getInstance();  </span><br><span class="line">LoginUserInfo loginUserInfo = UserUtil.threadLocal.get();  </span><br><span class="line">String moduleFlag = ModuleFlagHolder.threadLocal.get();  </span><br><span class="line">Integer solutionId = SolutionIdHolder.threadLocal.get();  </span><br><span class="line">Integer mirrorId = MirrorIdHolder.threadLocal.get();  </span><br><span class="line">Future&lt;PersonGanttData&gt; personGanttData = executor.submit(() -&gt; &#123;  </span><br><span class="line">    <span class="keyword">if</span> (CollUtil.isEmpty(personIdList)) &#123;  </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> PersonGanttData();  </span><br><span class="line">    &#125;  </span><br><span class="line">    SchPairingQuery schRosterQuery = createQuery(pairingIdList, personIdList, startDate, endDate);  </span><br><span class="line">    ModuleFlagHolder.threadLocal.set(moduleFlag);  </span><br><span class="line">    SolutionIdHolder.threadLocal.set(solutionId);  </span><br><span class="line">    MirrorIdHolder.threadLocal.set(mirrorId);  </span><br><span class="line">    UserUtil.threadLocal.set(loginUserInfo);  </span><br><span class="line">    RetainManualResultHolder.threadLocal.set(<span class="keyword">true</span>);  </span><br><span class="line">    <span class="keyword">return</span> coreService.getRosterGantt(schRosterQuery);  </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h3 id="解决方式："><a href="#解决方式：" class="headerlink" title="解决方式："></a>解决方式：</h3><p>当updateAllFlightTimeCache方法中数据库为空的时候，线程A和线程B同时调用getFlightTimeFromCache方法，线程A和线程B都会判断SCH_FLIGHT_TIME_CACHE.estimatedSize() == 0，<br>线程A先执行updateAllFlightTimeCache方法，线程B执行getFlightTimeFromCache方法，线程B会判断SCH_FLIGHT_TIME_CACHE.estimatedSize() == 0，此时线程B会再次执行updateAllFlightTimeCache方法，导致线程B会重复执行updateAllFlightTimeCache方法，最终导致缓存中数据重复。</p>
-<h3 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h3><p>1.在xml方法中 添加 flushCache=”true”，不使用一级缓存</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">"ruleChoiceList"</span> resultMap=<span class="string">"choiceMap"</span> flushCache=<span class="string">"true"</span>&gt;</span><br></pre></td></tr></table></figure>
-<p>2.事务粒度的问题，尽量不要使用大事务</p>
-]]></content>
       <categories>
         <category>日常问题记录</category>
       </categories>
@@ -1365,6 +1342,29 @@ http {
 <p>这样添加之后，我们需要去直接访问自己的页面地址，而不是访问swagger-ui.html，例如/swagger/index.html。<br>如果采用<em>.htm或者</em>.do这种方式，可能会出现页面访问得到的，提示/v2/api-docs接口无法请求。解决方案是配置把swagger或者数据的接口置入dispatcherServlet中</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;servlet-mapping&gt;</span><br><span class="line">    &lt;servlet-name&gt;SpringmvcDispatcherServlet&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;&#x2F;v2&#x2F;api-docs&lt;&#x2F;url-pattern&gt;</span><br><span class="line">&lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
 
+]]></content>
+      <categories>
+        <category>日常问题记录</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Mybatis一级缓存问题</title>
+    <url>/2025/05/05/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/Mybatis%E4%B8%80%E7%BA%A7%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h3 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 根据packageId，获取包下面的规则和参数   ruleChoiceList数据库方法</span></span><br><span class="line">List&lt;RuleChoice&gt; ruleChoiceList = packageRuleService.ruleChoiceList(packageId, ruleType, autoCheckBeforeCalculate);  </span><br><span class="line">  </span><br><span class="line"><span class="comment">// 再加上飞行值勤期里的规则参数  </span></span><br><span class="line">ruleChoiceList.forEach(ruleChoice -&gt; &#123;  </span><br><span class="line">    ruleChoice.setPackageType(packageType);  </span><br><span class="line">    <span class="comment">// 飞值  </span></span><br><span class="line">    <span class="keyword">if</span> (FunctionHolder.clazzFunctionIdMap.get(FuncPairingPilotFlyDutyTime<span class="class">.<span class="keyword">class</span>).<span class="title">contains</span>(<span class="title">ruleChoice</span>.<span class="title">getFunctionId</span>()) )  </span></span><br><span class="line"><span class="class">    ) </span>&#123;  </span><br><span class="line">	    <span class="comment">// 这里第二次进来的时候，第一次add的结果还在</span></span><br><span class="line">        List&lt;RuleParam&gt; ruleParams = dutyTimeService.flyDutyConfigToRule(filialeCode, packageType);  </span><br><span class="line">        ruleChoice.getParamList().addAll(ruleParams);  </span><br><span class="line">    &#125; </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="分析过程-amp-原因"><a href="#分析过程-amp-原因" class="headerlink" title="分析过程&amp;原因"></a>分析过程&amp;原因</h3><ul>
+<li>参数个数不对，首先怀疑是代码写错了，后面打了日志，发现第一次是好的，第二次进来的时候个数不对。</li>
+<li>怀疑第二次进来的时候 拿到的是第一次的请求结果，也就是第二次拿到的对象是第一次的返回对象，怀疑是mybatis的一级缓存原因。</li>
+<li>特定条件才会出现，不是必须，怀疑是某个接口的问题。</li>
+<li>排查哪个接口请求的时候，会调用2次这个方法，且还是是在同一个sqlsession中，在代码中就是在同一个事务中。因为不同的事务，sqlsession肯定不是同一个，不会出现一级缓存问题。</li>
+<li>排查到有个接口在最外层加了一个大事务。其中在复现问题的过程中，发现内层的方法加上事务注解的时候，该方法不会在事务中，因为用的this调用，所以怀疑是在最外层加的事务。</li>
+<li>log.info(“getRuleChoices 在事务中{}”, TransactionSynchronizationManager.isActualTransactionActive()); 可以打印当前方法是否在事务中。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果在事务中，就不去用线程池去读了，会读不到未提交的  </span></span><br><span class="line"><span class="keyword">if</span> (TransactionSynchronizationManager.isActualTransactionActive()) &#123;  </span><br><span class="line">  </span><br><span class="line">    SchPairingQuery schRosterQuery = <span class="keyword">new</span> SchPairingQuery();  </span><br><span class="line">    schRosterQuery.setPairingIds(pairingIdList);  </span><br><span class="line">    List&lt;SchPairingVO&gt; pairingVOList = <span class="keyword">new</span> ArrayList&lt;&gt;();  </span><br><span class="line">    List&lt;RosterFilialeSheetVO&gt; sheetVOS = <span class="keyword">new</span> ArrayList&lt;&gt;();  </span><br><span class="line">    <span class="keyword">if</span> (CollUtil.isNotEmpty(pairingIdList)) &#123;  </span><br><span class="line">		<span class="comment">// 这里2个方法都去调用了 getPairings(schRosterQuery).getPairings() 里面回去重复计算规则告警 报错了</span></span><br><span class="line">        pairingVOList = coreService.getPairings(schRosterQuery).getPairings();  </span><br><span class="line">        sheetVOS = coreService.getPersonRosterSheet(schRosterQuery);  </span><br><span class="line">    &#125;  </span><br><span class="line">    PersonGanttData ganttData = <span class="keyword">new</span> PersonGanttData();  </span><br><span class="line">    <span class="keyword">if</span> (CollUtil.isNotEmpty(personIdList)) &#123;  </span><br><span class="line">        schRosterQuery = createQuery(pairingIdList, personIdList, startDate, endDate);  </span><br><span class="line">        ganttData = coreService.getRosterGantt(schRosterQuery);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RosterOperResultVO(pairingVOList, sheetVOS, ganttData);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">// 下面是通过线程池去调用，在不同的sqlseesion中，所以不会出问题</span></span><br><span class="line">ThreadPoolExecutor executor = CrewReturnThreadPoolExecutor.getInstance();  </span><br><span class="line">LoginUserInfo loginUserInfo = UserUtil.threadLocal.get();  </span><br><span class="line">String moduleFlag = ModuleFlagHolder.threadLocal.get();  </span><br><span class="line">Integer solutionId = SolutionIdHolder.threadLocal.get();  </span><br><span class="line">Integer mirrorId = MirrorIdHolder.threadLocal.get();  </span><br><span class="line">Future&lt;PersonGanttData&gt; personGanttData = executor.submit(() -&gt; &#123;  </span><br><span class="line">    <span class="keyword">if</span> (CollUtil.isEmpty(personIdList)) &#123;  </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> PersonGanttData();  </span><br><span class="line">    &#125;  </span><br><span class="line">    SchPairingQuery schRosterQuery = createQuery(pairingIdList, personIdList, startDate, endDate);  </span><br><span class="line">    ModuleFlagHolder.threadLocal.set(moduleFlag);  </span><br><span class="line">    SolutionIdHolder.threadLocal.set(solutionId);  </span><br><span class="line">    MirrorIdHolder.threadLocal.set(mirrorId);  </span><br><span class="line">    UserUtil.threadLocal.set(loginUserInfo);  </span><br><span class="line">    RetainManualResultHolder.threadLocal.set(<span class="keyword">true</span>);  </span><br><span class="line">    <span class="keyword">return</span> coreService.getRosterGantt(schRosterQuery);  </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="解决方式："><a href="#解决方式：" class="headerlink" title="解决方式："></a>解决方式：</h3><p>当updateAllFlightTimeCache方法中数据库为空的时候，线程A和线程B同时调用getFlightTimeFromCache方法，线程A和线程B都会判断SCH_FLIGHT_TIME_CACHE.estimatedSize() == 0，<br>线程A先执行updateAllFlightTimeCache方法，线程B执行getFlightTimeFromCache方法，线程B会判断SCH_FLIGHT_TIME_CACHE.estimatedSize() == 0，此时线程B会再次执行updateAllFlightTimeCache方法，导致线程B会重复执行updateAllFlightTimeCache方法，最终导致缓存中数据重复。</p>
+<h3 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h3><p>1.在xml方法中 添加 flushCache=”true”，不使用一级缓存</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">"ruleChoiceList"</span> resultMap=<span class="string">"choiceMap"</span> flushCache=<span class="string">"true"</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>2.事务粒度的问题，尽量不要使用大事务</p>
 ]]></content>
       <categories>
         <category>日常问题记录</category>
@@ -2573,6 +2573,185 @@ Using index condition
       </categories>
   </entry>
   <entry>
+    <title>InnoDB存储引擎对MVCC的实现</title>
+    <url>/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="多版本并发控制-Multi-Version-Concurrency-Control"><a href="#多版本并发控制-Multi-Version-Concurrency-Control" class="headerlink" title="多版本并发控制 (Multi-Version Concurrency Control)"></a>多版本并发控制 (Multi-Version Concurrency Control)</h2><p>MVCC 是一种并发控制机制，用于在多个并发事务同时读写数据库时保持数据的一致性和隔离性。它是通过在每个数据行上维护多个版本的数据来实现的。当一个事务要对数据库中的数据进行修改时，MVCC 会为该事务创建一个数据快照，而不是直接修改实际的数据行。</p>
+<p>1、读操作（SELECT）：</p>
+<p>当一个事务执行读操作时，它会使用快照读取。快照读取是基于事务开始时数据库中的状态创建的，因此事务不会读取其他事务尚未提交的修改。具体工作情况如下：</p>
+<ul>
+<li>对于读取操作，事务会查找符合条件的数据行，并选择符合其事务开始时间的数据版本进行读取。</li>
+<li>如果某个数据行有多个版本，事务会选择不晚于其开始时间的最新版本，确保事务只读取在它开始之前已经存在的数据。</li>
+<li>事务读取的是快照数据，因此其他并发事务对数据行的修改不会影响当前事务的读取操作。</li>
+</ul>
+<p>2、写操作（INSERT、UPDATE、DELETE）：</p>
+<p>当一个事务执行写操作时，它会生成一个新的数据版本，并将修改后的数据写入数据库。具体工作情况如下：</p>
+<ul>
+<li>对于写操作，事务会为要修改的数据行创建一个新的版本，并将修改后的数据写入新版本。</li>
+<li>新版本的数据会带有当前事务的版本号，以便其他事务能够正确读取相应版本的数据。</li>
+<li>原始版本的数据仍然存在，供其他事务使用快照读取，这保证了其他事务不受当前事务的写操作影响。</li>
+</ul>
+<p>3、事务提交和回滚：</p>
+<ul>
+<li>当一个事务提交时，它所做的修改将成为数据库的最新版本，并且对其他事务可见。</li>
+<li>当一个事务回滚时，它所做的修改将被撤销，对其他事务不可见。</li>
+</ul>
+<p>4、版本的回收：</p>
+<p>为了防止数据库中的版本无限增长，MVCC 会定期进行版本的回收。回收机制会删除已经不再需要的旧版本数据，从而释放空间。</p>
+<p>MVCC 通过创建数据的多个版本和使用快照读取来实现并发控制。读操作使用旧版本数据的快照，写操作创建新版本，并确保原始版本仍然可用。这样，不同的事务可以在一定程度上并发执行，而不会相互干扰，从而提高了数据库的并发性能和数据一致性。</p>
+<h2 id="一致性非锁定读和锁定读"><a href="#一致性非锁定读和锁定读" class="headerlink" title="一致性非锁定读和锁定读"></a>一致性非锁定读和锁定读</h2><h3 id="一致性非锁定读"><a href="#一致性非锁定读" class="headerlink" title="一致性非锁定读"></a>一致性非锁定读</h3><p>对于 <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-consistent-read.html" target="_blank" rel="noopener"><strong>一致性非锁定读（Consistent Nonlocking Reads）</strong></a>的实现，通常做法是加一个版本号或者时间戳字段，在更新数据的同时版本号 + 1 或者更新时间戳。查询时，将当前可见的版本号与对应记录的版本号进行比对，如果记录的版本小于可见版本，则表示该记录可见</p>
+<p>在 <code>InnoDB</code> 存储引擎中，<a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-multi-versioning.html" target="_blank" rel="noopener">多版本控制 (multi versioning)</a> 就是对非锁定读的实现。如果读取的行正在执行 <code>DELETE</code> 或 <code>UPDATE</code> 操作，这时读取操作不会去等待行上锁的释放。相反地，<code>InnoDB</code> 存储引擎会去读取行的一个快照数据，对于这种读取历史数据的方式，我们叫它快照读 (snapshot read)</p>
+<p>在 <code>Repeatable Read</code> 和 <code>Read Committed</code> 两个隔离级别下，如果是执行普通的 <code>select</code> 语句（不包括 <code>select ... lock in share mode</code> ,<code>select ... for update</code>）则会使用 <code>一致性非锁定读（MVCC）</code>。并且在 <code>Repeatable Read</code> 下 <code>MVCC</code> 实现了可重复读和防止部分幻读</p>
+<h3 id="锁定读"><a href="#锁定读" class="headerlink" title="锁定读"></a>锁定读</h3><p>如果执行的是下列语句，就是 <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking-reads.html" target="_blank" rel="noopener"><strong>锁定读（Locking Reads）</strong></a></p>
+<ul>
+<li><code>select ... lock in share mode</code></li>
+<li><code>select ... for update</code></li>
+<li><code>insert</code>、<code>update</code>、<code>delete</code> 操作</li>
+</ul>
+<p>在锁定读下，读取的是数据的最新版本，这种读也被称为 <code>当前读（current read）</code>。锁定读会对读取到的记录加锁：</p>
+<ul>
+<li><p><code>select ... lock in share mode</code>：对记录加 <code>S</code> 锁，其它事务也可以加<code>S</code>锁，如果加 <code>x</code> 锁则会被阻塞</p>
+</li>
+<li><p><code>select ... for update</code>、<code>insert</code>、<code>update</code>、<code>delete</code>：对记录加 <code>X</code> 锁，且其它事务不能加任何锁</p>
+</li>
+</ul>
+<p>在一致性非锁定读下，即使读取的记录已被其它事务加上 <code>X</code> 锁，这时记录也是可以被读取的，即读取的快照数据。上面说了，在 <code>Repeatable Read</code> 下 <code>MVCC</code> 防止了部分幻读，这边的 “部分” 是指在 <code>一致性非锁定读</code> 情况下，只能读取到第一次查询之前所插入的数据（根据 Read View 判断数据可见性，Read View 在第一次查询时生成）。但是！如果是 <code>当前读</code> ，每次读取的都是最新数据，这时如果两次查询中间有其它事务插入数据，就会产生幻读。所以， <strong><code>InnoDB</code> 在实现<code>Repeatable Read</code> 时，如果执行的是当前读，则会对读取的记录使用 <code>Next-key Lock</code> ，来防止其它事务在间隙间插入数据</strong></p>
+<h2 id="InnoDB-对-MVCC-的实现"><a href="#InnoDB-对-MVCC-的实现" class="headerlink" title="InnoDB 对 MVCC 的实现"></a>InnoDB 对 MVCC 的实现</h2><p><code>MVCC</code> 的实现依赖于：<strong>隐藏字段、Read View、undo log</strong>。在内部实现中，<code>InnoDB</code> 通过数据行的 <code>DB_TRX_ID</code> 和 <code>Read View</code> 来判断数据的可见性，如不可见，则通过数据行的 <code>DB_ROLL_PTR</code> 找到 <code>undo log</code> 中的历史版本。每个事务读到的数据版本可能是不一样的，在同一个事务中，用户只能看到该事务创建 <code>Read View</code> 之前已经提交的修改和该事务本身做的修改</p>
+<h3 id="隐藏字段"><a href="#隐藏字段" class="headerlink" title="隐藏字段"></a>隐藏字段</h3><p>在内部，<code>InnoDB</code> 存储引擎为每行数据添加了三个 <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-multi-versioning.html" target="_blank" rel="noopener">隐藏字段</a>：</p>
+<ul>
+<li><code>DB_TRX_ID（6字节）</code>：表示最后一次插入或更新该行的事务 id。此外，<code>delete</code> 操作在内部被视为更新，只不过会在记录头 <code>Record header</code> 中的 <code>deleted_flag</code> 字段将其标记为已删除</li>
+<li><code>DB_ROLL_PTR（7字节）</code> 回滚指针，指向该行的 <code>undo log</code> 。如果该行未被更新，则为空</li>
+<li><code>DB_ROW_ID（6字节）</code>：如果没有设置主键且该表没有唯一非空索引时，<code>InnoDB</code> 会使用该 id 来生成聚簇索引</li>
+</ul>
+<h3 id="ReadView"><a href="#ReadView" class="headerlink" title="ReadView"></a>ReadView</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ReadView</span> &#123;</span></span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">trx_id_t</span> m_low_limit_id;      <span class="comment">/* 大于等于这个 ID 的事务均不可见 */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">trx_id_t</span> m_up_limit_id;       <span class="comment">/* 小于这个 ID 的事务均可见 */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">trx_id_t</span> m_creator_trx_id;    <span class="comment">/* 创建该 Read View 的事务ID */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">trx_id_t</span> m_low_limit_no;      <span class="comment">/* 事务 Number, 小于该 Number 的 Undo Logs 均可以被 Purge */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">ids_t</span> m_ids;                  <span class="comment">/* 创建 Read View 时的活跃事务列表 */</span></span><br><span class="line"></span><br><span class="line">  m_closed;                     <span class="comment">/* 标记 Read View 是否 close */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/facebook/mysql-8.0/blob/8.0/storage/innobase/include/read0types.h#L298" target="_blank" rel="noopener"><code>Read View</code></a> 主要是用来做可见性判断，里面保存了 “当前对本事务不可见的其他活跃事务”</p>
+<p>主要有以下字段：</p>
+<ul>
+<li><code>m_low_limit_id</code>：目前出现过的最大的事务 ID+1，即下一个将被分配的事务 ID。大于等于这个 ID 的数据版本均不可见</li>
+<li><code>m_up_limit_id</code>：活跃事务列表 <code>m_ids</code> 中最小的事务 ID，如果 <code>m_ids</code> 为空，则 <code>m_up_limit_id</code> 为 <code>m_low_limit_id</code>。小于这个 ID 的数据版本均可见</li>
+<li><code>m_ids</code>：<code>Read View</code> 创建时其他未提交的活跃事务 ID 列表。创建 <code>Read View</code>时，将当前未提交事务 ID 记录下来，后续即使它们修改了记录行的值，对于当前事务也是不可见的。<code>m_ids</code> 不包括当前事务自己和已提交的事务（正在内存中）</li>
+<li><code>m_creator_trx_id</code>：创建该 <code>Read View</code> 的事务 ID</li>
+</ul>
+<p><strong>事务可见性示意图</strong>（<a href="https://leviathan.vip/2019/03/20/InnoDB%E7%9A%84%E4%BA%8B%E5%8A%A1%E5%88%86%E6%9E%90-MVCC/#MVCC-1" target="_blank" rel="noopener">图源</a>）：</p>
+<p><img src="./images/mvvc/trans_visible.png" alt="trans_visible"></p>
+<h3 id="undo-log"><a href="#undo-log" class="headerlink" title="undo-log"></a>undo-log</h3><p><code>undo log</code> 主要有两个作用：</p>
+<ul>
+<li>当事务回滚时用于将数据恢复到修改前的样子</li>
+<li>另一个作用是 <code>MVCC</code> ，当读取记录时，若该记录被其他事务占用或当前版本对该事务不可见，则可以通过 <code>undo log</code> 读取之前的版本数据，以此实现非锁定读</li>
+</ul>
+<p><strong>在 <code>InnoDB</code> 存储引擎中 <code>undo log</code> 分为两种：<code>insert undo log</code> 和 <code>update undo log</code>：</strong></p>
+<ol>
+<li><strong><code>insert undo log</code></strong>：指在 <code>insert</code> 操作中产生的 <code>undo log</code>。因为 <code>insert</code> 操作的记录只对事务本身可见，对其他事务不可见，故该 <code>undo log</code> 可以在事务提交后直接删除。不需要进行 <code>purge</code> 操作</li>
+</ol>
+<p><strong><code>insert</code> 时的数据初始状态：</strong></p>
+<p><img src="./images/mvvc/317e91e1-1ee1-42ad-9412-9098d5c6a9ad.png" alt></p>
+<ol start="2">
+<li><strong><code>update undo log</code></strong>：<code>update</code> 或 <code>delete</code> 操作中产生的 <code>undo log</code>。该 <code>undo log</code>可能需要提供 <code>MVCC</code> 机制，因此不能在事务提交时就进行删除。提交时放入 <code>undo log</code> 链表，等待 <code>purge线程</code> 进行最后的删除</li>
+</ol>
+<p><strong>数据第一次被修改时：</strong></p>
+<p><img src="./images/mvvc/c52ff79f-10e6-46cb-b5d4-3c9cbcc1934a.png" alt></p>
+<p><strong>数据第二次被修改时：</strong></p>
+<p><img src="./images/mvvc/6a276e7a-b0da-4c7b-bdf7-c0c7b7b3b31c.png" alt></p>
+<p>不同事务或者相同事务的对同一记录行的修改，会使该记录行的 <code>undo log</code> 成为一条链表，链首就是最新的记录，链尾就是最早的旧记录。</p>
+<h3 id="数据可见性算法"><a href="#数据可见性算法" class="headerlink" title="数据可见性算法"></a>数据可见性算法</h3><p>在 <code>InnoDB</code> 存储引擎中，创建一个新事务后，执行每个 <code>select</code> 语句前，都会创建一个快照（Read View），<strong>快照中保存了当前数据库系统中正处于活跃（没有 commit）的事务的 ID 号</strong>。其实简单的说保存的是系统中当前不应该被本事务看到的其他事务 ID 列表（即 m_ids）。当用户在这个事务中要读取某个记录行的时候，<code>InnoDB</code> 会将该记录行的 <code>DB_TRX_ID</code> 与 <code>Read View</code> 中的一些变量及当前事务 ID 进行比较，判断是否满足可见性条件</p>
+<p><a href="https://github.com/facebook/mysql-8.0/blob/8.0/storage/innobase/include/read0types.h#L161" target="_blank" rel="noopener">具体的比较算法</a>如下(<a href="https://leviathan.vip/2019/03/20/InnoDB%E7%9A%84%E4%BA%8B%E5%8A%A1%E5%88%86%E6%9E%90-MVCC/#MVCC-1" target="_blank" rel="noopener">图源</a>)：</p>
+<p><img src="./images/mvvc/8778836b-34a8-480b-b8c7-654fe207a8c2.png" alt></p>
+<ol>
+<li><p>如果记录 DB_TRX_ID &lt; m_up_limit_id，那么表明最新修改该行的事务（DB_TRX_ID）在当前事务创建快照之前就提交了，所以该记录行的值对当前事务是可见的</p>
+</li>
+<li><p>如果 DB_TRX_ID &gt;= m_low_limit_id，那么表明最新修改该行的事务（DB_TRX_ID）在当前事务创建快照之后才修改该行，所以该记录行的值对当前事务不可见。跳到步骤 5</p>
+</li>
+<li><p>m_ids 为空，则表明在当前事务创建快照之前，修改该行的事务就已经提交了，所以该记录行的值对当前事务是可见的</p>
+</li>
+<li><p>如果 m_up_limit_id &lt;= DB_TRX_ID &lt; m_low_limit_id，表明最新修改该行的事务（DB_TRX_ID）在当前事务创建快照的时候可能处于“活动状态”或者“已提交状态”；所以就要对活跃事务列表 m_ids 进行查找（源码中是用的二分查找，因为是有序的）</p>
+<ul>
+<li><p>如果在活跃事务列表 m_ids 中能找到 DB_TRX_ID，表明：① 在当前事务创建快照前，该记录行的值被事务 ID 为 DB_TRX_ID 的事务修改了，但没有提交；或者 ② 在当前事务创建快照后，该记录行的值被事务 ID 为 DB_TRX_ID 的事务修改了。这些情况下，这个记录行的值对当前事务都是不可见的。跳到步骤 5</p>
+</li>
+<li><p>在活跃事务列表中找不到，则表明“id 为 trx_id 的事务”在修改“该记录行的值”后，在“当前事务”创建快照前就已经提交了，所以记录行对当前事务可见</p>
+</li>
+</ul>
+</li>
+<li><p>在该记录行的 DB_ROLL_PTR 指针所指向的 <code>undo log</code> 取出快照记录，用快照记录的 DB_TRX_ID 跳到步骤 1 重新开始判断，直到找到满足的快照版本或返回空</p>
+</li>
+</ol>
+<h2 id="RC-和-RR-隔离级别下-MVCC-的差异"><a href="#RC-和-RR-隔离级别下-MVCC-的差异" class="headerlink" title="RC 和 RR 隔离级别下 MVCC 的差异"></a>RC 和 RR 隔离级别下 MVCC 的差异</h2><p>在事务隔离级别 <code>RC</code> 和 <code>RR</code> （InnoDB 存储引擎的默认事务隔离级别）下，<code>InnoDB</code> 存储引擎使用 <code>MVCC</code>（非锁定一致性读），但它们生成 <code>Read View</code> 的时机却不同</p>
+<ul>
+<li>在 RC 隔离级别下的 <strong><code>每次select</code></strong> 查询前都生成一个<code>Read View</code> (m_ids 列表)</li>
+<li>在 RR 隔离级别下只在事务开始后 <strong><code>第一次select</code></strong> 数据前生成一个<code>Read View</code>（m_ids 列表）</li>
+</ul>
+<h2 id="MVCC-解决不可重复读问题"><a href="#MVCC-解决不可重复读问题" class="headerlink" title="MVCC 解决不可重复读问题"></a>MVCC 解决不可重复读问题</h2><p>虽然 RC 和 RR 都通过 <code>MVCC</code> 来读取快照数据，但由于 <strong>生成 Read View 时机不同</strong>，从而在 RR 级别下实现可重复读</p>
+<p>举个例子：</p>
+<p><img src="./images/mvvc/6fb2b9a1-5f14-4dec-a797-e4cf388ed413.png" alt></p>
+<h3 id="在-RC-下-ReadView-生成情况"><a href="#在-RC-下-ReadView-生成情况" class="headerlink" title="在 RC 下 ReadView 生成情况"></a>在 RC 下 ReadView 生成情况</h3><p><strong>1. 假设时间线来到 T4 ，那么此时数据行 id = 1 的版本链为：</strong></p>
+<p><img src="./images/mvvc/a3fd1ec6-8f37-42fa-b090-7446d488fd04.png" alt></p>
+<p>由于 RC 级别下每次查询都会生成<code>Read View</code> ，并且事务 101、102 并未提交，此时 <code>103</code> 事务生成的 <code>Read View</code> 中活跃的事务 <strong><code>m_ids</code> 为：[101,102]</strong> ，<code>m_low_limit_id</code>为：104，<code>m_up_limit_id</code>为：101，<code>m_creator_trx_id</code> 为：103</p>
+<ul>
+<li>此时最新记录的 <code>DB_TRX_ID</code> 为 101，m_up_limit_id &lt;= 101 &lt; m_low_limit_id，所以要在 <code>m_ids</code> 列表中查找，发现 <code>DB_TRX_ID</code> 存在列表中，那么这个记录不可见</li>
+<li>根据 <code>DB_ROLL_PTR</code> 找到 <code>undo log</code> 中的上一版本记录，上一条记录的 <code>DB_TRX_ID</code> 还是 101，不可见</li>
+<li>继续找上一条 <code>DB_TRX_ID</code>为 1，满足 1 &lt; m_up_limit_id，可见，所以事务 103 查询到数据为 <code>name = 菜花</code></li>
+</ul>
+<p><strong>2. 时间线来到 T6 ，数据的版本链为：</strong></p>
+<p><img src="./images/mvvc/528559e9-dae8-4d14-b78d-a5b657c88391.png" alt></p>
+<p>因为在 RC 级别下，重新生成 <code>Read View</code>，这时事务 101 已经提交，102 并未提交，所以此时 <code>Read View</code> 中活跃的事务 <strong><code>m_ids</code>：[102]</strong> ，<code>m_low_limit_id</code>为：104，<code>m_up_limit_id</code>为：102，<code>m_creator_trx_id</code>为：103</p>
+<ul>
+<li><p>此时最新记录的 <code>DB_TRX_ID</code> 为 102，m_up_limit_id &lt;= 102 &lt; m_low_limit_id，所以要在 <code>m_ids</code> 列表中查找，发现 <code>DB_TRX_ID</code> 存在列表中，那么这个记录不可见</p>
+</li>
+<li><p>根据 <code>DB_ROLL_PTR</code> 找到 <code>undo log</code> 中的上一版本记录，上一条记录的 <code>DB_TRX_ID</code> 为 101，满足 101 &lt; m_up_limit_id，记录可见，所以在 <code>T6</code> 时间点查询到数据为 <code>name = 李四</code>，与时间 T4 查询到的结果不一致，不可重复读！</p>
+</li>
+</ul>
+<p><strong>3. 时间线来到 T9 ，数据的版本链为：</strong></p>
+<p><img src="./images/mvvc/6f82703c-36a1-4458-90fe-d7f4edbac71a.png" alt></p>
+<p>重新生成 <code>Read View</code>， 这时事务 101 和 102 都已经提交，所以 <strong>m_ids</strong> 为空，则 m_up_limit_id = m_low_limit_id = 104，最新版本事务 ID 为 102，满足 102 &lt; m_low_limit_id，可见，查询结果为 <code>name = 赵六</code></p>
+<blockquote>
+<p><strong>总结：</strong> <strong>在 RC 隔离级别下，事务在每次查询开始时都会生成并设置新的 Read View，所以导致不可重复读</strong></p>
+</blockquote>
+<h3 id="在-RR-下-ReadView-生成情况"><a href="#在-RR-下-ReadView-生成情况" class="headerlink" title="在 RR 下 ReadView 生成情况"></a>在 RR 下 ReadView 生成情况</h3><p>在可重复读级别下，只会在事务开始后第一次读取数据时生成一个 Read View（m_ids 列表）</p>
+<p><strong>1. 在 T4 情况下的版本链为：</strong></p>
+<p><img src="./images/mvvc/0e906b95-c916-4f30-beda-9cb3e49746bf.png" alt></p>
+<p>在当前执行 <code>select</code> 语句时生成一个 <code>Read View</code>，此时 <strong><code>m_ids</code>：[101,102]</strong> ，<code>m_low_limit_id</code>为：104，<code>m_up_limit_id</code>为：101，<code>m_creator_trx_id</code> 为：103</p>
+<p>此时和 RC 级别下一样：</p>
+<ul>
+<li>最新记录的 <code>DB_TRX_ID</code> 为 101，m_up_limit_id &lt;= 101 &lt; m_low_limit_id，所以要在 <code>m_ids</code> 列表中查找，发现 <code>DB_TRX_ID</code> 存在列表中，那么这个记录不可见</li>
+<li>根据 <code>DB_ROLL_PTR</code> 找到 <code>undo log</code> 中的上一版本记录，上一条记录的 <code>DB_TRX_ID</code> 还是 101，不可见</li>
+<li>继续找上一条 <code>DB_TRX_ID</code>为 1，满足 1 &lt; m_up_limit_id，可见，所以事务 103 查询到数据为 <code>name = 菜花</code></li>
+</ul>
+<p><strong>2. 时间点 T6 情况下：</strong></p>
+<p><img src="./images/mvvc/79ed6142-7664-4e0b-9023-cf546586aa39.png" alt></p>
+<p>在 RR 级别下只会生成一次<code>Read View</code>，所以此时依然沿用 <strong><code>m_ids</code>：[101,102]</strong> ，<code>m_low_limit_id</code>为：104，<code>m_up_limit_id</code>为：101，<code>m_creator_trx_id</code> 为：103</p>
+<ul>
+<li><p>最新记录的 <code>DB_TRX_ID</code> 为 102，m_up_limit_id &lt;= 102 &lt; m_low_limit_id，所以要在 <code>m_ids</code> 列表中查找，发现 <code>DB_TRX_ID</code> 存在列表中，那么这个记录不可见</p>
+</li>
+<li><p>根据 <code>DB_ROLL_PTR</code> 找到 <code>undo log</code> 中的上一版本记录，上一条记录的 <code>DB_TRX_ID</code> 为 101，不可见</p>
+</li>
+<li><p>继续根据 <code>DB_ROLL_PTR</code> 找到 <code>undo log</code> 中的上一版本记录，上一条记录的 <code>DB_TRX_ID</code> 还是 101，不可见</p>
+</li>
+<li><p>继续找上一条 <code>DB_TRX_ID</code>为 1，满足 1 &lt; m_up_limit_id，可见，所以事务 103 查询到数据为 <code>name = 菜花</code></p>
+</li>
+</ul>
+<p><strong>3. 时间点 T9 情况下：</strong></p>
+<p><img src="./images/mvvc/cbbedbc5-0e3c-4711-aafd-7f3d68a4ed4e.png" alt></p>
+<p>此时情况跟 T6 完全一样，由于已经生成了 <code>Read View</code>，此时依然沿用 <strong><code>m_ids</code>：[101,102]</strong> ，所以查询结果依然是 <code>name = 菜花</code></p>
+<h2 id="MVCC➕Next-key-Lock-防止幻读"><a href="#MVCC➕Next-key-Lock-防止幻读" class="headerlink" title="MVCC➕Next-key-Lock 防止幻读"></a>MVCC➕Next-key-Lock 防止幻读</h2><p><code>InnoDB</code>存储引擎在 RR 级别下通过 <code>MVCC</code>和 <code>Next-key Lock</code> 来解决幻读问题：</p>
+<p><strong>1、执行普通 <code>select</code>，此时会以 <code>MVCC</code> 快照读的方式读取数据</strong></p>
+<p>在快照读的情况下，RR 隔离级别只会在事务开启后的第一次查询生成 <code>Read View</code> ，并使用至事务提交。所以在生成 <code>Read View</code> 之后其它事务所做的更新、插入记录版本对当前事务并不可见，实现了可重复读和防止快照读下的 “幻读”</p>
+<p><strong>2、执行 select…for update/lock in share mode、insert、update、delete 等当前读</strong></p>
+<p>在当前读下，读取的都是最新的数据，如果其它事务有插入新的记录，并且刚好在当前事务查询范围内，就会产生幻读！<code>InnoDB</code> 使用 <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html#innodb-next-key-locks" target="_blank" rel="noopener">Next-key Lock</a> 来防止这种情况。当执行当前读时，会锁定读取到的记录的同时，锁定它们的间隙，防止其它事务在查询范围内插入数据。只要我不让你插入，就不会发生幻读</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><strong>《MySQL 技术内幕 InnoDB 存储引擎第 2 版》</strong></li>
+<li><a href="https://tech.meituan.com/2014/08/20/innodb-lock.html" target="_blank" rel="noopener">Innodb 中的事务隔离级别和锁的关系</a></li>
+<li><a href="https://blog.csdn.net/qq_35190492/article/details/109044141" target="_blank" rel="noopener">MySQL 事务与 MVCC 如何实现的隔离级别</a></li>
+<li><a href="https://leviathan.vip/2019/03/20/InnoDB%E7%9A%84%E4%BA%8B%E5%8A%A1%E5%88%86%E6%9E%90-MVCC/" target="_blank" rel="noopener">InnoDB 事务分析-MVCC</a></li>
+</ul>
+<!-- @include: @article-footer.snippet.md -->
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>database</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>synchronized&amp;Lock&amp;AQS</title>
     <url>/2021/06/09/java/coucurrent/2.synchronized&amp;Lock&amp;AQS/</url>
     <content><![CDATA[<h1 id="并发同步器"><a href="#并发同步器" class="headerlink" title="并发同步器"></a>并发同步器</h1><p>多线程编程中，有可能会出现多个线程同时访问同一个共享、可变资源的情况；这种资源可能是：对象、变量、文件等。</p>
@@ -3351,6 +3530,41 @@ default                    do
       </categories>
   </entry>
   <entry>
+    <title>dubbo注册中心</title>
+    <url>/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/</url>
+    <content><![CDATA[<h1 id="注册中心的作用"><a href="#注册中心的作用" class="headerlink" title="注册中心的作用"></a>注册中心的作用</h1><p>为了达到服务器动态扩容的目的，注册中心存储的服务器的地址信息和可用状态，并实时推送给订阅了相关服务的客户端。</p>
+<p>一个完整的注册中心需要实现以下功能：</p>
+<p>1.接收服务端的注册和客户端的引用，即 将服务与消费相关联，并支持多对多。<br>2.支持服务端宕机后能即时清楚其状态。<br>3.注册中心重启后，可以自动恢复注册的数据和订阅的请求。<br>4.注册中心自身的集群。</p>
+<h1 id="Dubbo所支持的注册中心"><a href="#Dubbo所支持的注册中心" class="headerlink" title="Dubbo所支持的注册中心"></a>Dubbo所支持的注册中心</h1><p>1.Multicast注册中心:</p>
+<ul>
+<li>基于组网广播技术，只能用在局域网内，一般用于简单的测试服务</li>
+</ul>
+<p>2.zookeeper 注册中心(推荐)</p>
+<p>3.Redis注册中心</p>
+<p>4.Simple注册中心</p>
+<h1 id="Redis-注册中心"><a href="#Redis-注册中心" class="headerlink" title="Redis 注册中心"></a>Redis 注册中心</h1><p>关于Redis注册中心我们需要了解两点，</p>
+<ol>
+<li>如何存储服务的注册与订阅关系</li>
+<li>是当服务状态改变时如何即时更新</li>
+</ol>
+<h2 id="如何存储服务的注册与订阅关系"><a href="#如何存储服务的注册与订阅关系" class="headerlink" title="如何存储服务的注册与订阅关系"></a>如何存储服务的注册与订阅关系</h2><p>使用redis的发布订阅(pub/sub)模型。</p>
+<p>redis中存储的数据结构。</p>
+<p>服务端：<br>Reids中增加了一个Hash 类型的记录，其key为/dubbo/tuling.dubbo.server.UserService/providers。Value中分别存储了两个服务提供者的URL和有效期。</p>
+<p><img src="/uploads/dubbo/Redis%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E5%9E%8B.png" alt="Redis服务端模型.png"></p>
+<p>客户端:<br>主 Key 为服务名和类型 </p>
+<p>Map 中的 Key 为 URL 地址</p>
+<p>Map 中的 Value 为过期时间，用于判断脏数据，脏数据由监控中心删除</p>
+<h2 id="是当服务状态改变时如何即时更新"><a href="#是当服务状态改变时如何即时更新" class="headerlink" title="是当服务状态改变时如何即时更新"></a>是当服务状态改变时如何即时更新</h2><p>这里Dubbo采用的是定时心跳的机制 来维护服务URL的有效期，默认每30秒更新一次有效期。即URL对应的毫秒值。<br>具体代码参见：com.alibaba.dubbo.registry.redis.RedisRegistry#expireExecutor</p>
+<p><img src="/uploads/dubbo/Redis%E5%BF%83%E8%B7%B3.png" alt="Redis心跳.png"></p>
+<p>com.alibaba.dubbo.registry.redis.RedisRegistry#deferExpired<br>com.alibaba.dubbo.registry.integration.RegistryDirectory<br>com.alibaba.dubbo.registry.support.ProviderConsumerRegTable</p>
+<h1 id="Zookeeper-注册中心"><a href="#Zookeeper-注册中心" class="headerlink" title="Zookeeper 注册中心"></a>Zookeeper 注册中心</h1><p>Zookeper是一个树型的目录服务，本身支持变更推送相比redis的实现Publish/Subscribe功能更稳定。</p>
+<p>结构：<br><img src="/uploads/dubbo/Zookeeper%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83.png" alt="Zookeeper注册中心.png"></p>
+]]></content>
+      <categories>
+        <category>dubbo</category>
+      </categories>
+  </entry>
+  <entry>
     <title>dubbo调用模块</title>
     <url>/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/</url>
     <content><![CDATA[<h2 id="一、Dubbo-调用模块基本组成"><a href="#一、Dubbo-调用模块基本组成" class="headerlink" title="一、Dubbo 调用模块基本组成"></a>一、Dubbo 调用模块基本组成</h2><ol>
@@ -3409,41 +3623,6 @@ default                    do
 <p>&lt;dubbo:provider filter=”accesslog” accesslog=”logs/dubbo.log”/&gt;<br>以上配置 就是 为 服务提供者 添加 日志记录过滤器， 所有访问日志将会集中打印至 accesslog 当中</p>
 <h2 id="三、Dubbo调用流程"><a href="#三、Dubbo调用流程" class="headerlink" title="三、Dubbo调用流程"></a>三、Dubbo调用流程</h2><p><img src="/uploads/dubbo/Dubbo%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png" alt="Dubbo调用流程.png"></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//------ 6协议 调用</span></span><br><span class="line">doInvoke:<span class="number">77</span>, DubboInvoker &#123;org.apache.dubbo.rpc.protocol.dubbo&#125;</span><br><span class="line">invoke:<span class="number">155</span>, AbstractInvoker &#123;org.apache.dubbo.rpc.protocol&#125;</span><br><span class="line"><span class="comment">//------ 5异步转同步</span></span><br><span class="line">invoke:<span class="number">52</span>, AsyncToSyncInvoker &#123;org.apache.dubbo.rpc.protocol&#125; <span class="comment">// 异步转同步 ,返回结果之前进行阻塞调用线程</span></span><br><span class="line"><span class="comment">//----- 4过滤器链</span></span><br><span class="line">invoke:<span class="number">92</span>, MonitorFilter &#123;org.apache.dubbo.monitor.support&#125;  <span class="comment">// 过滤链-&gt; 监控器</span></span><br><span class="line">invoke:<span class="number">54</span>, FutureFilter &#123;org.apache.dubbo.rpc.protocol.dubbo.filter&#125;    <span class="comment">//过滤链-&gt; 回调参数</span></span><br><span class="line">invoke:<span class="number">14</span>, ProviderHelloFilter &#123;com.wyb.dubbo&#125;  <span class="comment">// 过滤链-&gt; 自定义过滤器</span></span><br><span class="line">invoke:<span class="number">60</span>, ConsumerContextFilter &#123;org.apache.dubbo.rpc.filter&#125; <span class="comment">// 过滤链-&gt; 消费者环境初始化</span></span><br><span class="line"><span class="comment">//------3集群处理</span></span><br><span class="line">doInvoke:<span class="number">82</span>, FailoverClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">// 集服-失败重试</span></span><br><span class="line">invoke:<span class="number">248</span>, AbstractClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">//</span></span><br><span class="line"><span class="comment">//----- Mock服务</span></span><br><span class="line">invoke:<span class="number">78</span>, MockClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support.wrapper&#125; <span class="comment">// mock 服务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//----- 2动态代理 --透明化</span></span><br><span class="line">invoke:<span class="number">55</span>, InvokerInvocationHandler &#123;org.apache.dubbo.rpc.proxy&#125;<span class="comment">// 代理的中间接口</span></span><br><span class="line">getUser:-<span class="number">1</span>, proxy0 &#123;org.apache.dubbo.common.bytecode&#125; <span class="comment">// 代理对象</span></span><br><span class="line"><span class="comment">//----- 1调用客户端</span></span><br><span class="line">main:<span class="number">53</span>, DubboClient &#123;com.wyb.dubbo&#125;  <span class="comment">// 客户端</span></span><br><span class="line"></span><br><span class="line">RegistryProtocol --&gt; Cluster --&gt; MockClusterInvoker:ClusterInvoker-&gt;DubboProtocol-&gt;FilterChain:AsyncToSyncInvoker:DubboInvoker</span><br><span class="line">协议--》(注册协议)---&gt;MockClusterInvoker ---》ClusterInvoker---&gt; RegistryDirectory ---&gt;(DubboProtcol)-&gt;FilterChain--&gt;DubboInvoker</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>dubbo</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>dubbo注册中心</title>
-    <url>/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/</url>
-    <content><![CDATA[<h1 id="注册中心的作用"><a href="#注册中心的作用" class="headerlink" title="注册中心的作用"></a>注册中心的作用</h1><p>为了达到服务器动态扩容的目的，注册中心存储的服务器的地址信息和可用状态，并实时推送给订阅了相关服务的客户端。</p>
-<p>一个完整的注册中心需要实现以下功能：</p>
-<p>1.接收服务端的注册和客户端的引用，即 将服务与消费相关联，并支持多对多。<br>2.支持服务端宕机后能即时清楚其状态。<br>3.注册中心重启后，可以自动恢复注册的数据和订阅的请求。<br>4.注册中心自身的集群。</p>
-<h1 id="Dubbo所支持的注册中心"><a href="#Dubbo所支持的注册中心" class="headerlink" title="Dubbo所支持的注册中心"></a>Dubbo所支持的注册中心</h1><p>1.Multicast注册中心:</p>
-<ul>
-<li>基于组网广播技术，只能用在局域网内，一般用于简单的测试服务</li>
-</ul>
-<p>2.zookeeper 注册中心(推荐)</p>
-<p>3.Redis注册中心</p>
-<p>4.Simple注册中心</p>
-<h1 id="Redis-注册中心"><a href="#Redis-注册中心" class="headerlink" title="Redis 注册中心"></a>Redis 注册中心</h1><p>关于Redis注册中心我们需要了解两点，</p>
-<ol>
-<li>如何存储服务的注册与订阅关系</li>
-<li>是当服务状态改变时如何即时更新</li>
-</ol>
-<h2 id="如何存储服务的注册与订阅关系"><a href="#如何存储服务的注册与订阅关系" class="headerlink" title="如何存储服务的注册与订阅关系"></a>如何存储服务的注册与订阅关系</h2><p>使用redis的发布订阅(pub/sub)模型。</p>
-<p>redis中存储的数据结构。</p>
-<p>服务端：<br>Reids中增加了一个Hash 类型的记录，其key为/dubbo/tuling.dubbo.server.UserService/providers。Value中分别存储了两个服务提供者的URL和有效期。</p>
-<p><img src="/uploads/dubbo/Redis%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E5%9E%8B.png" alt="Redis服务端模型.png"></p>
-<p>客户端:<br>主 Key 为服务名和类型 </p>
-<p>Map 中的 Key 为 URL 地址</p>
-<p>Map 中的 Value 为过期时间，用于判断脏数据，脏数据由监控中心删除</p>
-<h2 id="是当服务状态改变时如何即时更新"><a href="#是当服务状态改变时如何即时更新" class="headerlink" title="是当服务状态改变时如何即时更新"></a>是当服务状态改变时如何即时更新</h2><p>这里Dubbo采用的是定时心跳的机制 来维护服务URL的有效期，默认每30秒更新一次有效期。即URL对应的毫秒值。<br>具体代码参见：com.alibaba.dubbo.registry.redis.RedisRegistry#expireExecutor</p>
-<p><img src="/uploads/dubbo/Redis%E5%BF%83%E8%B7%B3.png" alt="Redis心跳.png"></p>
-<p>com.alibaba.dubbo.registry.redis.RedisRegistry#deferExpired<br>com.alibaba.dubbo.registry.integration.RegistryDirectory<br>com.alibaba.dubbo.registry.support.ProviderConsumerRegTable</p>
-<h1 id="Zookeeper-注册中心"><a href="#Zookeeper-注册中心" class="headerlink" title="Zookeeper 注册中心"></a>Zookeeper 注册中心</h1><p>Zookeper是一个树型的目录服务，本身支持变更推送相比redis的实现Publish/Subscribe功能更稳定。</p>
-<p>结构：<br><img src="/uploads/dubbo/Zookeeper%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83.png" alt="Zookeeper注册中心.png"></p>
-]]></content>
       <categories>
         <category>dubbo</category>
       </categories>
@@ -4111,6 +4290,62 @@ default                    do
       </categories>
   </entry>
   <entry>
+    <title>database/MVVC</title>
+    <url>/2025/08/13/database/MVVC/</url>
+    <content><![CDATA[<p>==⚠  Switch to EXCALIDRAW VIEW in the MORE OPTIONS menu of this document. ⚠== You can decompress Drawing data with the command palette: ‘Decompress current Excalidraw file’. For more info check in plugin settings under ‘Saving’</p>
+<h1 id="Excalidraw-Data"><a href="#Excalidraw-Data" class="headerlink" title="Excalidraw Data"></a>Excalidraw Data</h1><h2 id="Text-Elements"><a href="#Text-Elements" class="headerlink" title="Text Elements"></a>Text Elements</h2><p>id=1 ^Qx5Qv7li</p>
+<p>id=2 ^jrdf56aF</p>
+<p>DB_ROW_ID（6字节）：如果没有设置主键且该表没有唯一非空索引时，InnoDB 会使用该 id 来生成聚簇索引 ^PcrFPdGT</p>
+<p>DB_ROLL_PTR（7字节） ^qrjjYqw5</p>
+<p>回滚指针，指向该行的 undo log 。如果该行未被更新，则为空 ^8uHvHopF</p>
+<p>DB_ROLL_PTR（7字节） ^g0GroBv6</p>
+<p>DB_TRX_ID（6字节） ^3vnnraRU</p>
+<p>表示最后一次插入或更新该行的事务 id。此外，delete 操作在内部被视为更新，只不过会在记录头 Record header 中的 deleted_flag 字段将其标记为已删除 ^fklgZavf</p>
+<p>DB_TRX_ID（6字节） ^6fuMkoSL</p>
+<p>ReadView ^EnCoKZ9v</p>
+<p>undo log 主要有两个作用：</p>
+<p>1.当事务回滚时用于将数据恢复到修改前的样子<br>2.另一个作用是 MVCC ，当读取记录时，若该记录被其他事务占用或当前版本对该事务不可见，则可以通过 undo log 读取之前的版本数据，以此实现非锁定读 ^JrTInNCo</p>
+<p>事务1 ^BOYugqwB</p>
+<p>insert into user(id,name) values (1,’菜花’); ^v7jcIBr9</p>
+<p>DB_ROW_ID=1 ^l5egCQ6p</p>
+<p>undo log ^qGjdtile</p>
+<p>ID=1 ^4AVhx8BD</p>
+<p>NAME=’’菜花‘ ^FmHQbcU9</p>
+<p>DB_ROLL_PTR=null ^0Lzl5Nyg</p>
+<p>事务101 ^0c4sPXdn</p>
+<p>update user set name = ‘张三’ where id = 1 ^fvq19NRg</p>
+<p>DB_ROW_ID=101 ^feBO1n9b</p>
+<p>ID=1 ^9W3g80Ky</p>
+<p>NAME=’’张三‘ ^A3dDfuTw</p>
+<p>DB_ROLL_PTR=xxx ^y9AX4x9n</p>
+<p>事务102 ^Pqb6M4jL</p>
+<p>update user set name = ‘李四’ where id = 1 ^qAxX2n8t</p>
+<p>DB_ROW_ID=101 ^5iKxn1rv</p>
+<p>ID=1 ^2HM2YEtb</p>
+<p>NAME=’’李四‘ ^5omCJfYe</p>
+<p>DB_ROLL_PTR=xxx ^fy2IcLc6</p>
+<p>最新版本 ^fkVIQWqW</p>
+<p>InnoDB存储引擎在 RR 级别下通过 MVCC和 Next-key Lock 来解决幻读问题： ^nEpXtzTk</p>
+<p>1、执行普通 select，此时会以 MVCC 快照读的方式读取数据 ^9UqPHxdD</p>
+<p>在快照读的情况下，RR 隔离级别只会在事务开启后的第一次查询生成 Read View ，并使用至事务提交。所以在生成 Read View 之后其它事务所做的更新、插入记录版本对当前事务并不可见，实现了可重复读和防止快照读下的 “幻读” ^KRUstQTY</p>
+<p>2、执行 select…for update/lock in share mode、insert、update、delete 等当前读 ^Jcnxrav1</p>
+<p>在当前读下，读取的都是最新的数据，如果其它事务有插入新的记录，并且刚好在当前事务查询范围内，就会产生幻读！InnoDB 使用 Next-key Lock 来防止这种情况。当执行当前读时，会锁定读取到的记录的同时，锁定它们的间隙，防止其它事务在查询范围内插入数据。只要我不让你插入，就不会发生幻读 ^r2eR2WP5</p>
+<p>class ReadView {<br>  /* … <em>/<br>private:<br>  trx_id_t m_low_limit_id;      /</em> 大于等于这个 ID 的事务均不可见 */</p>
+<p>  trx_id_t m_up_limit_id;       /* 小于这个 ID 的事务均可见 */</p>
+<p>  trx_id_t m_creator_trx_id;    /* 创建该 Read View 的事务ID */</p>
+<p>  trx_id_t m_low_limit_no;      /* 事务 Number, 小于该 Number 的 Undo Logs 均可以被 Purge */</p>
+<p>  ids_t m_ids;                  /* 创建 Read View 时的活跃事务列表 */</p>
+<p>  m_closed;                     /* 标记 Read View 是否 close */<br>} ^uxFLAOrU</p>
+<h2 id="Embedded-Files"><a href="#Embedded-Files" class="headerlink" title="Embedded Files"></a>Embedded Files</h2><p>8561de755ee191434df12795f9672a0596780c8e: [[ReadView.png]]</p>
+<p>%%</p>
+<h2 id="Drawing"><a href="#Drawing" class="headerlink" title="Drawing"></a>Drawing</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">N4KAkARALgngDgUwgLgAQQQDwMYEMA2AlgCYBOuA7hADTgQBuCpAzoQPYB2KqATLZMzYBXUtiRoIACyhQ4zZAHoFAc0JRJQgEYA6bGwC2CgF7N6hbEcK4OCtptbErHALRY8RMpWdx8Q1TdIEfARcZgRmBShcZQUebQBGABZtAGYaOiCEfQQOKGZuAG1wMFAwMogSbghsegAJUgB2ADYAGUkAdSEYACUAQQBhWoARADUjKEJ49LLIWEQqwOwojmVg</span><br><span class="line"></span><br><span class="line">6fLMbhSADgBOVJ5dgFZtxKOeHgbthqP+cphuZ0Tj7R4UpPijgAYUo9&#x2F;zu6QCgkdTcC5fJoJL67FKJC4pJq7a6AqQIQjKaTcXaJZIpeFNOHPRIpXYo6yrcSoL4o5hQUhsADWCH6bHwbFIVQAxPEEDyeetIJpcNgGcp6UIOMQWWyORI6dZmHBcIFcgKIAAzQj4fAAZVgawkgg8atp9KZ7RBkjBNLpjIQepgBvQRsqKPFGI44XyaHiKLYSuwagePq+1</span><br><span class="line"></span><br><span class="line">OKkDFwjgAEliN7UAUALoo9XkbKx7gcITalGESVYKoALQebuEks9zHjpRm0HglJS4YAvjSEAhiNx4u8GjsjvEmnxwwwmKxOB3EtsmijGCx2BwAHKcMTcOGI+K7Hhw3PMIaZKBt7jqghhFGaMvEACiwWyuXjRRmJXD5UqEiEiUELTn3UkhYA8kMmkMF5CO0+ifkIArlHMlIQMq9JUI+jbhsmg5CHAxC4Hu7Y+jc3y7McOzjikKJEBwDKZtm+DEWwIr</span><br><span class="line"></span><br><span class="line">7mgh74GExTNsU1aQM+6AfpgmgANL9CkP7bLUkitsQRyYAACjiABW&#x2F;RqlBCwIEs5JrCimxoM4TSaak8SXMcNyJDpfYosGqDOPEpypBOmnbNc3Y8KGk6DsCxCgmgSL7E0exHFcOJ4QSpKDsJ6KYj6vbaMSuxfDw&#x2F;ZNN22I3GSKxOmGNamna0rslyfK8kgJ7CqK4qShlsroPKHCKsqORQGqmrag6ToQC67Y2maCAWi5VpoAOqW2ky9XQU1arupIFbxr</span><br><span class="line"></span><br><span class="line">6g7+sKQYdqGKKRqhsa3shNaprg6ZYagWY5oOebEAWEi4F8Q1nqN3CsbMdZbE2La0agRwEikXwGSl5TTiOXBoJ5RGDm9s4LhwS4+rszSHMDFxbjuwSYQeR4ICeZ6XlkVW3o+51sRtECvu+n7fn+AFASBYEQRd8wHaQcEQAhSEoqh6HQ9hRy4euEINM0xF5mRaBbZRg5sjRG30YxZTMWUrEVBjzAAIpwBwAD654AGJQAAmgAsiM1GFlJ3FtKr9AAI5</span><br><span class="line"></span><br><span class="line">yZdEiLMsFJqmpplNHi2jNLsmkNPEELW18tyDiZZnEtoJyeQ0cL27C5nbCizmuagOn7NcTS9kS2JPUciQokFGLVWgVzaNccKhtcJxrg03XlMplIvQIvXMqymUSNyOX8nlIrzUVFcldA5DlUqKrVSmWq6vqA2sq6g5pealrWoPZf9VUg2ln4I1eh2foBtNIYlxA80xnGhTLeUq3reR201rt+3oLgUzT+Wc9oOdtak6gDYzCL5RhLd1t+28zSOTWv2j</span><br><span class="line"></span><br><span class="line">thwc&#x2F;cOf2LkpH2H4j0LjmQhruW6gs4aDlPBKC8V5kaFFRo+Em0E9yYE7qg8WVRJaYCOJLegDQiCU3vA&#x2F;UW2D2IQESPoSaXwAAqFAABStRCBSTgAAIVVhw1sTQmE6mJtfaCsE2DwTIdTFCaEMK3XiDhaE2xoSIlOOzUie8eY1j5kyAWsMmJ3DFlQvBBCiEkJRPJOUWAsE1kts4H22hoSdntrhBEwNjKPHiH2bQ&#x2F;lWY9lOHiL440ayh06rfSEvY8Ld</span><br><span class="line"></span><br><span class="line">n0jZHg2wAnlGTiFXgbsaxF24CvIe5cZRZRrrlWB+UG5SiblUMqFUO41W7hPQ0&#x2F;dmpj1au1MOBdS6tQqc6Kpx0Z6nR9AvKasAZorzXotTeKY0wIAzFzCiuZ8yWxgjwNp59KxqJuhtP4Cd3KaSnP&#x2F;b+4dHrrJnJwf6gNw5fBid5cy3wIFQygbDeG8DEbXjyIMyRdMZFyKRIopEideYcwWbzaiWiYYMRgTWDBqd0AkAALyn0HOQCg9CLFVHBZClanAo</span><br><span class="line"></span><br><span class="line">A6kIEYSk9kUzIoVmtLUJkkmQQsb0IgygProDELkJgappwTHcMS9EZKID6BIMQFSg49C5FwHmJgoznTSzlorFW6tNba11gbNU7J0R5gILCzB8LiAQrVLgIQUA2DdHCGiykdIhCAvKCRBAtQ0Qpw7K8I4uiWI7QxtsQgCBJC7ELL0RIqtyakHwNsboOoeBwG6PoRFkFjboFNik1SjxYrxASASDcFxgbnGeK4tA5xXgKIhAnT40T8IhxHiGJ2nj3F9j</span><br><span class="line"></span><br><span class="line">2O8aKPBYmQHiSCpIRxUjRzXNie2rNxwfOSUlYuLV0qFKrtlWuuT66FQKZkuUrcSlVTKXVXuk9WmtuHh1UePUmljsqcaaeHoL7hy6YGHpy85rinXktIZa0RkbW5hMvaUzcBpDPsQDpqAr5mNvtdQeIkOzeW2LpCEDShy7LJbFFeX95yAO4NsbyG5HbRXOQgemqBoHXMlLcpBaAkw0ykRB2RjNoT517IiAKGivljP3nq35lyAXmooQfDGiJmBSXEpL</span><br><span class="line"></span><br><span class="line">eIABxBkHCNxwCaNgJhmhlAQmjEbG+EAg3NotqGy4njNJ&#x2F;BxG8F9MT42oAspcREPx3E7G7L&#x2F;QJWbw5vASF2GJiQop4lfknI1CTmjaHXHCbYJJmiuwSoOFJaA0ll2Klk7KaohQ9rPPZgdCp27Dq7qOx0fdF01LtHU4J770nNMahOqFwhl3zM6RNReG7Dl9O3QM+DW9IA7wPd8g+kyqi4ESLMy9K6b0BrvsLRZ3AjgwhSA0V2L6dnvTBJZz+Gy&#x2F;0A0p</span><br><span class="line"></span><br><span class="line">OOQ40UYSNqfNuSB2iAXQYQUjG8yD7xoyEUUuFgInwYykqQYg6p7q4AVqQ++M2JtULgJIaMP5CxDHoGwbiNGpL4A4C0fohBMDbHaAADULII29MFyaiLW8LCRNZabSI2ih3CMT&#x2F;HCZUZzTa4yfn83+ULMAD99FzYW0tpoK2uPoOm4OaxJwGh2MitbEk3kfjHEk+4r4rwSTxydmuKKjNM3TrQAZIzDQ8IKMSL7Alpb9Mgp4CzmCfGbOToyZXdA1dHN1</span><br><span class="line"></span><br><span class="line">wKq59tpVB2edVN5nuvnx3+dnYFlTIXx7zpafL8ow0r0logJNddJknZJajClhMaWNTDN5UenaOWDpHAK1ey3qVH0+k+Djs4dW&#x2F;6frBO8erAC2tPpk&#x2F;2N4K9CB9YuQN48sCEaING6lxDTyfsvP+32aOQOsv4fB3RK5g5gXyrBTMt0lBZUgvFnnmqyLUXorBCvdU2LcX4HxaYolJLGUUr3ByHZtKCD0tJVUZlxBWU5JrByqI3LSC8ogORyj1G6MMcSE</span><br><span class="line"></span><br><span class="line">xljbGOMStIFKjgMq4USHBfnqzKq1Uasr2gbVurID6sNcFctpriMPlI1UIwOkmjdG2AgKSkg2C7GcM4VYCIOEpBkkjhSSkfGIa6k7iZwqQkUzQpmE4wM4C7sjwKQKQ4UeIlwOwBIfsTQ0IPWQIKmJOdi3kGGxIBEnkem5+AGnO1mVIvObmAunag+5QzmIu8C1BLcHmlUUug4tUMuDUU8AWU69SvOYWPBNYmuK62uuuS8iWW6RuG8seHB5uh6oO2WJ</span><br><span class="line"></span><br><span class="line">6uWTQduRWj4k2aApWUO5WPoPY2Izw7uzWnuaclwPuey&#x2F;6PoYaNWIMYGEGUGkeNy0e9y8GKC94aCU2cqM26MVQ4k2ApACs4kxANG9Cb2Ohbh94OCEg22u2+2h2x2p252l212d2D23hmhx8L2Yi98H25QX2yGLyNW0IG4WBEAJEwODu6efymeRGZWFqN+EgfhARQRIR&#x2F;+5iXhqObinYkIjsa4jMYmWm9Okmzg0SSBFwimaBTOmBVOYc1WcQmGew&#x2F;iC</span><br><span class="line"></span><br><span class="line">IjsOcJBxqac5B3OlBvBfOzcguOUTmeSvazBxSkuli285Squ4W6ujSiu1OvAAhVxQhGuUWs8MWq6cW3S+us0g4&#x2F;SMhJue6u8uG6iT41ux8DQah7xlRAgTut8NkpwMc76v6FWRkHu70+ylI3wwCsU2IdhhGEeNYcCMGzhu6jy32HYhRoYxmpR5RaeJ+BG4ex+0AG+6AQwHCss3QP47Qss0YQwgAEP9NCADq2oAEFBgAkP+ABY&#x2F;4AEGagAOeaACFNoA</span><br><span class="line"></span><br><span class="line">JDmgAfdGAB2&#x2F;oANxyAAOhwIAHSpgAKHKACn0YABYRCpgA9KqAAAcoAHrpgAXl6ABEvoAKj6gAb6aAAw&#x2F;9GBwBwGwGyZqYAFjygA&#x2F;vKAAUrnqagCQKgIAKbmgA+K6AAIRoAFoBgA4D52lDSF4skQBskclck8n8lClilSlylKlqm6mGkmkWk2kOnOmunukcKoA+n+mBnEAhkRkxlxlYq5AV4YrV617Mr14VaN6YLd4t5VRUod7mBd7N694spspD7Ip</span><br><span class="line"></span><br><span class="line">cqehj4Yx37RSP7P6v7v6f74Df6&#x2F;6yR+gr7+Dr5yoSDJmcncm8kCkikSkykKkqmql5lGnylmlWl2lOkululskVl+kBlBlhlRmxm2lKq77qqsAH6oBH4qIGps4moc5X4w5VA0J0KMIsJsKcLcK8L8JtGZEUzAFWy&#x2F;BGbAy+wfAGRGH3CPDAzezVZfD6T2QGQoYzHBI6RE5OymYbgkiPRRTjhrEJI2SeLfCvyMyyKIgNCJTmw847HMH7FdqElHGi79r</span><br><span class="line"></span><br><span class="line">i6sGlLS6CERYK58HBaPGy4LoDzCGvFa5roSEG5SELT&#x2F;EIZyH7oW6KGgnKEHS7CQlVgaG3o8D3qO4yK9g1ZNCdilHIl6Gc6&#x2F;oYkdgB6hiwjvoh6Qzgb4lMlEnDZ3KkmfZIbPJcWhhHKAabifKqLAlUQZ6QZZ41hwBsB5guEJiPh3j3glxlBfCPhpZgB5UzBmT2RQh0URSMUbhKb3hsXRwkVwhcV2wNDFW5En6hBQAsj6DMoyBtjiSZWqhJVjzKhQA</span><br><span class="line"></span><br><span class="line">cK7R5jKBnQaGZB3Lj5SwyzyxKxqwazYBaw6ySB6yGwzYajURCDxhE7fD+I2QIhRprhnBYERi4BwBbCvDRJRQ+WJBXDeLRS2XlA5DECTWSjTV0mNRRCkBQC9BZHCS4AKF4aQBfUg1wRg0YwiJUAohBCngUBBXgWWpVAxF7YHZHYnZnYXZXY3b3bIXPaoWdHqTWzhoc7RQ1ZJB4Q44E7Qi2yMzfDU2ybrjfTKb3E6SIFHK1bmRyaAb9gsXlpHIZyeQ</span><br><span class="line"></span><br><span class="line">TgnCgz9guJWZbG2atRCW0GHEuZMFi4sFtxsHnHpaXHKVq6qWPxlxBYzqG1zp63XEG2QAiHvFiHxbfGG66XhXbzyH&#x2F;WHynq9AWWzWRHWUfUwm3TFqwhM4IE1bmFkrRLuUtaeV6HY7B14VsSh6BWMlDawYx4AlkkFHRXZxC00k4Yg6Q1lEMkQ5MkZVZUoz3hlWFXeFFX3glUV1gAVW80KK5wKLvBC0NJlBmRi0Tg2TRwvp+SHDtU12dVlHdW9X9WYR</span><br><span class="line"></span><br><span class="line">DVZX&#x2F;W0jjU&#x2F;WOArBe01jzVVTj6T5Ua0b0aMbMasbsZNCcZ7U17YCHWPBE7jhPT1r9iOzoEvV7XKC3X3U+ydhAZOWgH06+0YCShz1&#x2F;WXxzXOHj6zkP5P4v5v4f5f5NA&#x2F;5&#x2F;4H0HXxjOBE6nC+QKKIM3DMws43V3U+jv0z1A0w2iJw3&#x2F;XQ2g0hDw1ZFqjI2iJo11EkazZVC9DEC7A6j9BfDdA1b0LKzKzYBDDKy1CSxCDcSFjrnZ4Bo8aKRmxjkbDwH</span><br><span class="line"></span><br><span class="line">E7IE4SOwv1X3DFP0Zywj07LIQhxWc5BJgixQZwvWeTeSeQwh7AfxxIgWfSIGEHn2&#x2F;CfBPRnBGOQAUEK1toSUQDCV0GChiVq1OOnFa0jpcF+aW0A21JK5KXcFyUvHtKiGaUJbaW&#x2F;HJZ6Wm4ZZGX51u25YcKe0&#x2F;3e0laYOwnRIOznDgxomzhYgSYFMWF+4hi7BppOywh4lJ2OHEkjbZUV0TZPY57pFUL6ykBSRSTKz6wUC24IQbaUIYyFg0b6BQCqy</span><br><span class="line"></span><br><span class="line">SBfDYBHBwDbBST6wIBzhDA&#x2F;jEDqq4CPZCMI1hGIQzCm75FRW4T5zmR1qp6jUaKF01GQ7Q4Y0SAdNdM9N9Mk2tPk2oAY4nWxQkjFq1aPT1WQAezuKQhOUvoyN+xVZvCUVghM6pD05RIxIc4i1gibH8XbHyW7EOYHHC75InES7eMyVPGhO3EKUm2Ev2j4s3E8bqUROfF669I6U7oPIrQu1nMmVHwwQCNqXwL27GV+0&#x2F;YGFxw7Ch3cA3BImR2WF3SeQ</span><br><span class="line"></span><br><span class="line">uzFq&#x2F;MVAJ32FpX0FR4NNO2QD7MJ6oZgxLEQinN50gn0kpUOFAqJl7k&#x2F;gtAtCyziT0LdB8kNDHnxkwpGvsmcmmvmuWvWu2uNkoqapV4es4rtkN7Z5N4MpVCt79ke6d74A9kjn95iOQDD6Tk8oYy0P0OMPMMMJsMcNcM8N8PsvlCSpbn4BF5VDGvOsWtWs2tinfmqq&#x2F;leuH6kA6pAVn7rHhyX6UPX7UMSD6BwCSxfBQAKwcPiTKxMKSDKztDcRDD6w</span><br><span class="line"></span><br><span class="line">KxcKbCmJCO8bmxoVmQEhGZ80JwIHnDNWc4ewEjbB2LZz2zmTh35Nc1hzWz7CgEvUQgIFHLRIIs047uVbAIyYIgvUGRIvJRUHq0uMq2MGNyeM4vSUcG60hPkvpLG1dTBN+PVIcvRZjSRP210vG76WMuGUQ26sVBgkwT72RacvqEZM3zaHkKNSwkG7HAoFx0foNZaHuKh1R3hwS3014SlH+X9ZF3J0kljYzDNNCPPPuFRHoDbBCC1B1D+irYDMRENH</span><br><span class="line"></span><br><span class="line">oAjNjMTNTMzNzMLNLMrNrMbPcZbNUy7Nx7kkMyHO6Qy3avQkF36s6KtsQUSACdCe1AidPMo5WJuJqZxw+RQHAyAa8VwEU0IivCuyYEKJOzh0QsJreQJD04wh9hab9ic5lqIt8XvuCWfvK2YvHHq1eMAcrRAeQcmhG1BM7GyXkvW2wfUtaU&#x2F;E1h&#x2F;HKtm4oeu0Ye4BMJpM6u6F3SPT2wpo&#x2F;otZe6ufGHoliv2wxKRTkfMdh6sd1OhVwZp0RXx4Unqv</span><br><span class="line"></span><br><span class="line">5z056cJUVHcuGfVGpWDYBs7noCAB7aoAFt2gA4MaAARKY6Zt4AIgqepgAMhGAAhbqgPAmwKgGyMoKgIAEAMMpx3gAVOaADVEYAC9mgADaaOmACYSoAFxylpdrhbEgG3O3e3h3p353kol313d3D3R3L3H333f3ZeTZNbvArZuQvreKnZy3wNw5EgIb7eYbg5EbeP6AfeA+aocbo+4+nb3bvb&#x2F;bg7w7o747k7qs07E0m50qBbiZwPu3B3x3Z3F3V3b</span><br><span class="line"></span><br><span class="line">AN3930pT3b3n3v3&#x2F;3ZIP5++WqdbTJp+JjzbYFJnNzknoz4zkz0zsz8zizyzqzIQJNWzaFfYiBk3vw3itFTOwxlWPRaGNWQeYmbX5QGjCaRmOk3wpwUc+BWGxjpBNOJwRm9kNWj00cX0uJctyLDjTISt2S37WLSX&#x2F;7XmgHPmwH&#x2F;joHWXqLOX&#x2F;jeX88BXUTRX5QJXDLzt5XzLbElX3ENXxWN8Nl62D6t0vY5wmkJOgrXU2yJTrWByXvekE4tvO0srQ</span><br><span class="line"></span><br><span class="line">VbHSrZfKrkVarvYMVNk90nOtJlf83I&#x2F;g4JdqdFdddBVYA1dGnuVqCNinvHORy44zQfv3hbuIfJFPwKakfiQHVO&#x2F;Gio9Bg49g1w1IKBnWDE1U1C96TS9f9GMtPPbPtkMAHZDsR2Y7CdlOwgj7Uj6MDInFFGxCeQbeCINNE9Fvr30uoniPCOcFbqGMMCCcM1I3yXqf0v+M1H&#x2F;p9T&#x2F;40M6GDDJhiw3TacNuGvDfhlAMPrH0bMCQJEPoxJD9gnoSIBEL</span><br><span class="line"></span><br><span class="line">YzQYmpjgcIFYp2GgK&#x2F;AcQmDQGsDUIbg18GkoHBhQDwZkwyav&#x2F;FGhQ3CJUMfCEgDhGwAACqIwJhA0A1i9BJAhAZWBQC+C1BNAHAIwC0DXwk052MbCANYkQIQEEBfYKNEiDeCc18KaACcEZixJVYKm4fYpse2CxaNTgkBPRgWkMa3tUA1sJAo9BeqWNvgOIe6NFxbSxcnGX7BLuJX5wa0h07BVLun3S684wODxbLmSzz6UsbacHWljE2kKlcEmqHY9</span><br><span class="line"></span><br><span class="line">Ky1wAtBa+VlTJoQMfjEdTM3FLrNK1cqHJqsNHMVnTWsaRQkQNTAboSUVZhUOOmg&#x2F;1Nxh46REqE7GGjPSA4T0BVC6nMoHs0n7jcdOqGV2Ppzm6aJ1B1zCTqvC+CbC2A2w1QjOxWE2dxGn0DOBzmOB&#x2F;BPgVwRxLYwgDfFIQyeK+izFdiRRSi7vXgFC2qxIhxMXvOIfC2j4xdUW8fIXN2h&#x2F;Z9p8hyXVPsUN8Zy5M+mXe4srjNoZ8oOYTGDgXxrDiEi+</span><br><span class="line"></span><br><span class="line">DtelrIWQ5AlauVuUysfFVg1d3+xHOmkkFhDTDu+AGI5GMLKZSYoo0UUQX8L66J1ZhCrJwmPzpF5FDh2nNDBzhOrz9c6BnC4bU0NYrckyjrE1ma1LZusK2Bee1lqOLZ6jXW5bUUsj09b&#x2F;lMUHBNsljwTRdlceQbfHn2UJ7GFw2kbDtqOVcbVAJy1PDGDoP0GGDjBpg8wZYOsG2D7BG5VfNuWLymiXWZbd1jvirby9uAgFBKsBUD6q8CBGgttloLJ7</span><br><span class="line"></span><br><span class="line">tAoAiQEYLdldj9B4g3EaMBwnoQtAXICsOcKrHMpPDoIjg30S4MTRJBWY0cLrvdFlo1h&#x2F;mGFZoKIKdj9hxM6jJXBEJ0YudOBsQwKCrwSHmNkhLfaxukMRGZDkRcXBPrkI8aYiU+RQi4iULxGkiSW5QokXaFz4niKW4TWoYX3g4NDHa4&#x2F;MrgyIM7JMDoc4ToXh3rBZMZEIo9xDEjWS8iQwIdbvrR1kSqMbgMLGYZc2CrzDhuTTbBC0xeHXCUg9AV0u</span><br><span class="line"></span><br><span class="line">QG6C6DtmgzXjlQhSBCAGQKQdUBwiOCyweACsboLLB1DdgaMc4biEwnPBkR0iT2NTuInv5yixuCo4GI9Gcp&#x2F;CF+jI85kZ1qJ5jTO6AVCehNwCYTrOHRWzupDxA7sYh&#x2F;QiECRT85udTIALb2DiBc4KYSKMUfzrwGLSpASQzMJ6CSDOA+DWc2YhEU2hj4ftsh8XNEUnz&#x2F;ZSVsRh43ESpSvFZ9CREHY8W0nJGxZKRdteocV1iZNCmWAkllqeh&#x2F;Bsi5uT</span><br><span class="line"></span><br><span class="line">8H7FdSfqt0O+UmeKu119y98ScG4JyoBIPjD8NRUo+pgsNlET9OJ4cQopcEdiVYzh+ddUZKNmAOtZYlrW7GmSPKGioUCZE0eySaktSMyloj1s2W9Z2iMedef1pqOdE95XRlKd0a9CYCejSeTKH0ZT39FTkaeRYksWWKOAViqxNYusb20bHNiOesY7np1MandBmph5XqZWz3x&#x2F;kFe9bTMY2wSRU1cxVw9tugHiBGB2g8QKABaDsC1B9YRwfQBQA4S3</span><br><span class="line"></span><br><span class="line">YhQGEaKS2IAKiN2xjwXsApPgbVpTg+aUoh7BfbexGY9OG4JpFkQ2R9Jp7BIEkAvbY5r20rSLn4LfYbjTajjfITkMcmJdnJmtFLm5MvEZdAm3kyoebWeJW0ah+XQKV8WCkl9QpT45oRV2ZEwRxIn4oFN0NbY8sOw3dbyAgL+HDDveAo3vlFAnA&#x2F;MtWQ&#x2F;AKnKyW5zDpRRUnKuNkQncdkJr0jUAyHwDKBCwuAegOqGwniczZ+EwicRNInkTKJ1ElILR</span><br><span class="line"></span><br><span class="line">PomMSVOwiEhnsLAAHDSpv2NDDxNhB8TVR5wi5otyuZ6INe5sy2dbNtnSTtazgmGRCHeGOwSKGM94GcFd5&#x2F;NHgTOfYCzQxn3QnKVwaVhCKcrJA8IMaE4JVmqwRcVeTWQuPLTsnUyHJolVWr+z3EuSDxOtI8R5JZl3F+C7MkkX5LeI8zc2QUzdA+NpEjdy+L4ubm+OPiSwYp+dOKb0giRRwRWJhVAMSHzkUd0pQCLTE9GLSRpoJMc2CfrPglBytOZU</span><br><span class="line"></span><br><span class="line">ibnMSm7VS0OtUmCU6KqAGlAAXJ6AAAc0ABwKqaUACE1oACXjQAKaKgANCMPuAvQANFygAQqVqyt3QACbWgANE1HSe0C5KgEACzJoAB15QABTqgAUMVAAFwnPdNSgAMcifuCPQAFfKgAWDlAA4&#x2F;GelcFgABujAAqvqAAWTVQDqo9AC2VAHDSYCoBAAtHJnd0FidWWOqHwDRBUAgpTUoAFbrQAGA6gAN0VAA4BaMKfugAJ91AABEqAATNIB6Jlv5&#x2F;8</span><br><span class="line"></span><br><span class="line">oBWAsgXvcYF8CkgEgtQXCK9wWCvBUQue7kKqFdChhSwvYWcL2QNZXhaQAEVCL+soi8RTd0FJyKlFKijRdov6mo9bRSKYaX62x5jSvR5KN0dSlmnE84lC06Nr6Kp4rSMY70z6d9PYCaA&#x2F;pAMoGSDNwBgzl8R0wHugD0UAKQFECqBadzgUIKUFaCyBNYoIXEL7Fn3GhfQqYVsKOFikNxTwqIZ8LBFqASxW2F8USKAlCi5RWoq0VXTq2&#x2F;5DMdhk9APS</span><br><span class="line"></span><br><span class="line">L8avESfHKdlESSJZEiiVRJol0SGJTEwRqpxIYLti0yQU4AgO+AIhFiUUYYqgXeFvIE417IQfpP2CgwTg1wDnMK14EIBnAh80mZCIxyhhuwSQJ6HFSdjkzUk7cvYp3PoLuMe5zcLEf3I1BpdfJZQ7PpTL6hVCrx+fAKdPL5mzyQpjQoWeFNfGVdugEs5YRih&#x2F;EbR7IsiS4IcFgJpTNkewFWfWBjTvAr+l8g1gVKG5r875GdaflnTn4vzkqC3PlZAF</span><br><span class="line"></span><br><span class="line">X6NNd+7hTftv32EzY66zgD5VgJsjoZflpmf5fnLKDAZd2YKrTOOFTSuw7+Sq3mI&#x2F;z6pqAJ6r&#x2F;aelIK&#x2F;rf9r0v9BpuPmyVfSfp+S&#x2F;6YDOBmgyoA4MjQiwKOp2JjVfsS6s1QUSOx&#x2F;eJfdAbwFtiwhxMFObke8CaDv0vqDq0gU6siLL1cgq04saWPLGVjqxtY+sftOYHQNUkdiDnGuE8jEhXY0SRBgCA0J310G+8vAuMVEzYhKstcyQeNQUFKCIpUNe</span><br><span class="line"></span><br><span class="line">QTIOIYqDyBagxkujWuF+wRgTQVWP0ElgtAoAFAFoFJG6DiRtgTCLiE9BLAnLWxIjYNC82cAIgic64aihOGKLiZJM&#x2F;gy4Hk2aAIgEQCcP4RCJpraMohkBAxvbDiGLir2y4qxmkL+H2NYV6LESgiu7kYjkV+41OZwWZmYq2ZOfXFRPI0p3j+ZEYQWcVOfGZZF+K8mCAIgvRXo6+34noTLJ9AxIuwejRWS12dwKIOVFJUzNVlBZMc8pdUiACFRTqyqj</span><br><span class="line"></span><br><span class="line">ZvHJCTJLWFkZ1QQgVWAyDYA6gOhAcoVQc1Dmuw8QFksopHJqnRzoEk6s2U0D40CahNHQiGe0VTkuDqsQmOyN5CZxXA&#x2F;h3xStM8BQydhDI3FKNRAGfWGSECeEeyKZM7XSagV1k1ubZKyEdztxtMvIRBr7lQb0VQ82DaPPg0cyCW14&#x2F;yR8V5k0tiVAs0lehuFlYbKuoRPDSunZG3QDIzQAyGJmSkZpQJYrcOVFFkx+UmN78wbmxtK6qsjhEmv4OCxm</span><br><span class="line"></span><br><span class="line">7&#x2F;U35V8j+buS6lnSepyY4Qh1PjEtbzp6ZdrdvHLzhL0evbEaTEsJTdl5pBPRJUDWSXzTyeTgjJQmyqDTrZ186xdcutXXrrN1mgbdWUvzYVLtRp0nra1L6kpjrpqPJZXqm5SrLQKz0uOdcKGDOBbs9AegM4DYxqBEgt2W7HOBoz9BhIozVJhpsDT7qgCh66tAcAQKfBzg5vbXCZF+CQgIQOkRTDetMwTj7i7yb2B8GAR9h7eVmoFeuAxw1Yo4Occ6</span><br><span class="line"></span><br><span class="line">hkJhUea4VXmrueiOxZ+afGMGnYmeJ8mBbsOEW22kSskJzzEO8TclcvMq4jBqVHhLQnSoqyMxeB2M5KQol3kddBRoXR6FcEK28r5WgoOCYKs07CqDcKk2RNJv4lqj5NxnDZdcPPAcAWQfDXYPQBTn8YKa7icKPWgQLIEyK76WHYRVsiRRMC+aRmOCJUz352KPwQ4CcHeSNy4hGFeAdyoDh&#x2F;AFEOUtzUiOxVosO0lO0DdTuT6068WoWkDgSOC0x76d</span><br><span class="line"></span><br><span class="line">0HSeRSMJXRaOdJKx8fFp51JNKu7QdeWh03k&#x2F;xpGTOKXYUxpxDE8tMuwmQSBEyK7dZ&#x2F;K8rU+Mq1cS4WPdHOolQHVL98p9UrUWs2IAjAbUiNdqcaOLzj7J9CAafZEutEYod22mLSazCORJC1xy+zHh2UdE48UlwQdUKnJpQzaXRpUf0EtM5QBj&#x2F;qebLnvtvn1T75laY2tndOWVZim2T0xTQWIgBMJSA9CF0nOBZAW60KmWzzp2HPo3K&#x2F;g0mlGXCFth</span><br><span class="line"></span><br><span class="line">t9&#x2F;EMmE6trghHYzK0hWl+vJLhHzjsxiOuxK9TdxYDFE0mwDeTuA2+iGCTk3uQzNckDz3J+tTyensUpjzShLOnPQSsgBUj7xhe+eUh0XmYah92G4UBXrq6I7fY1NOvZsneAR1P0tHBlcBn03t6CSne9juhp70Py&#x2F;sL1SrKEMu2D7ddQklQ6PuLxC9oeqpQAIGR8pQACRygAKjlsFvpcUpqU1LhpAAyvpwKNu9pX0oADi5WRYAAdTQAHbGgAIwNAAs</span><br><span class="line"></span><br><span class="line">JqAAGJUAB38oAE5TQALJKJ3QAOwWgABW1NScQQAGfKppOw76UAD0ZqgHVj9B+gqAR0i4cADf0YADXlFhU6UACnQXqRYXPd5FgANbk4FgAA2VfS4Clw9EcAASToABpzQAJ&#x2F;aepOBdQsAD3yoAEHI77gMcACncoACwE2hRD2IBQ8ReqAUo4AGk5WI10YCOOkxjiCwAHnagABudzSgAQFTAAWdpFGdFWo0w&#x2F;MYsPWGMjjhjgM4e0BuHYFHh7w34aCNh</span><br><span class="line"></span><br><span class="line">GojsRxI8ke0BpGMj2R3I&#x2F;kcKOlHyjjpKozUfqNNGWjbRro70f6PDHRjkx6Y2cZu5LGVjnRtYxsZ2P7GjjVogaV1BM3fDTNwXfxOuD+E14olDou6E6KP0IAT9U2uaRfugBX6UQC26cnfs55r5jpJhyHsLxu4XHbD9h647cfuOPGfDARkIxEZiPxGkjHAVI+kfsO&#x2F;GRgeRgo8UbKPMLKj1R5hbUYaOwLmjrRjoz0b6OwLBjIxr7uMamMzG5jSJko8s</span><br><span class="line"></span><br><span class="line">ZO6rH&#x2F;D6xrY7scOPHHZeqYm6emMV4NsVe3+9XtcPoS3ZegDQaMHll5IcBag&#x2F;QboEcDjB6gRgug5WA4OB3zsXmHwStJGu31RR3ErMSTNTVth2wcQNWCptpNxn+I7EixPYN2CcqFo4h2ITSb8GOCyYTgRJ0nQJU3H2T49bjMDTTtoOoroNCGoLSwZC3jyl0HByLXnsK40iudgJQQxStFmyCUt7xAjVdCI1EdbofiGrCzSGGUbw49cmjRsW+B7mQJuU</span><br><span class="line"></span><br><span class="line">7Wcvz1mFTb5au8TasgJD+JxVYOSVfrpem&#x2F;6OEP4ZWH4F6YA7d1nhLTWOEZiVqfIj1ZNFHwHFgh1w4ULTGZhfpcj30EI54MzW5ErgusXw+EZWnC6fBA8OTCKNKzIMtnPNqIqndQd81dn&#x2F;Ng8xg8PKJbgdWDGK9g0hqi1jmEOcTSc4kzQ7CG7Zc5+MGlt5YEhwJ3wCjXvPgY7mypV1PsZrMPMsdStJ5gVY0zE1T95E9sK89rh11RzDDTJHPBIDgV+o</span><br><span class="line"></span><br><span class="line">ranWqoGpexODbvYoYHSM8CuDMqHKPrEbQftiXzTj9p+pJXSnmmqo7qTJ5aYtsX7372T+27Sy6bO2LKPT90r0y2wN1myiEUkbANWNIAHTJZzw7jZAEtifAoWiIDcOcGOAVMszkUAg1pjTSMxNMfsfSVpkrQnIoC1WRYuFyQueIq190C4OhZJCYW255BuPbhYT34WikkGunb2YZ1YqSWWeskcObZ357omvBicwZSXml6ZzM1Vi9PWI7eQr6Wkni5R0</span><br><span class="line"></span><br><span class="line">OQ4h+LaaI1d2GEu9YjzI+ljSrskvnnpLl59KzecEl3mO9xh+FOVFmmBlcgl3Q6kwAAAUJAagGvmyAABKVAPQAIA6pmAqAa676AADkgAHeDAAjUHfXHrAAbhOPF48wYQIGuddVTndIbt14gPdf3TPXXrvgcIJ9Z+sA2gboNsJTaOOr6WNwznYy7IlMvRLzLY28aYyisu0nz9E0y&#x2F;Q5fZROWWTLltk3GJOuQ2oA0Ny63DbusPWEAyNt62ja+vUA&#x2F;rg</span><br><span class="line"></span><br><span class="line">NkGy&#x2F;rdNv6leV2vy+sofN8cIAvQWoMoFqDqh1QP4I9a9s0D6BdgzADgArB&#x2F;C3Z+g75iK3usAKJnZJ+87sAQeOAVodIktKzSZDfgJBSNzVV5Ohn0mnAT11sTSN1gsyN6awQK0QbbDODrha0hEMwuuLJ3YWKd9V9s4nvpmFCiLDBi2kwdZkZ6OrrV7PdRdHPUi6LYUivkIcq5WgxrZAwXXeiXNV6ypd6o5C7GSn&#x2F;jpNHlMVvLMgPcXlD18082vwdm&#x2F;</span><br><span class="line"></span><br><span class="line">66QPAboFJDnDbAGQugloJoAVh2p9YhYNnokEwC7VjZpyimKJu2tVbdr15urYvwa0KafTZsiwS0GUBsBlYCsMdvQG6A0ZagHAE&#x2F;TRiDOYBzdgO4RmbacGWxngp9f3azWCH1rN2jWOAbCGhAIFvBOwUYU5C90vpvYBICszpnXDAs4hhmXCNbHHCB48zpRLCzHpREYtvNu4gi4nZaup78Rad&#x2F;s5nsztdXs7XBmeQXti1F6F56WEvUxcq6EABdGRAjnV</span><br><span class="line"></span><br><span class="line">1LNTdIoEuiO6yp75AJ7I1wGEE5WDwlbGtZWtQ4bM45z3kcUVs2fgCOAIBlA86poHdUXvp0LzuAva2vaH0b37zd2iR1I5keSw5HoBl5nuYSAwG61Nt5YkZuAsma71eIB6GrNR1hwXcQXSrCAnsiFom5Vk5C2VbQsD8qrTZlFsg63Gx2WNiK8DU1eT1p9k7nMgJiPLwcZ3sHeK7mbnuIfs6+rZDvg9zoLvTm2hUkUQ03x+w&#x2F;APmXyqQ2Sgj0LW+isi</span><br><span class="line"></span><br><span class="line">LTCw61miWBH4lrveoflGaGZLmkFR8stm5yalLTW1kjqIPJDBFURo&#x2F;bcax6d9OhpK+qvHpaQOGW+6nwYmyM732jTybKSybQOVsv0m5t6Sxm+Ph3t72D7R9k+2fYvtX2b7h0vbQ1P3JplhnySOXhLYAo+WP912n0P5blvtMTsLkLUL6K41fmE0nYZmpe37D5oJawxAyIgR84+8K0PE1EmELBCfAM4fYT4WXLC6ubLJTbLSEzgiis1W9ESXx7H1j00E</span><br><span class="line"></span><br><span class="line">2zQTjs0nsItYPBzbVuDfg7ieIaqWNF3O5zvouDWpzvOmc&#x2F;gByd2UNokBS4JEJcqbniCTeg5BgWuCAYzkVT&#x2F;rmJdUMyiKHmMBpyHPeSvwAHrT+rXrqOvMlTjXJ67mDaqCImdL&#x2F;5P4EF2mcYFi02O9lbM7MsUnD9ll6k9Zem0rPabDJ+m+ORv2ZLWT5SxMpq88sLLbpUtlZTLdu31EzZQgFoPrFwAxnZYqsTQPrCEC9A9A2wGADwF0FsAwg8Z++9DL</span><br><span class="line"></span><br><span class="line">cjW77o9OEnM8GZVZnEQniHyjCDwiYF1w+kg9iA6ZydhwH0SNhwHybbQOSDcDi4Ag6xdAa6rqDvC3TJoOYOU9JL1FozoovM6s7VLnOzwdScDX6RDL4a20P0B0Pb0DD3J0KwMa8OkgEuz9by8pCRR+iV9aVuKJ1lGGNrN8zuxxq&#x2F;GfnBEVCRIL0BGCSBrsHCIYNs2HoaHpXyj1e&#x2F;K&#x2F;XuKvY5vr3&#x2F;We4vdXub3t91YdFaxD05TUOjAiBCFkspWMDK4O</span><br><span class="line"></span><br><span class="line">3aOIYpPqVML1dgSQb9i9hZEa4EqyhfKsXBvHPImydHpJYoOQNcdxq+5iJddu2DPb9q1E5xUUuhzRDnXCQ5Seoa4tErhLYXZnNcAS7Q+yu2uFASX1UpM03i9RtXcAYzJBN3rvw6lV7uO7W1xRztc7W2P9rVRY8+TaqC8kLnGuTSxIFU&#x2F;qX9qKPXG+M4MuE2KmJl416TdNcWX6TSzonta8ZRrPr9I+R1y+ADdBvdBIbsNxG6jcxu43CbmMSc61Fafx</span><br><span class="line"></span><br><span class="line">b52253oc&#x2F;2PTHnmj3&#x2F;TACYT4BxIvQRW0wmYA0ZlA+gWWEwkIDqh6Avd8M4m6hmW7w4o422NFERkfMZah8x255DjVy7khoD73IA+5rAP7oZb3+&#x2F;TkreArm5oSOtxOAbcvsm3tV3F4E6oPtuMHZxYl2R5j29uBzo3rmTeKnlJPerxfRj+Q&#x2F;4OUOMnjLtoWwGndSy8xxGtHiKOeAVNmue8mEEU7AlgW9XoGYVxKNFfK7937GkR5xpNniPf9CsfQNw00</span><br><span class="line"></span><br><span class="line">DYBdB5lBR6N3vkPvZLLTvQ209fmvuEAP++W899e&#x2F;vfwrNK492b26KY4KmNwbj2+nMddRqzKGXOa7Cco1bPd3NNTN1wQHpo30bjpthzlKst8vHD0bD1Hopl4eAnrbhq4N9CckfwnnV08RR9CwEOpvrOuoTFoW9pOGLLQpkW0LtdhM5kbF2KbCTt0+QwuOWnffx+l299CC8sqCRd53ft2JLFWqVy8jk+qTn3aj4H504gBzhegqsc8GCm+uABMAgBuA</span><br><span class="line"></span><br><span class="line">AMAnVcSBjfpv831b&#x2F;+u2+cbLZfTwTaMtGeZnu+k15zmBSLOElyzocqs8WmOWHXzl9AJF+i+xfag8XxL8l9S&#x2F;pfMvVKnzw&#x2F;sTIO+zflvm3wF+8vv7gv9znMaD6oT4B1QFATALgAGCAHagjqIwOyRGAMh1b9AVbLfbbG5frI3sV5JLvxC1agLXULRq8vCQgwD20m59TpDwJQ73mYe99ECqttPR&#x2F;E1a5yojsQc1Xo7FBxPoz+I+duWfnPyj21HZ8q5q</span><br><span class="line"></span><br><span class="line">PVFwd7N9ou0v87Q16hzOdnscsxfi9aH0LorscjXqZ8op1iCLdCetCry+EIxrWvMbWNQjghL3ekVtrRmyXwC0BGAkjnOAwAM1F94cSP3onh&#x2F;eT7gD4KuSlsX4Yw4AZAFHA0AaNYfmmmu35W2AEoxzpulUjDrAWROPTgQqXYnTQbg+kgyq5oimD7AtUVwGh6eOFVlh7VW7mmv4tuBHvi7x2HbsN6kelFuR5kusTt26EOJ&#x2F;nR7JO83qvBoazHlQ6tCp</span><br><span class="line"></span><br><span class="line">6NNJTed&#x2F;ovxcehwHFTVYkepADDC7yKU7cOnglu7ieSupJ4a+3elr7qsj7vJayaQPh0448RbDqIlslrGCjcwdvl04pkTgd0AuBFEFq7u+KBp75TOxnr76me&#x2F;voGw2ulnh6I02NnmH4M2EfkzboApfuX6V+&#x2F;QNX61+9fo37OAzfrtrp+J0k6xmiXga4Fuur+jc75+J+NLZ4GYXu+7y2KQDX7tAQwDqCFgmgCkBrqHAMrBSQzQbdhHARgA0DG2D&#x2F;kDp</span><br><span class="line"></span><br><span class="line">JuuXh8BxAbwEiDk+tZlT4FyWhHEAIE1wC7gvsnwqgYqYGBOGhHIPXNxIVmOkFWbJAq7JVhCWDZqh6R2zZv46tm&#x2F;XsE6dm2&#x2F;jiKs+e&#x2F;uN7ku4gVz7dWPPqQ58+o7gIaMWigblj5AHHguaP+0ssuY&#x2F;Y39vTgvU2VkBICWx3uMKmYrMNxITgbdqPwGyS3pK7ByiAc07IBZQfoaKWh1m+6aC8tlMxvg4kLdiXo+jhba22mkk5zQEpmrAZCscQKGDnyL6</span><br><span class="line"></span><br><span class="line">ESB&#x2F;A+kvnD4yewDZA&#x2F;AWcgYysB5PuwGU+nAbh57++HpQZnBhLhcFMyu&#x2F;l5Lp2e&#x2F;lcH4qI5qf40u&#x2F;VnS5jubwUL6noqcr2hcsG8sRzcC5FBgQzW9eoliyGCvkAivUL6LIgHmq1tU4SeAAeK7wh97kiFyWCnnqwYhylomRqW&#x2F;iG4EQALodp6kmozl1B42EzoZ7TOh8l6FzOo2sYZUmNJsH4k89JvZZ2e8bPEEGcrlqzaqWsCmTi5+Hrp6YVBstuF7y</span><br><span class="line"></span><br><span class="line">26XvrBrgn4LgEm2MPkmarsrwJAYxU9kM3SSYObtbDPo&#x2F;ullpXUOVmuC5oB8jCLRIOBgHYq8pPuh4U+GFj17cBfXvT6Eem&#x2F;pJTM+lwaKHMGxLBKG7+UoT1Zn+coRf7juV&#x2F;m0LgQHHuxZjgWuojqVO7Dl5QJwC1oZq&#x2F;Aj0NUyq+Sntd5SemvoiGWBSAdYFoh7To6GG++zLDZ8KYQBza82qAGCioA31oAAE+oACQct9aoAigkwAIA1ZG+HhwboQ+FXW</span><br><span class="line"></span><br><span class="line">nis+GbQ+6CBFfhv4f+HCQgQMBHvhnoQNp6e&#x2F;gZM5E2gYfaL76Zngs7mu4YVZ4h+NrtGHh+9npH7xhLNhyYaukVI+GQR4GNBHZAsET+F&#x2F;hAEUhFBkKEamHumpQTJpeuGYT65YhVCMrDiQmgJIBwAPVH3b6AQwFAC6CzAPQjxAMAC0A0YHAPzqt+CZg&#x2F;bLg1YTFRY+fsPGqnCakh4i6RJFKRrWwL6Dey1eYcJ7ZGY3toiDf2k1rjpemOwMHaVYhwES</span><br><span class="line"></span><br><span class="line">B0Uh8kg60+JwYOF8BRHiOHCh9BlcFihMTlOFH+A7reLUuw7s8HyhrwYL5KEbQkc63+hWPOZdC+HMLo04zKviZ1239vxYGQmGDiB8e8dH&#x2F;5XepgXU7COSwr&#x2F;oNA9CNYK6CFgoGC7A54PoC6CTQGwDiQuwNGD9A6oDRi+yuWP7JsS5qt97CqMlgHCfA9ocPpF06AVUApAszEYBDAhYE0CFgHCPECFgigvoBCAt2AyBNA21My5qRAwWhQ6M7ws8Dyy9</span><br><span class="line"></span><br><span class="line">0NVgGWkmDBa7B6svuzbso0RZFUUIFpGppo+cMSCxQJMirwxI3sNATxwGBKi7C0hwX45eROFj5EDePmkz4BRaKsRYp2pFvv6iBoUXcHhaDwchq8+sgUx7whLHpk6noS+qL7JRllEe4&#x2F;BW3n8HLgLNLoxHh24W5B4QuUfJgIk0IceHrWloXCFd2GRMq6gBv+uqAIAT5vEAcAuwJoC3u7EiVIIBl4ciHXhgPhKqXCWYVQhsxHMVzE8xv7shJpyd7Hib</span><br><span class="line"></span><br><span class="line">&#x2F;2k1u4gVMDtkKxvMzQIpiQGWkud6QuDMJpIOI+Zi9TRQcvki4JIXYWwGYe3IX2HHBQMbwEgx6DmDGCBO&#x2F;mFFjeB&#x2F;sSKTeCMbR7cGKGijGLe6Tpf7vBB0OzxJRaoZXrZMJFIxyFoOoZsgcCC1iHY4goKr&#x2F;7mhJgfTFnmMnsvZWBY0eo5KuKlu4FnOWnq6H9OpzqmSFxqEbp5+B+NphHe+2EWSa4RoQeNoWeQfkRGRhNrrZ5kRsYePjTR2wLNHzRi0</span><br><span class="line"></span><br><span class="line">ctGrR60ZtHbR2QW5YlxQzimFFB1zhdqohIXmsoCR+YvLZQA2wLoI2omgCMCPaINLsAKwOoMQBCAIwF8CywUAEdC7ROXmhQ9cJZj7wv02cjV59++8mex&#x2F;OoDp1hOOtAXdGyycQA15gOukC15QO7XgHD1uJRMCE4eNPnyF0+9sYKEJ2zsWOGuxbPrDEc+MCV7GSBPscjGl8xeit4Tup6DuqhxuHIWH4xhHJXa+w+7ORzDCUKg3aisgouHTeQeICcAw</span><br><span class="line"></span><br><span class="line">hgjlaGMxHzie4YwuwO0ApAygAojcQDwHAH8xQ0SvbCxqAY6GTREgCwlsJHCVgl9BzMbl4xoOZl8LQg6Zq9SSYfsLm6JxZknsCZuOVhjjk4AcEh4ZmBwR2HuOZPqhZchvYf9HYu&#x2F;IRv6gxW&#x2F;lAkihCCcFGTh8CfDEzhjwQx5+x&#x2F;PvS6Kh8UaehGALLr0LPIOIFjJOOddqyH8W8MoBiQGtCbU6ABUlpnFXh2cQb72Bmnr07ae0KPtr+ebvmM4YR&#x2F;oU</span><br><span class="line"></span><br><span class="line">EH9adcfM6hhE2s3GRB1nlGwU8HcbfpygK8WvEbx&#x2F;pmFY7xe8QfFHxJ8cc45BxeGkmna7rtxGeuc8TdpCJ6ABQDLxM6jqCkATCLsCYA9CDqBfAmgOtHEA8QO0D9AWEqfEHqRIVUyvAyQhqqWM&#x2F;4udE7srkQiTVYQIYcD6ReseHD1eoDuW7fxkDrgY1uf8bA6degCSv5cBtsTHbAxECQIG4sLsfDF2J5FhN7CBEgRFFDuvsagnyB6CUuFTI22k0nYJ</span><br><span class="line"></span><br><span class="line">KUXjHl2vwZXYFmZwP4hcue8rRRWajdhQn6W8JKzBGBxUTU5iuDMYe64JpUKbK&#x2F;6vQCkDEAQwHxqMIvMQNHwBvCVnGqOBhoIlb2xKaSnkpQgJSmyxUVvLF5eNsE5RgwFwPgJ5miiRbzEUpwIiD+JPzMW54+NaLXpFWiLqiAGJ3YcYk+Opic24Dh4CQS6QJbydAkfJE4V8m3BnsU4lIxTwa4kvBy3oHFKhVQNtrJJJ0KloS+t0DCBcUOwEu4gh7iFW</span><br><span class="line"></span><br><span class="line">46B5CYr6qxUmn9EiWIrjimnhZgfU4Xhf2LEn0p6ISeGSJ9vib5Z+Fvj+Gu+M+vtqZ+TvnGm+BGSVXFZJPvjknDaIQZSYFJU0tTbFJ3omkoxh5SX0kDJTQEMkjJYyRMlTJ+IbMnzJo8YmHoASaZb4ppU8YF48RyvPxG9Jf+tGALg6oJLAUAUkMQAKwzALCAtA5ADLBHADYtl5LJrwvEJKJwgg5AgYQGMjIVYH8Z5AVSjMIHS2RdAaMTAwtaMyGgIv</span><br><span class="line"></span><br><span class="line">nFA5xA3HlEiMqjsHK7U+Udo8nr+O4kipOxWqTYk6puDvYmH+jiQk6cGUgXN7jmMUWamLhQcegDba2+BCm4xBKbO6sulIVZDh8b&#x2F;lRqIpBoVXgiiFmAKy0x&#x2F;&#x2F;ptZl0d3lCmSJbTBjAwAuwL0C3Y09rsBcAYnPilmyPdn3YD2Q9iPZj2uwBPZT2M9j1HKCr2NwkIhAsSGlCxcSWgFMp8tvhmEZxGex54BhKZymWwujGjL7Bqsa+yKJlaIBjRQuVtEi</span><br><span class="line"></span><br><span class="line">nRNCW&#x2F;E+hPRMWg9cfYmuyAW1bubEeOnIVbEmJwCbemAxTyeqn8BQ3s+mBR44W+l6pYgQalfp0oT+lzhI7v+kYaHiZFKWpPwD4nbeoqYeFKGLqacj8W6mRVLMhESbinpxg0Uo6hpevgykRpecQdp5BiYmCiYAKWW6EJipbMlmpZ6ST6Ee+1cQGEk25Jg3EU2wbIUn8edJm3ExB9ruRHxBvaf2mDpw6aOnjpk6RwDTpH4mn5jxuQbqJJZKWSHGFwVz</span><br><span class="line"></span><br><span class="line">h2ldJhft6YBW3dqQC92&#x2F;doPbD2o9uPaT2mANPY3+EiabwvMFcsHblu7kZrEo+qmDuwrgNkQTLahlcipiAY4ULFBdYdZjwL+2OmaLQY4TOFEj3qvuk7w2xJmfeloOj6VYmWZEMRE5hanyRULfJ&#x2F;br8kzeTmbKEuZC4e5lV8osttr5YXwalG0qT&#x2F;iuaY+bwOTjJSB4QtYVMh&#x2F;EkA+pZoX6kWhGGeYHBpGurPz5w3GXeEr8r&#x2F;JhllAG&#x2F;FXTFUyqqghH</span><br><span class="line"></span><br><span class="line">ZBmqdn3Q52VGplATsNdkS0bwC7A6YUUGaqByxEJarP8xAJPQjUnHvaokC9&#x2F;lDQUCEgEwh9pbAAOlDpI6WOmJAE6bdQtZM6VAwwCFahVYQqkUBzgNoLuPwKrwMaogTNO04mdQxUEgkuZpqouaXYYAEuegCK2ytqrbq2KQJrba2utvraG2vQf1rq5bAtnJnACVtEgh25vL8wCCDzuHSRCHOPJJAhnYD2rYMw6nILEAfakQy9Ro6uLnjqE0bxlUIQwH</span><br><span class="line"></span><br><span class="line">Mk0I4kLUCFgeQLLBzgQgOqCqwjMP0A0YhYMcoEpd9mfFJm6VsThGe6mQYTIgakiMRPQubnWrEgIwaAg4+J7MWarBqweWbmaM&#x2F;irzVmOwXWbruPnFZqeRoCd5FmZfkQULWJVmbYm6pP2fqk&#x2F;J9wd7H0eMgYCloxCgRakSA22rbhQ5UKZBm+JG0C9TxQtyjHFko5OGCGCi44JdSgOYWQGllR1oRYEhppAdro2BosROoZ5GMOJD6wmgLOqJAUkOprCZ</span><br><span class="line"></span><br><span class="line">OGXXlaYmknbBecImCiH&#x2F;CbiEuwwgNhEkDqZk3HY7BIrMLbCxWoqWuDgqGOWbHs4emUYkGZyqUZlHBT2TwEChGqa8mMyy+a+nRO76R7Eb5iCX8kyhUUSamuZ6Mat6gpEIN5mExPoBuAeChJnXb5ouUXInXszqb6mXe&#x2F;qaVFRJS9r3oHp8kkTlxZzocmFRQboS6GgZWaTiZo8uWRmm1x2aYVm5p9JlTYRhKSqRGxB1WaDk64VEe5YaFOhXYz9ZefoN</span><br><span class="line"></span><br><span class="line">neuPafrC9AmALdg8AHANsCpyjCWbw1apYUHjX8taqV5IFGOIeHmSrMMtY80jYR5BciMLLCJypLmiQUYelVhMFc4DyVQVqpNBeZlPp9BR9lBRq+eeJUen6dN6JOgOZwW75AcYBkH5wGSRQCFBCVrrU0K1u6lIpJmPxaswmVl5B8O2Kdjk3e54RxkyWs&#x2F;F3wxZ4aetbxZ4EZDaoAUEa+Hvh31oABy5oADbaqxGIRQERxGgRxcaca0REEXMUMRCxR+G</span><br><span class="line"></span><br><span class="line">rF6xYBHIR2xSM56FlVJkle++WSZ4mFZrmYUWuBacRGMoVhVVmdxcUbmz2FLrnsWzF8xTBGLFJxQhFnFWxdp7KorpgNnphX+pUGCRGMN4VSQEzLoK4AP4LgDqgygH6rNR2wKrD6w+gJeCzpIOhbbn8XaudRfM1amrHqQ4IOwLZSLuKkJKMHttAUBwPtnZGQhcQkHZIeodm5E6Yj2bPl2x+RQvkoqSdiUU2Za+XZmsFhqZFEApcgXvnApQGSxpHIG3</span><br><span class="line"></span><br><span class="line">mlGw5P2NcCrmOuXXYnU8ccZKGWpoUVEpxSrmnEHuWGShJoQTQFAD0AwNMrBNAygN0BMILQCkBsATQO0CkAvQGvLMSmzH1E5EfMexm8JkUE&#x2F;RupvESLG3mYsVUEGIP4LsD9AssHADKw9CMwAKwNGLLC9A6oNsAjAUkJXlfAU7osmEl86UziyZUaPXLrg4IBSEgE1wKkCEEkEo7xswKmeHAPR+BecDPRyxG9HZiH0T7BgiDOb9HvoM+ekjmJD6SE5v</span><br><span class="line"></span><br><span class="line">ZRRT2Yr5IpWUWksCCRKX&#x2F;JKCdKV1FthdhrbaUPioE4xYufQ7pRWyNWpjiupUfKbI7iFVKf+UmGmh7JhBTKwDFqcTjmuE5GWXaQFuEhjBHAhANxCYAHAPECkA5umxk2hl4V&#x2F;mqFf+SNny2N5XeUPlT5YSE5li6eZrPsl&#x2F;BU4f2IBJVhVoaOS8rAwLctgTc0NwAbFmYmBPnAR8HIaQWZFPISAndlYCfyXDhi+e9mDljBWRailcMfZmVF36cgnGptRQ</span><br><span class="line"></span><br><span class="line">L4iyrLNtoe0q4XakX5+BO8AFuYhTfS7lnYMWjoYgSWhklRhpdJ6RZO1mWbTO3+TeG2BxOWNIOBKZBPFFxCaePHnOk8ZcW6WNxYEGZp6WDhF5JzMYH75pFhbNqVZ5QMybj4ksOGWRl0ZbGXxliZcmWpl6ZZmXNJHWV1qyVSlfJWXOkJa4XQloXpmGhlGMJoAnALQODSywCsPgCSwx8Q0CSgLQNGDxAtQIoIEl5tvOllmJZpimxQTOIHjyMpZbEUkU</span><br><span class="line"></span><br><span class="line">qQufIfMxbicmNeFbhcn6JVyXpb&#x2F;xtyY24qpvXs4zwqQ4ZYn+RS+cUXWZTBbZlkV4pQ5mzhQOdFEg5XxWDn0VXwJ7nXiqgZmoQZK5XyxgVB3rNaGQZCXIZisoarBVPQYosYEGlp5eVH5iEiX+5myPALUCqwPAMrDngUADzEvlH+TJbvlYabeEhlcJVUBbVO1XtUHVAFf+5uQS7BfTblOwFFBVld8YuzTB8albwNuJ&#x2F;LB73E8HlokvwZwLokORCqZb</span><br><span class="line"></span><br><span class="line">GYVPJThVz5eFXVUEVA5QFokWfZswUXi04e1XOJO+VOW0ViWuDlfAObAuVhxYhr0R&#x2F;OCBAhm6hKsRuYzVMur9gJwLAfxVyFglcMW0pMBL2DiVQZQdZqFfnkkluhbScvpXFvoQZ63F2SZpW5JIYTpV5pbeC8Wtx0QcWllJDnsBn+VgVcFWhVJFBFVRVMVcXYOVTaRAC81fWe5Vphvlt2n&#x2F;5VQN0BNA4kHkC6C7GDqArkbAEYAcAugnOT9APAOLJZl8</span><br><span class="line"></span><br><span class="line">VQ9WHIIFllKcC+ZhgQRFJZTuwEgEUP7DCYuvm7xAOG6QVXnJAZbP7XJ8avA7delVf2HVVeLg7GvZ9VYRWI1UMcjUtVDieRXc+RqS4k0V7iT1XocuNT+7YcQ1d8HQpBMZXa3Ki&#x2F;iyry+5NQTb8W7wNxRYyycVjknlQxYsJrVF5RtW&#x2F;6RwAYD9ATCOqDKwSAEdXBpJ1WJUfl6eV+VUIg9foDD1o9e84Penznl6GSvKcKKLEMHvIwJC9kMWgrIdsDFC</span><br><span class="line"></span><br><span class="line">HyaBlKmMcY4ljipFnYekU9h5BTemUFvJaZmw1jsf2V0GjVUOXNVpFbnVtVFFY5lUVhdVjXF1dFXwXngzRcRwWYFTLFDKZZMaphbhjdaUy98MtOla1qL+fIVWh0SUoVGe&#x2F;ImdWSVnNcXgtpFvqsXxpHWrPpVABDUQ2ppOWWpVYRBWfXGmF4QaVkdF5WTLWlJ1hZ8Um1ZtRbVW1NtXbUO1D+E7Uu1WtdRFRpjvpb4UN7aR5WG1MJd5WXVHbBwDRgt2</span><br><span class="line"></span><br><span class="line">LUBNAt2DRjOA5MC0DYA9CJLC7A2AOJDcQRwGkQQFbfmhRt84UNFBy68anCCbBreeZC4gPtQa4YyUSHuk7sB6YYS8C6ZvcqXJBmGekGMxoZNydgHkav53p1BRYkv16dQjWQxkTt9kjlkoejUF1mNajHTlJdbOVfALfhXWLl1uTO4rldGidEq+MDc5T6hx8k+hAumKZ40yFavrCHwSDCavVMJVQOqAxu0YNgAaNuwmQg4SPGktrVR9tXVGEADUU1Et</span><br><span class="line"></span><br><span class="line">RbUR1FdRzGShSsZ&#x2F;UTzkZxmDZTQqiElb&#x2F;mz1TzhjD1NPAI03NN91VykpVEmb5ws05jdKz&#x2F;MTlCWY9iFTLWqpoJ9UrgZyRzBpm2RtZqURpFhiRkUcBUNXZi4VoTWnXw1b9URWex0TUzpI1x&#x2F;uwXVFUpYk3Y1rHn1XdRTFeqEyIjONM7qlLqeHL8WmVmRTEgWKfqW7ujNbjkjF7kKdUTF51VMUlxngZlm9ZGlqQ3NaHgfkF4tlDfoXUNNcbQ3aVAfh</span><br><span class="line"></span><br><span class="line">LWhsRSa8UlJ82hs7&#x2F;88jYo3KNqjeo2aN2jbo36NhjZSI&#x2F;FnWbi09ZXEZLaeV88T2lVRNUd029NzUa1HtRnUSC0QFS2Rbab6dOKsEItxkjs1dEKwch54QsLg2ZAJYdfcSOwGcCdQ7ALIdHDoybJdFC2w2IBVKPQ9vKAgPNitE829l5wQ1XvNrBZ819u3zeFEA5&#x2F;9Qk3+xgLRjGeZtQIqUw5MKcRwwgRyDcCdeyUgSDdFHwmKnjFmObIWDFZ4ai3q6</span><br><span class="line"></span><br><span class="line">M&#x2F;C5zSsClli3MaMqmTmlUqCAqpU5cqveAmtgGD5TwkKaFa2oI3uoCH2toIpKzc5puOIq0gY9Naov8U9GoEi5v1I6pXw2alAA08rLUo0qNajaQAaNWjTo16NBjWWre5VIJ5yxFQdH6W5W0cLqoG5LauGhe8LIT0U1q0IrfwW5xAv20Zqg7bbkQAwkaJHiR4ZlJBSRMkXJEKRSkSpHztrAqZBwCwCCchgqKHt3T65zah2Ax50grDRJ5i&#x2F;AQxAdsgix</span><br><span class="line"></span><br><span class="line">lYxqeeQyfl8zVUD6wysPoD0Ac4PECYAQwC0AjAuwAyCaAP4CkC6Nh4CkC0OrtRpE+gFTuLQkU5vKrEXZkwaZDRIIKtbDCFa4D3TeCxbtgU1YOIGZJaBHNK17Zi44MTgIu5bjG0ICzrVTJP1zzX2XhNbzZnVRNpRV81Z1Pzf63b5f6d1XANnmVhxgZS5Vk3KlULqCo6Y0DfA1koenR0WIZwEvFCwu&#x2F;RUi3q+b+dU0gBtTRIDqgDICMDRgksO0D6w5</span><br><span class="line"></span><br><span class="line">emRnGljsqaXmllpdaW2l9pY6XOlrpcM2k0ozV6XUpPCReZ+lvwAGV5tuDTB3ixCzQ51OdLneXocpa9RWg7sIGDw6E4L6OBU0diFf4lklUmuZAIgHtivBpFwnXHyutL2eJ2vN3ZlJ1fZMnT61ydfrVUUBtSnWSqylDRfKXVcoLeHEyI8VnIm44GpfHF5yKkoa16lndctXd1QaWi2u67jTPUlR8WT&#x2F;LvcXRm6Erda3dllo8VLWLU0tTcXpUtxKSu3F</span><br><span class="line"></span><br><span class="line">sNpaRADwdiHch2od6HZh3YduHeJD4dhHUI37aG3Z0YitJQW4VG1c9RjDTRxAGaUWlvQFaU2ldpQ6VOlLpW6VKtZynXld0vtRR15wFJTR17NrfBwLVoyxKTFGt9jj8AlmWmPWpP0FmNriB2oYJpLrgqQh8wOQlXTi7J1pwbQUWZETZ9lp6w5bJ2RO45RwX&#x2F;NQbUA041fVTXwn5BKQ3yRtMiMaquOaPUZ26hpXbuW1hv9u0VHlFnZU2q6EzZob45gG</span><br><span class="line"></span><br><span class="line">Ea6YtcXQW2k5PdRTkltZbeXR78KyUfxqypGvuYlozOYT0rIh&#x2F;AZqMUKakPTel7bT1RP8XbQLm2qvbbPRW5w1eQIuqGMOd1IdKHWh0YdWHTh14dZ6I92REgahWqYpjFPdAvovtXiBoCW7amrHt89Ke3OqC1PCW3YiJZIDIlqJeiWYlnkDiV4lO0QGrlqbAqKk&#x2F;CL6HzTYG11Ju3cAkIAHQR8b1UojlWAHYnngdQ+qB24MwHSM2QdNuWnkwSPaVjBs</span><br><span class="line"></span><br><span class="line">AH4F+C&#x2F;g&#x2F;4IBDngwEKBDdAK4RD0p5XKdY6Y4OEKFyVShELvVwMtkKuAL+tclBYqYkFZEKhgJ0aMF00cQtsF+IHLoj5IgmWuT09lNXe60Z1kTY10M9zXUz1xNkpZOUAt7PUC18F4Bep2ZNAaLz011UbXMQmYqGfk04yXFa6k6Mm6ag0ots3b6Xh6RIIt1yFhber0ltlOTXTU57hNv0XsmPlVYxwTOfXRH9+9a9RhIUcIe27Mw9Db2dtA1A709twuc</span><br><span class="line"></span><br><span class="line">70ntS5UO3j4nEDxB8QAkEJAiQYkJJCgF+NZpULtsDAkDGx+jPRSvR3fjH33Udupqz5ub8J8xx931C71nt7vcGx1AjQK0AdAXQH0CDAowOMCTAL7UGpaYgGLJYIpRyH0Tt0lfVoSWQrNPnBW8MSE&#x2F;mN9ceSB1DqYHSOqvYSNPgDd9V8j2kcA54HAC3YUAEYD0IVeetVyxj9hhS1qUceMQv0kmAnA1yEfDsCHAsDoeWn1NWCA6nUzsAi7E+CSDiDHZ</span><br><span class="line"></span><br><span class="line">3DucBt0zwAm2J1wTXkVid1&#x2F;bT3Cln9TE1o1v9R1U1FgDQqHJNGHNtqsifXWIbUh6OaJjJSOQ3uHah3iB3VptXdRm3QDkXTVosh8AxJ7xZD5GWSAAGtqAAFQq2kgAHMmuChwrdAqAIADlfoADUSoADQcmaZ&#x2F;GgADEqqAHOAWIzgEyAwAqAC0C&#x2F;IIZIADHkYADNioADeekUaAAd6mAAGRnikPNaWRskMw&#x2F;MOLD3QMsPrDWw9Ma7D+w4cPHDpw+cPBk</span><br><span class="line"></span><br><span class="line">1w3cNPDLw1t0YU+BPk6Yee3v2JZpwYWTb5JTxYRH0t0tUUiMmJ3fLWURzrn55vDHCB8MLDSw6sObD2wwqb9AewwcOYIRwwgAnDZwyKCXDtww8PPDb3TPG8R3SaHkLxokhAC7AugvrC55mAGSmrNj9qMR+wcmUHUqJVYYZK5lFOBKOe2&#x2F;1WHCOIoFvYhTcqxF40gomQzdnKM4dP2B5D9ybyHQ1fJcUNChHrQ13095Q4z1hazPX80v9bPXUMqdh+V8</span><br><span class="line"></span><br><span class="line">BtZ6TYTVzuWhHa1FyQvZuVkoRqqU6sw0UF5zFax5dN0DDErq+VMwww4J7K9szUt2Jk8QIACADIADmRkdyAAdmYTGBxcEBLAjpIgr2knpGMY5GlI6gCAA1&#x2F;qAA5o5FGJ3IACdpoADw+qUYBGboUmOpjGY1mMiMuY&#x2F;mOFjfxqWMVj1Y3WMlGDY9CN5WNwHCMB5tckYXIjeEaiM2u5hYd12W2Ix8WlpeI757F4TY+mOZjYQNmNQA7YwWNFjipuWOVjt</span><br><span class="line"></span><br><span class="line">Y&#x2F;WP+G7I0F6zxQ2bCWLxVCNxCYStIJLCsMoo8uBNhfiJm7Bc4xPD1fQRmLWoE2XYrSHFuQLsGqFaOQ85yE5mox2AIE4UJeyK9EfaCwX91XW25w1gpSN5etTXb9m+t&#x2F;2W12Kdedp13mpniZ5n+qX&#x2F;Zx59C5FGW40xMDbnIt10cHDpmRkAytXv5k9VgLySMYygEvudgdJUSAuCvuMncgAKMGgAK2KGw46TfDqAIAApaYADdnusOUKDCnAqAAAPqAA9</span><br><span class="line"></span><br><span class="line">Cp&#x2F;yJ3IAA03kAqAAp+aAAR9ERkfSuDSoAC+hQAFGgAG563pJqS+kgAM+BcCoAALxoAAlcrdyAAAkZjGuChpPj62k1PqoAixn&#x2F;LyKgAMHacCtZOAAWgoncH3ImNgKLClCZtG0CpqSwKek0aaOkOxoABhcgMaAAs4nBGRRjsOAATGmAARtb7jGw2dyAAOAR3DgALgEboRxM9jvE&#x2F;xOCTok+JOSTsCrJPyTSk4ApqTDk0QxOTi+vpN+kpk7AqWTNk3Z</span><br><span class="line"></span><br><span class="line">P1TWkzpMuTbk55OwKPk35PvcAU6ApBTPRiFPhTkUzFPxTiUylPpTFY5lOoAOU0Ub5Tg497DDjpJVcrhIO3SiPi1aI5a7MNWIyL6xszLU67LjVQIVOVjxUwJPLDZU2sMSTuCtJNyTikypPqT4ZJpM1kPU46QGTJk+ZNWTtk&#x2F;ZPvTjkz1OuTHk15O+T&#x2F;k4FPMKwU9EZwKEU7CbTTCU0lNpTGU9lN5Tb3RJ5dp0jTyPxyTCNgAcAmAOQD0A2noEUvMX</span><br><span class="line"></span><br><span class="line">eba3JoqVagSAYV6vdDQse5uOJN0m&#x2F;dzS4EVCdRS6JGo8VUZDyQDqOkcuQ&#x2F;bCGj2FY80w1po5qmlDTVSRUVDY5U&#x2F;0Tl1FbUOxRTo40WCNBE2uFaEabpGq6x+nVsCmxvo7Rxd5hVmB7016bYGkRjx1QxP1qK8LF1xjchfFk8AKY0dytjSwNoDOzNeJ4r7MCgJojnWcxZICVQqALQh7QiYxDazSiY&#x2F;syJjYyqgCAAkt5tGzpgpVaids6mOOzUAM7PaA</span><br><span class="line"></span><br><span class="line">rs+dyRUHs+cN5g3s77P+zCAIHOnWQNCHORUYcy0pRz0RjHN81qPDCMbTgeFtOIjItcYV0NjxdOPPF+lVGHzjRladPM2+I8XjxzDsxuMiMyc6nPuzns1nPMAPs0hG5z+c+zZFzTyCXMYKZcxXN61XlgbV3O7hcbUmwPAAgDdAPAO0DiQx+RAV&#x2F;uXKYSAZwgIdSGmYgtJJjGYBXsZKoW+rt2B&#x2F;jamPpa+QDiAzhNlX+tgU5w5kKAQE2ccQUO5FlPc8</span><br><span class="line"></span><br><span class="line">nU9hRZJ239lo5LPWjuXDLMs99o24mOjHPXwXg9Ks8xUzQmkNFBt8ZNdIbXpwvQg3tYiIH8CFlIY9L10JcIRg2NO5syMM4N1s2MOJkuCtHP8TpRidyAAvwmZGK3SdxrGMpGDOwK8pGArvcJ3CwrfTOpIABYSoAC+mnQuwzsCpqRqTgAMDBgAC9q+Co6SAAjDqekgAOVyoZHcOAAgP8TDT5H6SAjtI8COMjDICGRpTgAJvxgALOevE7dwuGqY20aak</span><br><span class="line"></span><br><span class="line">RRk6SekTpiUahG&#x2F;C8woncgADAqTpIcbuTgADdyJ3IAAvqYACZaY6RpTXC7goyL8i2Aq+GmpP4a3clCuYaAAiEbUKgAJXRgAAbyYCkovUKnpIACLyuotLzBLftriLRRgwslGzC6wt8LHC9KRcLPC6Ap8LAi3pPCLYixNMRLCi8otqLmi9ovlkuizSNQAdIwyOgjpixYs8TVizYvlzDi04suLLCh4teLBxr4sBLwS6Ev9T4S6pNyL+ClEuxL8S0ktp</span><br><span class="line"></span><br><span class="line">LGS4otZLuS3cNkt1czcq1zCI+ON++9DZTatzs4+3PHTfonEG2FCYcI3oARSyUtlLbC5UvVLvC64uCLoi+ItwKLS0ouqLeS1ouEjqAN0tAj9IyCNMjwZIMuWL1i0dzRz4y0cbOLri9MuOk3i34tBLIS6lNhLLS+stxLiSykvpLoCpks5LeSxjMmBWM15U4z1wjaiIl5MOfZyOc4MytzgksI6gMg+sIBAk0hAPoDRAyblbDW68uuY16MVwL8C0zJmm</span><br><span class="line"></span><br><span class="line">W4xoW+mf0e2QrlzMgosIKQZBNAC4hNutZozf109ODlaMP9No9At2jcs6&#x2F;3wL7&#x2F;Z5m4abo7algtP2L2B1UsBclJ+wE1UU1pwsFQpgTdUvVN3IttE2Qu&#x2F;YGuu&#x2F;CHAowyYEz0UAK+0QAiAHQPeYghhABC08QHtA4QrYPgXEgiQItibhRwOqB1oPAIdD288utgBP4JoO4CUgFdEb3xAw9P4RX6wJL32YACsC0C9AP4KQALJh80EOhoSQNCx6Dl9J1idg</span><br><span class="line"></span><br><span class="line">50TbBZSdVPFDWDo&#x2F;odlHZnwLJbqjcFfKlNsyAtownIsDplbDrXZcLMmjaq2LOgLmq6nbarqEy13oTlFZhPn+2E&#x2F;UW4TzowWHYx7o1BkJoGBJexecyUglZBZpyHskptk3X0NhjJswZyRj3q4&#x2F;R+rucYmTYA7bR9ZP6TU8ACakqAKgAKAAAFSoAyc6gCAbCgJqRwAK+K9Z7gyAH+s3OmALLAkAR8X7OywbIBQBobPK2oBIbxAMDb&#x2F;r+GwBvAbgAOSa</span><br><span class="line"></span><br><span class="line">XhhHNeGJizYaoAvJKgAnccCoADi6kaZgbEGzcYcA&#x2F;63SCIbyGxzbJeqEJhv9UOG3hsEb&#x2F;60BuoAgAPA65G5RvUbtG7Ap0bwxkxtOGrGwhs4bKG8l7+EIQKqikAR8aQAcbuGwRvCbgANhKgAF96AZMDPOTUm9Rvgb8m2xtabSm1xtoboiLxvYbbpAJu6bwGw0pF5+gJoBMA1AKJteGAZO5uebnimdy6CXJmcPKAH1jJtjGz3KgDiQIgMoBARFmyxv</span><br><span class="line"></span><br><span class="line">&#x2F;rJAMwDKbOG8wDObgm5lsubqAIZsfTjU7pP2kJ3IADctoADDsXAqAA6EoGkcm4luobH6&#x2F;G5tgGW1ltNbQm8BvKKeWz1OZGgAGQqqAHVthA1W42BuhH66EBfrRDD1O&#x2F;rCm8JugbCW1BuEAMGwgBwbCm+xs2bqG+hsObUAPxuZbwmyRtkbFG1RtDANG&#x2F;RuMbCW&#x2F;BtLbnG6hs8bRAHxskAjWy1s+bu25Jv0bsm8duLb1m2dsqbgQBhDsgmm9psZb+m0</span><br><span class="line"></span><br><span class="line">Zvtbpm3ArmbzGyduvbxAKlurbl245tsAN28JtubQgB5tebPm35sI7AWzRuoAwW7MYgjYW6gARbUWzFukAcW9VvwbyW6lvJbN281v4bf2wDtNThW6VsVbVW89v&#x2F;rKm2yBhAOm5TuU7wm21smbTU11s9brO&#x2F;FvMbA21t1NhGgQi0Vh8iDtOTje0y3PojZWVEFHTJabiNzcjy&#x2F;tpDblYB9Njb8G5NvOz1WzNtzbC21ZvabEO&#x2F;ZtQ7629dubbxG6Rvib</span><br><span class="line"></span><br><span class="line">e2wdvSbR2yDsvbxu7ZsXbWG+bvs7gm8Jtib92&#x2F;ttSbMm0MbE7Tu8tvvbam19unbHu4Rs5b&#x2F;2zzu6TZm&#x2F;ttM7im29t2bGG2buywTm5buoA8O4jukA3m2Jso72e+juY7l3KFvhb4xvjuxbgu5ZvVkKW7Zvk7HO1lvU7Me6gB07ZW7AqVbge8zuywvWw1v17zW1zuMKNO7pN873e&#x2F;1snjnaeUHYzTEOADLQMEHABwAeoNIiL00AMJDZAVQCSiYgdwAw</span><br><span class="line"></span><br><span class="line">BT6HCC8l7EqtvvssWxQNUAiAHcNGB7g+gHqAutIs5vtH05MCvTn7O+8Auv1B4sft37OaufsKwFowbSv7p++fuX7K67Gwn79+1kD&#x2F;75RaN4&#x2F;7wB&#x2F;oDdAMsxAfv7WQD+CbrRlUAdwH+gArBaVo2rAfDtH+2hEtkN+8gdYHWQEXhhh5xJgdn7IB1IJN9XxaQfn7Rugnl2DHfesDUHWQAoL0Is7GeCMHzAMWvagt2F5RewdGgZoR88IASiNQXB&#x2F;gBxmf</span><br><span class="line"></span><br><span class="line">gjBaCujrT2AnRm+0YBsABgPf4MAAthWoYejMFfhMHUBzanvEg1aSKyBJAPzWb7YoAYd7gLasIfGHxAKrBsAe0Ebq4AmgMED5S+h+J1iwOgvgAYwhO0KDXWPFd5veHvAMTaLtRwI9Zqg6qMoDZgyoAsDKAnh0Hg+H2yLwCxHx1EEcaHt+x3CgHCAAgcTAnAOL54YGGuqj5gK+AO2DgOQHYcOHnSUyZEALahyO82pRxNAqo+qJ0kaHdgFJAiMzADqB</span><br><span class="line"></span><br><span class="line">r4cAFYc2Ha+PYdKeMEEsCzbCAPQgKHzLmQJMxA830ejgTJodSqo+gKwc3wsWetapgBgDqCZA4x2SiYz3VJG4TAjAIMesgaiFPsaCEMeEBnQiEI2BAAA&#x3D;</span><br></pre></td></tr></table></figure>
+<p>%%</p>
+]]></content>
+      <tags>
+        <tag>excalidraw</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JDK1.8 HashMap源码分析</title>
     <url>/2019/01/08/java/javase/hashMap/</url>
     <content><![CDATA[<p><a href="https://blog.csdn.net/qq_36520235/article/details/82417949" target="_blank" rel="noopener">Hashmap的结构，1.7和1.8有哪些区别，史上最深入的分析</a><br><a href="https://www.cnblogs.com/Hangtutu/p/9251999.html" target="_blank" rel="noopener">jdk1.7死环</a><br><a href="https://juejin.im/post/5a66a08d5188253dc3321da0" target="_blank" rel="noopener">jdk1.7线程不安全</a><br><a href="https://blog.csdn.net/u013494765/article/details/77837338" target="_blank" rel="noopener">jdk1.8扩容核心-链表复制处理</a><br><a href="https://mp.weixin.qq.com/s/NvmqdPOyWQdeHG2s-xSbHg" target="_blank" rel="noopener">HashMap1.8面试连问</a><br><a href="https://blog.csdn.net/weixin_42340670/article/details/80503517?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3" target="_blank" rel="noopener">HashMap1.8源码解析：resize方法（有问题）</a></p>
@@ -4472,6 +4707,142 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
       </categories>
   </entry>
   <entry>
+    <title>JVM类加载机制</title>
+    <url>/2018/11/01/java/jvm/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<h1 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h1><p>类是在运行期间第一次使用时动态加载的，而不是编译时期一次性加载。因为如果在编译时期一次性加载，那么会占用很多的内存。</p>
+<h2 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h2><p><img src="/uploads/java/jvm/%E7%B1%BB%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="类生命周期"></p>
+<h2 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h2><h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><p>查找并加载类的二进制数据加载时类加载过程的第一个阶段，在加载阶段，虚拟机需要完成以下三件事情：</p>
+<ul>
+<li>通过一个类的全限定名来获取其定义的二进制字节流。</li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
+<li>在Java堆中生成一个代表这个类的 java.lang.Class对象，作为对方法区中这些数据的访问入口。</li>
+</ul>
+<p>相对于类加载的其他阶段而言，加载阶段（准确地说，是加载阶段获取类的二进制字节流的动作）是可控性最强的阶段，因为开发人员既可以使用系统提供的类加载器来完成加载，也可以自定义自己的类加载器来完成加载。</p>
+<p>加载阶段完成后，虚拟机外部的二进制字节流就按照虚拟机所需的格式存储在方法区之中，而且在Java堆中也创建一个<br>java.lang.Class类的对象，这样便可以通过该对象访问方法区中的这些数据。</p>
+<h3 id="验证：确保被加载的类的正确性"><a href="#验证：确保被加载的类的正确性" class="headerlink" title="验证：确保被加载的类的正确性"></a>验证：确保被加载的类的正确性</h3><p>验证是连接阶段的第一步，目的是保证加载的类符合当前虚拟机的要求。验证阶段大致分四步：</p>
+<ul>
+<li>文件格式验证：验证字节流是否符合Class文件格式的规范；例如：是否以 0xCAFEBABE开头、主次版本号是否在当前虚拟机的处理范围之内、常量池中的常量是否有不被支持的类型。</li>
+<li>元数据验证：对字节码描述的信息进行语义分析（注意：对比javac编译阶段的语义分析），以保证其描述的信息符合Java语言规范的要求；例如：这个类是否有父类，除了<br>java.lang.Object之外。</li>
+<li>字节码验证：通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。</li>
+<li>符号引用验证：确保解析动作能正确执行。</li>
+</ul>
+<p>验证阶段是非常重要的，但不是必须的，它对程序运行期没有影响，如果所引用的类经过反复验证，那么可以考虑采用<br>-Xverifynone参数来关闭大部分的类验证措施，以缩短虚拟机类加载的时间。</p>
+<h3 id="准备：为类的静态变量分配内存，初始化默认值-类型默认值-不是程序赋值"><a href="#准备：为类的静态变量分配内存，初始化默认值-类型默认值-不是程序赋值" class="headerlink" title="准备：为类的静态变量分配内存，初始化默认值 类型默认值 不是程序赋值"></a>准备：为<strong>类的静态变量</strong>分配内存，初始化默认值 类型默认值 不是程序赋值</h3><p>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些内存都将在方法区中分配。对于该阶段有以下几点需要注意：</p>
+<ul>
+<li>这时候进行内存分配的仅包括类变量（static），而不包括实例变量，实例变量会在对象实例化时随着对象一块分配在Java堆中。</li>
+<li>这里所设置的初始值通常情况下是数据类型默认的零值（如0、0L、null、false等），而不是被在Java代码中被显式地赋予的值。</li>
+<li>如果类字段的字段属性表中存在 ConstantValue属性，即同时被final和static修饰，那么在准备阶段变量value就会被初始化为ConstValue属性所指定的值。</li>
+</ul>
+<h3 id="解析：把类中的符号引用转换为直接引用"><a href="#解析：把类中的符号引用转换为直接引用" class="headerlink" title="解析：把类中的符号引用转换为直接引用"></a>解析：把类中的符号引用转换为直接引用</h3><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程，解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符7类符号引用进行。</p>
+<p>符号引用就是一组符号来描述目标，可以是任何字面量。</p>
+<p>直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化 "></a>初始化 <clinit></clinit></h3><p>初始化，为类的静态变量赋予正确的初始值，JVM负责对类进行初始化，主要对类变量进行初始化。在Java中对类变量进行初始值设定有两种方式：</p>
+<ul>
+<li>声明类变量是指定初始值</li>
+<li>使用静态代码块为类变量指定初始值</li>
+</ul>
+<p>初始化步骤：</p>
+<ul>
+<li>假如这个类还没有被加载和连接，则程序先加载并连接该类</li>
+<li>假如该类的直接父类还没有被初始化，则先初始化其直接父类</li>
+<li>假如类中有初始化语句，则系统依次执行这些初始化语句</li>
+</ul>
+<p>类初始化时机（主动，被动）</p>
+<p>只有当对类的主动使用的时候才会导致类的初始化，类的主动使用包括以下六种：</p>
+<ul>
+<li>创建类的实例，也就是new的方式</li>
+<li>反射（如 Class.forName(“com.Test”)</li>
+<li>访问某个类或接口的静态变量，或者对该静态变量赋值</li>
+<li>调用类的静态方法</li>
+<li>初始化某个类的子类，则其父类也会被初始化</li>
+<li>Java虚拟机启动时被标明为启动类的类（ JavaTest），直接使用 java.exe命令来运行某个主类</li>
+</ul>
+<p>被动引用的常见例子包括：</p>
+<ul>
+<li>通过子类引用父类的静态字段，不会导致子类初始化。</li>
+</ul>
+<blockquote>
+<p>System.out.println(SubClass.value); // value 字段在 SuperClass 中定义</p>
+</blockquote>
+<ul>
+<li>通过数组定义来引用类，不会触发此类的初始化。该过程会对数组类进行初始化，数组类是一个由虚拟机自动生成的、直接继承自 Object<br>的子类，其中包含了数组的属性和方法。</li>
+</ul>
+<blockquote>
+<p>SuperClass[] sca = new SuperClass[10];</p>
+</blockquote>
+<ul>
+<li>常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化。</li>
+</ul>
+<blockquote>
+<p>System.out.println(ConstClass.HELLOWORLD);</p>
+</blockquote>
+<h3 id="结束生命周期"><a href="#结束生命周期" class="headerlink" title="结束生命周期"></a>结束生命周期</h3><ul>
+<li>执行了System.exit()方法</li>
+<li>程序正常执行结束</li>
+<li>程序在执行过程中遇到了异常或错误而异常终止</li>
+<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
+</ul>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>站在Java虚拟机的角度来讲，只存在两种不同的类加载器：启动类加载器：它使用C++实现（这里仅限于Hotspot，也就是JDK1.5之后默认的虚拟机，有很多其他的虚拟机是用Java语言实现的），是虚拟机自身的一部分；<br>所有其它的类加载器：这些类加载器都由Java语言实现，独立于虚拟机之外，并且全部继承自抽象类 java.lang.ClassLoader，这些类加载器需要由启动类加载器加载到内存中之后才能去加载其他的类。</p>
+<p>站在Java开发人员的角度来看，类加载器可以大致划分为以下三类：</p>
+<ul>
+<li>启动类加载器：负责加载支撑JVM运行的位于JRE的lib目录下的核心类库，比如 rt.jar、charsets.jar等 </li>
+<li>扩展类加载器：负责加载支撑JVM运行的位于JRE的lib目录下的ext扩展目录中的JAR类包</li>
+<li>应用程序类加载器：负责加载ClassPath路径下的类包，主要就是加载你自己写的那些类</li>
+<li>自定义加载器：负责加载用户自定义路径下的类包</li>
+</ul>
+<h2 id="类加载机制-1"><a href="#类加载机制-1" class="headerlink" title="类加载机制"></a>类加载机制</h2><ul>
+<li>全盘负责，当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入</li>
+<li>父类委托，先让父类加载器试图加载该类，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类</li>
+<li>缓存机制，缓存机制将会保证所有加载过的Class都会被缓存，当程序中需要使用某个Class时，类加载器先从缓存区寻找该Class，<br>只有缓存区不存在，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存入缓存区。这就是为什么修改了Class后，必须重启JVM，程序的修改才会生效</li>
+</ul>
+<h3 id="双亲委派"><a href="#双亲委派" class="headerlink" title="双亲委派"></a>双亲委派</h3><p><img src="/uploads/java/jvm/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6.jpg" alt="双亲委派机制"></p>
+<p>双亲委派模型的工作流程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把请求委托给父加载器去完成，依次向上，因此，所有的类加载请求最终都应该被传递到顶层的启动类加载器中，<br>只有当父加载器在它的搜索范围中没有找到所需的类时，即无法完成该加载，子加载器才会尝试自己去加载该类。</p>
+<h4 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制:"></a>双亲委派机制:</h4><ul>
+<li>1、当 AppClassLoader加载一个class时，它首先不会自己去尝试加载这个类，而是把类加载请求委派给父类加载器ExtClassLoader去完成。</li>
+<li>2、当 ExtClassLoader加载一个class时，它首先也不会自己去尝试加载这个类，而是把类加载请求委派给BootStrapClassLoader```去完成。</li>
+<li>3、如果 BootStrapClassLoader加载失败（例如在 $JAVA_HOME/jre/lib里未查找到该class），会使用 ExtClassLoader来尝试加载；</li>
+<li>4、若ExtClassLoader也加载失败，则会使用 AppClassLoader来加载，如果 AppClassLoader也加载失败，则会报出异常 ClassNotFoundException</li>
+</ul>
+<h4 id="ClassLoader源码分析："><a href="#ClassLoader源码分析：" class="headerlink" title="ClassLoader源码分析："></a>ClassLoader源码分析：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">return</span> loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">    <span class="comment">// 首先判断该类型是否已经被加载</span></span><br><span class="line">    Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果没有被加载，就委托给父类加载或者委派给启动类加载器加载</span></span><br><span class="line">        <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//如果存在父类加载器，就委派给父类加载器加载</span></span><br><span class="line">                c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//如果不存在父类加载器，就检查是否是由启动类加载器加载的类，通过调用本地方法native Class findBootstrapClass(String name)</span></span><br><span class="line">                c = findBootstrapClassOrNull(name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">            <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果父类加载器和启动类加载器都不能完成加载任务，才调用自身的加载功能</span></span><br><span class="line">            <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">            c = findClass(name);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">            PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">            PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">            PerfCounter.getFindClasses().increment();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">        resolveClass(c);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="双亲委派模型意义："><a href="#双亲委派模型意义：" class="headerlink" title="双亲委派模型意义："></a>双亲委派模型意义：</h4><ul>
+<li>系统类防止内存中出现多份同样的字节码</li>
+<li>保证Java程序安全稳定运行</li>
+</ul>
+<h2 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h2><p>通常情况下，我们都是直接使用系统类加载器。但是，有的时候，我们也需要自定义类加载器。比如应用是通过网络来传输 Java类的字节码，为保证安全性，<br>这些字节码经过了加密处理，这时系统类加载器就无法对其进行加载，这样则需要自定义类加载器来实现。自定义类加载器一般都是继承自 ClassLoader类，<br>从上面对 loadClass方法来分析来看，我们只需要重写 findClass 方法即可。下面我们通过一个示例来演示自定义类加载器的流程：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wyb.test.java.reflect;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WybClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String root;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">        <span class="keyword">byte</span>[] classData = loadClassData(name);</span><br><span class="line">        <span class="keyword">if</span> (classData == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> defineClass(name, classData, <span class="number">0</span>, classData.length);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] loadClassData(String className) &#123;</span><br><span class="line"></span><br><span class="line">        String fileName = root + File.separatorChar + className.replace(<span class="string">'.'</span>, File.separatorChar) + <span class="string">".class"</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            InputStream ins = <span class="keyword">new</span> FileInputStream(fileName);</span><br><span class="line">            ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            <span class="keyword">int</span> bufferSize = <span class="number">1024</span>;</span><br><span class="line">            <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[bufferSize];</span><br><span class="line">            <span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> ((length = ins.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                baos.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> baos.toByteArray();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getRoot</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoot</span><span class="params">(String root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.root = root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        WybClassLoader wybClassLoader = <span class="keyword">new</span> WybClassLoader();</span><br><span class="line">        <span class="comment">// class 需要用javac编译  class不能放在类路径下</span></span><br><span class="line"></span><br><span class="line">        wybClassLoader.setRoot(<span class="string">"E:\\marcher\\spring-example\\spring-example-test\\temp"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class clazz = wybClassLoader.loadClass(<span class="string">"WybClass"</span>);</span><br><span class="line">            Object obj = clazz.newInstance();</span><br><span class="line">            System.out.println(obj.getClass().getClassLoader());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException | InstantiationException | IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自定义类加载器的核心在于对字节码文件的获取，如果是加密的字节码则需要在该类中对文件进行解密。由于这里只是演示，我并未对class文件进行加密，因此没有解密的过程。这里有几点需要注意：</p>
+<p>1、这里传递的文件名需要是类的全限定性名称，即 com.wyb.test.java.reflect.WybClass，因为 defineClass 方法是按这种格式进行处理的。</p>
+<p>2、最好不要重写loadClass方法，因为这样容易破坏双亲委托模式。</p>
+<p>3、这类Test 类本身可以被 AppClassLoader类加载，因此我们不能把 E://marcher//spring-example/temp.class放在类路径下。否则，由于双亲委托机制的存在，会直接导致该类由 AppClassLoader加载，而不会通过我们自定义类加载器来加载。</p>
+<h3 id="Tomcat打破双亲委派机制"><a href="#Tomcat打破双亲委派机制" class="headerlink" title="Tomcat打破双亲委派机制"></a>Tomcat打破双亲委派机制</h3><p>以Tomcat类加载为例，Tomcat 如果使用默认的双亲委派类加载机制行不行？<br>我们思考一下：Tomcat是个web容器， 那么它要解决什么问题： </p>
+<ol>
+<li>一个web容器可能需要部署两个应用程序，不同的应用程序可能会依赖同一个第三方类库的不同版本，不能要求同一个类库在同一个服务器只有一份，因此要保证每个应用程序的类库都是独立的，保证相互隔离。 </li>
+<li>部署在同一个web容器中相同的类库相同的版本可以共享。否则，如果服务器有10个应用程序，那么要有10份相同的类库加载进虚拟机。 </li>
+<li>web容器也有自己依赖的类库，不能与应用程序的类库混淆。基于安全考虑，应该让容器的类库和程序的类库隔离开来。 </li>
+<li>web容器要支持jsp的修改，我们知道，jsp 文件最终也是要编译成class文件才能在虚拟机中运行，但程序运行后修改jsp已经是司空见惯的事情， web容器需要支持 jsp 修改后不用重启。</li>
+</ol>
+<p>再看看我们的问题：Tomcat 如果使用默认的双亲委派类加载机制行不行？<br>答案是不行的。为什么？<br>第一个问题，如果使用默认的类加载器机制，那么是无法加载两个相同类库的不同版本的，默认的类加器是不管你是什么版本的，只在乎你的全限定类名，并且只有一份。<br>第二个问题，默认的类加载器是能够实现的，因为他的职责就是保证唯一性。<br>第三个问题和第一个问题一样。<br>我们再看第四个问题，我们想我们要怎么实现jsp文件的热加载，jsp 文件其实也就是class文件，那么如果修改了，但类名还是一样，类加载器会直接取方法区中已经存在的，修改后的jsp是不会重新加载的。那么怎么办呢？我们可以直接卸载掉这jsp文件的类加载器，所以你应该想到了，每个jsp文件对应一个唯一的类加载器，当一个jsp文件修改了，就直接卸载这个jsp类加载器。重新创建类加载器，重新加载jsp文件。</p>
+<h4 id="Tomcat自定义加载器详解"><a href="#Tomcat自定义加载器详解" class="headerlink" title="Tomcat自定义加载器详解"></a>Tomcat自定义加载器详解</h4><p><img src="/uploads/java/jvm/Tomcat%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E8%BD%BD%E5%99%A8.png" alt="Tomcat自定义加载器"></p>
+<p>tomcat的几个主要类加载器：</p>
+<ul>
+<li>commonLoader：Tomcat最基本的类加载器，加载路径中的class可以被Tomcat容器本身以及各个Webapp访问；</li>
+<li>catalinaLoader：Tomcat容器私有的类加载器，加载路径中的class对于Webapp不可见；</li>
+<li>sharedLoader：各个Webapp共享的类加载器，加载路径中的class对于所有Webapp可见，但是对于Tomcat容器不可见；</li>
+<li>WebappClassLoader：各个Webapp私有的类加载器，加载路径中的class只对当前Webapp可见，比如加载war包里相关的类，每个war包应用都有自己的WebappClassLoader，实现相互隔离，比如不同war包应用引入了不同的spring版本，这样实现就能加载各自的spring版本；</li>
+</ul>
+<p>从图中的委派关系中可以看出：<br>CommonClassLoader能加载的类都可以被CatalinaClassLoader和SharedClassLoader使用，从而实现了公有类库的共用，而CatalinaClassLoader和SharedClassLoader自己能加载的类则与对方相互隔离。</p>
+<p>WebAppClassLoader可以使用SharedClassLoader加载到的类，但各个WebAppClassLoader实例之间相互隔离。</p>
+<p>而JasperLoader的加载范围仅仅是这个JSP文件所编译出来的那一个.Class文件，它出现的目的就是为了被丢弃：当Web容器检测到JSP文件被修改时，会替换掉目前的JasperLoader的实例，并通过再建立一个新的Jsp类加载器来实现JSP文件的热加载功能。</p>
+<p>tomcat 这种类加载机制违背了java 推荐的双亲委派模型了吗？答案是：违背了。 </p>
+<p>很显然，tomcat 不是这样实现，tomcat 为了实现隔离性，没有遵守这个约定，每个webappClassLoader加载自己的目录下的class文件，不会传递给父类加载器，打破了双亲委派机制。</p>
+<h4 id="模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离"><a href="#模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离" class="headerlink" title="模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离"></a>模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离</h4>]]></content>
+      <categories>
+        <category>JVM</category>
+      </categories>
+  </entry>
+  <entry>
     <title>jvm基础学习</title>
     <url>/2018/10/31/java/jvm/jvm%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h1 id="一：内存区域"><a href="#一：内存区域" class="headerlink" title="一：内存区域"></a>一：内存区域</h1><p><img src="/uploads/java/jvm/jvm%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F.jpg" alt="内存区域"></p>
@@ -4676,142 +5047,6 @@ obj = null;</code></pre><h2 id="垃圾收集算法（怎么回收）"><a href="#
 <p>   为避免以上原因引起的 Full GC，可采用的方法为增大永久代空间或转为使用 CMS GC。</p>
 <h3 id="5-Concurrent-Mode-Failure"><a href="#5-Concurrent-Mode-Failure" class="headerlink" title="5.Concurrent Mode Failure"></a>5.Concurrent Mode Failure</h3><p>   执行 CMS GC 的过程中同时有对象要放入老年代，而此时老年代空间不足（可能是 GC 过程中浮动垃圾过多导致暂时性的空间不足），便会报 Concurrent Mode Failure 错误，并触发 Full GC。</p>
 ]]></content>
-      <categories>
-        <category>JVM</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>JVM类加载机制</title>
-    <url>/2018/11/01/java/jvm/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
-    <content><![CDATA[<h1 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h1><p>类是在运行期间第一次使用时动态加载的，而不是编译时期一次性加载。因为如果在编译时期一次性加载，那么会占用很多的内存。</p>
-<h2 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h2><p><img src="/uploads/java/jvm/%E7%B1%BB%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="类生命周期"></p>
-<h2 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h2><h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><p>查找并加载类的二进制数据加载时类加载过程的第一个阶段，在加载阶段，虚拟机需要完成以下三件事情：</p>
-<ul>
-<li>通过一个类的全限定名来获取其定义的二进制字节流。</li>
-<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
-<li>在Java堆中生成一个代表这个类的 java.lang.Class对象，作为对方法区中这些数据的访问入口。</li>
-</ul>
-<p>相对于类加载的其他阶段而言，加载阶段（准确地说，是加载阶段获取类的二进制字节流的动作）是可控性最强的阶段，因为开发人员既可以使用系统提供的类加载器来完成加载，也可以自定义自己的类加载器来完成加载。</p>
-<p>加载阶段完成后，虚拟机外部的二进制字节流就按照虚拟机所需的格式存储在方法区之中，而且在Java堆中也创建一个<br>java.lang.Class类的对象，这样便可以通过该对象访问方法区中的这些数据。</p>
-<h3 id="验证：确保被加载的类的正确性"><a href="#验证：确保被加载的类的正确性" class="headerlink" title="验证：确保被加载的类的正确性"></a>验证：确保被加载的类的正确性</h3><p>验证是连接阶段的第一步，目的是保证加载的类符合当前虚拟机的要求。验证阶段大致分四步：</p>
-<ul>
-<li>文件格式验证：验证字节流是否符合Class文件格式的规范；例如：是否以 0xCAFEBABE开头、主次版本号是否在当前虚拟机的处理范围之内、常量池中的常量是否有不被支持的类型。</li>
-<li>元数据验证：对字节码描述的信息进行语义分析（注意：对比javac编译阶段的语义分析），以保证其描述的信息符合Java语言规范的要求；例如：这个类是否有父类，除了<br>java.lang.Object之外。</li>
-<li>字节码验证：通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。</li>
-<li>符号引用验证：确保解析动作能正确执行。</li>
-</ul>
-<p>验证阶段是非常重要的，但不是必须的，它对程序运行期没有影响，如果所引用的类经过反复验证，那么可以考虑采用<br>-Xverifynone参数来关闭大部分的类验证措施，以缩短虚拟机类加载的时间。</p>
-<h3 id="准备：为类的静态变量分配内存，初始化默认值-类型默认值-不是程序赋值"><a href="#准备：为类的静态变量分配内存，初始化默认值-类型默认值-不是程序赋值" class="headerlink" title="准备：为类的静态变量分配内存，初始化默认值 类型默认值 不是程序赋值"></a>准备：为<strong>类的静态变量</strong>分配内存，初始化默认值 类型默认值 不是程序赋值</h3><p>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些内存都将在方法区中分配。对于该阶段有以下几点需要注意：</p>
-<ul>
-<li>这时候进行内存分配的仅包括类变量（static），而不包括实例变量，实例变量会在对象实例化时随着对象一块分配在Java堆中。</li>
-<li>这里所设置的初始值通常情况下是数据类型默认的零值（如0、0L、null、false等），而不是被在Java代码中被显式地赋予的值。</li>
-<li>如果类字段的字段属性表中存在 ConstantValue属性，即同时被final和static修饰，那么在准备阶段变量value就会被初始化为ConstValue属性所指定的值。</li>
-</ul>
-<h3 id="解析：把类中的符号引用转换为直接引用"><a href="#解析：把类中的符号引用转换为直接引用" class="headerlink" title="解析：把类中的符号引用转换为直接引用"></a>解析：把类中的符号引用转换为直接引用</h3><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程，解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符7类符号引用进行。</p>
-<p>符号引用就是一组符号来描述目标，可以是任何字面量。</p>
-<p>直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。</p>
-<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化 "></a>初始化 <clinit></clinit></h3><p>初始化，为类的静态变量赋予正确的初始值，JVM负责对类进行初始化，主要对类变量进行初始化。在Java中对类变量进行初始值设定有两种方式：</p>
-<ul>
-<li>声明类变量是指定初始值</li>
-<li>使用静态代码块为类变量指定初始值</li>
-</ul>
-<p>初始化步骤：</p>
-<ul>
-<li>假如这个类还没有被加载和连接，则程序先加载并连接该类</li>
-<li>假如该类的直接父类还没有被初始化，则先初始化其直接父类</li>
-<li>假如类中有初始化语句，则系统依次执行这些初始化语句</li>
-</ul>
-<p>类初始化时机（主动，被动）</p>
-<p>只有当对类的主动使用的时候才会导致类的初始化，类的主动使用包括以下六种：</p>
-<ul>
-<li>创建类的实例，也就是new的方式</li>
-<li>反射（如 Class.forName(“com.Test”)</li>
-<li>访问某个类或接口的静态变量，或者对该静态变量赋值</li>
-<li>调用类的静态方法</li>
-<li>初始化某个类的子类，则其父类也会被初始化</li>
-<li>Java虚拟机启动时被标明为启动类的类（ JavaTest），直接使用 java.exe命令来运行某个主类</li>
-</ul>
-<p>被动引用的常见例子包括：</p>
-<ul>
-<li>通过子类引用父类的静态字段，不会导致子类初始化。</li>
-</ul>
-<blockquote>
-<p>System.out.println(SubClass.value); // value 字段在 SuperClass 中定义</p>
-</blockquote>
-<ul>
-<li>通过数组定义来引用类，不会触发此类的初始化。该过程会对数组类进行初始化，数组类是一个由虚拟机自动生成的、直接继承自 Object<br>的子类，其中包含了数组的属性和方法。</li>
-</ul>
-<blockquote>
-<p>SuperClass[] sca = new SuperClass[10];</p>
-</blockquote>
-<ul>
-<li>常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化。</li>
-</ul>
-<blockquote>
-<p>System.out.println(ConstClass.HELLOWORLD);</p>
-</blockquote>
-<h3 id="结束生命周期"><a href="#结束生命周期" class="headerlink" title="结束生命周期"></a>结束生命周期</h3><ul>
-<li>执行了System.exit()方法</li>
-<li>程序正常执行结束</li>
-<li>程序在执行过程中遇到了异常或错误而异常终止</li>
-<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
-</ul>
-<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>站在Java虚拟机的角度来讲，只存在两种不同的类加载器：启动类加载器：它使用C++实现（这里仅限于Hotspot，也就是JDK1.5之后默认的虚拟机，有很多其他的虚拟机是用Java语言实现的），是虚拟机自身的一部分；<br>所有其它的类加载器：这些类加载器都由Java语言实现，独立于虚拟机之外，并且全部继承自抽象类 java.lang.ClassLoader，这些类加载器需要由启动类加载器加载到内存中之后才能去加载其他的类。</p>
-<p>站在Java开发人员的角度来看，类加载器可以大致划分为以下三类：</p>
-<ul>
-<li>启动类加载器：负责加载支撑JVM运行的位于JRE的lib目录下的核心类库，比如 rt.jar、charsets.jar等 </li>
-<li>扩展类加载器：负责加载支撑JVM运行的位于JRE的lib目录下的ext扩展目录中的JAR类包</li>
-<li>应用程序类加载器：负责加载ClassPath路径下的类包，主要就是加载你自己写的那些类</li>
-<li>自定义加载器：负责加载用户自定义路径下的类包</li>
-</ul>
-<h2 id="类加载机制-1"><a href="#类加载机制-1" class="headerlink" title="类加载机制"></a>类加载机制</h2><ul>
-<li>全盘负责，当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入</li>
-<li>父类委托，先让父类加载器试图加载该类，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类</li>
-<li>缓存机制，缓存机制将会保证所有加载过的Class都会被缓存，当程序中需要使用某个Class时，类加载器先从缓存区寻找该Class，<br>只有缓存区不存在，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存入缓存区。这就是为什么修改了Class后，必须重启JVM，程序的修改才会生效</li>
-</ul>
-<h3 id="双亲委派"><a href="#双亲委派" class="headerlink" title="双亲委派"></a>双亲委派</h3><p><img src="/uploads/java/jvm/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6.jpg" alt="双亲委派机制"></p>
-<p>双亲委派模型的工作流程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把请求委托给父加载器去完成，依次向上，因此，所有的类加载请求最终都应该被传递到顶层的启动类加载器中，<br>只有当父加载器在它的搜索范围中没有找到所需的类时，即无法完成该加载，子加载器才会尝试自己去加载该类。</p>
-<h4 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制:"></a>双亲委派机制:</h4><ul>
-<li>1、当 AppClassLoader加载一个class时，它首先不会自己去尝试加载这个类，而是把类加载请求委派给父类加载器ExtClassLoader去完成。</li>
-<li>2、当 ExtClassLoader加载一个class时，它首先也不会自己去尝试加载这个类，而是把类加载请求委派给BootStrapClassLoader```去完成。</li>
-<li>3、如果 BootStrapClassLoader加载失败（例如在 $JAVA_HOME/jre/lib里未查找到该class），会使用 ExtClassLoader来尝试加载；</li>
-<li>4、若ExtClassLoader也加载失败，则会使用 AppClassLoader来加载，如果 AppClassLoader也加载失败，则会报出异常 ClassNotFoundException</li>
-</ul>
-<h4 id="ClassLoader源码分析："><a href="#ClassLoader源码分析：" class="headerlink" title="ClassLoader源码分析："></a>ClassLoader源码分析：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">return</span> loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">    <span class="comment">// 首先判断该类型是否已经被加载</span></span><br><span class="line">    Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果没有被加载，就委托给父类加载或者委派给启动类加载器加载</span></span><br><span class="line">        <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//如果存在父类加载器，就委派给父类加载器加载</span></span><br><span class="line">                c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//如果不存在父类加载器，就检查是否是由启动类加载器加载的类，通过调用本地方法native Class findBootstrapClass(String name)</span></span><br><span class="line">                c = findBootstrapClassOrNull(name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">            <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果父类加载器和启动类加载器都不能完成加载任务，才调用自身的加载功能</span></span><br><span class="line">            <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">            c = findClass(name);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">            PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">            PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">            PerfCounter.getFindClasses().increment();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">        resolveClass(c);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="双亲委派模型意义："><a href="#双亲委派模型意义：" class="headerlink" title="双亲委派模型意义："></a>双亲委派模型意义：</h4><ul>
-<li>系统类防止内存中出现多份同样的字节码</li>
-<li>保证Java程序安全稳定运行</li>
-</ul>
-<h2 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h2><p>通常情况下，我们都是直接使用系统类加载器。但是，有的时候，我们也需要自定义类加载器。比如应用是通过网络来传输 Java类的字节码，为保证安全性，<br>这些字节码经过了加密处理，这时系统类加载器就无法对其进行加载，这样则需要自定义类加载器来实现。自定义类加载器一般都是继承自 ClassLoader类，<br>从上面对 loadClass方法来分析来看，我们只需要重写 findClass 方法即可。下面我们通过一个示例来演示自定义类加载器的流程：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wyb.test.java.reflect;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WybClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String root;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">        <span class="keyword">byte</span>[] classData = loadClassData(name);</span><br><span class="line">        <span class="keyword">if</span> (classData == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> defineClass(name, classData, <span class="number">0</span>, classData.length);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] loadClassData(String className) &#123;</span><br><span class="line"></span><br><span class="line">        String fileName = root + File.separatorChar + className.replace(<span class="string">'.'</span>, File.separatorChar) + <span class="string">".class"</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            InputStream ins = <span class="keyword">new</span> FileInputStream(fileName);</span><br><span class="line">            ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            <span class="keyword">int</span> bufferSize = <span class="number">1024</span>;</span><br><span class="line">            <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[bufferSize];</span><br><span class="line">            <span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> ((length = ins.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                baos.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> baos.toByteArray();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getRoot</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoot</span><span class="params">(String root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.root = root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        WybClassLoader wybClassLoader = <span class="keyword">new</span> WybClassLoader();</span><br><span class="line">        <span class="comment">// class 需要用javac编译  class不能放在类路径下</span></span><br><span class="line"></span><br><span class="line">        wybClassLoader.setRoot(<span class="string">"E:\\marcher\\spring-example\\spring-example-test\\temp"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class clazz = wybClassLoader.loadClass(<span class="string">"WybClass"</span>);</span><br><span class="line">            Object obj = clazz.newInstance();</span><br><span class="line">            System.out.println(obj.getClass().getClassLoader());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException | InstantiationException | IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>自定义类加载器的核心在于对字节码文件的获取，如果是加密的字节码则需要在该类中对文件进行解密。由于这里只是演示，我并未对class文件进行加密，因此没有解密的过程。这里有几点需要注意：</p>
-<p>1、这里传递的文件名需要是类的全限定性名称，即 com.wyb.test.java.reflect.WybClass，因为 defineClass 方法是按这种格式进行处理的。</p>
-<p>2、最好不要重写loadClass方法，因为这样容易破坏双亲委托模式。</p>
-<p>3、这类Test 类本身可以被 AppClassLoader类加载，因此我们不能把 E://marcher//spring-example/temp.class放在类路径下。否则，由于双亲委托机制的存在，会直接导致该类由 AppClassLoader加载，而不会通过我们自定义类加载器来加载。</p>
-<h3 id="Tomcat打破双亲委派机制"><a href="#Tomcat打破双亲委派机制" class="headerlink" title="Tomcat打破双亲委派机制"></a>Tomcat打破双亲委派机制</h3><p>以Tomcat类加载为例，Tomcat 如果使用默认的双亲委派类加载机制行不行？<br>我们思考一下：Tomcat是个web容器， 那么它要解决什么问题： </p>
-<ol>
-<li>一个web容器可能需要部署两个应用程序，不同的应用程序可能会依赖同一个第三方类库的不同版本，不能要求同一个类库在同一个服务器只有一份，因此要保证每个应用程序的类库都是独立的，保证相互隔离。 </li>
-<li>部署在同一个web容器中相同的类库相同的版本可以共享。否则，如果服务器有10个应用程序，那么要有10份相同的类库加载进虚拟机。 </li>
-<li>web容器也有自己依赖的类库，不能与应用程序的类库混淆。基于安全考虑，应该让容器的类库和程序的类库隔离开来。 </li>
-<li>web容器要支持jsp的修改，我们知道，jsp 文件最终也是要编译成class文件才能在虚拟机中运行，但程序运行后修改jsp已经是司空见惯的事情， web容器需要支持 jsp 修改后不用重启。</li>
-</ol>
-<p>再看看我们的问题：Tomcat 如果使用默认的双亲委派类加载机制行不行？<br>答案是不行的。为什么？<br>第一个问题，如果使用默认的类加载器机制，那么是无法加载两个相同类库的不同版本的，默认的类加器是不管你是什么版本的，只在乎你的全限定类名，并且只有一份。<br>第二个问题，默认的类加载器是能够实现的，因为他的职责就是保证唯一性。<br>第三个问题和第一个问题一样。<br>我们再看第四个问题，我们想我们要怎么实现jsp文件的热加载，jsp 文件其实也就是class文件，那么如果修改了，但类名还是一样，类加载器会直接取方法区中已经存在的，修改后的jsp是不会重新加载的。那么怎么办呢？我们可以直接卸载掉这jsp文件的类加载器，所以你应该想到了，每个jsp文件对应一个唯一的类加载器，当一个jsp文件修改了，就直接卸载这个jsp类加载器。重新创建类加载器，重新加载jsp文件。</p>
-<h4 id="Tomcat自定义加载器详解"><a href="#Tomcat自定义加载器详解" class="headerlink" title="Tomcat自定义加载器详解"></a>Tomcat自定义加载器详解</h4><p><img src="/uploads/java/jvm/Tomcat%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E8%BD%BD%E5%99%A8.png" alt="Tomcat自定义加载器"></p>
-<p>tomcat的几个主要类加载器：</p>
-<ul>
-<li>commonLoader：Tomcat最基本的类加载器，加载路径中的class可以被Tomcat容器本身以及各个Webapp访问；</li>
-<li>catalinaLoader：Tomcat容器私有的类加载器，加载路径中的class对于Webapp不可见；</li>
-<li>sharedLoader：各个Webapp共享的类加载器，加载路径中的class对于所有Webapp可见，但是对于Tomcat容器不可见；</li>
-<li>WebappClassLoader：各个Webapp私有的类加载器，加载路径中的class只对当前Webapp可见，比如加载war包里相关的类，每个war包应用都有自己的WebappClassLoader，实现相互隔离，比如不同war包应用引入了不同的spring版本，这样实现就能加载各自的spring版本；</li>
-</ul>
-<p>从图中的委派关系中可以看出：<br>CommonClassLoader能加载的类都可以被CatalinaClassLoader和SharedClassLoader使用，从而实现了公有类库的共用，而CatalinaClassLoader和SharedClassLoader自己能加载的类则与对方相互隔离。</p>
-<p>WebAppClassLoader可以使用SharedClassLoader加载到的类，但各个WebAppClassLoader实例之间相互隔离。</p>
-<p>而JasperLoader的加载范围仅仅是这个JSP文件所编译出来的那一个.Class文件，它出现的目的就是为了被丢弃：当Web容器检测到JSP文件被修改时，会替换掉目前的JasperLoader的实例，并通过再建立一个新的Jsp类加载器来实现JSP文件的热加载功能。</p>
-<p>tomcat 这种类加载机制违背了java 推荐的双亲委派模型了吗？答案是：违背了。 </p>
-<p>很显然，tomcat 不是这样实现，tomcat 为了实现隔离性，没有遵守这个约定，每个webappClassLoader加载自己的目录下的class文件，不会传递给父类加载器，打破了双亲委派机制。</p>
-<h4 id="模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离"><a href="#模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离" class="headerlink" title="模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离"></a>模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离</h4>]]></content>
       <categories>
         <category>JVM</category>
       </categories>
@@ -5109,56 +5344,83 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
       </categories>
   </entry>
   <entry>
-    <title>Java设计模式：适配器</title>
-    <url>/2019/01/08/java/java-design/structure/adapter/</url>
-    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>适配器就是一种适配中间件，它存在于不匹配的二者之间，用于连接二者，将不匹配变得匹配，简单点理解就是平常所见的转接头，转换器之类的存在。</p>
-<p>把一个类接口转换成另一个用户需要的接口。</p>
+    <title>Java设计模式：桥接器</title>
+    <url>/2019/01/08/java/java-design/structure/bridge/</url>
+    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将抽象与实现分离开来，使它们可以独立变化。</p>
+<p>抽象与实现解耦，例如一个生产线的机器，将参数设定与具体生产的过程实现分离开，使整个生产线更加灵活，用一套参数也可以使用不同的工作模式。</p>
+<p>其中参数设定与生产过程属于两种不同的维度，桥接模式所做的事情就是将不同的维度联结在一起！</p>
 <h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
-<li>通过组合的方式。</li>
-<li>通过继承来实现适配器功能。</li>
+<li>在一个类中通过组合另一个对象，调用时只需在当前类调用对象方法即可，实现解耦。</li>
 </ul>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个鸭接口 方法为鸭子叫</p>
-<pre><code>public interface Duck {
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义电视机抽象类,拥有3个方法。</p>
+<pre><code>public abstract class Tv {
 
-    void quack();</code></pre><p>   定义一个火鸡接口 方法为鸡叫</p>
-<pre><code>public interface Turkey {
+    public abstract void on();
 
-   void gobble();    </code></pre><p>   鸭子实现类</p>
-<pre><code>public class WildDuck implements Duck {
+    public abstract void off();
 
-    @Override
-    public void quack() {
-        System.out.println(&quot;鸭子叫&quot;);
-    }
-}    </code></pre><p>   火鸡实现类</p>
-<pre><code>public class WildTurkey implements Turkey {
+    public abstract void tuneTunnel();</code></pre><p>   定义一个电视机的实现类，Sony电视机。</p>
+<pre><code>public class SonyTv extends Tv {
 
     @Override
-    public void gobble() {
-        System.out.println(&quot;火鸡叫&quot;);
+    public void on() {
+        System.out.println(&quot;SonyTv,on&quot;);
     }
-} </code></pre><p>   现在鸭子只能发出鸭子叫，鸡只能发出鸡叫，我们想要鸭子发出鸡的叫声。添加鸭子适配器。</p>
-<pre><code>public class DuckAdapter implements Turkey {
 
-   Duck duck;
+    @Override
+    public void off() {
+        System.out.println(&quot;SonyTv,off&quot;);
+    }
 
-   public DuckAdapter(Duck duck) {
-       this.duck = duck;
+    @Override
+    public void tuneTunnel() {
+        System.out.println(&quot;SonyTv,tuneTunnel&quot;);
+    }</code></pre><p>   定义一个遥控器抽象类。组合了一个电视机对象。</p>
+<pre><code>protected Tv tv;
+
+    public RemoteControl(Tv tv) {
+        this.tv = tv;
+    }
+
+    public abstract void on();
+
+    public abstract void off();
+
+    public abstract void tuneTunnel();   </code></pre><p>   定义一个遥控器的实现类，Sony电视机遥控器。</p>
+<pre><code>public class SonyRemoteControl extends RemoteControl {
+
+    public SonyRemoteControl(Tv tv) {
+        super(tv);
+    }
+
+    @Override
+    public void on() {
+        System.out.println(&quot;sonyRemoteControl,on&quot;);
+        tv.on();
+    }
+
+    @Override
+    public void off() {
+        System.out.println(&quot;sonyRemoteControl,off&quot;);
+        tv.off();
+    }
+
+    @Override
+    public void tuneTunnel() {
+        System.out.println(&quot;sonyRemoteControl,tuneTunnel&quot;);
+        tv.off();
+    }
+} </code></pre><p>   在生成sony电视机遥控器时，传入一个sony电视机对象，即可使用该遥控器实现该电视机的状态变换。</p>
+<pre><code>public class Client {
+
+   public static void main(String[] args) {
+       Tv sonyTv = new SonyTv();
+       SonyRemoteControl sonyRemoteControl = new SonyRemoteControl(sonyTv);
+       sonyRemoteControl.on();
+       sonyRemoteControl.off();
+       sonyRemoteControl.tuneTunnel();
    }
-
-   @Override
-   public void gobble() {
-       duck.quack();
-   }
-}</code></pre><p>   组合方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
-<pre><code>public class DuckAdapter extends Turkey WildTurkey implements Turkey {
-
-      @Override
-      public void gobble() {
-          gobble.quack();
-      }
-   }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
-]]></content>
+}</code></pre>]]></content>
       <categories>
         <category>java-design-patterns</category>
       </categories>
@@ -5270,83 +5532,56 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
       </categories>
   </entry>
   <entry>
-    <title>Java设计模式：桥接器</title>
-    <url>/2019/01/08/java/java-design/structure/bridge/</url>
-    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将抽象与实现分离开来，使它们可以独立变化。</p>
-<p>抽象与实现解耦，例如一个生产线的机器，将参数设定与具体生产的过程实现分离开，使整个生产线更加灵活，用一套参数也可以使用不同的工作模式。</p>
-<p>其中参数设定与生产过程属于两种不同的维度，桥接模式所做的事情就是将不同的维度联结在一起！</p>
+    <title>Java设计模式：适配器</title>
+    <url>/2019/01/08/java/java-design/structure/adapter/</url>
+    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>适配器就是一种适配中间件，它存在于不匹配的二者之间，用于连接二者，将不匹配变得匹配，简单点理解就是平常所见的转接头，转换器之类的存在。</p>
+<p>把一个类接口转换成另一个用户需要的接口。</p>
 <h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
-<li>在一个类中通过组合另一个对象，调用时只需在当前类调用对象方法即可，实现解耦。</li>
+<li>通过组合的方式。</li>
+<li>通过继承来实现适配器功能。</li>
 </ul>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义电视机抽象类,拥有3个方法。</p>
-<pre><code>public abstract class Tv {
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个鸭接口 方法为鸭子叫</p>
+<pre><code>public interface Duck {
 
-    public abstract void on();
+    void quack();</code></pre><p>   定义一个火鸡接口 方法为鸡叫</p>
+<pre><code>public interface Turkey {
 
-    public abstract void off();
-
-    public abstract void tuneTunnel();</code></pre><p>   定义一个电视机的实现类，Sony电视机。</p>
-<pre><code>public class SonyTv extends Tv {
-
-    @Override
-    public void on() {
-        System.out.println(&quot;SonyTv,on&quot;);
-    }
+   void gobble();    </code></pre><p>   鸭子实现类</p>
+<pre><code>public class WildDuck implements Duck {
 
     @Override
-    public void off() {
-        System.out.println(&quot;SonyTv,off&quot;);
+    public void quack() {
+        System.out.println(&quot;鸭子叫&quot;);
     }
+}    </code></pre><p>   火鸡实现类</p>
+<pre><code>public class WildTurkey implements Turkey {
 
     @Override
-    public void tuneTunnel() {
-        System.out.println(&quot;SonyTv,tuneTunnel&quot;);
-    }</code></pre><p>   定义一个遥控器抽象类。组合了一个电视机对象。</p>
-<pre><code>protected Tv tv;
-
-    public RemoteControl(Tv tv) {
-        this.tv = tv;
+    public void gobble() {
+        System.out.println(&quot;火鸡叫&quot;);
     }
+} </code></pre><p>   现在鸭子只能发出鸭子叫，鸡只能发出鸡叫，我们想要鸭子发出鸡的叫声。添加鸭子适配器。</p>
+<pre><code>public class DuckAdapter implements Turkey {
 
-    public abstract void on();
+   Duck duck;
 
-    public abstract void off();
-
-    public abstract void tuneTunnel();   </code></pre><p>   定义一个遥控器的实现类，Sony电视机遥控器。</p>
-<pre><code>public class SonyRemoteControl extends RemoteControl {
-
-    public SonyRemoteControl(Tv tv) {
-        super(tv);
-    }
-
-    @Override
-    public void on() {
-        System.out.println(&quot;sonyRemoteControl,on&quot;);
-        tv.on();
-    }
-
-    @Override
-    public void off() {
-        System.out.println(&quot;sonyRemoteControl,off&quot;);
-        tv.off();
-    }
-
-    @Override
-    public void tuneTunnel() {
-        System.out.println(&quot;sonyRemoteControl,tuneTunnel&quot;);
-        tv.off();
-    }
-} </code></pre><p>   在生成sony电视机遥控器时，传入一个sony电视机对象，即可使用该遥控器实现该电视机的状态变换。</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-       Tv sonyTv = new SonyTv();
-       SonyRemoteControl sonyRemoteControl = new SonyRemoteControl(sonyTv);
-       sonyRemoteControl.on();
-       sonyRemoteControl.off();
-       sonyRemoteControl.tuneTunnel();
+   public DuckAdapter(Duck duck) {
+       this.duck = duck;
    }
-}</code></pre>]]></content>
+
+   @Override
+   public void gobble() {
+       duck.quack();
+   }
+}</code></pre><p>   组合方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
+<pre><code>public class DuckAdapter extends Turkey WildTurkey implements Turkey {
+
+      @Override
+      public void gobble() {
+          gobble.quack();
+      }
+   }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
+]]></content>
       <categories>
         <category>java-design-patterns</category>
       </categories>

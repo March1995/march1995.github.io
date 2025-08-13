@@ -299,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/31/java/jvm/jvm%E8%B0%83%E4%BC%98/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/11/07/java/coucurrent/5.Collections&Queue%E4%BD%93%E7%B3%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -318,7 +318,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/10/31/java/jvm/jvm%E8%B0%83%E4%BC%98/" itemprop="url">JVM调优</a></h1>
+                <a class="post-title-link" href="/2021/11/07/java/coucurrent/5.Collections&Queue%E4%BD%93%E7%B3%BB/" itemprop="url">Collections&Queue体系</a></h1>
         
 
         <div class="post-meta">
@@ -330,8 +330,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-31T00:00:00+00:00">
-                2021-10-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-07T00:00:00+00:00">
+                2021-11-07
               </time>
             
 
@@ -353,8 +353,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index">
-                    <span itemprop="name">JVM</span>
+                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">并发编程</span>
                   </a>
                 </span>
 
@@ -384,7 +384,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.3k 字
+                  156 字
                 </span>
               
 
@@ -400,7 +400,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  4 分钟
+                  1 分钟
                 </span>
               
             </div>
@@ -423,45 +423,224 @@
       
         
           
-            <blockquote>
-<p><a href="https://www.cnblogs.com/likehua/p/3369823.html" target="_blank" rel="noopener">https://www.cnblogs.com/likehua/p/3369823.html</a></p>
-</blockquote>
-<blockquote>
-<p>实战<a href="https://juejin.cn/post/7025410482341150751?utm_source=gold_browser_extension#heading-8" target="_blank" rel="noopener">https://juejin.cn/post/7025410482341150751?utm_source=gold_browser_extension#heading-8</a><br><a href="https://blog.csdn.net/weixin_42081445/article/details/144562955" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42081445/article/details/144562955</a></p>
-</blockquote>
-<h1 id="1-堆大小设置"><a href="#1-堆大小设置" class="headerlink" title="1.堆大小设置"></a>1.堆大小设置</h1><p>典型设置</p>
-<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k</p>
+            <h1 id="BlockingQueue阻塞队列"><a href="#BlockingQueue阻塞队列" class="headerlink" title="BlockingQueue阻塞队列"></a>BlockingQueue阻塞队列</h1><p>队列实质就是一种存储数据的结构</p>
+<p>通常用链表或者数组实现</p>
+<p>一般而言队列具备FIFO先进先出的特性，当然也有双端队列（Deque）优先级队列</p>
+<p>主要操作：入队（EnQueue）与出队（Dequeue）</p>
+<p><img src="/uploads/java/concurrent/BlockingQueue.png" alt="BlockingQueue.png"></p>
+<p>1、ArrayBlockingQueue 由数组支持的有界队列<br>2、LinkedBlockingQueue 由链接节点支持的可选有界队列<br>3、PriorityBlockingQueue 由优先级堆支持的无界优先级队列<br>4、DelayQueue 由优先级堆支持的、基于时间的调度队列</p>
+<h1 id="Java7HashMap死锁与Java8HashMap优化"><a href="#Java7HashMap死锁与Java8HashMap优化" class="headerlink" title="Java7HashMap死锁与Java8HashMap优化"></a>Java7HashMap死锁与Java8HashMap优化</h1><h1 id="ConcurrentHashMap线程安全与分段锁"><a href="#ConcurrentHashMap线程安全与分段锁" class="headerlink" title="ConcurrentHashMap线程安全与分段锁"></a>ConcurrentHashMap线程安全与分段锁</h1><h1 id="并发List-ArrayList与CopyOnWriteArrayList"><a href="#并发List-ArrayList与CopyOnWriteArrayList" class="headerlink" title="并发List-ArrayList与CopyOnWriteArrayList"></a>并发List-ArrayList与CopyOnWriteArrayList</h1><h1 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h1><p><img src="/uploads/java/concurrent/AQS%E5%90%8C%E6%AD%A5%E5%99%A8%E6%9D%A1%E4%BB%B6%E9%98%9F%E5%88%97%E5%BA%94%E7%94%A8%E9%80%BB%E8%BE%91.jpg" alt="AQS同步器条件队列应用逻辑.jpg"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/11/05/java/coucurrent/4.Atomic&Unsafe%E9%AD%94%E6%B3%95%E7%B1%BB%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/11/05/java/coucurrent/4.Atomic&Unsafe%E9%AD%94%E6%B3%95%E7%B1%BB%E8%AF%A6%E8%A7%A3/" itemprop="url">Atomic&Unsafe魔法类详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-05T00:00:00+00:00">
+                2021-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  800 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h1><p>处理器自动保证基本内存操作的原子性，如对同一个缓存行里进行16/32/64位的操作是原子的。<br>复杂的内存操作处理器不能自动保证其原子性，比如跨总线宽度，跨多个缓存行，跨页表的访问。</p>
+<p>缓存加锁</p>
+<p>总线加锁</p>
+<h1 id="Atomic"><a href="#Atomic" class="headerlink" title="Atomic"></a>Atomic</h1><p>在Atomic包里一共有12个类，四种原子更新方式,原子更新基本类型,原子更新数组,原子更新引用,原子更新字段, Atomic包里的类基本都是使用Unsafe实现的包装类。</p>
+<p>基本类：AtomicInteger、AtomicLong、AtomicBoolean；</p>
+<p>引用类型：AtomicReference、AtomicReference的ABA实例、AtomicStampedRerence、AtomicMarkableReference；</p>
+<p>数组类型：AtomicIntegerArray、AtomicLongArray、AtomicReferenceArray</p>
+<p>属性原子修改器（Updater）：AtomicIntegerFieldUpdater、AtomicLongFieldUpdater、AtomicReferenceFieldUpdater</p>
+<h1 id="Unsafe"><a href="#Unsafe" class="headerlink" title="Unsafe"></a>Unsafe</h1><p>Unsafe是位于sun.misc包下的一个类，主要提供一些用于执行低级别、不安全操作的方法，如直接访问系统内存资源、自主管理内存资源等，这些方法在提升Java运行效率、<br>增强Java语言底层资源操作能力方面起到了很大的作用。</p>
+<p>Unsafe类为一单例实现，提供静态方法getUnsafe获取Unsafe实例，当且仅当调用getUnsafe方法的类为引导类加载器所加载时才合法，<br>否则抛出SecurityException异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Unsafe</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 单例对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Unsafe theUnsafe;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Unsafe</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    <span class="meta">@CallerSensitive</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Unsafe <span class="title">getUnsafe</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Class var0 = Reflection.getCallerClass();       </span><br><span class="line">        <span class="comment">// 仅在引导类加载器`BootstrapClassLoader`加载时才合法       </span></span><br><span class="line">        <span class="keyword">if</span>(!VM.isSystemDomainLoader(var0.getClassLoader())) &#123;           </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> SecurityException(<span class="string">"Unsafe"</span>);       </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;           </span><br><span class="line">            <span class="keyword">return</span> theUnsafe;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何获取Unsafe"><a href="#如何获取Unsafe" class="headerlink" title="如何获取Unsafe"></a>如何获取Unsafe</h2><p>1、把调用Unsafe相关方法的类Demo所在jar包路径追加到默认的bootstrap路径中，使得A被引导类加载器加载</p>
 <ul>
-<li><p>-Xmx3550m:设置JVM最大可用内存为3550M</p>
-</li>
-<li><p>-Xms3550m:设置JVM初始内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存</p>
-</li>
-<li><p>-Xmn2g:设置年轻代大小为2G。整个JVM内存大小=年轻代大小 + 年老代大小 + 持久代大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。<br>此值对系统性能影响较大，Sun官方推荐配置为整个堆的3/8</p>
-</li>
-<li><p>-Xss128k：设置每个线程的堆栈大小。JDK5.0以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。更具应用的线程所需内存大小进行调整。<br>在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。</p>
-</li>
+<li>java -Xbootclasspath/Demo:${path} // 其中path为调用Unsafe相关方法的类所在jar包路径 </li>
 </ul>
-<p>java -Xmx3550m -Xms3550m -Xss128k -XX:NewRatio=4 -XX:SurvivorRatio=4 -XX:MaxPermSize=16m -XX:MaxTenuringThreshold=0</p>
-<ul>
-<li><p>-XX:NewRatio=4:设置年轻代（包括Eden和两个Survivor区）与年老代的比值（除去持久代）。设置为4，则年轻代与年老代所占比值为1：4，年轻代占整个堆栈的1/5</p>
-</li>
-<li><p>-XX:SurvivorRatio=4：设置年轻代中Eden区与Survivor区的大小比值。设置为4，则两个Survivor区与一个Eden区的比值为2:4，一个Survivor区占整个年轻代的1/6</p>
-</li>
-<li><p>-XX:MaxPermSize=16m:设置持久代大小为16m。</p>
-</li>
-<li><p>-XX:MaxTenuringThreshold=0：设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代。<br>对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间，<br>增加在年轻代即被回收的概论。</p>
-</li>
-</ul>
-<h1 id="2-回收器选择"><a href="#2-回收器选择" class="headerlink" title="2.回收器选择"></a>2.回收器选择</h1><p>JVM给了三种选择：<strong>串行收集器、并行收集器、并发收集器</strong>，但是串行收集器只适用于小数据量的情况，所以这里的选择主要针对并行收集器和并发收集器。<br>默认情况下，JDK5.0以前都是使用串行收集器，如果想使用其他收集器需要在启动时加入相应参数。JDK5.0以后，JVM会根据当前系统配置进行判断。</p>
-<h2 id="2-1-吞吐量优先的并行收集器"><a href="#2-1-吞吐量优先的并行收集器" class="headerlink" title="2.1 吞吐量优先的并行收集器"></a>2.1 吞吐量优先的并行收集器</h2><p>如上文所述，并行收集器主要以到达一定的吞吐量为目标，适用于科学技术和后台处理等。</p>
-<p>典型配置：<br>java -Xmx3800m -Xms3800m -Xmn2g -Xss128k <strong>-XX:+UseParallelGC -XX:ParallelGCThreads=20</strong></p>
-<p>-XX:+UseParallelGC：选择垃圾收集器为并行收集器。此配置仅对年轻代有效。即上述配置下，年轻代使用并发收集，而年老代仍旧使用串行收集。<br>-XX:ParallelGCThreads=20：配置并行收集器的线程数，即：同时多少个线程一起进行垃圾回收。此值最好配置与处理器数目相等。</p>
-<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20 <strong>-XX:+UseParallelOldGC</strong><br>-XX:+UseParallelOldGC：配置年老代垃圾收集方式为并行收集。JDK6.0支持对年老代并行收集。</p>
-<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k <strong>-XX:+UseParallelGC  -XX:MaxGCPauseMillis=100</strong><br>-XX:MaxGCPauseMillis=100:设置每次年轻代垃圾回收的最长时间，如果无法满足此时间，JVM会自动调整年轻代大小，以满足此值。</p>
-<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC  -XX:MaxGCPauseMillis=100 <strong>-XX:+UseAdaptiveSizePolicy</strong><br>-XX:+UseAdaptiveSizePolicy：设置此选项后，并行收集器会自动选择年轻代区大小和相应的Survivor区比例，以达到目标系统规定的最低相应时间或者收集频率等，此值建议使用并行收集器时，一直打开。</p>
-<h2 id="2-2-响应时间优先的并发收集器"><a href="#2-2-响应时间优先的并发收集器" class="headerlink" title="2.2 响应时间优先的并发收集器"></a>2.2 响应时间优先的并发收集器</h2><p>如上文所述，并发收集器主要是保证系统的响应时间，减少垃圾收集时的停顿时间。适用于应用服务器、电信领域等。</p>
-<p>典型配置：<br>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:ParallelGCThreads=20 <strong>-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</strong><br>-XX:+UseConcMarkSweepGC：设置年老代为并发收集。测试中配置这个以后，-XX:NewRatio=4的配置失效了，原因不明。所以，此时年轻代大小最好用-Xmn设置。<br>-XX:+UseParNewGC:设置年轻代为并行收集。可与CMS收集同时使用。JDK5.0以上，JVM会根据系统配置自行设置，所以无需再设置此值。</p>
-<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseConcMarkSweepGC <strong>-XX:CMSFullGCsBeforeCompaction=5 -XX:+UseCMSCompactAtFullCollection</strong><br>-XX:CMSFullGCsBeforeCompaction：由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此值设置运行多少次GC以后对内存空间进行压缩、整理。<br>-XX:+UseCMSCompactAtFullCollection：打开对年老代的压缩。可能会影响性能，但是可以消除碎片</p>
+<p>2、通过反射获取单例对象theUnsafe</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnsafeInstance</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Unsafe <span class="title">reflectGetUnsafe</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Field field = Unsafe.class.getDeclaredField("theUnsafe");</span><br><span class="line">            field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">return</span> (Unsafe) field.get(<span class="keyword">null</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Unsafe功能"><a href="#Unsafe功能" class="headerlink" title="Unsafe功能"></a>Unsafe功能</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/Unsafe%E5%8A%9F%E8%83%BD.png" alt="Unsafe功能.png"></p>
+<h2 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * CAS</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> o         包含要修改field的对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> offset    对象中某field的偏移量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> expected  期望值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> update    更新值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>          true | false</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapObject</span><span class="params">(Object var1, <span class="keyword">long</span> var2, Object var4, Object var5)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapInt</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">int</span> var4, <span class="keyword">int</span> var5)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapLong</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">long</span> var4, <span class="keyword">long</span> var6)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/uploads/java/concurrent/CAS.png" alt="CAS.png"></p>
+<h2 id="线程调度"><a href="#线程调度" class="headerlink" title="线程调度"></a>线程调度</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//取消阻塞线程</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">unpark</span><span class="params">(Object thread)</span></span>;</span><br><span class="line"><span class="comment">//阻塞线程</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">park</span><span class="params">(<span class="keyword">boolean</span> isAbsolute, <span class="keyword">long</span> time)</span></span>;</span><br><span class="line"><span class="comment">//获得对象锁（可重入锁）</span></span><br><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">monitorEnter</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="comment">//释放对象锁</span></span><br><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">monitorExit</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="comment">//尝试获取对象锁</span></span><br><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">tryMonitorEnter</span><span class="params">(Object o)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//内存屏障，禁止load操作重排序。屏障前的load操作不能被重排序到屏障后，屏障后的load操作不能被重排序到屏障前</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">loadFence</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//内存屏障，禁止store操作重排序。屏障前的store操作不能被重排序到屏障后，屏障后的store操作不能被重排序到屏障前</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">storeFence</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//内存屏障，禁止load、store操作重排序</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">fullFence</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">典型应用</span><br><span class="line">StampedLock的validate()方法使用内存屏障，防止指令重排</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">validate</span><span class="params">(<span class="keyword">long</span> stamp)</span> </span>&#123;</span><br><span class="line">    U.loadFence();<span class="comment">// 内存屏障</span></span><br><span class="line">    reture (stamp &amp; SBITS) == (state &amp; SBITS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/uploads/java/concurrent/%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C.png" alt="内存屏障.png"></p>
 
           
         
@@ -643,6 +822,225 @@
         
           
             <h1 id="1-Semaphore-是什么？"><a href="#1-Semaphore-是什么？" class="headerlink" title="1. Semaphore 是什么？"></a>1. Semaphore 是什么？</h1><p>Semaphore 字面意思是信号量的意思，它的作用是控制访问特定资源的线程数目。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/31/java/jvm/jvm%E8%B0%83%E4%BC%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/31/java/jvm/jvm%E8%B0%83%E4%BC%98/" itemprop="url">JVM调优</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-31T00:00:00+00:00">
+                2021-10-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.3k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p><a href="https://www.cnblogs.com/likehua/p/3369823.html" target="_blank" rel="noopener">https://www.cnblogs.com/likehua/p/3369823.html</a></p>
+</blockquote>
+<blockquote>
+<p>实战<a href="https://juejin.cn/post/7025410482341150751?utm_source=gold_browser_extension#heading-8" target="_blank" rel="noopener">https://juejin.cn/post/7025410482341150751?utm_source=gold_browser_extension#heading-8</a><br><a href="https://blog.csdn.net/weixin_42081445/article/details/144562955" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42081445/article/details/144562955</a></p>
+</blockquote>
+<h1 id="1-堆大小设置"><a href="#1-堆大小设置" class="headerlink" title="1.堆大小设置"></a>1.堆大小设置</h1><p>典型设置</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k</p>
+<ul>
+<li><p>-Xmx3550m:设置JVM最大可用内存为3550M</p>
+</li>
+<li><p>-Xms3550m:设置JVM初始内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存</p>
+</li>
+<li><p>-Xmn2g:设置年轻代大小为2G。整个JVM内存大小=年轻代大小 + 年老代大小 + 持久代大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。<br>此值对系统性能影响较大，Sun官方推荐配置为整个堆的3/8</p>
+</li>
+<li><p>-Xss128k：设置每个线程的堆栈大小。JDK5.0以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。更具应用的线程所需内存大小进行调整。<br>在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。</p>
+</li>
+</ul>
+<p>java -Xmx3550m -Xms3550m -Xss128k -XX:NewRatio=4 -XX:SurvivorRatio=4 -XX:MaxPermSize=16m -XX:MaxTenuringThreshold=0</p>
+<ul>
+<li><p>-XX:NewRatio=4:设置年轻代（包括Eden和两个Survivor区）与年老代的比值（除去持久代）。设置为4，则年轻代与年老代所占比值为1：4，年轻代占整个堆栈的1/5</p>
+</li>
+<li><p>-XX:SurvivorRatio=4：设置年轻代中Eden区与Survivor区的大小比值。设置为4，则两个Survivor区与一个Eden区的比值为2:4，一个Survivor区占整个年轻代的1/6</p>
+</li>
+<li><p>-XX:MaxPermSize=16m:设置持久代大小为16m。</p>
+</li>
+<li><p>-XX:MaxTenuringThreshold=0：设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代。<br>对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间，<br>增加在年轻代即被回收的概论。</p>
+</li>
+</ul>
+<h1 id="2-回收器选择"><a href="#2-回收器选择" class="headerlink" title="2.回收器选择"></a>2.回收器选择</h1><p>JVM给了三种选择：<strong>串行收集器、并行收集器、并发收集器</strong>，但是串行收集器只适用于小数据量的情况，所以这里的选择主要针对并行收集器和并发收集器。<br>默认情况下，JDK5.0以前都是使用串行收集器，如果想使用其他收集器需要在启动时加入相应参数。JDK5.0以后，JVM会根据当前系统配置进行判断。</p>
+<h2 id="2-1-吞吐量优先的并行收集器"><a href="#2-1-吞吐量优先的并行收集器" class="headerlink" title="2.1 吞吐量优先的并行收集器"></a>2.1 吞吐量优先的并行收集器</h2><p>如上文所述，并行收集器主要以到达一定的吞吐量为目标，适用于科学技术和后台处理等。</p>
+<p>典型配置：<br>java -Xmx3800m -Xms3800m -Xmn2g -Xss128k <strong>-XX:+UseParallelGC -XX:ParallelGCThreads=20</strong></p>
+<p>-XX:+UseParallelGC：选择垃圾收集器为并行收集器。此配置仅对年轻代有效。即上述配置下，年轻代使用并发收集，而年老代仍旧使用串行收集。<br>-XX:ParallelGCThreads=20：配置并行收集器的线程数，即：同时多少个线程一起进行垃圾回收。此值最好配置与处理器数目相等。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20 <strong>-XX:+UseParallelOldGC</strong><br>-XX:+UseParallelOldGC：配置年老代垃圾收集方式为并行收集。JDK6.0支持对年老代并行收集。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k <strong>-XX:+UseParallelGC  -XX:MaxGCPauseMillis=100</strong><br>-XX:MaxGCPauseMillis=100:设置每次年轻代垃圾回收的最长时间，如果无法满足此时间，JVM会自动调整年轻代大小，以满足此值。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC  -XX:MaxGCPauseMillis=100 <strong>-XX:+UseAdaptiveSizePolicy</strong><br>-XX:+UseAdaptiveSizePolicy：设置此选项后，并行收集器会自动选择年轻代区大小和相应的Survivor区比例，以达到目标系统规定的最低相应时间或者收集频率等，此值建议使用并行收集器时，一直打开。</p>
+<h2 id="2-2-响应时间优先的并发收集器"><a href="#2-2-响应时间优先的并发收集器" class="headerlink" title="2.2 响应时间优先的并发收集器"></a>2.2 响应时间优先的并发收集器</h2><p>如上文所述，并发收集器主要是保证系统的响应时间，减少垃圾收集时的停顿时间。适用于应用服务器、电信领域等。</p>
+<p>典型配置：<br>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:ParallelGCThreads=20 <strong>-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</strong><br>-XX:+UseConcMarkSweepGC：设置年老代为并发收集。测试中配置这个以后，-XX:NewRatio=4的配置失效了，原因不明。所以，此时年轻代大小最好用-Xmn设置。<br>-XX:+UseParNewGC:设置年轻代为并行收集。可与CMS收集同时使用。JDK5.0以上，JVM会根据系统配置自行设置，所以无需再设置此值。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseConcMarkSweepGC <strong>-XX:CMSFullGCsBeforeCompaction=5 -XX:+UseCMSCompactAtFullCollection</strong><br>-XX:CMSFullGCsBeforeCompaction：由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此值设置运行多少次GC以后对内存空间进行压缩、整理。<br>-XX:+UseCMSCompactAtFullCollection：打开对年老代的压缩。可能会影响性能，但是可以消除碎片</p>
 
           
         
@@ -1050,379 +1448,6 @@
 <td>事务/补偿机制</td>
 </tr>
 </tbody></table>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo协议模块</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
-                2021-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2.2k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  8 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>课程概要：</strong></p>
-<ol>
-<li>RPC协议基本组成</li>
-<li>RPC协议报文编码与实现详解</li>
-<li>Dubbo中所支持RPC协议与使用<h3 id="RPC协议基本组成"><a href="#RPC协议基本组成" class="headerlink" title="## RPC协议基本组成"></a>## <strong>RPC协议基本组成</strong></h3></li>
-</ol>
-<hr>
-<h3 id="RPC-协议名词解释"><a href="#RPC-协议名词解释" class="headerlink" title="RPC 协议名词解释"></a><strong>RPC 协议名词解释</strong></h3><p>在一个典型RPC的使用场景中，包含了服务发现、负载、容错、网络传输、序列化等组件，其中RPC协议就指明了程序如何进行网络传输和序列化 。也就是说一个RPC协议的实现就等于一个非透明的远程调用实现，如何做到的的呢？</p>
-<p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE.png" alt="Rpc协议.png"></p>
-<h3 id="协议基本组成："><a href="#协议基本组成：" class="headerlink" title="协议基本组成："></a><strong>协议基本组成：</strong></h3><p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90.png" alt="Rpc协议基本组成.png"></p>
-<ol>
-<li>地址：服务提供者地址</li>
-<li>端口：协议指定开放的端口</li>
-<li>报文编码：协议报文编码 ，分为请求头和请求体两部分。</li>
-<li>序列化方式：将请求体序列化成对象<ol>
-<li>Hessian2Serialization、</li>
-<li>DubboSerialization、</li>
-<li>JavaSerialization</li>
-<li>JsonSerialization</li>
-</ol>
-</li>
-<li>运行服务: 网络传输实现<ol>
-<li>netty</li>
-<li>mina</li>
-<li>RMI 服务</li>
-<li>servlet 容器（jetty、Tomcat、Jboss）<h2 id="Dubbo中所支持RPC协议使用"><a href="#Dubbo中所支持RPC协议使用" class="headerlink" title="Dubbo中所支持RPC协议使用"></a><strong>Dubbo中所支持RPC协议使用</strong></h2></li>
-</ol>
-</li>
-</ol>
-<hr>
-<p><strong>dubbo 支持的RPC协议列表</strong></p>
-<table>
-<thead>
-<tr>
-<th align="left"><strong>名称</strong></th>
-<th align="left"><strong>实现描述</strong></th>
-<th align="left"><strong>连接描述</strong></th>
-<th align="left"><strong>适用场景</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>dubbo</strong></td>
-<td align="left">传输服务: mina, netty(默认), grizzy序列化: hessian2(默认), java, fastjson自定义报文</td>
-<td align="left">单个长连接NIO异步传输</td>
-<td align="left">1、常规RPC调用2、传输数据量小3、提供者少于消费者</td>
-</tr>
-<tr>
-<td align="left"><strong>rmi</strong></td>
-<td align="left">传输：java rmi 服务序列化：java原生二进制序列化</td>
-<td align="left">多个短连接BIO同步传输</td>
-<td align="left">1、常规RPC调用  2、与原RMI客户端集成  3、可传少量文件  4、不防火墙穿透</td>
-</tr>
-<tr>
-<td align="left"><strong>hessian</strong></td>
-<td align="left">传输服务：servlet容器序列化：hessian二进制序列化</td>
-<td align="left">基于Http 协议传输，依懒servlet容器配置</td>
-<td align="left">1、提供者多于消费者  2、可传大字段和文件  <del>3、跨语言调用</del></td>
-</tr>
-<tr>
-<td align="left"><strong>http</strong></td>
-<td align="left">传输服务：servlet容器序列化：java原生二进制序列化</td>
-<td align="left">依懒servlet容器配置</td>
-<td align="left">1、数据包大小混合</td>
-</tr>
-<tr>
-<td align="left"><strong>thrift</strong></td>
-<td align="left">与thrift RPC 实现集成，并在其基础上修改了报文头</td>
-<td align="left">长连接、NIO异步传输</td>
-<td align="left"></td>
-</tr>
-</tbody></table>
-<p><strong><em>关于RMI不支持防火墙穿透的补充说明：</em></strong></p>
-<p>原因在于RMI 底层实现中会有两个端口，一个是固定的用于服务发现的注册端口，另外会生成一个<strong><em>随机</em></strong>端口用于网络传输。因为这个随机端口就不能在防火墙中提前设置开放开。所以存在<em>防火墙穿透问题</em></p>
-<h3 id="协议的使用与配置"><a href="#协议的使用与配置" class="headerlink" title="协议的使用与配置:"></a><strong>协议的使用与配置:</strong></h3><p>Dubbo框架配置协议非常方便，用户只需要在 provider 应用中 配置*&lt;*<em>dubbo:protocol&gt;</em>元素即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line"> name: 协议名称 dubbo|rmi|hessian|http|</span><br><span class="line"> host:本机IP可不填，则系统自动获取</span><br><span class="line"> port：端口、填-1表示系统自动选择</span><br><span class="line"> server：运行服务 mina|netty|grizzy|servlet|jetty</span><br><span class="line"> serialization：序列化方式 hessian2|java|compactedjava|fastjson</span><br><span class="line"> 详细配置参见dubbo 官网 dubbo.io</span><br><span class="line">--&gt;</span><br><span class="line">&lt;dubbo:protocol name&#x3D;&quot;dubbo&quot; host&#x3D;&quot;192.168.0.11&quot; port&#x3D;&quot;20880&quot; server&#x3D;&quot;netty&quot;</span><br><span class="line"> serialization&#x3D;“hessian2” charset&#x3D;“UTF-8” &#x2F;&gt;</span><br></pre></td></tr></table></figure>
-<p>#TODO 演示采用其它协议来配置Dubbo</p>
-<ul>
-<li><input disabled type="checkbox"> dubbo 协议采用 json 进行序列化(源码参见：com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol<em>)</em></li>
-<li><input disabled type="checkbox"> 采用RMI协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.rmi.RmiProtocol)</em></li>
-<li><input disabled type="checkbox"> 采用Http协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.http.HttpProtocol.InternalHandler)</em></li>
-<li><input disabled type="checkbox"> 采用Heason协议(源码参见:com.alibaba.dubbo.rpc.protocol.hessian.HessianProtocol.HessianHandler)</li>
-</ul>
-<p>new PrintWriter(System.out)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -aon|findstr &quot;17732&quot;</span><br></pre></td></tr></table></figure>
-<p>序列化：</p>
-<table>
-<thead>
-<tr>
-<th align="left"></th>
-<th align="left">特点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">fastjson</td>
-<td align="left">文本型：体积较大，性能慢、跨语言、可读性高</td>
-</tr>
-<tr>
-<td align="left">fst</td>
-<td align="left">二进制型：体积小、兼容 JDK 原生的序列化。要求 JDK 1.7 支持。</td>
-</tr>
-<tr>
-<td align="left">hessian2</td>
-<td align="left">二进制型：跨语言、容错性高、体积小</td>
-</tr>
-<tr>
-<td align="left">java</td>
-<td align="left">二进制型：在JAVA原生的基础上 可以写入Null</td>
-</tr>
-<tr>
-<td align="left">compactedjava</td>
-<td align="left">二进制型：与java 类似，内容做了压缩</td>
-</tr>
-<tr>
-<td align="left">nativejava</td>
-<td align="left">二进制型：原生的JAVA 序列化</td>
-</tr>
-<tr>
-<td align="left">kryo</td>
-<td align="left">二进制型：体积比hessian2 还要小，但容错性 没有hessian2 好</td>
-</tr>
-</tbody></table>
-<h3 id="Hessian-序列化："><a href="#Hessian-序列化：" class="headerlink" title="Hessian 序列化："></a>Hessian 序列化：</h3><ul>
-<li>参数及返回值需实现Serializable接口</li>
-<li>参数及返回值不能自定义实现List,Map,Number,Date,Calendar等接口，只能用 JDK 自带的实现，因为 hessian 会做特殊处理，自定义实现类中的属性值都会丢失。</li>
-<li>Hessian 序列化，只传成员属性值和值的类型，不传方法或静态变量，兼容情况<a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn1" target="_blank" rel="noopener">[1]</a><br><a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn2" target="_blank" rel="noopener">[2]</a></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="left"><strong>数据通讯</strong></th>
-<th align="left"><strong>情况</strong></th>
-<th align="left"><strong>结果</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">A-&gt;B</td>
-<td align="left">类A多一种 属性（或者说类B少一种 属性）</td>
-<td align="left">不抛异常，A多的那 个属性的值，B没有， 其他正常</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A使用多 出来的枚举进行传输</td>
-<td align="left">抛异常</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A不使用 多出来的枚举进行传输</td>
-<td align="left">不抛异常，B正常接 收数据</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">A和B的属性 名相同，但类型不相同</td>
-<td align="left">抛异常</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">serialId 不相同</td>
-<td align="left">正常传输</td>
-</tr>
-</tbody></table>
-<p>接口增加方法，对客户端无影响，如果该方法不是客户端需要的，客户端不需要重新部署。输入参数和结果集中增加属性，对客户端无影响，如果客户端并不需要新属性，不用重新部署。</p>
-<p>输入参数和结果集属性名变化，对客户端序列化无影响，但是如果客户端不重新部署，不管输入还是输出，属性名变化的属性值是获取不到的。</p>
-<p>总结：服务器端和客户端对领域对象并不需要完全一致，而是按照最大匹配原则。</p>
-<ul>
-<li><input disabled type="checkbox"> 演示Hession2 序列化的容错性</li>
-</ul>
-<h2 id="三-、RPC协议报文编码与实现详解"><a href="#三-、RPC协议报文编码与实现详解" class="headerlink" title="三 、RPC协议报文编码与实现详解"></a><strong>三 、RPC协议报文编码与实现详解</strong></h2><hr>
-<h3 id="RPC-传输实现："><a href="#RPC-传输实现：" class="headerlink" title="RPC 传输实现："></a><strong>RPC 传输实现：</strong></h3><p>RPC的协议的传输是基于 TCP/IP 做为基础使用Socket 或Netty、mina等网络编程组件实现。但有个问题是TCP是面向字节流的无边边界协议，其只管负责数据传输并不会区分每次请求所对应的消息，这样就会出现TCP协义传输当中的拆包与粘包问题</p>
-<h3 id="拆包与粘包产生的原因："><a href="#拆包与粘包产生的原因：" class="headerlink" title="拆包与粘包产生的原因："></a><strong>拆包与粘包产生的原因：</strong></h3><p>我们知道tcp是以流动的方式传输数据，传输的最小单位为一个报文段（segment）。tcp Header中有个Options标识位，常见的标识为mss(Maximum Segment Size)指的是，连接层每次传输的数据有个最大限制MTU(Maximum Transmission Unit)，一般是1500比特，超过这个量要分成多个报文段，mss则是这个最大限制减去TCP的header，光是要传输的数据的大小，一般为1460比特。换算成字节，也就是180多字节。</p>
-<p>tcp为提高性能，发送端会将需要发送的数据发送到缓冲区，等待缓冲区满了之后，再将缓冲中的数据发送到接收方。同理，接收方也有缓冲区这样的机制，来接收数据。这时就会出现以下情况：</p>
-<ol>
-<li>应用程序写入的数据大于MSS大小，这将会发生拆包。</li>
-<li>应用程序写入数据小于MSS大小，这将会发生粘包。</li>
-<li>接收方法不及时读取套接字缓冲区数据，这将发生粘包。<h3 id="拆包与粘包解决办法："><a href="#拆包与粘包解决办法：" class="headerlink" title="拆包与粘包解决办法："></a><strong>拆包与粘包解决办法：</strong></h3></li>
-<li>设置定长消息，服务端每次读取既定长度的内容作为一条完整消息。</li>
-<li>{“type”:”message”,”content”:”hello”}\n</li>
-<li>使用带消息头的协议、消息头存储消息开始标识及消息长度信息，服务端获取消息头的时候解析出消息长度，然后向后读取该长度的内容。</li>
-</ol>
-<p><strong>比如：</strong>Http协议 heade 中的 Content-Length 就表示消息体的大小。</p>
-<p><img src="/uploads/dubbo/Http%E5%8D%8F%E8%AE%AEhead.png" alt="http协议head.png"></p>
-<h3 id="Dubbo-协议报文编码："><a href="#Dubbo-协议报文编码：" class="headerlink" title="Dubbo 协议报文编码："></a>Dubbo 协议报文编码：</h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E7%BC%96%E7%A0%81.png" alt="Dubbo协议报文编码.png"></p>
-<ul>
-<li><strong>magic</strong>：类似java字节码文件里的魔数，用来判断是不是dubbo协议的数据包。魔数是常量0xdabb,用于判断报文的开始。</li>
-<li><strong>flag</strong>：标志位, 一共8个地址位。低四位用来表示消息体数据用的序列化工具的类型（默认hessian），高四位中，第一位为1表示是request请求，第二位为1表示双向传输（即有返回response），第三位为1表示是心跳ping事件。</li>
-<li><strong>status</strong>：状态位, 设置请求响应状态，dubbo定义了一些响应的类型。具体类型见 com.alibaba.dubbo.remoting.exchange.Response</li>
-<li><strong>invoke id：</strong>消息id, long 类型。每一个请求的唯一识别id（由于采用异步通讯的方式，用来把请求request和返回的response对应上）</li>
-<li><strong>body length：</strong>消息体 body 长度, int 类型，即记录Body Content有多少个字节。</li>
-</ul>
-<p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt="img.png"></p>
-<pre><code>*（注：相关源码参见**c**om.alibaba.dubbo.rpc.protocol.dubbo.DubboCodec**）*</code></pre><h3 id="Dubbo协议的编解码过程："><a href="#Dubbo协议的编解码过程：" class="headerlink" title="Dubbo协议的编解码过程："></a><strong><em>Dubbo协议的编解码过程：</em></strong></h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E7%9A%84%E7%BC%96%E8%A7%A3%E7%A0%81%E8%BF%87%E7%A8%8B.png" alt="Dubbo协议的编解码过程.png"></p>
-<p><strong>Dubbo 协议编解码实现过程*</strong>(源码来源于<em>*dubbo2.5.8 )</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、DubboCodec.encodeRequestData() 116L &#x2F;&#x2F; 编码request</span><br><span class="line">2、DecodeableRpcInvocation.decode()  89L   &#x2F;&#x2F; 解码request</span><br><span class="line">3、DubboCodec.encodeResponseData()   184L  &#x2F;&#x2F; 编码response    </span><br><span class="line">4、DecodeableRpcResult.decode()      73L   &#x2F;&#x2F; 解码response</span><br></pre></td></tr></table></figure>
-
 
           
         
@@ -1921,6 +1946,379 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo协议模块</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
+                2021-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.2k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>课程概要：</strong></p>
+<ol>
+<li>RPC协议基本组成</li>
+<li>RPC协议报文编码与实现详解</li>
+<li>Dubbo中所支持RPC协议与使用<h3 id="RPC协议基本组成"><a href="#RPC协议基本组成" class="headerlink" title="## RPC协议基本组成"></a>## <strong>RPC协议基本组成</strong></h3></li>
+</ol>
+<hr>
+<h3 id="RPC-协议名词解释"><a href="#RPC-协议名词解释" class="headerlink" title="RPC 协议名词解释"></a><strong>RPC 协议名词解释</strong></h3><p>在一个典型RPC的使用场景中，包含了服务发现、负载、容错、网络传输、序列化等组件，其中RPC协议就指明了程序如何进行网络传输和序列化 。也就是说一个RPC协议的实现就等于一个非透明的远程调用实现，如何做到的的呢？</p>
+<p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE.png" alt="Rpc协议.png"></p>
+<h3 id="协议基本组成："><a href="#协议基本组成：" class="headerlink" title="协议基本组成："></a><strong>协议基本组成：</strong></h3><p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90.png" alt="Rpc协议基本组成.png"></p>
+<ol>
+<li>地址：服务提供者地址</li>
+<li>端口：协议指定开放的端口</li>
+<li>报文编码：协议报文编码 ，分为请求头和请求体两部分。</li>
+<li>序列化方式：将请求体序列化成对象<ol>
+<li>Hessian2Serialization、</li>
+<li>DubboSerialization、</li>
+<li>JavaSerialization</li>
+<li>JsonSerialization</li>
+</ol>
+</li>
+<li>运行服务: 网络传输实现<ol>
+<li>netty</li>
+<li>mina</li>
+<li>RMI 服务</li>
+<li>servlet 容器（jetty、Tomcat、Jboss）<h2 id="Dubbo中所支持RPC协议使用"><a href="#Dubbo中所支持RPC协议使用" class="headerlink" title="Dubbo中所支持RPC协议使用"></a><strong>Dubbo中所支持RPC协议使用</strong></h2></li>
+</ol>
+</li>
+</ol>
+<hr>
+<p><strong>dubbo 支持的RPC协议列表</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>名称</strong></th>
+<th align="left"><strong>实现描述</strong></th>
+<th align="left"><strong>连接描述</strong></th>
+<th align="left"><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>dubbo</strong></td>
+<td align="left">传输服务: mina, netty(默认), grizzy序列化: hessian2(默认), java, fastjson自定义报文</td>
+<td align="left">单个长连接NIO异步传输</td>
+<td align="left">1、常规RPC调用2、传输数据量小3、提供者少于消费者</td>
+</tr>
+<tr>
+<td align="left"><strong>rmi</strong></td>
+<td align="left">传输：java rmi 服务序列化：java原生二进制序列化</td>
+<td align="left">多个短连接BIO同步传输</td>
+<td align="left">1、常规RPC调用  2、与原RMI客户端集成  3、可传少量文件  4、不防火墙穿透</td>
+</tr>
+<tr>
+<td align="left"><strong>hessian</strong></td>
+<td align="left">传输服务：servlet容器序列化：hessian二进制序列化</td>
+<td align="left">基于Http 协议传输，依懒servlet容器配置</td>
+<td align="left">1、提供者多于消费者  2、可传大字段和文件  <del>3、跨语言调用</del></td>
+</tr>
+<tr>
+<td align="left"><strong>http</strong></td>
+<td align="left">传输服务：servlet容器序列化：java原生二进制序列化</td>
+<td align="left">依懒servlet容器配置</td>
+<td align="left">1、数据包大小混合</td>
+</tr>
+<tr>
+<td align="left"><strong>thrift</strong></td>
+<td align="left">与thrift RPC 实现集成，并在其基础上修改了报文头</td>
+<td align="left">长连接、NIO异步传输</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p><strong><em>关于RMI不支持防火墙穿透的补充说明：</em></strong></p>
+<p>原因在于RMI 底层实现中会有两个端口，一个是固定的用于服务发现的注册端口，另外会生成一个<strong><em>随机</em></strong>端口用于网络传输。因为这个随机端口就不能在防火墙中提前设置开放开。所以存在<em>防火墙穿透问题</em></p>
+<h3 id="协议的使用与配置"><a href="#协议的使用与配置" class="headerlink" title="协议的使用与配置:"></a><strong>协议的使用与配置:</strong></h3><p>Dubbo框架配置协议非常方便，用户只需要在 provider 应用中 配置*&lt;*<em>dubbo:protocol&gt;</em>元素即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line"> name: 协议名称 dubbo|rmi|hessian|http|</span><br><span class="line"> host:本机IP可不填，则系统自动获取</span><br><span class="line"> port：端口、填-1表示系统自动选择</span><br><span class="line"> server：运行服务 mina|netty|grizzy|servlet|jetty</span><br><span class="line"> serialization：序列化方式 hessian2|java|compactedjava|fastjson</span><br><span class="line"> 详细配置参见dubbo 官网 dubbo.io</span><br><span class="line">--&gt;</span><br><span class="line">&lt;dubbo:protocol name&#x3D;&quot;dubbo&quot; host&#x3D;&quot;192.168.0.11&quot; port&#x3D;&quot;20880&quot; server&#x3D;&quot;netty&quot;</span><br><span class="line"> serialization&#x3D;“hessian2” charset&#x3D;“UTF-8” &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+<p>#TODO 演示采用其它协议来配置Dubbo</p>
+<ul>
+<li><input disabled type="checkbox"> dubbo 协议采用 json 进行序列化(源码参见：com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol<em>)</em></li>
+<li><input disabled type="checkbox"> 采用RMI协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.rmi.RmiProtocol)</em></li>
+<li><input disabled type="checkbox"> 采用Http协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.http.HttpProtocol.InternalHandler)</em></li>
+<li><input disabled type="checkbox"> 采用Heason协议(源码参见:com.alibaba.dubbo.rpc.protocol.hessian.HessianProtocol.HessianHandler)</li>
+</ul>
+<p>new PrintWriter(System.out)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -aon|findstr &quot;17732&quot;</span><br></pre></td></tr></table></figure>
+<p>序列化：</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">fastjson</td>
+<td align="left">文本型：体积较大，性能慢、跨语言、可读性高</td>
+</tr>
+<tr>
+<td align="left">fst</td>
+<td align="left">二进制型：体积小、兼容 JDK 原生的序列化。要求 JDK 1.7 支持。</td>
+</tr>
+<tr>
+<td align="left">hessian2</td>
+<td align="left">二进制型：跨语言、容错性高、体积小</td>
+</tr>
+<tr>
+<td align="left">java</td>
+<td align="left">二进制型：在JAVA原生的基础上 可以写入Null</td>
+</tr>
+<tr>
+<td align="left">compactedjava</td>
+<td align="left">二进制型：与java 类似，内容做了压缩</td>
+</tr>
+<tr>
+<td align="left">nativejava</td>
+<td align="left">二进制型：原生的JAVA 序列化</td>
+</tr>
+<tr>
+<td align="left">kryo</td>
+<td align="left">二进制型：体积比hessian2 还要小，但容错性 没有hessian2 好</td>
+</tr>
+</tbody></table>
+<h3 id="Hessian-序列化："><a href="#Hessian-序列化：" class="headerlink" title="Hessian 序列化："></a>Hessian 序列化：</h3><ul>
+<li>参数及返回值需实现Serializable接口</li>
+<li>参数及返回值不能自定义实现List,Map,Number,Date,Calendar等接口，只能用 JDK 自带的实现，因为 hessian 会做特殊处理，自定义实现类中的属性值都会丢失。</li>
+<li>Hessian 序列化，只传成员属性值和值的类型，不传方法或静态变量，兼容情况<a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn1" target="_blank" rel="noopener">[1]</a><br><a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn2" target="_blank" rel="noopener">[2]</a></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>数据通讯</strong></th>
+<th align="left"><strong>情况</strong></th>
+<th align="left"><strong>结果</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">A-&gt;B</td>
+<td align="left">类A多一种 属性（或者说类B少一种 属性）</td>
+<td align="left">不抛异常，A多的那 个属性的值，B没有， 其他正常</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A使用多 出来的枚举进行传输</td>
+<td align="left">抛异常</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A不使用 多出来的枚举进行传输</td>
+<td align="left">不抛异常，B正常接 收数据</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">A和B的属性 名相同，但类型不相同</td>
+<td align="left">抛异常</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">serialId 不相同</td>
+<td align="left">正常传输</td>
+</tr>
+</tbody></table>
+<p>接口增加方法，对客户端无影响，如果该方法不是客户端需要的，客户端不需要重新部署。输入参数和结果集中增加属性，对客户端无影响，如果客户端并不需要新属性，不用重新部署。</p>
+<p>输入参数和结果集属性名变化，对客户端序列化无影响，但是如果客户端不重新部署，不管输入还是输出，属性名变化的属性值是获取不到的。</p>
+<p>总结：服务器端和客户端对领域对象并不需要完全一致，而是按照最大匹配原则。</p>
+<ul>
+<li><input disabled type="checkbox"> 演示Hession2 序列化的容错性</li>
+</ul>
+<h2 id="三-、RPC协议报文编码与实现详解"><a href="#三-、RPC协议报文编码与实现详解" class="headerlink" title="三 、RPC协议报文编码与实现详解"></a><strong>三 、RPC协议报文编码与实现详解</strong></h2><hr>
+<h3 id="RPC-传输实现："><a href="#RPC-传输实现：" class="headerlink" title="RPC 传输实现："></a><strong>RPC 传输实现：</strong></h3><p>RPC的协议的传输是基于 TCP/IP 做为基础使用Socket 或Netty、mina等网络编程组件实现。但有个问题是TCP是面向字节流的无边边界协议，其只管负责数据传输并不会区分每次请求所对应的消息，这样就会出现TCP协义传输当中的拆包与粘包问题</p>
+<h3 id="拆包与粘包产生的原因："><a href="#拆包与粘包产生的原因：" class="headerlink" title="拆包与粘包产生的原因："></a><strong>拆包与粘包产生的原因：</strong></h3><p>我们知道tcp是以流动的方式传输数据，传输的最小单位为一个报文段（segment）。tcp Header中有个Options标识位，常见的标识为mss(Maximum Segment Size)指的是，连接层每次传输的数据有个最大限制MTU(Maximum Transmission Unit)，一般是1500比特，超过这个量要分成多个报文段，mss则是这个最大限制减去TCP的header，光是要传输的数据的大小，一般为1460比特。换算成字节，也就是180多字节。</p>
+<p>tcp为提高性能，发送端会将需要发送的数据发送到缓冲区，等待缓冲区满了之后，再将缓冲中的数据发送到接收方。同理，接收方也有缓冲区这样的机制，来接收数据。这时就会出现以下情况：</p>
+<ol>
+<li>应用程序写入的数据大于MSS大小，这将会发生拆包。</li>
+<li>应用程序写入数据小于MSS大小，这将会发生粘包。</li>
+<li>接收方法不及时读取套接字缓冲区数据，这将发生粘包。<h3 id="拆包与粘包解决办法："><a href="#拆包与粘包解决办法：" class="headerlink" title="拆包与粘包解决办法："></a><strong>拆包与粘包解决办法：</strong></h3></li>
+<li>设置定长消息，服务端每次读取既定长度的内容作为一条完整消息。</li>
+<li>{“type”:”message”,”content”:”hello”}\n</li>
+<li>使用带消息头的协议、消息头存储消息开始标识及消息长度信息，服务端获取消息头的时候解析出消息长度，然后向后读取该长度的内容。</li>
+</ol>
+<p><strong>比如：</strong>Http协议 heade 中的 Content-Length 就表示消息体的大小。</p>
+<p><img src="/uploads/dubbo/Http%E5%8D%8F%E8%AE%AEhead.png" alt="http协议head.png"></p>
+<h3 id="Dubbo-协议报文编码："><a href="#Dubbo-协议报文编码：" class="headerlink" title="Dubbo 协议报文编码："></a>Dubbo 协议报文编码：</h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E7%BC%96%E7%A0%81.png" alt="Dubbo协议报文编码.png"></p>
+<ul>
+<li><strong>magic</strong>：类似java字节码文件里的魔数，用来判断是不是dubbo协议的数据包。魔数是常量0xdabb,用于判断报文的开始。</li>
+<li><strong>flag</strong>：标志位, 一共8个地址位。低四位用来表示消息体数据用的序列化工具的类型（默认hessian），高四位中，第一位为1表示是request请求，第二位为1表示双向传输（即有返回response），第三位为1表示是心跳ping事件。</li>
+<li><strong>status</strong>：状态位, 设置请求响应状态，dubbo定义了一些响应的类型。具体类型见 com.alibaba.dubbo.remoting.exchange.Response</li>
+<li><strong>invoke id：</strong>消息id, long 类型。每一个请求的唯一识别id（由于采用异步通讯的方式，用来把请求request和返回的response对应上）</li>
+<li><strong>body length：</strong>消息体 body 长度, int 类型，即记录Body Content有多少个字节。</li>
+</ul>
+<p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt="img.png"></p>
+<pre><code>*（注：相关源码参见**c**om.alibaba.dubbo.rpc.protocol.dubbo.DubboCodec**）*</code></pre><h3 id="Dubbo协议的编解码过程："><a href="#Dubbo协议的编解码过程：" class="headerlink" title="Dubbo协议的编解码过程："></a><strong><em>Dubbo协议的编解码过程：</em></strong></h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E7%9A%84%E7%BC%96%E8%A7%A3%E7%A0%81%E8%BF%87%E7%A8%8B.png" alt="Dubbo协议的编解码过程.png"></p>
+<p><strong>Dubbo 协议编解码实现过程*</strong>(源码来源于<em>*dubbo2.5.8 )</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、DubboCodec.encodeRequestData() 116L &#x2F;&#x2F; 编码request</span><br><span class="line">2、DecodeableRpcInvocation.decode()  89L   &#x2F;&#x2F; 解码request</span><br><span class="line">3、DubboCodec.encodeResponseData()   184L  &#x2F;&#x2F; 编码response    </span><br><span class="line">4、DecodeableRpcResult.decode()      73L   &#x2F;&#x2F; 解码response</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/06/09/java/coucurrent/2.synchronized&Lock&AQS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2175,636 +2573,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/06/08/java/coucurrent/1.JMM&volatile/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/06/08/java/coucurrent/1.JMM&volatile/" itemprop="url">JMM&volatile</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-08T00:00:00+00:00">
-                2021-06-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">并发编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  3.4k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  12 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="现代计算机模型"><a href="#现代计算机模型" class="headerlink" title="现代计算机模型"></a>现代计算机模型</h1><p>冯诺依曼计算机模型<br><img src="/uploads/java/concurrent/%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%A8%A1%E5%9E%8B.png" alt="冯诺依曼计算机模型"></p>
-<p>现代计算机硬件基本结构<br><img src="/uploads/java/concurrent/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.png" alt="现代计算机硬件基本结构"></p>
-<p>CPU内部结构<br><img src="/uploads/java/concurrent/CPU%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="CPU内部结构"></p>
-<p>CPU多核缓存架构<br><img src="/uploads/java/concurrent/CPU%E5%A4%9A%E6%A0%B8%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84.png" alt="CPU多核缓存架构"></p>
-<p>缓存一致性协议(MESI)<br><img src="/uploads/java/concurrent/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE.png" alt="缓存一致性协议"></p>
-<h1 id="缓存一致性协议-MESI-数据操作流程"><a href="#缓存一致性协议-MESI-数据操作流程" class="headerlink" title="缓存一致性协议(MESI) 数据操作流程"></a>缓存一致性协议(MESI) 数据操作流程</h1><p>MESI协议是一种广泛使用的缓存一致性协议，它定义了缓存行(Cache Line)的四种状态，并通过这四种状态的转换来维护多核处理器中缓存的一致性。以下是MESI协议的核心内容和数据操作流程：</p>
-<h2 id="MESI四种状态"><a href="#MESI四种状态" class="headerlink" title="MESI四种状态"></a>MESI四种状态</h2><ol>
-<li><p><strong>Modified (已修改)</strong>：</p>
-<ul>
-<li>缓存行已被修改，与主内存不同</li>
-<li>只有当前缓存拥有该数据的最新副本</li>
-<li>必须将数据写回主内存才能共享</li>
-</ul>
-</li>
-<li><p><strong>Exclusive (独占)</strong>：</p>
-<ul>
-<li>缓存行与主内存一致</li>
-<li>只有当前缓存拥有该数据</li>
-<li>可以直接修改，转为Modified状态</li>
-</ul>
-</li>
-<li><p><strong>Shared (共享)</strong>：</p>
-<ul>
-<li>缓存行与主内存一致</li>
-<li>可能有多个缓存同时拥有该数据副本</li>
-<li>不能直接修改，需要先获取独占权</li>
-</ul>
-</li>
-<li><p><strong>Invalid (无效)</strong>：</p>
-<ul>
-<li>缓存行不包含有效数据</li>
-<li>必须从主内存或其他缓存获取最新数据</li>
-</ul>
-</li>
-</ol>
-<h2 id="基本操作流程"><a href="#基本操作流程" class="headerlink" title="基本操作流程"></a>基本操作流程</h2><h3 id="1-读操作-Read"><a href="#1-读操作-Read" class="headerlink" title="1. 读操作(Read)"></a>1. 读操作(Read)</h3><ul>
-<li>如果本地缓存有有效数据(Modified/Exclusive/Shared)，直接返回</li>
-<li>如果本地缓存无效(Invalid)，发起总线读请求(BusRd)<ul>
-<li>其他缓存检查自己是否有该数据的Modified副本<ul>
-<li>有：提供数据并转为Shared状态</li>
-<li>无：主内存提供数据</li>
-</ul>
-</li>
-<li>请求者缓存行转为Shared或Exclusive状态(取决于是否有其他缓存也拥有该数据)</li>
-</ul>
-</li>
-</ul>
-<h3 id="2-写操作-Write"><a href="#2-写操作-Write" class="headerlink" title="2. 写操作(Write)"></a>2. 写操作(Write)</h3><ul>
-<li>如果本地缓存是Modified状态，直接写入</li>
-<li>如果本地缓存是Exclusive状态，转为Modified并写入</li>
-<li>如果本地缓存是Shared或Invalid状态：<ul>
-<li>发起总线读无效请求(BusRdX)</li>
-<li>其他缓存将对应行设为Invalid</li>
-<li>请求者获得独占权，缓存行转为Modified状态后执行写入</li>
-</ul>
-</li>
-</ul>
-<h3 id="3-监听总线事件"><a href="#3-监听总线事件" class="headerlink" title="3. 监听总线事件"></a>3. 监听总线事件</h3><p>每个缓存控制器监听总线上的事务：</p>
-<ul>
-<li><p><strong>BusRd</strong>：其他核心请求读取数据</p>
-<ul>
-<li>如果本地是Modified：提供数据并转为Shared</li>
-<li>如果本地是Exclusive：转为Shared</li>
-<li>如果本地是Shared：无变化</li>
-<li>如果本地是Invalid：忽略</li>
-</ul>
-</li>
-<li><p><strong>BusRdX</strong>：其他核心请求写入权限</p>
-<ul>
-<li>如果本地是Modified：提供数据并转为Invalid</li>
-<li>如果本地是Exclusive：转为Invalid</li>
-<li>如果本地是Shared：转为Invalid</li>
-<li>如果本地是Invalid：忽略</li>
-</ul>
-</li>
-<li><p><strong>Flush</strong>：其他核心将Modified数据写回主存</p>
-<ul>
-<li>如果本地是Shared或Invalid：更新数据</li>
-</ul>
-</li>
-</ul>
-<h2 id="典型状态转换示例"><a href="#典型状态转换示例" class="headerlink" title="典型状态转换示例"></a>典型状态转换示例</h2><ol>
-<li><strong>初始状态</strong>：所有缓存行Invalid</li>
-<li><strong>核心A读取X</strong>：<ul>
-<li>发起BusRd</li>
-<li>从内存加载X</li>
-<li>状态：Exclusive (因为其他缓存没有X) </li>
-</ul>
-</li>
-<li><strong>核心B读取X</strong>：<ul>
-<li>发起BusRd</li>
-<li>核心A检测到BusRd，转为Shared</li>
-<li>核心B从核心A或内存获取X</li>
-<li>状态：Shared (两个核心)</li>
-</ul>
-</li>
-<li><strong>核心A写入X</strong>：<ul>
-<li>发起BusRdX</li>
-<li>核心B检测到BusRdX，转为Invalid</li>
-<li>核心A获得独占权，状态：Modified</li>
-</ul>
-</li>
-<li><strong>核心B读取X</strong>：<ul>
-<li>发起BusRd</li>
-<li>核心A检测到BusRd，将数据写回内存并转为Shared</li>
-<li>核心B从核心A或内存获取X</li>
-<li>状态：Shared (两个核心)</li>
-</ul>
-</li>
-</ol>
-<p>MESI协议通过这种状态转换机制，确保了多核处理器中缓存数据的一致性，同时尽可能减少了不必要的总线流量和内存访问。</p>
-<h2 id="具体流程："><a href="#具体流程：" class="headerlink" title="具体流程："></a>具体流程：</h2><p><strong>主存中存在变量x=1，多cpu多线程读取x（lock的是缓存行，当锁的数据横跨多个缓存行时就会进行总线加锁），copy副本到工作线程，此时所有线程中缓存行的状态<br>都是S，T1线程想要修改x时，把缓存行设为E，T1修改x之后，其它线程通过总线嗅探机制时刻监听着，其它线程对该缓存行的操作，<br>发现T1变成M之后，其它线程的变成I，T1对x的操作，等待某一个时间后，刷回主存。其它线程，当发现x被修改之后，会重新去主存中<br>copy，但是cpu不会等待，从而出现指令重排。</strong></p>
-<p><img src="/uploads/java/concurrent/CPU%E5%A4%9A%E6%A0%B8%E7%BC%93%E5%AD%98%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.png" alt="具体流程"></p>
-<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><h2 id="什么是线程"><a href="#什么是线程" class="headerlink" title="什么是线程"></a>什么是线程</h2><p>进程是系统分配资源的基本单位，线程是调度CPU的基本单位，一个进程至少包含一个执行线程，<br>线程寄生在进程当中。每个线程都有一个程序计数器（记录要执行的下一条指令），<br>一组寄存器（保存当前线程的工作变量），堆栈（记录执行历史，其中每一帧保存了一个已经调用但未返回的过程）</p>
-<p>线程分为两类：<br>用户级线程(User-Level Thread)<br>内核线线程(Kernel-Level Thread)</p>
-<p>用户空间划分：<br>内核空间<br>用户空间</p>
-<p><img src="/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E6%B7%B1%E5%85%A5%E8%A7%A3%E8%AF%BB.png" alt="线程深入解读"></p>
-<h2 id="Java线程与内核线程的关系"><a href="#Java线程与内核线程的关系" class="headerlink" title="Java线程与内核线程的关系"></a>Java线程与内核线程的关系</h2><p><img src="/uploads/java/concurrent/Java%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="Java线程与内核线程的关系"></p>
-<h2 id="Java线程生命状态"><a href="#Java线程生命状态" class="headerlink" title="Java线程生命状态"></a>Java线程生命状态</h2><p><img src="/uploads/java/concurrent/Java%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E7%8A%B6%E6%80%81.png" alt="Java线程生命状态"></p>
-<h1 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h1><h2 id="为什么用到并发"><a href="#为什么用到并发" class="headerlink" title="为什么用到并发"></a>为什么用到并发</h2><ul>
-<li>充分利用多核CPU的计算能力</li>
-<li>方便业务拆分，提升应用性能</li>
-</ul>
-<h2 id="并发产生的问题"><a href="#并发产生的问题" class="headerlink" title="并发产生的问题"></a>并发产生的问题</h2><ul>
-<li>高并发场景下，导致频繁的上下文切换</li>
-<li>临界区线程安全问题，容易出现死锁的，产生死锁就会造成系统功能不可用</li>
-<li>其它</li>
-</ul>
-<p><img src="/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2%E8%BF%87%E7%A8%8B.png" alt="线程上下文切换过程"></p>
-<h1 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h1><p>JMM与JVM内存区域的划分是不同的概念层次，更恰当说JMM描述的是一组规则，通过这组规则控制程序中各个变量在共享数据区域和私有数据区域的访问方式，<br>JMM是围绕原子性，有序性、可见性展开。</p>
-<p>简单来说：JMM是计算机CPU多核缓存架构java实现，是一种规则。</p>
-<p><img src="/uploads/java/concurrent/JMM%E6%A8%A1%E5%9E%8B.png" alt="JMM模型"></p>
-<h2 id="JVM虚拟机规范主内存与工作内存"><a href="#JVM虚拟机规范主内存与工作内存" class="headerlink" title="JVM虚拟机规范主内存与工作内存"></a>JVM虚拟机规范主内存与工作内存</h2><p><img src="/uploads/java/concurrent/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%A7%84%E8%8C%83%E4%B8%BB%E5%86%85%E5%AD%98%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AD%98.png" alt="JVM虚拟机规范主内存与工作内存"></p>
-<h2 id="Java内存模型与硬件内存架构的关系"><a href="#Java内存模型与硬件内存架构的关系" class="headerlink" title="Java内存模型与硬件内存架构的关系"></a>Java内存模型与硬件内存架构的关系</h2><p>JMM模型跟CPU缓存模型结构类似，是基于CPU缓存模型建立起来的，JMM模型是标准化的，<br>屏蔽掉了底层不同计算机的区别。对于硬件内存来说只有寄存器、缓存内存、主内存的概念，并没有工作内存(线程私有数据区域)和主内存(堆内存)之分，<br>也就是说Java内存模型对内存的划分对硬件内存并没有任何影响</p>
-<p><img src="/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%A1%AC%E4%BB%B6%E5%86%85%E5%AD%98%E6%9E%B6%E6%9E%84%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="Java内存模型与硬件内存架构的关系"></p>
-<h2 id="Java内存模型内存交互操作"><a href="#Java内存模型内存交互操作" class="headerlink" title="Java内存模型内存交互操作"></a>Java内存模型内存交互操作</h2><p>1.lock(锁定)：作用于主内存的变量，把一个变量标记为一条线程独占状态<br>2.unlock(解锁)：作用于主内存的变量，把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定<br>3.read(读取)：作用于主内存的变量，把一个变量值从主内存传输到线程的工作内存中，以便随后的load动作使用<br>4.load(载入)：作用于工作内存的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中<br>5.use(使用)：作用于工作内存的变量，把工作内存中的一个变量值传递给执行引擎<br>6.assign(赋值)：作用于工作内存的变量，它把一个从执行引擎接收到的值赋给工作内存的变量<br>7.store(存储)：作用于工作内存的变量，把工作内存中的一个变量的值传送到主内存中，以便随后的write的操作<br>8.write(写入)：作用于工作内存的变量，它把store操作从工作内存中的一个变量的值传送到主内存的变量中</p>
-<p>把一个变量从主内存中复制到工作内存中，就需要按顺序地执行read和load操作，如果把变量从工作内存中同步到主内存中，<br>就需要按顺序地执行store和write操作。但Java内存模型只要求上述8大操作(原子操作)必须按顺序执行，而没有保证必须是连续执行。</p>
-<p><strong>read和load同时出现，store和write同时出现</strong></p>
-<p><img src="/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E4%BA%A4%E4%BA%92%E6%93%8D%E4%BD%9C.png" alt="Java内存模型内存交互操作"></p>
-<h2 id="Java内存模型内存同步规则"><a href="#Java内存模型内存同步规则" class="headerlink" title="Java内存模型内存同步规则"></a>Java内存模型内存同步规则</h2><p><img src="/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E5%90%8C%E6%AD%A5%E8%A7%84%E5%88%99.png" alt="Java内存模型内存同步规则"></p>
-<h1 id="volatile原理与内存语义"><a href="#volatile原理与内存语义" class="headerlink" title="volatile原理与内存语义"></a>volatile原理与内存语义</h1><p>volatile是Java虚拟机提供的轻量级的同步机制</p>
-<p>volatile语义有如下两个作用</p>
-<ul>
-<li>可见性：保证被volatile修饰的共享变量对所有线程总数可见的，也就是当一个线程修改了一个被volatile修饰共享变量的值，新值总是可以被其他线程立即得知。</li>
-<li>有序性：禁止指令重排序优化。</li>
-</ul>
-<p>volatile缓存可见性实现原理</p>
-<ul>
-<li>JMM内存交互层面：volatile修饰的变量的read、load、use操作和assign、store、write必须是连续的，即修改后必须立即同步会主内存，使用时必须从主内存刷新，由此保证volatile变量的可见性。</li>
-<li>底层实现：通过汇编lock前缀指令，它会锁定变量缓存行区域并写回主内存，这个操作称为“缓存锁定”，缓存一致性机制会阻止同时修改被两个以上处理器缓存的内存区域数据。一个处理器的缓存回写到内存内存会导致其他处理器的缓存无效</li>
-<li>汇编代码查看<br>XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly -Xcomp</li>
-</ul>
-<h2 id="volatile-无法保证原子性研究"><a href="#volatile-无法保证原子性研究" class="headerlink" title="volatile 无法保证原子性研究"></a>volatile 无法保证原子性研究</h2><h3 id="i-操作为何会被其他线程覆盖"><a href="#i-操作为何会被其他线程覆盖" class="headerlink" title="i++ 操作为何会被其他线程覆盖"></a><code>i++</code> 操作为何会被其他线程覆盖</h3><p><code>i++</code> 操作在多线程环境下容易被其他线程覆盖，这是因为它的执行过程不是原子性的，而是由多个步骤组成的复合操作。下面详细解释这一现象的原因和机制：</p>
-<h4 id="1-i-操作的实际执行步骤"><a href="#1-i-操作的实际执行步骤" class="headerlink" title="1. i++ 操作的实际执行步骤"></a>1. <code>i++</code> 操作的实际执行步骤</h4><p>看似简单的 <code>i++</code> 实际上包含 <strong>3个独立的操作</strong>：</p>
-<ol>
-<li><strong>读取（Read）</strong>：从内存中读取变量 <code>i</code> 的当前值到寄存器/工作内存</li>
-<li><strong>增加（Increment）</strong>：将读取的值加1（在CPU寄存器中计算）</li>
-<li><strong>写入（Write）</strong>：将新值写回内存中的变量 <code>i</code></li>
-</ol>
-<h4 id="2-并发覆盖的具体过程"><a href="#2-并发覆盖的具体过程" class="headerlink" title="2. 并发覆盖的具体过程"></a>2. 并发覆盖的具体过程</h4><p>假设初始值 <code>i = 5</code>，两个线程同时执行 <code>i++</code>：</p>
-<table>
-<thead>
-<tr>
-<th>时间</th>
-<th>线程A操作</th>
-<th>线程B操作</th>
-<th>内存值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>t1</td>
-<td>读取i=5</td>
-<td>-</td>
-<td>5</td>
-</tr>
-<tr>
-<td>t2</td>
-<td>-</td>
-<td>读取i=5</td>
-<td>5</td>
-</tr>
-<tr>
-<td>t3</td>
-<td>计算5+1=6</td>
-<td>-</td>
-<td>5</td>
-</tr>
-<tr>
-<td>t4</td>
-<td>-</td>
-<td>计算5+1=6</td>
-<td>5</td>
-</tr>
-<tr>
-<td>t5</td>
-<td>写入i=6</td>
-<td>-</td>
-<td>6</td>
-</tr>
-<tr>
-<td>t6</td>
-<td>-</td>
-<td>写入i=6</td>
-<td>6</td>
-</tr>
-</tbody></table>
-<p><strong>最终结果</strong>：<code>i=6</code> 而不是预期的 <code>7</code>，线程B的写入覆盖了线程A的写入。</p>
-<p>update flag =true</p>
-<table>
-<thead>
-<tr>
-<th>时间</th>
-<th>线程A操作</th>
-<th>线程B操作</th>
-<th>内存值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>t1</td>
-<td>读取flag，写入true</td>
-<td>-</td>
-<td>true</td>
-</tr>
-<tr>
-<td>t2</td>
-<td>-</td>
-<td>读取主内存最新的flag</td>
-<td>true</td>
-</tr>
-</tbody></table>
-<h4 id="3-字节码层面的证据"><a href="#3-字节码层面的证据" class="headerlink" title="3. 字节码层面的证据"></a>3. 字节码层面的证据</h4><p>通过查看 <code>i++</code> 的字节码可以更清楚地看到问题：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 源代码</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    i++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对应的字节码</span></span><br><span class="line">getfield #2    // 读取字段i的值（步骤1）</span><br><span class="line">iconst_1       <span class="comment">// 准备常量1</span></span><br><span class="line">iadd           <span class="comment">// 执行加法（步骤2）</span></span><br><span class="line">putfield #2    // 将结果写回字段i（步骤3）</span><br></pre></td></tr></table></figure>
-
-<h5 id="重点！"><a href="#重点！" class="headerlink" title="重点！"></a>重点！</h5><p>这三个字节码指令之间存在 <strong>线程切换的可能性</strong>。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 源代码</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">boolean</span> flag = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setFlag</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    flag = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对应的字节码</span></span><br><span class="line">aload_0         <span class="comment">// 加载this引用到操作数栈</span></span><br><span class="line">iconst_1        <span class="comment">// 将int常量1（true）压入栈</span></span><br><span class="line">putfield #2     // 将栈顶值(true)存入对象的第2个字段(flag)</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-与原子操作的对比"><a href="#4-与原子操作的对比" class="headerlink" title="4. 与原子操作的对比"></a>4. 与原子操作的对比</h4><p>真正的原子操作（如 <code>AtomicInteger.incrementAndGet()</code>）会：</p>
-<ol>
-<li>使用 <strong>CAS (Compare-And-Swap)</strong> 指令</li>
-<li>在硬件层面保证 <strong>读取-修改-写入</strong> 作为一个不可分割的整体执行</li>
-<li>通过CPU提供的原子指令（如x86的<code>LOCK XADD</code>）实现</li>
-</ol>
-<h4 id="5-覆盖问题的本质原因"><a href="#5-覆盖问题的本质原因" class="headerlink" title="5. 覆盖问题的本质原因"></a>5. 覆盖问题的本质原因</h4><p><code>i++</code> 被覆盖的核心原因是：</p>
-<ol>
-<li><strong>操作非原子性</strong>：三个步骤可能被线程切换打断</li>
-<li><strong>缺乏同步机制</strong>：没有锁或内存屏障保护</li>
-<li><strong>可见性问题</strong>：一个线程的修改可能不会立即被其他线程看到</li>
-<li><strong>竞态条件</strong>：多个线程基于相同的旧值进行计算</li>
-</ol>
-<h4 id="6-具体场景示例"><a href="#6-具体场景示例" class="headerlink" title="6. 具体场景示例"></a>6. 具体场景示例</h4><h5 id="银行账户取款问题"><a href="#银行账户取款问题" class="headerlink" title="银行账户取款问题"></a>银行账户取款问题</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Account</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> balance = <span class="number">100</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 不安全的取款方法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">withdraw</span><span class="params">(<span class="keyword">int</span> amount)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(balance &gt;= amount) &#123;</span><br><span class="line">            <span class="comment">// 这里可能被其他线程中断</span></span><br><span class="line">            balance -= amount; <span class="comment">// 等价于 balance = balance - amount</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>两个线程同时取款100元，可能导致：</p>
-<ul>
-<li>都检查通过 <code>balance &gt;= 100</code></li>
-<li>都执行 <code>balance - 100</code></li>
-<li>最终余额可能是0（正确）或 -100（错误）</li>
-</ul>
-<p>假如是withdraw方法是原子性的，那么线程balance - 100,另一个线程再进入withdraw方法的时候，从主内存从读取的balance值就会是0</p>
-<h1 id="可见性-amp-原子性-amp-有序性"><a href="#可见性-amp-原子性-amp-有序性" class="headerlink" title="可见性&amp;原子性&amp;有序性"></a>可见性&amp;原子性&amp;有序性</h1><p>并发编程三大特性</p>
-<ul>
-<li>可见性</li>
-<li>原子性</li>
-<li>有序性</li>
-</ul>
-<p>volatile保证可见性与有序性，但是不能保证原子性，要保证原子性需要借助synchronized、Lock锁机制，同理也能保证有序性与可见性。因为synchronized和Lock能够保证任一时刻只有一个线程访问该代码块。</p>
-<h1 id="有序性-amp-指令重排"><a href="#有序性-amp-指令重排" class="headerlink" title="有序性&amp;指令重排"></a>有序性&amp;指令重排</h1><p>java语言规范规定JVM线程内部维持顺序化语义。即只要程序的最终结果与它顺序化情况的结果相等，那么指令的执行顺序可以与代码顺序不一致，此过程叫指令的重排序。</p>
-<p>指令重排序的意义：JVM能根据处理器特性（CPU多级缓存系统、多核处理器等）适当的对机器指令进行重排序，使机器指令能更符合CPU的执行特性，最大限度的发挥机器性能。</p>
-<p>在编译器与CPU处理器中都能执行指令重排优化操作</p>
-<p><img src="/uploads/java/concurrent/%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92.png" alt="指令重排"></p>
-<h1 id="总线风暴–过度使用volatile可能产生的问题"><a href="#总线风暴–过度使用volatile可能产生的问题" class="headerlink" title="总线风暴–过度使用volatile可能产生的问题"></a>总线风暴–过度使用volatile可能产生的问题</h1>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2020/04/10/other/hangzhoumetro2025/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/04/10/other/hangzhoumetro2025/" itemprop="url">杭州地铁规划2025</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-10T00:00:00+00:00">
-                2020-04-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/other/" itemprop="url" rel="index">
-                    <span itemprop="name">other</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  7 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="杭州地铁规划2025"><a href="#杭州地铁规划2025" class="headerlink" title="杭州地铁规划2025"></a>杭州地铁规划2025</h1><p><img src="/uploads/other/%E6%9D%AD%E5%B7%9E%E5%9C%B0%E9%93%81%E8%A7%84%E5%88%922025.jpg" alt="杭州地铁规划2025.jpg"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2859,7 +2627,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">65</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2870,12 +2638,21 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
             
 
           </nav>
@@ -2971,7 +2748,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">72.5k</span>
+    <span title="Site words total count">78.4k</span>
   
 </div>
 
@@ -2998,7 +2775,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共72.5k字</span>
+  <span class="post-count">博客全站共78.4k字</span>
 </div>
 
         
