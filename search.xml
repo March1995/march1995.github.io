@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>支付系统可能遇到的问题</title>
+    <url>/2021/10/11/active/pay/</url>
+    <content><![CDATA[<p>(资源)</p>
+<p>资源不可用</p>
+<p>资源响应超时</p>
+<p>(外部服务)</p>
+<p>通信中断</p>
+<p>服务不可用</p>
+<p>外部服务器响应超时</p>
+<p>外部服务违背功能契约</p>
+<p>应对方式(参考)：原则：避免发生，降低概率，控制影响，快速恢复。</p>
+<table>
+<thead>
+<tr>
+<th>故障条件</th>
+<th>应对方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>超量请求</td>
+<td>配额控制，如订单号提前生成，控制额度</td>
+</tr>
+<tr>
+<td>重复请求</td>
+<td>幂等控制</td>
+</tr>
+<tr>
+<td>并发请求</td>
+<td>并发控制netty、mina等</td>
+</tr>
+<tr>
+<td>请求积压</td>
+<td>请求丢弃</td>
+</tr>
+<tr>
+<td>服务/资源响应超时</td>
+<td>时间控制</td>
+</tr>
+<tr>
+<td>可恢复通信故障</td>
+<td>合理重试</td>
+</tr>
+<tr>
+<td>处理中断</td>
+<td>事务/补偿机制</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>active</category>
+      </categories>
+  </entry>
+  <entry>
     <title>app嵌入H5如何同步登录状态</title>
     <url>/2021/10/11/active/appH5Token/</url>
     <content><![CDATA[<p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
@@ -60,56 +113,77 @@
       </categories>
   </entry>
   <entry>
-    <title>支付系统可能遇到的问题</title>
-    <url>/2021/10/11/active/pay/</url>
-    <content><![CDATA[<p>(资源)</p>
-<p>资源不可用</p>
-<p>资源响应超时</p>
-<p>(外部服务)</p>
-<p>通信中断</p>
-<p>服务不可用</p>
-<p>外部服务器响应超时</p>
-<p>外部服务违背功能契约</p>
-<p>应对方式(参考)：原则：避免发生，降低概率，控制影响，快速恢复。</p>
-<table>
-<thead>
-<tr>
-<th>故障条件</th>
-<th>应对方式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>超量请求</td>
-<td>配额控制，如订单号提前生成，控制额度</td>
-</tr>
-<tr>
-<td>重复请求</td>
-<td>幂等控制</td>
-</tr>
-<tr>
-<td>并发请求</td>
-<td>并发控制netty、mina等</td>
-</tr>
-<tr>
-<td>请求积压</td>
-<td>请求丢弃</td>
-</tr>
-<tr>
-<td>服务/资源响应超时</td>
-<td>时间控制</td>
-</tr>
-<tr>
-<td>可恢复通信故障</td>
-<td>合理重试</td>
-</tr>
-<tr>
-<td>处理中断</td>
-<td>事务/补偿机制</td>
-</tr>
-</tbody></table>
+    <title>缓存概要</title>
+    <url>/2019/10/25/cache/index/</url>
+    <content><![CDATA[<h1 id="一、缓存特征"><a href="#一、缓存特征" class="headerlink" title="一、缓存特征"></a>一、缓存特征</h1><h2 id="命中率"><a href="#命中率" class="headerlink" title="命中率"></a>命中率</h2><p>当某个请求能够通过访问缓存而得到响应时，称为缓存命中。</p>
+<p>缓存命中率越高，缓存的利用率也就越高。</p>
+<h2 id="最大空间"><a href="#最大空间" class="headerlink" title="最大空间"></a>最大空间</h2><p>缓存通常位于内存中，内存的空间通常比磁盘空间小的多，因此缓存的最大空间不可能非常大。</p>
+<p>当缓存存放的数据量超过最大空间时，就需要淘汰部分数据来存放新到达的数据。</p>
+<h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><ul>
+<li><p>FIFO（First In First Out）：先进先出策略，在实时性的场景下，需要经常访问最新的数据，那么就可以使用 FIFO，使得最先进入的数据（最晚的数据）被淘汰。</p>
+</li>
+<li><p>LRU（Least Recently Used）：最近最久未使用策略，优先淘汰最久未使用的数据，也就是上次被访问时间距离现在最久的数据。该策略可以保证内存中的数据都是热点数据，也就是经常被访问的数据，从而保证缓存命中率。</p>
+</li>
+<li><p>LFU（Least Frequently Used）：最不经常使用策略，优先淘汰一段时间内使用次数最少的数据。</p>
+</li>
+</ul>
+<h1 id="二、LRU"><a href="#二、LRU" class="headerlink" title="二、LRU"></a>二、LRU</h1><p>以下是基于 双向链表 + HashMap 的 LRU 算法实现，对算法的解释如下：</p>
+<p>访问某个节点时，将其从原来的位置删除，并重新插入到链表头部。这样就能保证链表尾部存储的就是最近最久未使用的节点，当节点数量大于缓存最大空间时就淘汰链表尾部的节点。<br>为了使删除操作时间复杂度为 O(1)，就不能采用遍历的方式找到某个节点。HashMap 存储着 Key 到节点的映射，通过 Key 就能以 O(1) 的时间得到节点，然后再以 O(1) 的时间将其从双向队列中删除。</p>
+<p><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/algorithms/cache/LRU.java" target="_blank" rel="noopener">LRU实现</a></p>
+<h1 id="三、CDN"><a href="#三、CDN" class="headerlink" title="三、CDN"></a>三、CDN</h1><p>内容分发网络（Content distribution network，CDN）是一种互连的网络系统，它利用更靠近用户的服务器从而更快更可靠地将 HTML、CSS、JavaScript、音乐、图片、视频等静态资源分发给用户。</p>
+<p>CDN 主要有以下优点：</p>
+<ul>
+<li>更快地将数据分发给用户；</li>
+<li>通过部署多台服务器，从而提高系统整体的带宽性能；</li>
+<li>多台服务器可以看成是一种冗余机制，从而具有高可用性。</li>
+</ul>
+<h1 id="四、缓存问题"><a href="#四、缓存问题" class="headerlink" title="四、缓存问题"></a>四、缓存问题</h1><h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>指对某一个一定不存在的数据进行请求，该请求会将穿透缓存到达数据库。</p>
+<p>解决方案：</p>
+<ul>
+<li>对这些不存在的数据缓存一个空数据</li>
+<li>对这类请求进行过滤</li>
+</ul>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>指的是由于数据没有被加载到缓存中，或者缓存数据在同一时间大面积失效（过期），又或者缓存服务器宕机，导致大量的请求都到达数据库。</p>
+<p>在有缓存的系统中，系统非常依赖于缓存，缓存分担了很大一部分的数据请求。当发生缓存雪崩时，数据库无法处理这么大的请求，导致数据库崩溃。</p>
+<p>解决方案：</p>
+<ul>
+<li>为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；</li>
+<li>为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存，分布式缓存中每一个节点只缓存部分的数据，当某个节点宕机时可以保证其它节点的缓存仍然可用。</li>
+<li>也可以进行缓存预热，避免在系统刚启动不久由于还未将大量数据进行缓存而导致缓存雪崩。</li>
+</ul>
+<h2 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h2><p>缓存一致性要求数据更新的同时缓存数据也能够实时更新。</p>
+<p>解决方案：</p>
+<ul>
+<li>在数据更新的同时立即去更新缓存；</li>
+<li>在读缓存之前先判断缓存是否是最新的，如果不是最新的先进行更新。</li>
+</ul>
+<h2 id="缓存-“无底洞”-现象"><a href="#缓存-“无底洞”-现象" class="headerlink" title="缓存 “无底洞” 现象"></a>缓存 “无底洞” 现象</h2><p>指的是为了满足业务要求添加了大量缓存节点，但是性能不但没有好转反而下降了的现象。</p>
+<p>产生原因：缓存系统通常采用 hash 函数将 key 映射到对应的缓存节点，随着缓存节点数目的增加，键值分布到更多的节点上，导致客户端一次批量操作会涉及多次网络操作，这意味着批量操作的耗时会随着节点数目的增加而不断增大。此外，网络连接数变多，对节点的性能也有一定影响。</p>
+<p>解决方案：</p>
+<ul>
+<li>优化批量数据操作命令；</li>
+<li>减少网络通信次数；</li>
+<li>降低接入成本，使用长连接 / 连接池，NIO 等。</li>
+</ul>
+<h1 id="五、数据分布"><a href="#五、数据分布" class="headerlink" title="五、数据分布"></a>五、数据分布</h1><h2 id="哈希分布"><a href="#哈希分布" class="headerlink" title="哈希分布"></a>哈希分布</h2><p>哈希分布就是将数据计算哈希值之后，按照哈希值分配到不同的节点上。例如有 N 个节点，数据的主键为 key，则将该数据分配的节点序号为：hash(key)%N。</p>
+<p>传统的哈希分布算法存在一个问题：当节点数量变化时，也就是 N 值变化，那么几乎所有的数据都需要重新分布，将导致大量的数据迁移。</p>
+<h2 id="顺序分布"><a href="#顺序分布" class="headerlink" title="顺序分布"></a>顺序分布</h2><p>将数据划分为多个连续的部分，按数据的 ID 或者时间分布到不同节点上。例如 User 表的 ID 范围为 1 ~ 7000，使用顺序分布可以将其划分成多个子表，对应的主键范围为 1 ~ 1000，1001 ~ 2000，…，6001 ~ 7000。</p>
+<p>顺序分布相比于哈希分布的主要优点如下：</p>
+<ul>
+<li>能保持数据原有的顺序；</li>
+<li>并且能够准确控制每台服务器存储的数据量，从而使得存储空间的利用率最大。</li>
+</ul>
+<h1 id="六、一致性哈希"><a href="#六、一致性哈希" class="headerlink" title="六、一致性哈希"></a>六、一致性哈希</h1><p>Distributed Hash Table（DHT） 是一种哈希分布方式，其目的是为了克服传统哈希分布在服务器节点数量变化时大量数据迁移的问题。</p>
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>将哈希空间 [0, 2n-1] 看成一个哈希环，每个服务器节点都配置到哈希环上。每个数据对象通过哈希取模得到哈希值之后，存放到哈希环中顺时针方向第一个大于等于该哈希值的节点上。</p>
+<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="一致性hash原理图"></p>
+<p>一致性哈希在增加或者删除节点时只会影响到哈希环中相邻的节点，例如下图中新增节点 X，只需要将它前一个节点 C 上的数据重新进行分布即可，对于节点 A、B、D 都没有影响。</p>
+<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="一致性hash增加节点示意图"></p>
+<h2 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h2><p>上面描述的一致性哈希存在数据分布不均匀的问题，节点存储的数据量有可能会存在很大的不同。</p>
+<p>数据不均匀主要是因为节点在哈希环上分布的不均匀，这种情况在节点数量很少的情况下尤其明显。</p>
+<p>解决方式是通过增加虚拟节点，然后将虚拟节点映射到真实节点上。虚拟节点的数量比真实节点来得多，那么虚拟节点在哈希环上分布的均匀性就会比原来的真实节点好，从而使得数据分布也更加均匀。</p>
 ]]></content>
       <categories>
-        <category>active</category>
+        <category>cache</category>
       </categories>
   </entry>
   <entry>
@@ -423,110 +497,6 @@
       </categories>
   </entry>
   <entry>
-    <title>缓存概要</title>
-    <url>/2019/10/25/cache/index/</url>
-    <content><![CDATA[<h1 id="一、缓存特征"><a href="#一、缓存特征" class="headerlink" title="一、缓存特征"></a>一、缓存特征</h1><h2 id="命中率"><a href="#命中率" class="headerlink" title="命中率"></a>命中率</h2><p>当某个请求能够通过访问缓存而得到响应时，称为缓存命中。</p>
-<p>缓存命中率越高，缓存的利用率也就越高。</p>
-<h2 id="最大空间"><a href="#最大空间" class="headerlink" title="最大空间"></a>最大空间</h2><p>缓存通常位于内存中，内存的空间通常比磁盘空间小的多，因此缓存的最大空间不可能非常大。</p>
-<p>当缓存存放的数据量超过最大空间时，就需要淘汰部分数据来存放新到达的数据。</p>
-<h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><ul>
-<li><p>FIFO（First In First Out）：先进先出策略，在实时性的场景下，需要经常访问最新的数据，那么就可以使用 FIFO，使得最先进入的数据（最晚的数据）被淘汰。</p>
-</li>
-<li><p>LRU（Least Recently Used）：最近最久未使用策略，优先淘汰最久未使用的数据，也就是上次被访问时间距离现在最久的数据。该策略可以保证内存中的数据都是热点数据，也就是经常被访问的数据，从而保证缓存命中率。</p>
-</li>
-<li><p>LFU（Least Frequently Used）：最不经常使用策略，优先淘汰一段时间内使用次数最少的数据。</p>
-</li>
-</ul>
-<h1 id="二、LRU"><a href="#二、LRU" class="headerlink" title="二、LRU"></a>二、LRU</h1><p>以下是基于 双向链表 + HashMap 的 LRU 算法实现，对算法的解释如下：</p>
-<p>访问某个节点时，将其从原来的位置删除，并重新插入到链表头部。这样就能保证链表尾部存储的就是最近最久未使用的节点，当节点数量大于缓存最大空间时就淘汰链表尾部的节点。<br>为了使删除操作时间复杂度为 O(1)，就不能采用遍历的方式找到某个节点。HashMap 存储着 Key 到节点的映射，通过 Key 就能以 O(1) 的时间得到节点，然后再以 O(1) 的时间将其从双向队列中删除。</p>
-<p><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/algorithms/cache/LRU.java" target="_blank" rel="noopener">LRU实现</a></p>
-<h1 id="三、CDN"><a href="#三、CDN" class="headerlink" title="三、CDN"></a>三、CDN</h1><p>内容分发网络（Content distribution network，CDN）是一种互连的网络系统，它利用更靠近用户的服务器从而更快更可靠地将 HTML、CSS、JavaScript、音乐、图片、视频等静态资源分发给用户。</p>
-<p>CDN 主要有以下优点：</p>
-<ul>
-<li>更快地将数据分发给用户；</li>
-<li>通过部署多台服务器，从而提高系统整体的带宽性能；</li>
-<li>多台服务器可以看成是一种冗余机制，从而具有高可用性。</li>
-</ul>
-<h1 id="四、缓存问题"><a href="#四、缓存问题" class="headerlink" title="四、缓存问题"></a>四、缓存问题</h1><h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>指对某一个一定不存在的数据进行请求，该请求会将穿透缓存到达数据库。</p>
-<p>解决方案：</p>
-<ul>
-<li>对这些不存在的数据缓存一个空数据</li>
-<li>对这类请求进行过滤</li>
-</ul>
-<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>指的是由于数据没有被加载到缓存中，或者缓存数据在同一时间大面积失效（过期），又或者缓存服务器宕机，导致大量的请求都到达数据库。</p>
-<p>在有缓存的系统中，系统非常依赖于缓存，缓存分担了很大一部分的数据请求。当发生缓存雪崩时，数据库无法处理这么大的请求，导致数据库崩溃。</p>
-<p>解决方案：</p>
-<ul>
-<li>为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；</li>
-<li>为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存，分布式缓存中每一个节点只缓存部分的数据，当某个节点宕机时可以保证其它节点的缓存仍然可用。</li>
-<li>也可以进行缓存预热，避免在系统刚启动不久由于还未将大量数据进行缓存而导致缓存雪崩。</li>
-</ul>
-<h2 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h2><p>缓存一致性要求数据更新的同时缓存数据也能够实时更新。</p>
-<p>解决方案：</p>
-<ul>
-<li>在数据更新的同时立即去更新缓存；</li>
-<li>在读缓存之前先判断缓存是否是最新的，如果不是最新的先进行更新。</li>
-</ul>
-<h2 id="缓存-“无底洞”-现象"><a href="#缓存-“无底洞”-现象" class="headerlink" title="缓存 “无底洞” 现象"></a>缓存 “无底洞” 现象</h2><p>指的是为了满足业务要求添加了大量缓存节点，但是性能不但没有好转反而下降了的现象。</p>
-<p>产生原因：缓存系统通常采用 hash 函数将 key 映射到对应的缓存节点，随着缓存节点数目的增加，键值分布到更多的节点上，导致客户端一次批量操作会涉及多次网络操作，这意味着批量操作的耗时会随着节点数目的增加而不断增大。此外，网络连接数变多，对节点的性能也有一定影响。</p>
-<p>解决方案：</p>
-<ul>
-<li>优化批量数据操作命令；</li>
-<li>减少网络通信次数；</li>
-<li>降低接入成本，使用长连接 / 连接池，NIO 等。</li>
-</ul>
-<h1 id="五、数据分布"><a href="#五、数据分布" class="headerlink" title="五、数据分布"></a>五、数据分布</h1><h2 id="哈希分布"><a href="#哈希分布" class="headerlink" title="哈希分布"></a>哈希分布</h2><p>哈希分布就是将数据计算哈希值之后，按照哈希值分配到不同的节点上。例如有 N 个节点，数据的主键为 key，则将该数据分配的节点序号为：hash(key)%N。</p>
-<p>传统的哈希分布算法存在一个问题：当节点数量变化时，也就是 N 值变化，那么几乎所有的数据都需要重新分布，将导致大量的数据迁移。</p>
-<h2 id="顺序分布"><a href="#顺序分布" class="headerlink" title="顺序分布"></a>顺序分布</h2><p>将数据划分为多个连续的部分，按数据的 ID 或者时间分布到不同节点上。例如 User 表的 ID 范围为 1 ~ 7000，使用顺序分布可以将其划分成多个子表，对应的主键范围为 1 ~ 1000，1001 ~ 2000，…，6001 ~ 7000。</p>
-<p>顺序分布相比于哈希分布的主要优点如下：</p>
-<ul>
-<li>能保持数据原有的顺序；</li>
-<li>并且能够准确控制每台服务器存储的数据量，从而使得存储空间的利用率最大。</li>
-</ul>
-<h1 id="六、一致性哈希"><a href="#六、一致性哈希" class="headerlink" title="六、一致性哈希"></a>六、一致性哈希</h1><p>Distributed Hash Table（DHT） 是一种哈希分布方式，其目的是为了克服传统哈希分布在服务器节点数量变化时大量数据迁移的问题。</p>
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>将哈希空间 [0, 2n-1] 看成一个哈希环，每个服务器节点都配置到哈希环上。每个数据对象通过哈希取模得到哈希值之后，存放到哈希环中顺时针方向第一个大于等于该哈希值的节点上。</p>
-<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="一致性hash原理图"></p>
-<p>一致性哈希在增加或者删除节点时只会影响到哈希环中相邻的节点，例如下图中新增节点 X，只需要将它前一个节点 C 上的数据重新进行分布即可，对于节点 A、B、D 都没有影响。</p>
-<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="一致性hash增加节点示意图"></p>
-<h2 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h2><p>上面描述的一致性哈希存在数据分布不均匀的问题，节点存储的数据量有可能会存在很大的不同。</p>
-<p>数据不均匀主要是因为节点在哈希环上分布的不均匀，这种情况在节点数量很少的情况下尤其明显。</p>
-<p>解决方式是通过增加虚拟节点，然后将虚拟节点映射到真实节点上。虚拟节点的数量比真实节点来得多，那么虚拟节点在哈希环上分布的均匀性就会比原来的真实节点好，从而使得数据分布也更加均匀。</p>
-]]></content>
-      <categories>
-        <category>cache</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>chmod指令学习</title>
-    <url>/2018/11/29/linux-command/chmod/</url>
-    <content><![CDATA[<h1 id="命令格式："><a href="#命令格式：" class="headerlink" title="命令格式："></a>命令格式：</h1><p>chmod [-cfvR] [–help] [–version] mode file   </p>
-<h1 id="命令功能："><a href="#命令功能：" class="headerlink" title="命令功能："></a>命令功能：</h1><p>用于改变文件或目录的访问权限，用它控制文件或目录的访问权限。</p>
-<h1 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h1><h2 id="必要参数："><a href="#必要参数：" class="headerlink" title="必要参数："></a>必要参数：</h2><pre><code>-c 当发生改变时，报告处理信息
--f 错误信息不输出
--R 处理指定目录以及其子目录下的所有文件
--v 运行时显示详细处理信息</code></pre><h2 id="选择参数："><a href="#选择参数：" class="headerlink" title="选择参数："></a>选择参数：</h2><pre><code>--reference=&lt;目录或者文件&gt; 设置成具有指定目录或者文件具有相同的权限
---version 显示版本信息
-&lt;权限范围&gt;+&lt;权限设置&gt; 使权限范围内的目录或者文件具有指定的权限
-&lt;权限范围&gt;-&lt;权限设置&gt; 删除权限范围的目录或者文件的指定权限
-&lt;权限范围&gt;=&lt;权限设置&gt; 设置权限范围内的目录或者文件的权限为指定的值    </code></pre><h3 id="权限范围："><a href="#权限范围：" class="headerlink" title="权限范围："></a>权限范围：</h3><pre><code>u ：目录或者文件的当前的用户
-g ：目录或者文件的当前的群组
-o ：除了目录或者文件的当前用户或群组之外的用户或者群组
-a ：所有的用户及群组</code></pre><h3 id="权限代号："><a href="#权限代号：" class="headerlink" title="权限代号："></a>权限代号：</h3><pre><code>r ：读权限，用数字4表示
-w ：写权限，用数字2表示
-x ：执行权限，用数字1表示
-- ：删除权限，用数字0表示
-s ：特殊权限 </code></pre><h3 id="文字设定法"><a href="#文字设定法" class="headerlink" title="文字设定法:"></a>文字设定法:</h3><pre><code>chmod ［who］ ［+ | - | =］ ［mode］ 文件名
-例子：
-chmod u+r 给拥有者添加可读权限   </code></pre><h3 id="数字设定法"><a href="#数字设定法" class="headerlink" title="数字设定法:"></a>数字设定法:</h3><ul>
-<li>0表示没有权限，1表示可执行权限，2表示可写权限，4表示可读权限，然后将其相加。所以数字属性的格式应为3个从0到7的八进制数，其顺序是（u）（g）（o）</li>
-</ul>
-<pre><code>chmod ［mode］ 文件名
-chmod 751 file 给file的属主分配读、写、执行(7)的权限，给file的所在组分配读、执行(5)的权限，给其他用户分配执行(1)的权限         </code></pre>]]></content>
-      <categories>
-        <category>linux-command</category>
-      </categories>
-  </entry>
-  <entry>
     <title>数据结构概念</title>
     <url>/2019/01/04/datastructure/index/</url>
     <content><![CDATA[<h1 id="数据结构算法学习（一）：数据结构与算法概念解析"><a href="#数据结构算法学习（一）：数据结构与算法概念解析" class="headerlink" title="数据结构算法学习（一）：数据结构与算法概念解析"></a>数据结构算法学习（一）：数据结构与算法概念解析</h1><h2 id="什么是数据结构"><a href="#什么是数据结构" class="headerlink" title="什么是数据结构"></a>什么是数据结构</h2><p>数据（data）：符号集合，处理对象。</p>
@@ -593,6 +563,48 @@ for (int i=1; i&lt;=n; i*=2)        //循环log2n次
 --from=&lt;当前用户：当前群组&gt; 只有当前用户和群组跟指定的用户和群组相同时才进行改变
 --help 显示帮助信息
 --version 显示版本信息</code></pre>]]></content>
+      <categories>
+        <category>linux-command</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>chmod指令学习</title>
+    <url>/2018/11/29/linux-command/chmod/</url>
+    <content><![CDATA[<h1 id="命令格式："><a href="#命令格式：" class="headerlink" title="命令格式："></a>命令格式：</h1><p>chmod [-cfvR] [–help] [–version] mode file   </p>
+<h1 id="命令功能："><a href="#命令功能：" class="headerlink" title="命令功能："></a>命令功能：</h1><p>用于改变文件或目录的访问权限，用它控制文件或目录的访问权限。</p>
+<h1 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h1><h2 id="必要参数："><a href="#必要参数：" class="headerlink" title="必要参数："></a>必要参数：</h2><pre><code>-c 当发生改变时，报告处理信息
+-f 错误信息不输出
+-R 处理指定目录以及其子目录下的所有文件
+-v 运行时显示详细处理信息</code></pre><h2 id="选择参数："><a href="#选择参数：" class="headerlink" title="选择参数："></a>选择参数：</h2><pre><code>--reference=&lt;目录或者文件&gt; 设置成具有指定目录或者文件具有相同的权限
+--version 显示版本信息
+&lt;权限范围&gt;+&lt;权限设置&gt; 使权限范围内的目录或者文件具有指定的权限
+&lt;权限范围&gt;-&lt;权限设置&gt; 删除权限范围的目录或者文件的指定权限
+&lt;权限范围&gt;=&lt;权限设置&gt; 设置权限范围内的目录或者文件的权限为指定的值    </code></pre><h3 id="权限范围："><a href="#权限范围：" class="headerlink" title="权限范围："></a>权限范围：</h3><pre><code>u ：目录或者文件的当前的用户
+g ：目录或者文件的当前的群组
+o ：除了目录或者文件的当前用户或群组之外的用户或者群组
+a ：所有的用户及群组</code></pre><h3 id="权限代号："><a href="#权限代号：" class="headerlink" title="权限代号："></a>权限代号：</h3><pre><code>r ：读权限，用数字4表示
+w ：写权限，用数字2表示
+x ：执行权限，用数字1表示
+- ：删除权限，用数字0表示
+s ：特殊权限 </code></pre><h3 id="文字设定法"><a href="#文字设定法" class="headerlink" title="文字设定法:"></a>文字设定法:</h3><pre><code>chmod ［who］ ［+ | - | =］ ［mode］ 文件名
+例子：
+chmod u+r 给拥有者添加可读权限   </code></pre><h3 id="数字设定法"><a href="#数字设定法" class="headerlink" title="数字设定法:"></a>数字设定法:</h3><ul>
+<li>0表示没有权限，1表示可执行权限，2表示可写权限，4表示可读权限，然后将其相加。所以数字属性的格式应为3个从0到7的八进制数，其顺序是（u）（g）（o）</li>
+</ul>
+<pre><code>chmod ［mode］ 文件名
+chmod 751 file 给file的属主分配读、写、执行(7)的权限，给file的所在组分配读、执行(5)的权限，给其他用户分配执行(1)的权限         </code></pre>]]></content>
+      <categories>
+        <category>linux-command</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>rm特殊删除</title>
+    <url>/2018/10/29/linux-command/rm/</url>
+    <content><![CDATA[<h1 id="特殊删除"><a href="#特殊删除" class="headerlink" title="特殊删除"></a>特殊删除</h1><h2 id="删除所有-p开头的文件"><a href="#删除所有-p开头的文件" class="headerlink" title="删除所有-p开头的文件"></a>删除所有-p开头的文件</h2><p>rm – -P.* </p>
+<p>需要用–进行特殊处理</p>
+<h2 id="自定义回收站功能"><a href="#自定义回收站功能" class="headerlink" title="自定义回收站功能"></a>自定义回收站功能</h2><p>myrm(){ D=/tmp/$(date +%Y%m%d%H%M%S); mkdir -p $D;  mv “$@” $D &amp;&amp; echo “moved to $D ok”; }</p>
+<p>alias rm=’myrm’</p>
+]]></content>
       <categories>
         <category>linux-command</category>
       </categories>
@@ -681,18 +693,6 @@ for (int i=1; i&lt;=n; i*=2)        //循环log2n次
 <li><p>–version 显示版本信息并离开</p>
 </li>
 </ul>
-]]></content>
-      <categories>
-        <category>linux-command</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>rm特殊删除</title>
-    <url>/2018/10/29/linux-command/rm/</url>
-    <content><![CDATA[<h1 id="特殊删除"><a href="#特殊删除" class="headerlink" title="特殊删除"></a>特殊删除</h1><h2 id="删除所有-p开头的文件"><a href="#删除所有-p开头的文件" class="headerlink" title="删除所有-p开头的文件"></a>删除所有-p开头的文件</h2><p>rm – -P.* </p>
-<p>需要用–进行特殊处理</p>
-<h2 id="自定义回收站功能"><a href="#自定义回收站功能" class="headerlink" title="自定义回收站功能"></a>自定义回收站功能</h2><p>myrm(){ D=/tmp/$(date +%Y%m%d%H%M%S); mkdir -p $D;  mv “$@” $D &amp;&amp; echo “moved to $D ok”; }</p>
-<p>alias rm=’myrm’</p>
 ]]></content>
       <categories>
         <category>linux-command</category>
@@ -2668,15 +2668,6 @@ Using index condition
       </categories>
   </entry>
   <entry>
-    <title>CountDownLatch&amp;Semaphore-共享锁</title>
-    <url>/2021/10/31/java/coucurrent/3.CountDownLatch&amp;Semaphore/</url>
-    <content><![CDATA[<h1 id="1-Semaphore-是什么？"><a href="#1-Semaphore-是什么？" class="headerlink" title="1. Semaphore 是什么？"></a>1. Semaphore 是什么？</h1><p>Semaphore 字面意思是信号量的意思，它的作用是控制访问特定资源的线程数目。</p>
-]]></content>
-      <categories>
-        <category>并发编程</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Atomic&amp;Unsafe魔法类详解</title>
     <url>/2021/11/05/java/coucurrent/4.Atomic&amp;Unsafe%E9%AD%94%E6%B3%95%E7%B1%BB%E8%AF%A6%E8%A7%A3/</url>
     <content><![CDATA[<h1 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h1><p>处理器自动保证基本内存操作的原子性，如对同一个缓存行里进行16/32/64位的操作是原子的。<br>复杂的内存操作处理器不能自动保证其原子性，比如跨总线宽度，跨多个缓存行，跨页表的访问。</p>
@@ -2731,106 +2722,20 @@ Using index condition
       </categories>
   </entry>
   <entry>
-    <title>定时任务&amp;定时线程池</title>
-    <url>/2021/11/09/java/coucurrent/7.%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1&amp;%E5%AE%9A%E6%97%B6%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>并发编程</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>ThreadLocal</title>
-    <url>/2019/03/02/java/coucurrent/ThreadLocal/</url>
-    <content><![CDATA[<h1 id="类图："><a href="#类图：" class="headerlink" title="类图："></a>类图：</h1><h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p><img src="/.io//uploads/java/concurrent/ThreadLocal.png" alt="ThreadLocal"></p>
-<h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h2><p><img src="/.io//uploads/java/concurrent/Thread.png" alt="Thread"></p>
-<h1 id="源码："><a href="#源码：" class="headerlink" title="源码："></a>源码：</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The entries in this hash map extend WeakReference, using</span></span><br><span class="line"><span class="comment">         * its main ref field as the key (which is always a</span></span><br><span class="line"><span class="comment">         * ThreadLocal object).  Note that null keys (i.e. entry.get()</span></span><br><span class="line"><span class="comment">         * == null) mean that the key is no longer referenced, so the</span></span><br><span class="line"><span class="comment">         * entry can be expunged from table.  Such entries are referred to</span></span><br><span class="line"><span class="comment">         * as "stale entries" in the code that follows.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">            <span class="comment">/** The value associated with this ThreadLocal. */</span></span><br><span class="line">            Object value;</span><br><span class="line"></span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="keyword">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The initial capacity -- MUST be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> INITIAL_CAPACITY = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The table, resized as necessary.</span></span><br><span class="line"><span class="comment">         * table.length MUST always be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br></pre></td></tr></table></figure>
-<h3 id="Thread-1"><a href="#Thread-1" class="headerlink" title="Thread"></a>Thread</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">ThreadLocal.ThreadLocalMap inheritableThreadLocals = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
-<h1 id="流程-先讲一下作用，再说自己看过源码，讲下源码"><a href="#流程-先讲一下作用，再说自己看过源码，讲下源码" class="headerlink" title="流程  先讲一下作用，再说自己看过源码，讲下源码"></a>流程  先讲一下作用，再说自己看过源码，讲下源码</h1><p>ThreadLocal就是让线程有一份自己的数据副本，因此不需要考虑线程安全问题。<br>在我做过的项目中一般用来存储用户信息。因为后台中每一个请求都是一个线程，我们在后续需要这个数据的时候就可以很方便的获取这个信息。<br>ThreadLocal中有一个静态内部类ThreadLocalMap，这个Map里面的key是ThreadLocal这个对象，value就是我们要存储的值。<br>而ThreadLocalMap里面其实是维护了一个Entry数组，而Entry类是ThreadLocalMap的静态内部类，其中key存储的是弱引用的ThreadLocal，value存储的就是要存储的数据。<br>而在每条线程Thread内部有一个ThreadLocal.ThreadLocalMap类型的成员变量threadLocals，<br>这个threadLocals就是每条线程用来存储数据副本的，key值为ThreadLocal对象，value为变量副本。<br>所以ThreadLocal和里面的静态内部类ThreadLocalMap其实是为每一个线程来服务的。在ThreadLocal源码中也可以看到，每次执行get和set方法的时候<br>，都要先获取当前访问的线程，然后再从当前线程获取该线程的ThreadLocalMap属性然后再来操作。</p>
-<p>ThreadLocal可能出现的问题？<br>ThreadLocal会发生内存泄漏的问题。<br>ThreadLocalMap里面维护了一个Entry数组，而每个Entry类的key是弱引用的ThreadLocal，value是数据。<br>如果一个ThreadLocal对象没有外部的强引用来指向它，那么堆内存不足的时候会被GC掉这些弱引用的Key，那么就会出现key为null但是value不为null的情况，但是此时的value会一直存在一个强引用链，也就是Thread当前线程-&gt;ThreadLocalMap-&gt;Entry-&gt;Value，导致GC无法回收造成内存的泄漏，这个value就是泄漏的对象。<br>但是ThreadLocalMap在执行get、set、remove的时候会自动清理key为null的Entry，<br>但是更优雅的做法还是在使用完ThreadLocal之后调用ThreadLocal中的remove方法清空ThreadLocal变量副本解决该问题，<br>在我做的项目中，会在过滤器的最后执行ThreadLocal中的remove方法进行手动释放。</p>
+    <title>CountDownLatch&amp;Semaphore-共享锁</title>
+    <url>/2021/10/31/java/coucurrent/3.CountDownLatch&amp;Semaphore/</url>
+    <content><![CDATA[<h1 id="1-Semaphore-是什么？"><a href="#1-Semaphore-是什么？" class="headerlink" title="1. Semaphore 是什么？"></a>1. Semaphore 是什么？</h1><p>Semaphore 字面意思是信号量的意思，它的作用是控制访问特定资源的线程数目。</p>
 ]]></content>
       <categories>
         <category>并发编程</category>
       </categories>
   </entry>
   <entry>
-    <title>java数据类型</title>
-    <url>/2018/05/17/java/javase/dataType/</url>
-    <content><![CDATA[<h1 id="1-Java-八大基本数据类型及其封装器类（位数为二进制位）"><a href="#1-Java-八大基本数据类型及其封装器类（位数为二进制位）" class="headerlink" title="1.Java 八大基本数据类型及其封装器类（位数为二进制位）"></a>1.Java 八大基本数据类型及其封装器类（位数为二进制位）</h1><h2 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h2><p>char：默认值：\u0000，16位，数据范围：\u0000 - u\ffff，存储Unicode码，用单引号赋值。封装类：Character</p>
-<h2 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h2><p>boolean：默认值：false，1位，只有true和false两个取值。封装类：Boolean</p>
-<h2 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h2><p>整数类型：(最大存储容量为2的n次方减一，范围为负数2的n减一次方至2的n减一次方减一，n为位数，原理见计算机组成原理无符号数与有符号数)</p>
-<p>byte：默认值：0，8位，字节，最大存储数据量是255，存放的数据范围是-128~127之间。封装类：Byte</p>
-<p>short：默认值：0，16位，最大数据存储量是65536，数据范围是-32768~32767之间。封装类：Short</p>
-<p>int：默认值：0，32位，最大数据存储容量是2的32次方减1，数据范围是负的2的31次方到正的2的31次方减1。封装类：Integer</p>
-<p>long：默认值：0，64位，最大数据存储容量是2的64次方减1，数据范围为负的2的63次方到正的2的63次方减1。封装类：Long</p>
-<p>浮点数类型：</p>
-<p>float：默认值：0.0f，32位，数据范围在3.4e-45~1.4e38，直接赋值时必须在数字后加上f或F。封装类：Float</p>
-<p>double：默认值：0.0d，64位，数据范围在4.9e-324~1.8e308，赋值时可以加d或D也可以不加。封装类：Double</p>
-<p>对于数值类型的基本类型的取值范围，我们无需强制去记忆，因为它们的值都已经以常量的形式定义在对应的包装类中了。如：</p>
-<p>基本类型byte 二进制位数：Byte.SIZE最小值：Byte.MIN_VALUE最大值：Byte.MAX_VALUE</p>
-<p>基本类型short二进制位数：Short.SIZE最小值：Short.MIN_VALUE最大值：Short.MAX_VALUE</p>
-<p>基本类型char二进制位数：Character.SIZE最小值：Character.MIN_VALUE最大值：Character.MAX_VALUE</p>
-<p>基本类型double 二进制位数：Double.SIZE最小值：Double.MIN_VALUE最大值：Double.MAX_VALUE</p>
-<blockquote>
-<p>注意：float、double两种类型的最小值与Float.MIN_VALUE、 Double.MIN_VALUE的值并不相同，实际上Float.MIN_VALUE和Double.MIN_VALUE分别指的是 float和double类型所能表示的最小正数。也就是说存在这样一种情况，0到±Float.MIN_VALUE之间的值float类型无法表示，0 到±Double.MIN_VALUE之间的值double类型无法表示。这并没有什么好奇怪的，因为这些范围内的数值超出了它们的精度范围。</p>
-</blockquote>
-<h1 id="2-数据类型之间的转换："><a href="#2-数据类型之间的转换：" class="headerlink" title="2.数据类型之间的转换："></a>2.数据类型之间的转换：</h1><h2 id="简单类型数据间的转换"><a href="#简单类型数据间的转换" class="headerlink" title="简单类型数据间的转换"></a>简单类型数据间的转换</h2><p>自动转换：运算或者方法调用时，低精度自动转化为高精度，从低到高顺序：(byte，short，char)–int–long–float—double；<br>        特例：int到float，long到float，long到double 是不会自动转换的，不然将会丢失精度。</p>
-<p>强制转换：高精度转为低精度，可以使用强制转换；即你必须采用下面这种语句格式： int n=(int)3.14159/2;可以想象，这种转换肯定可能会导致溢出或精度的下降。</p>
-<h2 id="表达式的数据类型自动提升"><a href="#表达式的数据类型自动提升" class="headerlink" title="表达式的数据类型自动提升"></a>表达式的数据类型自动提升</h2><p>注意一下规则：</p>
-<pre><code>①所有的byte,short,char型的值将被提升为int型；
-②如果有一个操作数是long型，计算结果是long型；
-③如果有一个操作数是float型，计算结果是float型；
-④如果有一个操作数是double型，计算结果是double型；
-例， byte b; b=3; b=(byte)(b*3);//必须声明byte。 </code></pre><h2 id="包装类过渡类型转换"><a href="#包装类过渡类型转换" class="headerlink" title="包装类过渡类型转换"></a>包装类过渡类型转换</h2><ul>
-<li>简单类型的变量转换为相应的包装类，可以利用包装类的构造函数。即：Boolean(boolean value)、Character(char value)、Integer(int value)、Long(long value)、Float(float value)、Double(double value)</li>
-<li>在各个包装类中，总有形为××Value()的方法，来得到其对应的简单类型数据。利用这种方法，也可以实现不同数值型变量间的转换，例如，对于一个双精度实型类，intValue()可以得到其对应的整型变量，而doubleValue()可以得到其对应的双精度实型变量</li>
-</ul>
-<h2 id="字符串与其它类型间的转换"><a href="#字符串与其它类型间的转换" class="headerlink" title="字符串与其它类型间的转换"></a>字符串与其它类型间的转换</h2><p>其它类型向字符串的转换：</p>
-<pre><code>①调用类的串转换方法:X.toString();
-②自动转换:X+&quot;&quot;;
-③使用String的方法:String.valueOf(X);</code></pre><p>字符串作为值,向其它类型的转换：</p>
-<pre><code>①先转换成相应的封装器实例,再调用对应的方法转换成其它类型。例：new Float(&quot;11&quot;).doubleValue()
-②静态parseXXX方法。
-    String s = &quot;1&quot;;
-    byte b = Byte.parseByte( s );
-    short t = Short.parseShort( s );
-    int i = Integer.parseInt( s );
-    long l = Long.parseLong( s );
-    Float f = Float.parseFloat( s );
-    Double d = Double.parseDouble( s );
-③Character的getNumericValue(char ch)方法</code></pre><h2 id="自动拆箱与自动装箱"><a href="#自动拆箱与自动装箱" class="headerlink" title="自动拆箱与自动装箱"></a><strong>自动拆箱与自动装箱</strong></h2><p>自动装箱：把基本类型用它们对应的包装类包装起来，使它们具有对象的特质，可以调用所对应的包装类所定义的方法，比如toString()等。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Integer i0 &#x3D; new Integer(0);&#x2F;&#x2F;基本的创建封装类对象</span><br><span class="line">Integer i1 &#x3D; 2;&#x2F;&#x2F;自动装箱</span><br><span class="line">Integer i1_ &#x3D; Integer.valueOf(2);&#x2F;&#x2F;自动装箱的本质，调用XX.valueof()方法</span><br><span class="line">&#96;&#96;&#96;    </span><br><span class="line"></span><br><span class="line">自动拆箱：跟自动装箱的方向相反，将Integer及Double这样的包装类的对象重新简化为基本类型的数据(自动拆箱时，一定要确保包装类的引用不为空)</span><br></pre></td></tr></table></figure>
-<p>System.out.println(i1+2);<br>//i1是我们上面通过自动装箱得到的一个integer对象，而这个对象是不能直接进行四则运算的，但是我们却给它+2，<br>这样就必须将integer对象转变为基本数据类型（int），这个过程就是自动拆箱的过程</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">jdk装箱池（方法区中的常量池）：java的八种基本类型（Byte Short、Integer、Long、Character、Boolean、Float、Double），除Float及Double意外，其它六种都实现了常量池，但是他们只在大于等于-128且小于等于127时才能使用常量池，如果不在此范围内，则会new一个出来，保存在堆内存中。</span><br><span class="line"></span><br><span class="line">例子：</span><br></pre></td></tr></table></figure>
-<pre><code>Integer a = 1;
-Integer b = 1;
-Integer c = 144;
-Integer d = 144;
-Integer a1 = new Integer(1);
-Integer b1 = new Integer(1);
-System.out.println(a == b);         //true
-System.out.println(a.equals(b));    //true
-System.out.println(a1 == b1);       //false
-System.out.println(a1.equals(b1));  //true
-System.out.println(c == d);         //false
-System.out.println(c.equals(d));    //true</code></pre><pre><code>
-在进行==比较的时候，在自动装箱池范围内的数据的引用是相同的，范围外的是不同的。 
-
-# 3.Java引用类型
-Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
-引申：Java中的堆内存、栈内存、静态存储区
-&gt; http://www.cnblogs.com/mingziday/p/4899212.html
-
-栈（stack）存放基础数据类型以及对象的对象的引用
-
-堆（heap）存放由new创建的对象和数组，即堆主要是用来存储对象的
-
-方法区中的静态存储区存储static声明的静态变量
-
-# 4.java字符编码
-&gt; http://kxjhlele.iteye.com/blog/333211
-</code></pre>]]></content>
+    <title>定时任务&amp;定时线程池</title>
+    <url>/2021/11/09/java/coucurrent/7.%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1&amp;%E5%AE%9A%E6%97%B6%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
+    <content><![CDATA[]]></content>
       <categories>
-        <category>JavaSE</category>
+        <category>并发编程</category>
       </categories>
   </entry>
   <entry>
@@ -2967,6 +2872,87 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
       </categories>
   </entry>
   <entry>
+    <title>java数据类型</title>
+    <url>/2018/05/17/java/javase/dataType/</url>
+    <content><![CDATA[<h1 id="1-Java-八大基本数据类型及其封装器类（位数为二进制位）"><a href="#1-Java-八大基本数据类型及其封装器类（位数为二进制位）" class="headerlink" title="1.Java 八大基本数据类型及其封装器类（位数为二进制位）"></a>1.Java 八大基本数据类型及其封装器类（位数为二进制位）</h1><h2 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h2><p>char：默认值：\u0000，16位，数据范围：\u0000 - u\ffff，存储Unicode码，用单引号赋值。封装类：Character</p>
+<h2 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h2><p>boolean：默认值：false，1位，只有true和false两个取值。封装类：Boolean</p>
+<h2 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h2><p>整数类型：(最大存储容量为2的n次方减一，范围为负数2的n减一次方至2的n减一次方减一，n为位数，原理见计算机组成原理无符号数与有符号数)</p>
+<p>byte：默认值：0，8位，字节，最大存储数据量是255，存放的数据范围是-128~127之间。封装类：Byte</p>
+<p>short：默认值：0，16位，最大数据存储量是65536，数据范围是-32768~32767之间。封装类：Short</p>
+<p>int：默认值：0，32位，最大数据存储容量是2的32次方减1，数据范围是负的2的31次方到正的2的31次方减1。封装类：Integer</p>
+<p>long：默认值：0，64位，最大数据存储容量是2的64次方减1，数据范围为负的2的63次方到正的2的63次方减1。封装类：Long</p>
+<p>浮点数类型：</p>
+<p>float：默认值：0.0f，32位，数据范围在3.4e-45~1.4e38，直接赋值时必须在数字后加上f或F。封装类：Float</p>
+<p>double：默认值：0.0d，64位，数据范围在4.9e-324~1.8e308，赋值时可以加d或D也可以不加。封装类：Double</p>
+<p>对于数值类型的基本类型的取值范围，我们无需强制去记忆，因为它们的值都已经以常量的形式定义在对应的包装类中了。如：</p>
+<p>基本类型byte 二进制位数：Byte.SIZE最小值：Byte.MIN_VALUE最大值：Byte.MAX_VALUE</p>
+<p>基本类型short二进制位数：Short.SIZE最小值：Short.MIN_VALUE最大值：Short.MAX_VALUE</p>
+<p>基本类型char二进制位数：Character.SIZE最小值：Character.MIN_VALUE最大值：Character.MAX_VALUE</p>
+<p>基本类型double 二进制位数：Double.SIZE最小值：Double.MIN_VALUE最大值：Double.MAX_VALUE</p>
+<blockquote>
+<p>注意：float、double两种类型的最小值与Float.MIN_VALUE、 Double.MIN_VALUE的值并不相同，实际上Float.MIN_VALUE和Double.MIN_VALUE分别指的是 float和double类型所能表示的最小正数。也就是说存在这样一种情况，0到±Float.MIN_VALUE之间的值float类型无法表示，0 到±Double.MIN_VALUE之间的值double类型无法表示。这并没有什么好奇怪的，因为这些范围内的数值超出了它们的精度范围。</p>
+</blockquote>
+<h1 id="2-数据类型之间的转换："><a href="#2-数据类型之间的转换：" class="headerlink" title="2.数据类型之间的转换："></a>2.数据类型之间的转换：</h1><h2 id="简单类型数据间的转换"><a href="#简单类型数据间的转换" class="headerlink" title="简单类型数据间的转换"></a>简单类型数据间的转换</h2><p>自动转换：运算或者方法调用时，低精度自动转化为高精度，从低到高顺序：(byte，short，char)–int–long–float—double；<br>        特例：int到float，long到float，long到double 是不会自动转换的，不然将会丢失精度。</p>
+<p>强制转换：高精度转为低精度，可以使用强制转换；即你必须采用下面这种语句格式： int n=(int)3.14159/2;可以想象，这种转换肯定可能会导致溢出或精度的下降。</p>
+<h2 id="表达式的数据类型自动提升"><a href="#表达式的数据类型自动提升" class="headerlink" title="表达式的数据类型自动提升"></a>表达式的数据类型自动提升</h2><p>注意一下规则：</p>
+<pre><code>①所有的byte,short,char型的值将被提升为int型；
+②如果有一个操作数是long型，计算结果是long型；
+③如果有一个操作数是float型，计算结果是float型；
+④如果有一个操作数是double型，计算结果是double型；
+例， byte b; b=3; b=(byte)(b*3);//必须声明byte。 </code></pre><h2 id="包装类过渡类型转换"><a href="#包装类过渡类型转换" class="headerlink" title="包装类过渡类型转换"></a>包装类过渡类型转换</h2><ul>
+<li>简单类型的变量转换为相应的包装类，可以利用包装类的构造函数。即：Boolean(boolean value)、Character(char value)、Integer(int value)、Long(long value)、Float(float value)、Double(double value)</li>
+<li>在各个包装类中，总有形为××Value()的方法，来得到其对应的简单类型数据。利用这种方法，也可以实现不同数值型变量间的转换，例如，对于一个双精度实型类，intValue()可以得到其对应的整型变量，而doubleValue()可以得到其对应的双精度实型变量</li>
+</ul>
+<h2 id="字符串与其它类型间的转换"><a href="#字符串与其它类型间的转换" class="headerlink" title="字符串与其它类型间的转换"></a>字符串与其它类型间的转换</h2><p>其它类型向字符串的转换：</p>
+<pre><code>①调用类的串转换方法:X.toString();
+②自动转换:X+&quot;&quot;;
+③使用String的方法:String.valueOf(X);</code></pre><p>字符串作为值,向其它类型的转换：</p>
+<pre><code>①先转换成相应的封装器实例,再调用对应的方法转换成其它类型。例：new Float(&quot;11&quot;).doubleValue()
+②静态parseXXX方法。
+    String s = &quot;1&quot;;
+    byte b = Byte.parseByte( s );
+    short t = Short.parseShort( s );
+    int i = Integer.parseInt( s );
+    long l = Long.parseLong( s );
+    Float f = Float.parseFloat( s );
+    Double d = Double.parseDouble( s );
+③Character的getNumericValue(char ch)方法</code></pre><h2 id="自动拆箱与自动装箱"><a href="#自动拆箱与自动装箱" class="headerlink" title="自动拆箱与自动装箱"></a><strong>自动拆箱与自动装箱</strong></h2><p>自动装箱：把基本类型用它们对应的包装类包装起来，使它们具有对象的特质，可以调用所对应的包装类所定义的方法，比如toString()等。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Integer i0 &#x3D; new Integer(0);&#x2F;&#x2F;基本的创建封装类对象</span><br><span class="line">Integer i1 &#x3D; 2;&#x2F;&#x2F;自动装箱</span><br><span class="line">Integer i1_ &#x3D; Integer.valueOf(2);&#x2F;&#x2F;自动装箱的本质，调用XX.valueof()方法</span><br><span class="line">&#96;&#96;&#96;    </span><br><span class="line"></span><br><span class="line">自动拆箱：跟自动装箱的方向相反，将Integer及Double这样的包装类的对象重新简化为基本类型的数据(自动拆箱时，一定要确保包装类的引用不为空)</span><br></pre></td></tr></table></figure>
+<p>System.out.println(i1+2);<br>//i1是我们上面通过自动装箱得到的一个integer对象，而这个对象是不能直接进行四则运算的，但是我们却给它+2，<br>这样就必须将integer对象转变为基本数据类型（int），这个过程就是自动拆箱的过程</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">jdk装箱池（方法区中的常量池）：java的八种基本类型（Byte Short、Integer、Long、Character、Boolean、Float、Double），除Float及Double意外，其它六种都实现了常量池，但是他们只在大于等于-128且小于等于127时才能使用常量池，如果不在此范围内，则会new一个出来，保存在堆内存中。</span><br><span class="line"></span><br><span class="line">例子：</span><br></pre></td></tr></table></figure>
+<pre><code>Integer a = 1;
+Integer b = 1;
+Integer c = 144;
+Integer d = 144;
+Integer a1 = new Integer(1);
+Integer b1 = new Integer(1);
+System.out.println(a == b);         //true
+System.out.println(a.equals(b));    //true
+System.out.println(a1 == b1);       //false
+System.out.println(a1.equals(b1));  //true
+System.out.println(c == d);         //false
+System.out.println(c.equals(d));    //true</code></pre><pre><code>
+在进行==比较的时候，在自动装箱池范围内的数据的引用是相同的，范围外的是不同的。 
+
+# 3.Java引用类型
+Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
+引申：Java中的堆内存、栈内存、静态存储区
+&gt; http://www.cnblogs.com/mingziday/p/4899212.html
+
+栈（stack）存放基础数据类型以及对象的对象的引用
+
+堆（heap）存放由new创建的对象和数组，即堆主要是用来存储对象的
+
+方法区中的静态存储区存储static声明的静态变量
+
+# 4.java字符编码
+&gt; http://kxjhlele.iteye.com/blog/333211
+</code></pre>]]></content>
+      <categories>
+        <category>JavaSE</category>
+      </categories>
+  </entry>
+  <entry>
     <title>java异常体系结构</title>
     <url>/2018/08/08/java/javase/exception/</url>
     <content><![CDATA[<h1 id="java异常体系结构图"><a href="#java异常体系结构图" class="headerlink" title="java异常体系结构图"></a>java异常体系结构图</h1><p><img src="/uploads/java/javase/%E5%BC%82%E5%B8%B8%E7%BB%93%E6%9E%84%E4%BD%93%E7%B3%BB.png" alt="java异常体系结构"></p>
@@ -2993,6 +2979,104 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
 <li>多个catch模块，子类在先，为了保证所有的catch都有存在的意义</li>
 <li>finally模块在try-catch的return或者异常处理之前执行</li>
 <li>在以下4种特殊情况下，finally块不会被执行：<br>1）在finally语句块中抛出了异常且未处理。<br>2）在前面的代码中用了System.exit()退出程序。<br>3）程序所在的线程死亡。<br>4）CPU出现异常被关闭。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>JavaSE</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>java标识符与关键字</title>
+    <url>/2018/05/16/java/javase/javaKeyWord/</url>
+    <content><![CDATA[<h1 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h1><ul>
+<li><p>概念：就是用于给程序中的变量、类、方法命名的符号;</p>
+</li>
+<li><p>标识符规则：标识符可以有字母、数字、下划线_、和美元符号$组成，并且数字不能打头<br>   标识符不能使java关键字和保留字，但可以包含关键字和保留字<br>   标识符不能包含空格 标识符只能包含美元符号$，不能包含@、#等其他特殊字符</p>
+</li>
+<li><p>分隔符：分号; 花括号{} 方括号[] 括号() 空格 圆点.;</p>
+</li>
+</ul>
+<h1 id="Java关键字"><a href="#Java关键字" class="headerlink" title="Java关键字"></a>Java关键字</h1><p>java中包含50个关键，所有关键字都是小写的</p>
+<pre><code>关键字列表：
+ abstract抽象的            assert 
+ boolean                   break 
+ byte                      case
+ catch                     char
+ const(保留字)             continue
+default                    do
+ double                    else
+ enum                      extends
+ final                     finally
+ float                     for
+ if                        goto(保留字)
+ implements                import
+ int                       interface
+ long                      native
+ new                       package
+ private                   protected
+ public                    return 
+ short                     static 
+ strictfp                  super
+ switch                    synchronized
+ this                      throw
+ throws                    transient
+ try                       void 
+ volatile                  while
+
+ 三个特殊的直接量（iteral）;true false null 都不是关键字
+
+
+ final、finally、finalize的区别:
+ final:
+ final修饰变量，则等同于常量,变量不能修改
+ final修饰方法中的参数，称为最终参数，参数不能修改。
+ final修饰类，则类不能被继承
+ final修饰方法，则方法不能被重写。
+ finally:
+ try-catch模块中使用finally，表示finally块则是无论异常是否发生，都会执行finally块的内容
+ finalize:
+ 使用finalize在垃圾收集器确定这个对象未被引用时调用，表示在垃圾收集器将对象从内存中清除出去之前做一些清理工作。
+ 子类可以覆盖该方法以实现资源清理工作，GC在回收对象之前调用该方法</code></pre>]]></content>
+      <categories>
+        <category>JavaSE</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>java正则表达式例子</title>
+    <url>/2018/08/28/java/javase/regularExpression/</url>
+    <content><![CDATA[<h1 id="正则表达式-文本框输入内容控制"><a href="#正则表达式-文本框输入内容控制" class="headerlink" title="[正则表达式]文本框输入内容控制"></a>[正则表达式]文本框输入内容控制</h1><ul>
+<li>整数或者小数：^[0-9]+.{0,1}[0-9]{0,2}$</li>
+<li>只能输入数字：”^[0-9]*$”。</li>
+<li>只能输入n位的数字：”^\d{n}$”。</li>
+<li>只能输入至少n位的数字：”^\d{n,}$”。</li>
+<li>只能输入m~n位的数字：。”^\d{m,n}$”</li>
+<li>只能输入零和非零开头的数字：”^(0|[1-9][0-9]*)$”。</li>
+<li>只能输入有两位小数的正实数：”^[0-9]+(.[0-9]{2})?$”。</li>
+<li>只能输入有1~3位小数的正实数：”^[0-9]+(.[0-9]{1,3})?$”。</li>
+<li>只能输入非零的正整数：”^+?[1-9][0-9]*$”。</li>
+<li>只能输入非零的负整数：”^-[1-9][]0-9”*$。</li>
+<li>只能输入长度为3的字符：”^.{3}$”。</li>
+<li>只能输入由26个英文字母组成的字符串：”^[A-Za-z]+$”。</li>
+<li>只能输入由26个大写英文字母组成的字符串：”^[A-Z]+$”。</li>
+<li>只能输入由26个小写英文字母组成的字符串：”^[a-z]+$”。</li>
+<li>只能输入由数字和26个英文字母组成的字符串：”^[A-Za-z0-9]+$”。</li>
+<li>只能输入由数字、26个英文字母或者下划线组成的字符串：”^\w+$”。</li>
+<li>验证用户密码：”^[a-zA-Z]\w{5,17}$”正确格式为：以字母开头，长度在6~18之间，只能包含字符、数字和下划线。</li>
+<li>验证是否含有^%&amp;’,;=?$&quot;等字符：”[^%&amp;’,;=?$\x22]+”。</li>
+<li>只能输入汉字：”^[\u4e00-\u9fa5]{0,}$”</li>
+<li>验证Email地址：”^\w+([-+.]\w+)<em>@\w+([-.]\w+)*.\w+([-.]\w+)</em>$”。</li>
+<li>验证InternetURL：”^http://([\w-]+.)+[\w-]+(/[\w-./?%&amp;=]*)?$”。</li>
+<li>验证电话号码：”^((\d{3,4}-)|\d{3.4}-)?\d{7,8}$”正确格式为：”XXX-XXXXXXX”、”XXXX-XXXXXXXX”、”XXX-XXXXXXX”、”XXX-XXXXXXXX”、”XXXXXXX”和”XXXXXXXX”。</li>
+<li>验证身份证号（15位或18位数字）：”^\d{15}|\d{18}$”。</li>
+<li>验证一年的12个月：”^(0?[1-9]|1[0-2])$”正确格式为：”01”～”09”和”1”～”12”。</li>
+<li>验证一个月的31天：”^((0?[1-9])|((1|2)[0-9])|30|31)$”正确格式为；”01”～”09”和”1”～”31”。</li>
+<li>匹配中文字符的正则表达式： [\u4e00-\u9fa5]</li>
+<li>匹配双字节字符(包括汉字在内)：[^\x00-\xff]</li>
+<li>应用：计算字符串的长度（一个双字节字符长度计2，ASCII字符计1）</li>
+<li>String.prototype.len=function(){return this.replace(/[^\x00-\xff]/g,”aa”).length;}</li>
+<li>匹配空行的正则表达式：\n[\s| ]*\r</li>
+<li>匹配html标签的正则表达式：&lt;(.<em>)&gt;(.</em>)&lt;/(.<em>)&gt;|&lt;(.</em>)/&gt;</li>
+<li>匹配首尾空格的正则表达式：(^\s<em>)|(\s</em>$)</li>
 </ul>
 ]]></content>
       <categories>
@@ -3151,104 +3235,6 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
       </categories>
   </entry>
   <entry>
-    <title>java正则表达式例子</title>
-    <url>/2018/08/28/java/javase/regularExpression/</url>
-    <content><![CDATA[<h1 id="正则表达式-文本框输入内容控制"><a href="#正则表达式-文本框输入内容控制" class="headerlink" title="[正则表达式]文本框输入内容控制"></a>[正则表达式]文本框输入内容控制</h1><ul>
-<li>整数或者小数：^[0-9]+.{0,1}[0-9]{0,2}$</li>
-<li>只能输入数字：”^[0-9]*$”。</li>
-<li>只能输入n位的数字：”^\d{n}$”。</li>
-<li>只能输入至少n位的数字：”^\d{n,}$”。</li>
-<li>只能输入m~n位的数字：。”^\d{m,n}$”</li>
-<li>只能输入零和非零开头的数字：”^(0|[1-9][0-9]*)$”。</li>
-<li>只能输入有两位小数的正实数：”^[0-9]+(.[0-9]{2})?$”。</li>
-<li>只能输入有1~3位小数的正实数：”^[0-9]+(.[0-9]{1,3})?$”。</li>
-<li>只能输入非零的正整数：”^+?[1-9][0-9]*$”。</li>
-<li>只能输入非零的负整数：”^-[1-9][]0-9”*$。</li>
-<li>只能输入长度为3的字符：”^.{3}$”。</li>
-<li>只能输入由26个英文字母组成的字符串：”^[A-Za-z]+$”。</li>
-<li>只能输入由26个大写英文字母组成的字符串：”^[A-Z]+$”。</li>
-<li>只能输入由26个小写英文字母组成的字符串：”^[a-z]+$”。</li>
-<li>只能输入由数字和26个英文字母组成的字符串：”^[A-Za-z0-9]+$”。</li>
-<li>只能输入由数字、26个英文字母或者下划线组成的字符串：”^\w+$”。</li>
-<li>验证用户密码：”^[a-zA-Z]\w{5,17}$”正确格式为：以字母开头，长度在6~18之间，只能包含字符、数字和下划线。</li>
-<li>验证是否含有^%&amp;’,;=?$&quot;等字符：”[^%&amp;’,;=?$\x22]+”。</li>
-<li>只能输入汉字：”^[\u4e00-\u9fa5]{0,}$”</li>
-<li>验证Email地址：”^\w+([-+.]\w+)<em>@\w+([-.]\w+)*.\w+([-.]\w+)</em>$”。</li>
-<li>验证InternetURL：”^http://([\w-]+.)+[\w-]+(/[\w-./?%&amp;=]*)?$”。</li>
-<li>验证电话号码：”^((\d{3,4}-)|\d{3.4}-)?\d{7,8}$”正确格式为：”XXX-XXXXXXX”、”XXXX-XXXXXXXX”、”XXX-XXXXXXX”、”XXX-XXXXXXXX”、”XXXXXXX”和”XXXXXXXX”。</li>
-<li>验证身份证号（15位或18位数字）：”^\d{15}|\d{18}$”。</li>
-<li>验证一年的12个月：”^(0?[1-9]|1[0-2])$”正确格式为：”01”～”09”和”1”～”12”。</li>
-<li>验证一个月的31天：”^((0?[1-9])|((1|2)[0-9])|30|31)$”正确格式为；”01”～”09”和”1”～”31”。</li>
-<li>匹配中文字符的正则表达式： [\u4e00-\u9fa5]</li>
-<li>匹配双字节字符(包括汉字在内)：[^\x00-\xff]</li>
-<li>应用：计算字符串的长度（一个双字节字符长度计2，ASCII字符计1）</li>
-<li>String.prototype.len=function(){return this.replace(/[^\x00-\xff]/g,”aa”).length;}</li>
-<li>匹配空行的正则表达式：\n[\s| ]*\r</li>
-<li>匹配html标签的正则表达式：&lt;(.<em>)&gt;(.</em>)&lt;/(.<em>)&gt;|&lt;(.</em>)/&gt;</li>
-<li>匹配首尾空格的正则表达式：(^\s<em>)|(\s</em>$)</li>
-</ul>
-]]></content>
-      <categories>
-        <category>JavaSE</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>java标识符与关键字</title>
-    <url>/2018/05/16/java/javase/javaKeyWord/</url>
-    <content><![CDATA[<h1 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h1><ul>
-<li><p>概念：就是用于给程序中的变量、类、方法命名的符号;</p>
-</li>
-<li><p>标识符规则：标识符可以有字母、数字、下划线_、和美元符号$组成，并且数字不能打头<br>   标识符不能使java关键字和保留字，但可以包含关键字和保留字<br>   标识符不能包含空格 标识符只能包含美元符号$，不能包含@、#等其他特殊字符</p>
-</li>
-<li><p>分隔符：分号; 花括号{} 方括号[] 括号() 空格 圆点.;</p>
-</li>
-</ul>
-<h1 id="Java关键字"><a href="#Java关键字" class="headerlink" title="Java关键字"></a>Java关键字</h1><p>java中包含50个关键，所有关键字都是小写的</p>
-<pre><code>关键字列表：
- abstract抽象的            assert 
- boolean                   break 
- byte                      case
- catch                     char
- const(保留字)             continue
-default                    do
- double                    else
- enum                      extends
- final                     finally
- float                     for
- if                        goto(保留字)
- implements                import
- int                       interface
- long                      native
- new                       package
- private                   protected
- public                    return 
- short                     static 
- strictfp                  super
- switch                    synchronized
- this                      throw
- throws                    transient
- try                       void 
- volatile                  while
-
- 三个特殊的直接量（iteral）;true false null 都不是关键字
-
-
- final、finally、finalize的区别:
- final:
- final修饰变量，则等同于常量,变量不能修改
- final修饰方法中的参数，称为最终参数，参数不能修改。
- final修饰类，则类不能被继承
- final修饰方法，则方法不能被重写。
- finally:
- try-catch模块中使用finally，表示finally块则是无论异常是否发生，都会执行finally块的内容
- finalize:
- 使用finalize在垃圾收集器确定这个对象未被引用时调用，表示在垃圾收集器将对象从内存中清除出去之前做一些清理工作。
- 子类可以覆盖该方法以实现资源清理工作，GC在回收对象之前调用该方法</code></pre>]]></content>
-      <categories>
-        <category>JavaSE</category>
-      </categories>
-  </entry>
-  <entry>
     <title>java线程解析</title>
     <url>/2019/03/02/java/javase/thread/</url>
     <content><![CDATA[<h1 id="一些概念："><a href="#一些概念：" class="headerlink" title="一些概念："></a>一些概念：</h1><p>并行与并发：</p>
@@ -3365,41 +3351,6 @@ default                    do
       </categories>
   </entry>
   <entry>
-    <title>dubbo注册中心</title>
-    <url>/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/</url>
-    <content><![CDATA[<h1 id="注册中心的作用"><a href="#注册中心的作用" class="headerlink" title="注册中心的作用"></a>注册中心的作用</h1><p>为了达到服务器动态扩容的目的，注册中心存储的服务器的地址信息和可用状态，并实时推送给订阅了相关服务的客户端。</p>
-<p>一个完整的注册中心需要实现以下功能：</p>
-<p>1.接收服务端的注册和客户端的引用，即 将服务与消费相关联，并支持多对多。<br>2.支持服务端宕机后能即时清楚其状态。<br>3.注册中心重启后，可以自动恢复注册的数据和订阅的请求。<br>4.注册中心自身的集群。</p>
-<h1 id="Dubbo所支持的注册中心"><a href="#Dubbo所支持的注册中心" class="headerlink" title="Dubbo所支持的注册中心"></a>Dubbo所支持的注册中心</h1><p>1.Multicast注册中心:</p>
-<ul>
-<li>基于组网广播技术，只能用在局域网内，一般用于简单的测试服务</li>
-</ul>
-<p>2.zookeeper 注册中心(推荐)</p>
-<p>3.Redis注册中心</p>
-<p>4.Simple注册中心</p>
-<h1 id="Redis-注册中心"><a href="#Redis-注册中心" class="headerlink" title="Redis 注册中心"></a>Redis 注册中心</h1><p>关于Redis注册中心我们需要了解两点，</p>
-<ol>
-<li>如何存储服务的注册与订阅关系</li>
-<li>是当服务状态改变时如何即时更新</li>
-</ol>
-<h2 id="如何存储服务的注册与订阅关系"><a href="#如何存储服务的注册与订阅关系" class="headerlink" title="如何存储服务的注册与订阅关系"></a>如何存储服务的注册与订阅关系</h2><p>使用redis的发布订阅(pub/sub)模型。</p>
-<p>redis中存储的数据结构。</p>
-<p>服务端：<br>Reids中增加了一个Hash 类型的记录，其key为/dubbo/tuling.dubbo.server.UserService/providers。Value中分别存储了两个服务提供者的URL和有效期。</p>
-<p><img src="/uploads/dubbo/Redis%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E5%9E%8B.png" alt="Redis服务端模型.png"></p>
-<p>客户端:<br>主 Key 为服务名和类型 </p>
-<p>Map 中的 Key 为 URL 地址</p>
-<p>Map 中的 Value 为过期时间，用于判断脏数据，脏数据由监控中心删除</p>
-<h2 id="是当服务状态改变时如何即时更新"><a href="#是当服务状态改变时如何即时更新" class="headerlink" title="是当服务状态改变时如何即时更新"></a>是当服务状态改变时如何即时更新</h2><p>这里Dubbo采用的是定时心跳的机制 来维护服务URL的有效期，默认每30秒更新一次有效期。即URL对应的毫秒值。<br>具体代码参见：com.alibaba.dubbo.registry.redis.RedisRegistry#expireExecutor</p>
-<p><img src="/uploads/dubbo/Redis%E5%BF%83%E8%B7%B3.png" alt="Redis心跳.png"></p>
-<p>com.alibaba.dubbo.registry.redis.RedisRegistry#deferExpired<br>com.alibaba.dubbo.registry.integration.RegistryDirectory<br>com.alibaba.dubbo.registry.support.ProviderConsumerRegTable</p>
-<h1 id="Zookeeper-注册中心"><a href="#Zookeeper-注册中心" class="headerlink" title="Zookeeper 注册中心"></a>Zookeeper 注册中心</h1><p>Zookeper是一个树型的目录服务，本身支持变更推送相比redis的实现Publish/Subscribe功能更稳定。</p>
-<p>结构：<br><img src="/uploads/dubbo/Zookeeper%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83.png" alt="Zookeeper注册中心.png"></p>
-]]></content>
-      <categories>
-        <category>dubbo</category>
-      </categories>
-  </entry>
-  <entry>
     <title>dubbo调用模块</title>
     <url>/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/</url>
     <content><![CDATA[<h2 id="一、Dubbo-调用模块基本组成"><a href="#一、Dubbo-调用模块基本组成" class="headerlink" title="一、Dubbo 调用模块基本组成"></a>一、Dubbo 调用模块基本组成</h2><ol>
@@ -3458,6 +3409,41 @@ default                    do
 <p>&lt;dubbo:provider filter=”accesslog” accesslog=”logs/dubbo.log”/&gt;<br>以上配置 就是 为 服务提供者 添加 日志记录过滤器， 所有访问日志将会集中打印至 accesslog 当中</p>
 <h2 id="三、Dubbo调用流程"><a href="#三、Dubbo调用流程" class="headerlink" title="三、Dubbo调用流程"></a>三、Dubbo调用流程</h2><p><img src="/uploads/dubbo/Dubbo%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png" alt="Dubbo调用流程.png"></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//------ 6协议 调用</span></span><br><span class="line">doInvoke:<span class="number">77</span>, DubboInvoker &#123;org.apache.dubbo.rpc.protocol.dubbo&#125;</span><br><span class="line">invoke:<span class="number">155</span>, AbstractInvoker &#123;org.apache.dubbo.rpc.protocol&#125;</span><br><span class="line"><span class="comment">//------ 5异步转同步</span></span><br><span class="line">invoke:<span class="number">52</span>, AsyncToSyncInvoker &#123;org.apache.dubbo.rpc.protocol&#125; <span class="comment">// 异步转同步 ,返回结果之前进行阻塞调用线程</span></span><br><span class="line"><span class="comment">//----- 4过滤器链</span></span><br><span class="line">invoke:<span class="number">92</span>, MonitorFilter &#123;org.apache.dubbo.monitor.support&#125;  <span class="comment">// 过滤链-&gt; 监控器</span></span><br><span class="line">invoke:<span class="number">54</span>, FutureFilter &#123;org.apache.dubbo.rpc.protocol.dubbo.filter&#125;    <span class="comment">//过滤链-&gt; 回调参数</span></span><br><span class="line">invoke:<span class="number">14</span>, ProviderHelloFilter &#123;com.wyb.dubbo&#125;  <span class="comment">// 过滤链-&gt; 自定义过滤器</span></span><br><span class="line">invoke:<span class="number">60</span>, ConsumerContextFilter &#123;org.apache.dubbo.rpc.filter&#125; <span class="comment">// 过滤链-&gt; 消费者环境初始化</span></span><br><span class="line"><span class="comment">//------3集群处理</span></span><br><span class="line">doInvoke:<span class="number">82</span>, FailoverClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">// 集服-失败重试</span></span><br><span class="line">invoke:<span class="number">248</span>, AbstractClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">//</span></span><br><span class="line"><span class="comment">//----- Mock服务</span></span><br><span class="line">invoke:<span class="number">78</span>, MockClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support.wrapper&#125; <span class="comment">// mock 服务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//----- 2动态代理 --透明化</span></span><br><span class="line">invoke:<span class="number">55</span>, InvokerInvocationHandler &#123;org.apache.dubbo.rpc.proxy&#125;<span class="comment">// 代理的中间接口</span></span><br><span class="line">getUser:-<span class="number">1</span>, proxy0 &#123;org.apache.dubbo.common.bytecode&#125; <span class="comment">// 代理对象</span></span><br><span class="line"><span class="comment">//----- 1调用客户端</span></span><br><span class="line">main:<span class="number">53</span>, DubboClient &#123;com.wyb.dubbo&#125;  <span class="comment">// 客户端</span></span><br><span class="line"></span><br><span class="line">RegistryProtocol --&gt; Cluster --&gt; MockClusterInvoker:ClusterInvoker-&gt;DubboProtocol-&gt;FilterChain:AsyncToSyncInvoker:DubboInvoker</span><br><span class="line">协议--》(注册协议)---&gt;MockClusterInvoker ---》ClusterInvoker---&gt; RegistryDirectory ---&gt;(DubboProtcol)-&gt;FilterChain--&gt;DubboInvoker</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>dubbo</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>dubbo注册中心</title>
+    <url>/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/</url>
+    <content><![CDATA[<h1 id="注册中心的作用"><a href="#注册中心的作用" class="headerlink" title="注册中心的作用"></a>注册中心的作用</h1><p>为了达到服务器动态扩容的目的，注册中心存储的服务器的地址信息和可用状态，并实时推送给订阅了相关服务的客户端。</p>
+<p>一个完整的注册中心需要实现以下功能：</p>
+<p>1.接收服务端的注册和客户端的引用，即 将服务与消费相关联，并支持多对多。<br>2.支持服务端宕机后能即时清楚其状态。<br>3.注册中心重启后，可以自动恢复注册的数据和订阅的请求。<br>4.注册中心自身的集群。</p>
+<h1 id="Dubbo所支持的注册中心"><a href="#Dubbo所支持的注册中心" class="headerlink" title="Dubbo所支持的注册中心"></a>Dubbo所支持的注册中心</h1><p>1.Multicast注册中心:</p>
+<ul>
+<li>基于组网广播技术，只能用在局域网内，一般用于简单的测试服务</li>
+</ul>
+<p>2.zookeeper 注册中心(推荐)</p>
+<p>3.Redis注册中心</p>
+<p>4.Simple注册中心</p>
+<h1 id="Redis-注册中心"><a href="#Redis-注册中心" class="headerlink" title="Redis 注册中心"></a>Redis 注册中心</h1><p>关于Redis注册中心我们需要了解两点，</p>
+<ol>
+<li>如何存储服务的注册与订阅关系</li>
+<li>是当服务状态改变时如何即时更新</li>
+</ol>
+<h2 id="如何存储服务的注册与订阅关系"><a href="#如何存储服务的注册与订阅关系" class="headerlink" title="如何存储服务的注册与订阅关系"></a>如何存储服务的注册与订阅关系</h2><p>使用redis的发布订阅(pub/sub)模型。</p>
+<p>redis中存储的数据结构。</p>
+<p>服务端：<br>Reids中增加了一个Hash 类型的记录，其key为/dubbo/tuling.dubbo.server.UserService/providers。Value中分别存储了两个服务提供者的URL和有效期。</p>
+<p><img src="/uploads/dubbo/Redis%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E5%9E%8B.png" alt="Redis服务端模型.png"></p>
+<p>客户端:<br>主 Key 为服务名和类型 </p>
+<p>Map 中的 Key 为 URL 地址</p>
+<p>Map 中的 Value 为过期时间，用于判断脏数据，脏数据由监控中心删除</p>
+<h2 id="是当服务状态改变时如何即时更新"><a href="#是当服务状态改变时如何即时更新" class="headerlink" title="是当服务状态改变时如何即时更新"></a>是当服务状态改变时如何即时更新</h2><p>这里Dubbo采用的是定时心跳的机制 来维护服务URL的有效期，默认每30秒更新一次有效期。即URL对应的毫秒值。<br>具体代码参见：com.alibaba.dubbo.registry.redis.RedisRegistry#expireExecutor</p>
+<p><img src="/uploads/dubbo/Redis%E5%BF%83%E8%B7%B3.png" alt="Redis心跳.png"></p>
+<p>com.alibaba.dubbo.registry.redis.RedisRegistry#deferExpired<br>com.alibaba.dubbo.registry.integration.RegistryDirectory<br>com.alibaba.dubbo.registry.support.ProviderConsumerRegTable</p>
+<h1 id="Zookeeper-注册中心"><a href="#Zookeeper-注册中心" class="headerlink" title="Zookeeper 注册中心"></a>Zookeeper 注册中心</h1><p>Zookeper是一个树型的目录服务，本身支持变更推送相比redis的实现Publish/Subscribe功能更稳定。</p>
+<p>结构：<br><img src="/uploads/dubbo/Zookeeper%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83.png" alt="Zookeeper注册中心.png"></p>
+]]></content>
       <categories>
         <category>dubbo</category>
       </categories>
@@ -3840,6 +3826,85 @@ default                    do
 
 <h3 id="线程池原理"><a href="#线程池原理" class="headerlink" title="线程池原理"></a>线程池原理</h3><p><img src="/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86.jpg" alt="线程池运行原理.jpg"></p>
 <h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1>]]></content>
+      <categories>
+        <category>并发编程</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>ThreadLocal</title>
+    <url>/2019/03/02/java/coucurrent/ThreadLocal/</url>
+    <content><![CDATA[<h1 id="类图："><a href="#类图：" class="headerlink" title="类图："></a>类图：</h1><h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p><img src="/.io//../uploads/java/concurrent/ThreadLocal.png" alt="ThreadLocal"></p>
+<h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h2><p><img src="/.io//uploads/java/concurrent/Thread.png" alt="Thread"></p>
+<h1 id="源码："><a href="#源码：" class="headerlink" title="源码："></a>源码：</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The entries in this hash map extend WeakReference, using</span></span><br><span class="line"><span class="comment">         * its main ref field as the key (which is always a</span></span><br><span class="line"><span class="comment">         * ThreadLocal object).  Note that null keys (i.e. entry.get()</span></span><br><span class="line"><span class="comment">         * == null) mean that the key is no longer referenced, so the</span></span><br><span class="line"><span class="comment">         * entry can be expunged from table.  Such entries are referred to</span></span><br><span class="line"><span class="comment">         * as "stale entries" in the code that follows.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">            <span class="comment">/** The value associated with this ThreadLocal. */</span></span><br><span class="line">            Object value;</span><br><span class="line"></span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="keyword">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The initial capacity -- MUST be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> INITIAL_CAPACITY = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The table, resized as necessary.</span></span><br><span class="line"><span class="comment">         * table.length MUST always be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br></pre></td></tr></table></figure>
+<h3 id="Thread-1"><a href="#Thread-1" class="headerlink" title="Thread"></a>Thread</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">ThreadLocal.ThreadLocalMap inheritableThreadLocals = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="流程-先讲一下作用，再说自己看过源码，讲下源码"><a href="#流程-先讲一下作用，再说自己看过源码，讲下源码" class="headerlink" title="流程  先讲一下作用，再说自己看过源码，讲下源码"></a>流程  先讲一下作用，再说自己看过源码，讲下源码</h3><p>ThreadLocal就是让线程有一份自己的数据副本，因此不需要考虑线程安全问题。<br>在我做过的项目中一般用来存储用户信息。因为后台中每一个请求都是一个线程，我们在后续需要这个数据的时候就可以很方便的获取这个信息。<br>ThreadLocal中有一个静态内部类ThreadLocalMap，这个Map里面的key是ThreadLocal这个对象，value就是我们要存储的值。<br>而ThreadLocalMap里面其实是维护了一个Entry数组，而Entry类是ThreadLocalMap的静态内部类，其中key存储的是弱引用的ThreadLocal，value存储的就是要存储的数据。<br>而在每条线程Thread内部有一个ThreadLocal.ThreadLocalMap类型的成员变量threadLocals，<br>这个threadLocals就是每条线程用来存储数据副本的，key值为ThreadLocal对象，value为变量副本。<br>所以ThreadLocal和里面的静态内部类ThreadLocalMap其实是为每一个线程来服务的。在ThreadLocal源码中也可以看到，每次执行get和set方法的时候<br>，都要先获取当前访问的线程，然后再从当前线程获取该线程的ThreadLocalMap属性然后再来操作。</p>
+<p>ThreadLocal可能出现的问题？<br>ThreadLocal会发生内存泄漏的问题。<br>ThreadLocalMap里面维护了一个Entry数组，而每个Entry类的key是弱引用的ThreadLocal，value是数据。<br>如果一个ThreadLocal对象没有外部的强引用来指向它，那么堆内存不足的时候会被GC掉这些弱引用的Key，那么就会出现key为null但是value不为null的情况，但是此时的value会一直存在一个强引用链，也就是Thread当前线程-&gt;ThreadLocalMap-&gt;Entry-&gt;Value，导致GC无法回收造成内存的泄漏，这个value就是泄漏的对象。<br>但是ThreadLocalMap在执行get、set、remove的时候会自动清理key为null的Entry，<br>但是更优雅的做法还是在使用完ThreadLocal之后调用ThreadLocal中的remove方法清空ThreadLocal变量副本解决该问题，<br>在我做的项目中，会在过滤器的最后执行ThreadLocal中的remove方法进行手动释放。</p>
+<h3 id="为什么-JDK-不把-value-也设计成弱引用？"><a href="#为什么-JDK-不把-value-也设计成弱引用？" class="headerlink" title="为什么 JDK 不把 value 也设计成弱引用？"></a>为什么 JDK 不把 value 也设计成弱引用？</h3><p>如果 value 是弱引用：</p>
+<p>只要 ThreadLocal 被回收，value 也会被回收。<br>但这样会导致 ThreadLocal 失去存储能力，因为 value 可能随时被 GC 回收，无法保证数据存活。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ThreadLocal&lt;<span class="keyword">byte</span>[]&gt; tl = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line">tl.set(<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>]); <span class="comment">// 1MB 数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 假设 value 是弱引用，且发生 GC：</span></span><br><span class="line">System.gc();</span><br><span class="line"><span class="keyword">byte</span>[] data = tl.get(); <span class="comment">// 可能返回 null，即使 tl 仍然存活！</span></span><br></pre></td></tr></table></figure>
+<p>JDK 的权衡：</p>
+<p>key 弱引用：防止 ThreadLocal 对象本身泄漏。<br>value 强引用：确保数据可用，但要求开发者 必须手动 remove()</p>
+<h3 id="JDK-的现有设计（key-弱引用-value-强引用）"><a href="#JDK-的现有设计（key-弱引用-value-强引用）" class="headerlink" title="JDK 的现有设计（key 弱引用 + value 强引用）"></a>JDK 的现有设计（key 弱引用 + value 强引用）</h3><p>优点：</p>
+<table>
+<thead>
+<tr>
+<th>设计</th>
+<th>回收时机</th>
+<th>是否可靠</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>key弱引用</td>
+<td>ThreadLocal 无强引用时回收</td>
+<td>❌</td>
+<td>key 可能被回收    防止 ThreadLocal 对象本身泄漏</td>
+</tr>
+<tr>
+<td>value强引用</td>
+<td>必须手动 remove() 或线程结束</td>
+<td>✅ 数据可靠</td>
+<td>保证业务逻辑正确性</td>
+</tr>
+</tbody></table>
+<p>平衡点：<br>key 弱引用 → 防止开发者忘记释放 ThreadLocal 对象（避免 ThreadLocal 本身泄漏）。<br>value 强引用 → 确保数据存活，由开发者控制清理（通过 remove()）。</p>
+<p>缺点:<br>内存泄漏风险：<br>如果开发者忘记 remove()，且 ThreadLocal 被回收（key=null），value 会一直占用内存（直到线程结束，或 ThreadLocalMap 扩容时清理）。</p>
+<h3 id="为什么-key-弱引用-能-避免-ThreadLocal-本身泄漏"><a href="#为什么-key-弱引用-能-避免-ThreadLocal-本身泄漏" class="headerlink" title="为什么 key 弱引用 能 避免 ThreadLocal 本身泄漏"></a>为什么 key 弱引用 能 避免 ThreadLocal 本身泄漏</h3><p>(1) 什么是 ThreadLocal 对象泄漏？</p>
+<p>假设 ThreadLocal 是强引用：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ThreadLocal&lt;Object&gt; threadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line">threadLocal.set(<span class="keyword">new</span> Object());</span><br><span class="line">threadLocal = <span class="keyword">null</span>; <span class="comment">// 失去强引用</span></span><br></pre></td></tr></table></figure>
+<p>由于 ThreadLocalMap 的 Entry 对 ThreadLocal 是强引用，即使开发者已经不再使用 threadLocal 变量，ThreadLocal 对象仍然被 ThreadLocalMap 引用，无法被 GC 回收。</p>
+<p>结果：ThreadLocal 对象本身泄漏（即使它已经不再需要）。</p>
+<p>(2) 弱引用如何解决这个问题？</p>
+<p>Entry 对 ThreadLocal（key）是弱引用：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">    Object value; <span class="comment">// value 仍然是强引用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当 ThreadLocal 失去所有强引用（如 threadLocal = null），key 会被 GC 回收（因为它是弱引用），此时 Entry 的 key 变为 null。</p>
+<p>效果：</p>
+<p>ThreadLocal 对象可以被回收，避免自身泄漏。<br>但 value 仍然是强引用，需要手动 remove() 或依赖 ThreadLocalMap 的惰性清理。</p>
+<h2 id="ThreadLocal内存溢出例子"><a href="#ThreadLocal内存溢出例子" class="headerlink" title="ThreadLocal内存溢出例子"></a>ThreadLocal内存溢出例子</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMemoryLeakDemo</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 模拟一个大对象</span></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">BigObject</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">byte</span>[] data;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">BigObject</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 每个对象占用约1MB内存</span></span><br><span class="line">            <span class="keyword">this</span>.data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用静态ThreadLocal变量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;BigObject&gt; threadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">            -Xmx12M -Xms12M</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        ExecutorService executor = Executors.newFixedThreadPool(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">            executor.execute(() -&gt; &#123;</span><br><span class="line">                <span class="comment">// 设置ThreadLocal值但不清理</span></span><br><span class="line">                threadLocal.set(<span class="keyword">new</span> BigObject());</span><br><span class="line">                System.out.println(Thread.currentThread().getName() + <span class="string">" set value"</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 模拟工作</span></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">100</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 这里故意不调用threadLocal.remove()</span></span><br><span class="line">            &#125;);</span><br><span class="line">            Thread.sleep(<span class="number">50</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        executor.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题分析："><a href="#问题分析：" class="headerlink" title="问题分析："></a>问题分析：</h3><p>1.线程池复用线程：我们创建了一个固定5个线程的线程池，这些线程会被反复使用</p>
+<p>2.ThreadLocal未清理：每个任务执行时都会设置一个新的BigObject(约1MB)到ThreadLocal中，但从未调用remove()</p>
+<p>3.内存泄漏过程：</p>
+<ul>
+<li><p>第一次任务执行时，线程的ThreadLocalMap中存入一个Entry</p>
+</li>
+<li><p>任务完成后，线程返回线程池，但Entry仍然存在</p>
+</li>
+<li><p>下次该线程执行新任务时，又存入新的BigObject</p>
+</li>
+<li><p>由于线程被复用，旧的Entry不会被自动清理</p>
+</li>
+</ul>
+<p>4.最终结果：</p>
+<ul>
+<li><p>每个线程的ThreadLocalMap中会积累多个BigObject</p>
+</li>
+<li><p>随着任务不断执行，内存占用持续增长</p>
+</li>
+<li><p>最终导致OutOfMemoryError</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">2</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">3</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">4</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">5</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">2</span> set value</span><br><span class="line">Exception in thread <span class="string">"pool-1-thread-3"</span> java.lang.OutOfMemoryError: Java heap space</span><br><span class="line">	at com.wyb.thread.base.threadLocal.ThreadLocalMemoryLeakDemo$BigObject.&lt;init&gt;(ThreadLocalMemoryLeakDemo.java:<span class="number">13</span>)</span><br><span class="line">	at com.wyb.thread.base.threadLocal.ThreadLocalMemoryLeakDemo.lambda$main$<span class="number">0</span>(ThreadLocalMemoryLeakDemo.java:<span class="number">26</span>)</span><br><span class="line">	at com.wyb.thread.base.threadLocal.ThreadLocalMemoryLeakDemo$$Lambda$<span class="number">14</span>/<span class="number">0x0000000800064440</span>.run(Unknown Source)</span><br><span class="line">	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:<span class="number">1128</span>)</span><br><span class="line">	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:<span class="number">628</span>)</span><br><span class="line">	at java.base/java.lang.Thread.run(Thread.java:<span class="number">834</span>)</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">4</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">5</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">6</span> set value</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>并发编程</category>
       </categories>
@@ -4407,142 +4472,6 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
       </categories>
   </entry>
   <entry>
-    <title>JVM类加载机制</title>
-    <url>/2018/11/01/java/jvm/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
-    <content><![CDATA[<h1 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h1><p>类是在运行期间第一次使用时动态加载的，而不是编译时期一次性加载。因为如果在编译时期一次性加载，那么会占用很多的内存。</p>
-<h2 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h2><p><img src="/uploads/java/jvm/%E7%B1%BB%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="类生命周期"></p>
-<h2 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h2><h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><p>查找并加载类的二进制数据加载时类加载过程的第一个阶段，在加载阶段，虚拟机需要完成以下三件事情：</p>
-<ul>
-<li>通过一个类的全限定名来获取其定义的二进制字节流。</li>
-<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
-<li>在Java堆中生成一个代表这个类的 java.lang.Class对象，作为对方法区中这些数据的访问入口。</li>
-</ul>
-<p>相对于类加载的其他阶段而言，加载阶段（准确地说，是加载阶段获取类的二进制字节流的动作）是可控性最强的阶段，因为开发人员既可以使用系统提供的类加载器来完成加载，也可以自定义自己的类加载器来完成加载。</p>
-<p>加载阶段完成后，虚拟机外部的二进制字节流就按照虚拟机所需的格式存储在方法区之中，而且在Java堆中也创建一个<br>java.lang.Class类的对象，这样便可以通过该对象访问方法区中的这些数据。</p>
-<h3 id="验证：确保被加载的类的正确性"><a href="#验证：确保被加载的类的正确性" class="headerlink" title="验证：确保被加载的类的正确性"></a>验证：确保被加载的类的正确性</h3><p>验证是连接阶段的第一步，目的是保证加载的类符合当前虚拟机的要求。验证阶段大致分四步：</p>
-<ul>
-<li>文件格式验证：验证字节流是否符合Class文件格式的规范；例如：是否以 0xCAFEBABE开头、主次版本号是否在当前虚拟机的处理范围之内、常量池中的常量是否有不被支持的类型。</li>
-<li>元数据验证：对字节码描述的信息进行语义分析（注意：对比javac编译阶段的语义分析），以保证其描述的信息符合Java语言规范的要求；例如：这个类是否有父类，除了<br>java.lang.Object之外。</li>
-<li>字节码验证：通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。</li>
-<li>符号引用验证：确保解析动作能正确执行。</li>
-</ul>
-<p>验证阶段是非常重要的，但不是必须的，它对程序运行期没有影响，如果所引用的类经过反复验证，那么可以考虑采用<br>-Xverifynone参数来关闭大部分的类验证措施，以缩短虚拟机类加载的时间。</p>
-<h3 id="准备：为类的静态变量分配内存，初始化默认值-类型默认值-不是程序赋值"><a href="#准备：为类的静态变量分配内存，初始化默认值-类型默认值-不是程序赋值" class="headerlink" title="准备：为类的静态变量分配内存，初始化默认值 类型默认值 不是程序赋值"></a>准备：为<strong>类的静态变量</strong>分配内存，初始化默认值 类型默认值 不是程序赋值</h3><p>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些内存都将在方法区中分配。对于该阶段有以下几点需要注意：</p>
-<ul>
-<li>这时候进行内存分配的仅包括类变量（static），而不包括实例变量，实例变量会在对象实例化时随着对象一块分配在Java堆中。</li>
-<li>这里所设置的初始值通常情况下是数据类型默认的零值（如0、0L、null、false等），而不是被在Java代码中被显式地赋予的值。</li>
-<li>如果类字段的字段属性表中存在 ConstantValue属性，即同时被final和static修饰，那么在准备阶段变量value就会被初始化为ConstValue属性所指定的值。</li>
-</ul>
-<h3 id="解析：把类中的符号引用转换为直接引用"><a href="#解析：把类中的符号引用转换为直接引用" class="headerlink" title="解析：把类中的符号引用转换为直接引用"></a>解析：把类中的符号引用转换为直接引用</h3><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程，解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符7类符号引用进行。</p>
-<p>符号引用就是一组符号来描述目标，可以是任何字面量。</p>
-<p>直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。</p>
-<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化 "></a>初始化 <clinit></clinit></h3><p>初始化，为类的静态变量赋予正确的初始值，JVM负责对类进行初始化，主要对类变量进行初始化。在Java中对类变量进行初始值设定有两种方式：</p>
-<ul>
-<li>声明类变量是指定初始值</li>
-<li>使用静态代码块为类变量指定初始值</li>
-</ul>
-<p>初始化步骤：</p>
-<ul>
-<li>假如这个类还没有被加载和连接，则程序先加载并连接该类</li>
-<li>假如该类的直接父类还没有被初始化，则先初始化其直接父类</li>
-<li>假如类中有初始化语句，则系统依次执行这些初始化语句</li>
-</ul>
-<p>类初始化时机（主动，被动）</p>
-<p>只有当对类的主动使用的时候才会导致类的初始化，类的主动使用包括以下六种：</p>
-<ul>
-<li>创建类的实例，也就是new的方式</li>
-<li>反射（如 Class.forName(“com.Test”)</li>
-<li>访问某个类或接口的静态变量，或者对该静态变量赋值</li>
-<li>调用类的静态方法</li>
-<li>初始化某个类的子类，则其父类也会被初始化</li>
-<li>Java虚拟机启动时被标明为启动类的类（ JavaTest），直接使用 java.exe命令来运行某个主类</li>
-</ul>
-<p>被动引用的常见例子包括：</p>
-<ul>
-<li>通过子类引用父类的静态字段，不会导致子类初始化。</li>
-</ul>
-<blockquote>
-<p>System.out.println(SubClass.value); // value 字段在 SuperClass 中定义</p>
-</blockquote>
-<ul>
-<li>通过数组定义来引用类，不会触发此类的初始化。该过程会对数组类进行初始化，数组类是一个由虚拟机自动生成的、直接继承自 Object<br>的子类，其中包含了数组的属性和方法。</li>
-</ul>
-<blockquote>
-<p>SuperClass[] sca = new SuperClass[10];</p>
-</blockquote>
-<ul>
-<li>常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化。</li>
-</ul>
-<blockquote>
-<p>System.out.println(ConstClass.HELLOWORLD);</p>
-</blockquote>
-<h3 id="结束生命周期"><a href="#结束生命周期" class="headerlink" title="结束生命周期"></a>结束生命周期</h3><ul>
-<li>执行了System.exit()方法</li>
-<li>程序正常执行结束</li>
-<li>程序在执行过程中遇到了异常或错误而异常终止</li>
-<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
-</ul>
-<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>站在Java虚拟机的角度来讲，只存在两种不同的类加载器：启动类加载器：它使用C++实现（这里仅限于Hotspot，也就是JDK1.5之后默认的虚拟机，有很多其他的虚拟机是用Java语言实现的），是虚拟机自身的一部分；<br>所有其它的类加载器：这些类加载器都由Java语言实现，独立于虚拟机之外，并且全部继承自抽象类 java.lang.ClassLoader，这些类加载器需要由启动类加载器加载到内存中之后才能去加载其他的类。</p>
-<p>站在Java开发人员的角度来看，类加载器可以大致划分为以下三类：</p>
-<ul>
-<li>启动类加载器：负责加载支撑JVM运行的位于JRE的lib目录下的核心类库，比如 rt.jar、charsets.jar等 </li>
-<li>扩展类加载器：负责加载支撑JVM运行的位于JRE的lib目录下的ext扩展目录中的JAR类包</li>
-<li>应用程序类加载器：负责加载ClassPath路径下的类包，主要就是加载你自己写的那些类</li>
-<li>自定义加载器：负责加载用户自定义路径下的类包</li>
-</ul>
-<h2 id="类加载机制-1"><a href="#类加载机制-1" class="headerlink" title="类加载机制"></a>类加载机制</h2><ul>
-<li>全盘负责，当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入</li>
-<li>父类委托，先让父类加载器试图加载该类，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类</li>
-<li>缓存机制，缓存机制将会保证所有加载过的Class都会被缓存，当程序中需要使用某个Class时，类加载器先从缓存区寻找该Class，<br>只有缓存区不存在，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存入缓存区。这就是为什么修改了Class后，必须重启JVM，程序的修改才会生效</li>
-</ul>
-<h3 id="双亲委派"><a href="#双亲委派" class="headerlink" title="双亲委派"></a>双亲委派</h3><p><img src="/uploads/java/jvm/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6.jpg" alt="双亲委派机制"></p>
-<p>双亲委派模型的工作流程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把请求委托给父加载器去完成，依次向上，因此，所有的类加载请求最终都应该被传递到顶层的启动类加载器中，<br>只有当父加载器在它的搜索范围中没有找到所需的类时，即无法完成该加载，子加载器才会尝试自己去加载该类。</p>
-<h4 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制:"></a>双亲委派机制:</h4><ul>
-<li>1、当 AppClassLoader加载一个class时，它首先不会自己去尝试加载这个类，而是把类加载请求委派给父类加载器ExtClassLoader去完成。</li>
-<li>2、当 ExtClassLoader加载一个class时，它首先也不会自己去尝试加载这个类，而是把类加载请求委派给BootStrapClassLoader```去完成。</li>
-<li>3、如果 BootStrapClassLoader加载失败（例如在 $JAVA_HOME/jre/lib里未查找到该class），会使用 ExtClassLoader来尝试加载；</li>
-<li>4、若ExtClassLoader也加载失败，则会使用 AppClassLoader来加载，如果 AppClassLoader也加载失败，则会报出异常 ClassNotFoundException</li>
-</ul>
-<h4 id="ClassLoader源码分析："><a href="#ClassLoader源码分析：" class="headerlink" title="ClassLoader源码分析："></a>ClassLoader源码分析：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">return</span> loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">    <span class="comment">// 首先判断该类型是否已经被加载</span></span><br><span class="line">    Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果没有被加载，就委托给父类加载或者委派给启动类加载器加载</span></span><br><span class="line">        <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//如果存在父类加载器，就委派给父类加载器加载</span></span><br><span class="line">                c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//如果不存在父类加载器，就检查是否是由启动类加载器加载的类，通过调用本地方法native Class findBootstrapClass(String name)</span></span><br><span class="line">                c = findBootstrapClassOrNull(name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">            <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果父类加载器和启动类加载器都不能完成加载任务，才调用自身的加载功能</span></span><br><span class="line">            <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">            c = findClass(name);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">            PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">            PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">            PerfCounter.getFindClasses().increment();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">        resolveClass(c);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="双亲委派模型意义："><a href="#双亲委派模型意义：" class="headerlink" title="双亲委派模型意义："></a>双亲委派模型意义：</h4><ul>
-<li>系统类防止内存中出现多份同样的字节码</li>
-<li>保证Java程序安全稳定运行</li>
-</ul>
-<h2 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h2><p>通常情况下，我们都是直接使用系统类加载器。但是，有的时候，我们也需要自定义类加载器。比如应用是通过网络来传输 Java类的字节码，为保证安全性，<br>这些字节码经过了加密处理，这时系统类加载器就无法对其进行加载，这样则需要自定义类加载器来实现。自定义类加载器一般都是继承自 ClassLoader类，<br>从上面对 loadClass方法来分析来看，我们只需要重写 findClass 方法即可。下面我们通过一个示例来演示自定义类加载器的流程：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wyb.test.java.reflect;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WybClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String root;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">        <span class="keyword">byte</span>[] classData = loadClassData(name);</span><br><span class="line">        <span class="keyword">if</span> (classData == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> defineClass(name, classData, <span class="number">0</span>, classData.length);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] loadClassData(String className) &#123;</span><br><span class="line"></span><br><span class="line">        String fileName = root + File.separatorChar + className.replace(<span class="string">'.'</span>, File.separatorChar) + <span class="string">".class"</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            InputStream ins = <span class="keyword">new</span> FileInputStream(fileName);</span><br><span class="line">            ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            <span class="keyword">int</span> bufferSize = <span class="number">1024</span>;</span><br><span class="line">            <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[bufferSize];</span><br><span class="line">            <span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> ((length = ins.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                baos.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> baos.toByteArray();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getRoot</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoot</span><span class="params">(String root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.root = root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        WybClassLoader wybClassLoader = <span class="keyword">new</span> WybClassLoader();</span><br><span class="line">        <span class="comment">// class 需要用javac编译  class不能放在类路径下</span></span><br><span class="line"></span><br><span class="line">        wybClassLoader.setRoot(<span class="string">"E:\\marcher\\spring-example\\spring-example-test\\temp"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class clazz = wybClassLoader.loadClass(<span class="string">"WybClass"</span>);</span><br><span class="line">            Object obj = clazz.newInstance();</span><br><span class="line">            System.out.println(obj.getClass().getClassLoader());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException | InstantiationException | IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>自定义类加载器的核心在于对字节码文件的获取，如果是加密的字节码则需要在该类中对文件进行解密。由于这里只是演示，我并未对class文件进行加密，因此没有解密的过程。这里有几点需要注意：</p>
-<p>1、这里传递的文件名需要是类的全限定性名称，即 com.wyb.test.java.reflect.WybClass，因为 defineClass 方法是按这种格式进行处理的。</p>
-<p>2、最好不要重写loadClass方法，因为这样容易破坏双亲委托模式。</p>
-<p>3、这类Test 类本身可以被 AppClassLoader类加载，因此我们不能把 E://marcher//spring-example/temp.class放在类路径下。否则，由于双亲委托机制的存在，会直接导致该类由 AppClassLoader加载，而不会通过我们自定义类加载器来加载。</p>
-<h3 id="Tomcat打破双亲委派机制"><a href="#Tomcat打破双亲委派机制" class="headerlink" title="Tomcat打破双亲委派机制"></a>Tomcat打破双亲委派机制</h3><p>以Tomcat类加载为例，Tomcat 如果使用默认的双亲委派类加载机制行不行？<br>我们思考一下：Tomcat是个web容器， 那么它要解决什么问题： </p>
-<ol>
-<li>一个web容器可能需要部署两个应用程序，不同的应用程序可能会依赖同一个第三方类库的不同版本，不能要求同一个类库在同一个服务器只有一份，因此要保证每个应用程序的类库都是独立的，保证相互隔离。 </li>
-<li>部署在同一个web容器中相同的类库相同的版本可以共享。否则，如果服务器有10个应用程序，那么要有10份相同的类库加载进虚拟机。 </li>
-<li>web容器也有自己依赖的类库，不能与应用程序的类库混淆。基于安全考虑，应该让容器的类库和程序的类库隔离开来。 </li>
-<li>web容器要支持jsp的修改，我们知道，jsp 文件最终也是要编译成class文件才能在虚拟机中运行，但程序运行后修改jsp已经是司空见惯的事情， web容器需要支持 jsp 修改后不用重启。</li>
-</ol>
-<p>再看看我们的问题：Tomcat 如果使用默认的双亲委派类加载机制行不行？<br>答案是不行的。为什么？<br>第一个问题，如果使用默认的类加载器机制，那么是无法加载两个相同类库的不同版本的，默认的类加器是不管你是什么版本的，只在乎你的全限定类名，并且只有一份。<br>第二个问题，默认的类加载器是能够实现的，因为他的职责就是保证唯一性。<br>第三个问题和第一个问题一样。<br>我们再看第四个问题，我们想我们要怎么实现jsp文件的热加载，jsp 文件其实也就是class文件，那么如果修改了，但类名还是一样，类加载器会直接取方法区中已经存在的，修改后的jsp是不会重新加载的。那么怎么办呢？我们可以直接卸载掉这jsp文件的类加载器，所以你应该想到了，每个jsp文件对应一个唯一的类加载器，当一个jsp文件修改了，就直接卸载这个jsp类加载器。重新创建类加载器，重新加载jsp文件。</p>
-<h4 id="Tomcat自定义加载器详解"><a href="#Tomcat自定义加载器详解" class="headerlink" title="Tomcat自定义加载器详解"></a>Tomcat自定义加载器详解</h4><p><img src="/uploads/java/jvm/Tomcat%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E8%BD%BD%E5%99%A8.png" alt="Tomcat自定义加载器"></p>
-<p>tomcat的几个主要类加载器：</p>
-<ul>
-<li>commonLoader：Tomcat最基本的类加载器，加载路径中的class可以被Tomcat容器本身以及各个Webapp访问；</li>
-<li>catalinaLoader：Tomcat容器私有的类加载器，加载路径中的class对于Webapp不可见；</li>
-<li>sharedLoader：各个Webapp共享的类加载器，加载路径中的class对于所有Webapp可见，但是对于Tomcat容器不可见；</li>
-<li>WebappClassLoader：各个Webapp私有的类加载器，加载路径中的class只对当前Webapp可见，比如加载war包里相关的类，每个war包应用都有自己的WebappClassLoader，实现相互隔离，比如不同war包应用引入了不同的spring版本，这样实现就能加载各自的spring版本；</li>
-</ul>
-<p>从图中的委派关系中可以看出：<br>CommonClassLoader能加载的类都可以被CatalinaClassLoader和SharedClassLoader使用，从而实现了公有类库的共用，而CatalinaClassLoader和SharedClassLoader自己能加载的类则与对方相互隔离。</p>
-<p>WebAppClassLoader可以使用SharedClassLoader加载到的类，但各个WebAppClassLoader实例之间相互隔离。</p>
-<p>而JasperLoader的加载范围仅仅是这个JSP文件所编译出来的那一个.Class文件，它出现的目的就是为了被丢弃：当Web容器检测到JSP文件被修改时，会替换掉目前的JasperLoader的实例，并通过再建立一个新的Jsp类加载器来实现JSP文件的热加载功能。</p>
-<p>tomcat 这种类加载机制违背了java 推荐的双亲委派模型了吗？答案是：违背了。 </p>
-<p>很显然，tomcat 不是这样实现，tomcat 为了实现隔离性，没有遵守这个约定，每个webappClassLoader加载自己的目录下的class文件，不会传递给父类加载器，打破了双亲委派机制。</p>
-<h4 id="模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离"><a href="#模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离" class="headerlink" title="模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离"></a>模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离</h4>]]></content>
-      <categories>
-        <category>JVM</category>
-      </categories>
-  </entry>
-  <entry>
     <title>jvm基础学习</title>
     <url>/2018/10/31/java/jvm/jvm%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h1 id="一：内存区域"><a href="#一：内存区域" class="headerlink" title="一：内存区域"></a>一：内存区域</h1><p><img src="/uploads/java/jvm/jvm%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F.jpg" alt="内存区域"></p>
@@ -4752,6 +4681,142 @@ obj = null;</code></pre><h2 id="垃圾收集算法（怎么回收）"><a href="#
       </categories>
   </entry>
   <entry>
+    <title>JVM类加载机制</title>
+    <url>/2018/11/01/java/jvm/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<h1 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h1><p>类是在运行期间第一次使用时动态加载的，而不是编译时期一次性加载。因为如果在编译时期一次性加载，那么会占用很多的内存。</p>
+<h2 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h2><p><img src="/uploads/java/jvm/%E7%B1%BB%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="类生命周期"></p>
+<h2 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h2><h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><p>查找并加载类的二进制数据加载时类加载过程的第一个阶段，在加载阶段，虚拟机需要完成以下三件事情：</p>
+<ul>
+<li>通过一个类的全限定名来获取其定义的二进制字节流。</li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
+<li>在Java堆中生成一个代表这个类的 java.lang.Class对象，作为对方法区中这些数据的访问入口。</li>
+</ul>
+<p>相对于类加载的其他阶段而言，加载阶段（准确地说，是加载阶段获取类的二进制字节流的动作）是可控性最强的阶段，因为开发人员既可以使用系统提供的类加载器来完成加载，也可以自定义自己的类加载器来完成加载。</p>
+<p>加载阶段完成后，虚拟机外部的二进制字节流就按照虚拟机所需的格式存储在方法区之中，而且在Java堆中也创建一个<br>java.lang.Class类的对象，这样便可以通过该对象访问方法区中的这些数据。</p>
+<h3 id="验证：确保被加载的类的正确性"><a href="#验证：确保被加载的类的正确性" class="headerlink" title="验证：确保被加载的类的正确性"></a>验证：确保被加载的类的正确性</h3><p>验证是连接阶段的第一步，目的是保证加载的类符合当前虚拟机的要求。验证阶段大致分四步：</p>
+<ul>
+<li>文件格式验证：验证字节流是否符合Class文件格式的规范；例如：是否以 0xCAFEBABE开头、主次版本号是否在当前虚拟机的处理范围之内、常量池中的常量是否有不被支持的类型。</li>
+<li>元数据验证：对字节码描述的信息进行语义分析（注意：对比javac编译阶段的语义分析），以保证其描述的信息符合Java语言规范的要求；例如：这个类是否有父类，除了<br>java.lang.Object之外。</li>
+<li>字节码验证：通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。</li>
+<li>符号引用验证：确保解析动作能正确执行。</li>
+</ul>
+<p>验证阶段是非常重要的，但不是必须的，它对程序运行期没有影响，如果所引用的类经过反复验证，那么可以考虑采用<br>-Xverifynone参数来关闭大部分的类验证措施，以缩短虚拟机类加载的时间。</p>
+<h3 id="准备：为类的静态变量分配内存，初始化默认值-类型默认值-不是程序赋值"><a href="#准备：为类的静态变量分配内存，初始化默认值-类型默认值-不是程序赋值" class="headerlink" title="准备：为类的静态变量分配内存，初始化默认值 类型默认值 不是程序赋值"></a>准备：为<strong>类的静态变量</strong>分配内存，初始化默认值 类型默认值 不是程序赋值</h3><p>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些内存都将在方法区中分配。对于该阶段有以下几点需要注意：</p>
+<ul>
+<li>这时候进行内存分配的仅包括类变量（static），而不包括实例变量，实例变量会在对象实例化时随着对象一块分配在Java堆中。</li>
+<li>这里所设置的初始值通常情况下是数据类型默认的零值（如0、0L、null、false等），而不是被在Java代码中被显式地赋予的值。</li>
+<li>如果类字段的字段属性表中存在 ConstantValue属性，即同时被final和static修饰，那么在准备阶段变量value就会被初始化为ConstValue属性所指定的值。</li>
+</ul>
+<h3 id="解析：把类中的符号引用转换为直接引用"><a href="#解析：把类中的符号引用转换为直接引用" class="headerlink" title="解析：把类中的符号引用转换为直接引用"></a>解析：把类中的符号引用转换为直接引用</h3><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程，解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符7类符号引用进行。</p>
+<p>符号引用就是一组符号来描述目标，可以是任何字面量。</p>
+<p>直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化 "></a>初始化 <clinit></clinit></h3><p>初始化，为类的静态变量赋予正确的初始值，JVM负责对类进行初始化，主要对类变量进行初始化。在Java中对类变量进行初始值设定有两种方式：</p>
+<ul>
+<li>声明类变量是指定初始值</li>
+<li>使用静态代码块为类变量指定初始值</li>
+</ul>
+<p>初始化步骤：</p>
+<ul>
+<li>假如这个类还没有被加载和连接，则程序先加载并连接该类</li>
+<li>假如该类的直接父类还没有被初始化，则先初始化其直接父类</li>
+<li>假如类中有初始化语句，则系统依次执行这些初始化语句</li>
+</ul>
+<p>类初始化时机（主动，被动）</p>
+<p>只有当对类的主动使用的时候才会导致类的初始化，类的主动使用包括以下六种：</p>
+<ul>
+<li>创建类的实例，也就是new的方式</li>
+<li>反射（如 Class.forName(“com.Test”)</li>
+<li>访问某个类或接口的静态变量，或者对该静态变量赋值</li>
+<li>调用类的静态方法</li>
+<li>初始化某个类的子类，则其父类也会被初始化</li>
+<li>Java虚拟机启动时被标明为启动类的类（ JavaTest），直接使用 java.exe命令来运行某个主类</li>
+</ul>
+<p>被动引用的常见例子包括：</p>
+<ul>
+<li>通过子类引用父类的静态字段，不会导致子类初始化。</li>
+</ul>
+<blockquote>
+<p>System.out.println(SubClass.value); // value 字段在 SuperClass 中定义</p>
+</blockquote>
+<ul>
+<li>通过数组定义来引用类，不会触发此类的初始化。该过程会对数组类进行初始化，数组类是一个由虚拟机自动生成的、直接继承自 Object<br>的子类，其中包含了数组的属性和方法。</li>
+</ul>
+<blockquote>
+<p>SuperClass[] sca = new SuperClass[10];</p>
+</blockquote>
+<ul>
+<li>常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化。</li>
+</ul>
+<blockquote>
+<p>System.out.println(ConstClass.HELLOWORLD);</p>
+</blockquote>
+<h3 id="结束生命周期"><a href="#结束生命周期" class="headerlink" title="结束生命周期"></a>结束生命周期</h3><ul>
+<li>执行了System.exit()方法</li>
+<li>程序正常执行结束</li>
+<li>程序在执行过程中遇到了异常或错误而异常终止</li>
+<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
+</ul>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>站在Java虚拟机的角度来讲，只存在两种不同的类加载器：启动类加载器：它使用C++实现（这里仅限于Hotspot，也就是JDK1.5之后默认的虚拟机，有很多其他的虚拟机是用Java语言实现的），是虚拟机自身的一部分；<br>所有其它的类加载器：这些类加载器都由Java语言实现，独立于虚拟机之外，并且全部继承自抽象类 java.lang.ClassLoader，这些类加载器需要由启动类加载器加载到内存中之后才能去加载其他的类。</p>
+<p>站在Java开发人员的角度来看，类加载器可以大致划分为以下三类：</p>
+<ul>
+<li>启动类加载器：负责加载支撑JVM运行的位于JRE的lib目录下的核心类库，比如 rt.jar、charsets.jar等 </li>
+<li>扩展类加载器：负责加载支撑JVM运行的位于JRE的lib目录下的ext扩展目录中的JAR类包</li>
+<li>应用程序类加载器：负责加载ClassPath路径下的类包，主要就是加载你自己写的那些类</li>
+<li>自定义加载器：负责加载用户自定义路径下的类包</li>
+</ul>
+<h2 id="类加载机制-1"><a href="#类加载机制-1" class="headerlink" title="类加载机制"></a>类加载机制</h2><ul>
+<li>全盘负责，当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入</li>
+<li>父类委托，先让父类加载器试图加载该类，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类</li>
+<li>缓存机制，缓存机制将会保证所有加载过的Class都会被缓存，当程序中需要使用某个Class时，类加载器先从缓存区寻找该Class，<br>只有缓存区不存在，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存入缓存区。这就是为什么修改了Class后，必须重启JVM，程序的修改才会生效</li>
+</ul>
+<h3 id="双亲委派"><a href="#双亲委派" class="headerlink" title="双亲委派"></a>双亲委派</h3><p><img src="/uploads/java/jvm/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6.jpg" alt="双亲委派机制"></p>
+<p>双亲委派模型的工作流程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把请求委托给父加载器去完成，依次向上，因此，所有的类加载请求最终都应该被传递到顶层的启动类加载器中，<br>只有当父加载器在它的搜索范围中没有找到所需的类时，即无法完成该加载，子加载器才会尝试自己去加载该类。</p>
+<h4 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制:"></a>双亲委派机制:</h4><ul>
+<li>1、当 AppClassLoader加载一个class时，它首先不会自己去尝试加载这个类，而是把类加载请求委派给父类加载器ExtClassLoader去完成。</li>
+<li>2、当 ExtClassLoader加载一个class时，它首先也不会自己去尝试加载这个类，而是把类加载请求委派给BootStrapClassLoader```去完成。</li>
+<li>3、如果 BootStrapClassLoader加载失败（例如在 $JAVA_HOME/jre/lib里未查找到该class），会使用 ExtClassLoader来尝试加载；</li>
+<li>4、若ExtClassLoader也加载失败，则会使用 AppClassLoader来加载，如果 AppClassLoader也加载失败，则会报出异常 ClassNotFoundException</li>
+</ul>
+<h4 id="ClassLoader源码分析："><a href="#ClassLoader源码分析：" class="headerlink" title="ClassLoader源码分析："></a>ClassLoader源码分析：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">return</span> loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">    <span class="comment">// 首先判断该类型是否已经被加载</span></span><br><span class="line">    Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果没有被加载，就委托给父类加载或者委派给启动类加载器加载</span></span><br><span class="line">        <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//如果存在父类加载器，就委派给父类加载器加载</span></span><br><span class="line">                c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//如果不存在父类加载器，就检查是否是由启动类加载器加载的类，通过调用本地方法native Class findBootstrapClass(String name)</span></span><br><span class="line">                c = findBootstrapClassOrNull(name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">            <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果父类加载器和启动类加载器都不能完成加载任务，才调用自身的加载功能</span></span><br><span class="line">            <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">            c = findClass(name);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">            PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">            PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">            PerfCounter.getFindClasses().increment();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">        resolveClass(c);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="双亲委派模型意义："><a href="#双亲委派模型意义：" class="headerlink" title="双亲委派模型意义："></a>双亲委派模型意义：</h4><ul>
+<li>系统类防止内存中出现多份同样的字节码</li>
+<li>保证Java程序安全稳定运行</li>
+</ul>
+<h2 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h2><p>通常情况下，我们都是直接使用系统类加载器。但是，有的时候，我们也需要自定义类加载器。比如应用是通过网络来传输 Java类的字节码，为保证安全性，<br>这些字节码经过了加密处理，这时系统类加载器就无法对其进行加载，这样则需要自定义类加载器来实现。自定义类加载器一般都是继承自 ClassLoader类，<br>从上面对 loadClass方法来分析来看，我们只需要重写 findClass 方法即可。下面我们通过一个示例来演示自定义类加载器的流程：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wyb.test.java.reflect;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WybClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String root;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">        <span class="keyword">byte</span>[] classData = loadClassData(name);</span><br><span class="line">        <span class="keyword">if</span> (classData == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> defineClass(name, classData, <span class="number">0</span>, classData.length);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] loadClassData(String className) &#123;</span><br><span class="line"></span><br><span class="line">        String fileName = root + File.separatorChar + className.replace(<span class="string">'.'</span>, File.separatorChar) + <span class="string">".class"</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            InputStream ins = <span class="keyword">new</span> FileInputStream(fileName);</span><br><span class="line">            ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            <span class="keyword">int</span> bufferSize = <span class="number">1024</span>;</span><br><span class="line">            <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[bufferSize];</span><br><span class="line">            <span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> ((length = ins.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                baos.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> baos.toByteArray();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getRoot</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoot</span><span class="params">(String root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.root = root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        WybClassLoader wybClassLoader = <span class="keyword">new</span> WybClassLoader();</span><br><span class="line">        <span class="comment">// class 需要用javac编译  class不能放在类路径下</span></span><br><span class="line"></span><br><span class="line">        wybClassLoader.setRoot(<span class="string">"E:\\marcher\\spring-example\\spring-example-test\\temp"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class clazz = wybClassLoader.loadClass(<span class="string">"WybClass"</span>);</span><br><span class="line">            Object obj = clazz.newInstance();</span><br><span class="line">            System.out.println(obj.getClass().getClassLoader());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException | InstantiationException | IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自定义类加载器的核心在于对字节码文件的获取，如果是加密的字节码则需要在该类中对文件进行解密。由于这里只是演示，我并未对class文件进行加密，因此没有解密的过程。这里有几点需要注意：</p>
+<p>1、这里传递的文件名需要是类的全限定性名称，即 com.wyb.test.java.reflect.WybClass，因为 defineClass 方法是按这种格式进行处理的。</p>
+<p>2、最好不要重写loadClass方法，因为这样容易破坏双亲委托模式。</p>
+<p>3、这类Test 类本身可以被 AppClassLoader类加载，因此我们不能把 E://marcher//spring-example/temp.class放在类路径下。否则，由于双亲委托机制的存在，会直接导致该类由 AppClassLoader加载，而不会通过我们自定义类加载器来加载。</p>
+<h3 id="Tomcat打破双亲委派机制"><a href="#Tomcat打破双亲委派机制" class="headerlink" title="Tomcat打破双亲委派机制"></a>Tomcat打破双亲委派机制</h3><p>以Tomcat类加载为例，Tomcat 如果使用默认的双亲委派类加载机制行不行？<br>我们思考一下：Tomcat是个web容器， 那么它要解决什么问题： </p>
+<ol>
+<li>一个web容器可能需要部署两个应用程序，不同的应用程序可能会依赖同一个第三方类库的不同版本，不能要求同一个类库在同一个服务器只有一份，因此要保证每个应用程序的类库都是独立的，保证相互隔离。 </li>
+<li>部署在同一个web容器中相同的类库相同的版本可以共享。否则，如果服务器有10个应用程序，那么要有10份相同的类库加载进虚拟机。 </li>
+<li>web容器也有自己依赖的类库，不能与应用程序的类库混淆。基于安全考虑，应该让容器的类库和程序的类库隔离开来。 </li>
+<li>web容器要支持jsp的修改，我们知道，jsp 文件最终也是要编译成class文件才能在虚拟机中运行，但程序运行后修改jsp已经是司空见惯的事情， web容器需要支持 jsp 修改后不用重启。</li>
+</ol>
+<p>再看看我们的问题：Tomcat 如果使用默认的双亲委派类加载机制行不行？<br>答案是不行的。为什么？<br>第一个问题，如果使用默认的类加载器机制，那么是无法加载两个相同类库的不同版本的，默认的类加器是不管你是什么版本的，只在乎你的全限定类名，并且只有一份。<br>第二个问题，默认的类加载器是能够实现的，因为他的职责就是保证唯一性。<br>第三个问题和第一个问题一样。<br>我们再看第四个问题，我们想我们要怎么实现jsp文件的热加载，jsp 文件其实也就是class文件，那么如果修改了，但类名还是一样，类加载器会直接取方法区中已经存在的，修改后的jsp是不会重新加载的。那么怎么办呢？我们可以直接卸载掉这jsp文件的类加载器，所以你应该想到了，每个jsp文件对应一个唯一的类加载器，当一个jsp文件修改了，就直接卸载这个jsp类加载器。重新创建类加载器，重新加载jsp文件。</p>
+<h4 id="Tomcat自定义加载器详解"><a href="#Tomcat自定义加载器详解" class="headerlink" title="Tomcat自定义加载器详解"></a>Tomcat自定义加载器详解</h4><p><img src="/uploads/java/jvm/Tomcat%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E8%BD%BD%E5%99%A8.png" alt="Tomcat自定义加载器"></p>
+<p>tomcat的几个主要类加载器：</p>
+<ul>
+<li>commonLoader：Tomcat最基本的类加载器，加载路径中的class可以被Tomcat容器本身以及各个Webapp访问；</li>
+<li>catalinaLoader：Tomcat容器私有的类加载器，加载路径中的class对于Webapp不可见；</li>
+<li>sharedLoader：各个Webapp共享的类加载器，加载路径中的class对于所有Webapp可见，但是对于Tomcat容器不可见；</li>
+<li>WebappClassLoader：各个Webapp私有的类加载器，加载路径中的class只对当前Webapp可见，比如加载war包里相关的类，每个war包应用都有自己的WebappClassLoader，实现相互隔离，比如不同war包应用引入了不同的spring版本，这样实现就能加载各自的spring版本；</li>
+</ul>
+<p>从图中的委派关系中可以看出：<br>CommonClassLoader能加载的类都可以被CatalinaClassLoader和SharedClassLoader使用，从而实现了公有类库的共用，而CatalinaClassLoader和SharedClassLoader自己能加载的类则与对方相互隔离。</p>
+<p>WebAppClassLoader可以使用SharedClassLoader加载到的类，但各个WebAppClassLoader实例之间相互隔离。</p>
+<p>而JasperLoader的加载范围仅仅是这个JSP文件所编译出来的那一个.Class文件，它出现的目的就是为了被丢弃：当Web容器检测到JSP文件被修改时，会替换掉目前的JasperLoader的实例，并通过再建立一个新的Jsp类加载器来实现JSP文件的热加载功能。</p>
+<p>tomcat 这种类加载机制违背了java 推荐的双亲委派模型了吗？答案是：违背了。 </p>
+<p>很显然，tomcat 不是这样实现，tomcat 为了实现隔离性，没有遵守这个约定，每个webappClassLoader加载自己的目录下的class文件，不会传递给父类加载器，打破了双亲委派机制。</p>
+<h4 id="模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离"><a href="#模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离" class="headerlink" title="模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离"></a>模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离</h4>]]></content>
+      <categories>
+        <category>JVM</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Java设计模式：责任链模式</title>
     <url>/2019/01/24/java/java-design/behavioral/chainOfResponsibility/</url>
     <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些对象连成一条链，并沿着这条链发送该请求，直到有一个对象处理它为止。</p>
@@ -4878,6 +4943,68 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
       </categories>
   </entry>
   <entry>
+    <title>Java设计模式：策略模式</title>
+    <url>/2019/01/24/java/java-design/behavioral/strategy/</url>
+    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义一系列算法，封装每个算法，并使它们可以互换。策略模式可以让算法独立于使用它的客户端。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>把对象的功能实现定义成一个接口，对象中依赖一个功能接口，通过改变接口的实现，来达到不同的功能。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义功能接口</p>
+<pre><code>public interface CallBehavior {
+
+   // 叫，不同动物叫声不同
+   void call();
+}</code></pre><p>   功能接口实现</p>
+<pre><code>public class Quack implements CallBehavior {
+
+    @Override
+    public void call() {
+        System.out.println(&quot;鸭子叫!&quot;);
+    }
+}
+
+public class Squeak implements CallBehavior {
+
+   @Override
+   public void call() {
+       System.out.println(&quot;鸡叫k!&quot;);
+   }
+}</code></pre><p>   定义对象类，并依赖功能接口，通过改变接口的具体实现达到不同的功能</p>
+<pre><code>public class Duck {
+
+    private CallBehavior behavior;
+
+    public void performQuack() {
+        if (behavior != null) {
+            behavior.call();
+        }
+    }
+    public void setQuackBehavior(CallBehavior behavior) {
+        this.behavior = behavior;
+    }
+}</code></pre><p>   测试：</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        Duck duck = new Duck();
+        CallBehavior quack = new Quack();
+        duck.setQuackBehavior(quack);
+        duck.performQuack();
+        CallBehavior squeak = new Squeak();
+        duck.setQuackBehavior(squeak);
+        duck.performQuack();
+    }
+}</code></pre><p>   输出：</p>
+<pre><code>鸭子叫!
+鸡叫k!</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><ul>
+<li>java.util.Comparator#compare()</li>
+<li>javax.servlet.http.HttpServlet</li>
+<li>javax.servlet.Filter#doFilter()</li>
+</ul>
+]]></content>
+      <categories>
+        <category>java-design-patterns</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Java设计模式：观察者模式</title>
     <url>/2019/01/24/java/java-design/behavioral/observer/</url>
     <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义对象之间的一对多依赖，当一个对象状态改变时，它的所有依赖都会收到通知并且自动更新状态。</p>
@@ -4982,68 +5109,6 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
       </categories>
   </entry>
   <entry>
-    <title>Java设计模式：策略模式</title>
-    <url>/2019/01/24/java/java-design/behavioral/strategy/</url>
-    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义一系列算法，封装每个算法，并使它们可以互换。策略模式可以让算法独立于使用它的客户端。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>把对象的功能实现定义成一个接口，对象中依赖一个功能接口，通过改变接口的实现，来达到不同的功能。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义功能接口</p>
-<pre><code>public interface CallBehavior {
-
-   // 叫，不同动物叫声不同
-   void call();
-}</code></pre><p>   功能接口实现</p>
-<pre><code>public class Quack implements CallBehavior {
-
-    @Override
-    public void call() {
-        System.out.println(&quot;鸭子叫!&quot;);
-    }
-}
-
-public class Squeak implements CallBehavior {
-
-   @Override
-   public void call() {
-       System.out.println(&quot;鸡叫k!&quot;);
-   }
-}</code></pre><p>   定义对象类，并依赖功能接口，通过改变接口的具体实现达到不同的功能</p>
-<pre><code>public class Duck {
-
-    private CallBehavior behavior;
-
-    public void performQuack() {
-        if (behavior != null) {
-            behavior.call();
-        }
-    }
-    public void setQuackBehavior(CallBehavior behavior) {
-        this.behavior = behavior;
-    }
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        Duck duck = new Duck();
-        CallBehavior quack = new Quack();
-        duck.setQuackBehavior(quack);
-        duck.performQuack();
-        CallBehavior squeak = new Squeak();
-        duck.setQuackBehavior(squeak);
-        duck.performQuack();
-    }
-}</code></pre><p>   输出：</p>
-<pre><code>鸭子叫!
-鸡叫k!</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><ul>
-<li>java.util.Comparator#compare()</li>
-<li>javax.servlet.http.HttpServlet</li>
-<li>javax.servlet.Filter#doFilter()</li>
-</ul>
-]]></content>
-      <categories>
-        <category>java-design-patterns</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Java设计模式：适配器</title>
     <url>/2019/01/08/java/java-design/structure/adapter/</url>
     <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>适配器就是一种适配中间件，它存在于不匹配的二者之间，用于连接二者，将不匹配变得匹配，简单点理解就是平常所见的转接头，转换器之类的存在。</p>
@@ -5094,88 +5159,6 @@ public class Squeak implements CallBehavior {
       }
    }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
 ]]></content>
-      <categories>
-        <category>java-design-patterns</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Java设计模式：桥接器</title>
-    <url>/2019/01/08/java/java-design/structure/bridge/</url>
-    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将抽象与实现分离开来，使它们可以独立变化。</p>
-<p>抽象与实现解耦，例如一个生产线的机器，将参数设定与具体生产的过程实现分离开，使整个生产线更加灵活，用一套参数也可以使用不同的工作模式。</p>
-<p>其中参数设定与生产过程属于两种不同的维度，桥接模式所做的事情就是将不同的维度联结在一起！</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
-<li>在一个类中通过组合另一个对象，调用时只需在当前类调用对象方法即可，实现解耦。</li>
-</ul>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义电视机抽象类,拥有3个方法。</p>
-<pre><code>public abstract class Tv {
-
-    public abstract void on();
-
-    public abstract void off();
-
-    public abstract void tuneTunnel();</code></pre><p>   定义一个电视机的实现类，Sony电视机。</p>
-<pre><code>public class SonyTv extends Tv {
-
-    @Override
-    public void on() {
-        System.out.println(&quot;SonyTv,on&quot;);
-    }
-
-    @Override
-    public void off() {
-        System.out.println(&quot;SonyTv,off&quot;);
-    }
-
-    @Override
-    public void tuneTunnel() {
-        System.out.println(&quot;SonyTv,tuneTunnel&quot;);
-    }</code></pre><p>   定义一个遥控器抽象类。组合了一个电视机对象。</p>
-<pre><code>protected Tv tv;
-
-    public RemoteControl(Tv tv) {
-        this.tv = tv;
-    }
-
-    public abstract void on();
-
-    public abstract void off();
-
-    public abstract void tuneTunnel();   </code></pre><p>   定义一个遥控器的实现类，Sony电视机遥控器。</p>
-<pre><code>public class SonyRemoteControl extends RemoteControl {
-
-    public SonyRemoteControl(Tv tv) {
-        super(tv);
-    }
-
-    @Override
-    public void on() {
-        System.out.println(&quot;sonyRemoteControl,on&quot;);
-        tv.on();
-    }
-
-    @Override
-    public void off() {
-        System.out.println(&quot;sonyRemoteControl,off&quot;);
-        tv.off();
-    }
-
-    @Override
-    public void tuneTunnel() {
-        System.out.println(&quot;sonyRemoteControl,tuneTunnel&quot;);
-        tv.off();
-    }
-} </code></pre><p>   在生成sony电视机遥控器时，传入一个sony电视机对象，即可使用该遥控器实现该电视机的状态变换。</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-       Tv sonyTv = new SonyTv();
-       SonyRemoteControl sonyRemoteControl = new SonyRemoteControl(sonyTv);
-       sonyRemoteControl.on();
-       sonyRemoteControl.off();
-       sonyRemoteControl.tuneTunnel();
-   }
-}</code></pre>]]></content>
       <categories>
         <category>java-design-patterns</category>
       </categories>
@@ -5282,6 +5265,88 @@ public class Squeak implements CallBehavior {
 ----Composite:22
 ------left:221
 --left:3</code></pre>]]></content>
+      <categories>
+        <category>java-design-patterns</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Java设计模式：桥接器</title>
+    <url>/2019/01/08/java/java-design/structure/bridge/</url>
+    <content><![CDATA[<h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将抽象与实现分离开来，使它们可以独立变化。</p>
+<p>抽象与实现解耦，例如一个生产线的机器，将参数设定与具体生产的过程实现分离开，使整个生产线更加灵活，用一套参数也可以使用不同的工作模式。</p>
+<p>其中参数设定与生产过程属于两种不同的维度，桥接模式所做的事情就是将不同的维度联结在一起！</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
+<li>在一个类中通过组合另一个对象，调用时只需在当前类调用对象方法即可，实现解耦。</li>
+</ul>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义电视机抽象类,拥有3个方法。</p>
+<pre><code>public abstract class Tv {
+
+    public abstract void on();
+
+    public abstract void off();
+
+    public abstract void tuneTunnel();</code></pre><p>   定义一个电视机的实现类，Sony电视机。</p>
+<pre><code>public class SonyTv extends Tv {
+
+    @Override
+    public void on() {
+        System.out.println(&quot;SonyTv,on&quot;);
+    }
+
+    @Override
+    public void off() {
+        System.out.println(&quot;SonyTv,off&quot;);
+    }
+
+    @Override
+    public void tuneTunnel() {
+        System.out.println(&quot;SonyTv,tuneTunnel&quot;);
+    }</code></pre><p>   定义一个遥控器抽象类。组合了一个电视机对象。</p>
+<pre><code>protected Tv tv;
+
+    public RemoteControl(Tv tv) {
+        this.tv = tv;
+    }
+
+    public abstract void on();
+
+    public abstract void off();
+
+    public abstract void tuneTunnel();   </code></pre><p>   定义一个遥控器的实现类，Sony电视机遥控器。</p>
+<pre><code>public class SonyRemoteControl extends RemoteControl {
+
+    public SonyRemoteControl(Tv tv) {
+        super(tv);
+    }
+
+    @Override
+    public void on() {
+        System.out.println(&quot;sonyRemoteControl,on&quot;);
+        tv.on();
+    }
+
+    @Override
+    public void off() {
+        System.out.println(&quot;sonyRemoteControl,off&quot;);
+        tv.off();
+    }
+
+    @Override
+    public void tuneTunnel() {
+        System.out.println(&quot;sonyRemoteControl,tuneTunnel&quot;);
+        tv.off();
+    }
+} </code></pre><p>   在生成sony电视机遥控器时，传入一个sony电视机对象，即可使用该遥控器实现该电视机的状态变换。</p>
+<pre><code>public class Client {
+
+   public static void main(String[] args) {
+       Tv sonyTv = new SonyTv();
+       SonyRemoteControl sonyRemoteControl = new SonyRemoteControl(sonyTv);
+       sonyRemoteControl.on();
+       sonyRemoteControl.off();
+       sonyRemoteControl.tuneTunnel();
+   }
+}</code></pre>]]></content>
       <categories>
         <category>java-design-patterns</category>
       </categories>

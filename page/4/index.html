@@ -2069,7 +2069,7 @@ Using index condition
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  694 字
+                  1.7k 字
                 </span>
               
 
@@ -2085,7 +2085,7 @@ Using index condition
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2 分钟
+                  7 分钟
                 </span>
               
             </div>
@@ -2108,13 +2108,78 @@ Using index condition
       
         
           
-            <h1 id="类图："><a href="#类图：" class="headerlink" title="类图："></a>类图：</h1><h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p><img src="/.io//uploads/java/concurrent/ThreadLocal.png" alt="ThreadLocal"></p>
+            <h1 id="类图："><a href="#类图：" class="headerlink" title="类图："></a>类图：</h1><h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p><img src="/.io//../uploads/java/concurrent/ThreadLocal.png" alt="ThreadLocal"></p>
 <h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h2><p><img src="/.io//uploads/java/concurrent/Thread.png" alt="Thread"></p>
 <h1 id="源码："><a href="#源码：" class="headerlink" title="源码："></a>源码：</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The entries in this hash map extend WeakReference, using</span></span><br><span class="line"><span class="comment">         * its main ref field as the key (which is always a</span></span><br><span class="line"><span class="comment">         * ThreadLocal object).  Note that null keys (i.e. entry.get()</span></span><br><span class="line"><span class="comment">         * == null) mean that the key is no longer referenced, so the</span></span><br><span class="line"><span class="comment">         * entry can be expunged from table.  Such entries are referred to</span></span><br><span class="line"><span class="comment">         * as "stale entries" in the code that follows.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">            <span class="comment">/** The value associated with this ThreadLocal. */</span></span><br><span class="line">            Object value;</span><br><span class="line"></span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="keyword">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The initial capacity -- MUST be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> INITIAL_CAPACITY = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The table, resized as necessary.</span></span><br><span class="line"><span class="comment">         * table.length MUST always be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br></pre></td></tr></table></figure>
 <h3 id="Thread-1"><a href="#Thread-1" class="headerlink" title="Thread"></a>Thread</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">ThreadLocal.ThreadLocalMap inheritableThreadLocals = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
-<h1 id="流程-先讲一下作用，再说自己看过源码，讲下源码"><a href="#流程-先讲一下作用，再说自己看过源码，讲下源码" class="headerlink" title="流程  先讲一下作用，再说自己看过源码，讲下源码"></a>流程  先讲一下作用，再说自己看过源码，讲下源码</h1><p>ThreadLocal就是让线程有一份自己的数据副本，因此不需要考虑线程安全问题。<br>在我做过的项目中一般用来存储用户信息。因为后台中每一个请求都是一个线程，我们在后续需要这个数据的时候就可以很方便的获取这个信息。<br>ThreadLocal中有一个静态内部类ThreadLocalMap，这个Map里面的key是ThreadLocal这个对象，value就是我们要存储的值。<br>而ThreadLocalMap里面其实是维护了一个Entry数组，而Entry类是ThreadLocalMap的静态内部类，其中key存储的是弱引用的ThreadLocal，value存储的就是要存储的数据。<br>而在每条线程Thread内部有一个ThreadLocal.ThreadLocalMap类型的成员变量threadLocals，<br>这个threadLocals就是每条线程用来存储数据副本的，key值为ThreadLocal对象，value为变量副本。<br>所以ThreadLocal和里面的静态内部类ThreadLocalMap其实是为每一个线程来服务的。在ThreadLocal源码中也可以看到，每次执行get和set方法的时候<br>，都要先获取当前访问的线程，然后再从当前线程获取该线程的ThreadLocalMap属性然后再来操作。</p>
+<h3 id="流程-先讲一下作用，再说自己看过源码，讲下源码"><a href="#流程-先讲一下作用，再说自己看过源码，讲下源码" class="headerlink" title="流程  先讲一下作用，再说自己看过源码，讲下源码"></a>流程  先讲一下作用，再说自己看过源码，讲下源码</h3><p>ThreadLocal就是让线程有一份自己的数据副本，因此不需要考虑线程安全问题。<br>在我做过的项目中一般用来存储用户信息。因为后台中每一个请求都是一个线程，我们在后续需要这个数据的时候就可以很方便的获取这个信息。<br>ThreadLocal中有一个静态内部类ThreadLocalMap，这个Map里面的key是ThreadLocal这个对象，value就是我们要存储的值。<br>而ThreadLocalMap里面其实是维护了一个Entry数组，而Entry类是ThreadLocalMap的静态内部类，其中key存储的是弱引用的ThreadLocal，value存储的就是要存储的数据。<br>而在每条线程Thread内部有一个ThreadLocal.ThreadLocalMap类型的成员变量threadLocals，<br>这个threadLocals就是每条线程用来存储数据副本的，key值为ThreadLocal对象，value为变量副本。<br>所以ThreadLocal和里面的静态内部类ThreadLocalMap其实是为每一个线程来服务的。在ThreadLocal源码中也可以看到，每次执行get和set方法的时候<br>，都要先获取当前访问的线程，然后再从当前线程获取该线程的ThreadLocalMap属性然后再来操作。</p>
 <p>ThreadLocal可能出现的问题？<br>ThreadLocal会发生内存泄漏的问题。<br>ThreadLocalMap里面维护了一个Entry数组，而每个Entry类的key是弱引用的ThreadLocal，value是数据。<br>如果一个ThreadLocal对象没有外部的强引用来指向它，那么堆内存不足的时候会被GC掉这些弱引用的Key，那么就会出现key为null但是value不为null的情况，但是此时的value会一直存在一个强引用链，也就是Thread当前线程-&gt;ThreadLocalMap-&gt;Entry-&gt;Value，导致GC无法回收造成内存的泄漏，这个value就是泄漏的对象。<br>但是ThreadLocalMap在执行get、set、remove的时候会自动清理key为null的Entry，<br>但是更优雅的做法还是在使用完ThreadLocal之后调用ThreadLocal中的remove方法清空ThreadLocal变量副本解决该问题，<br>在我做的项目中，会在过滤器的最后执行ThreadLocal中的remove方法进行手动释放。</p>
+<h3 id="为什么-JDK-不把-value-也设计成弱引用？"><a href="#为什么-JDK-不把-value-也设计成弱引用？" class="headerlink" title="为什么 JDK 不把 value 也设计成弱引用？"></a>为什么 JDK 不把 value 也设计成弱引用？</h3><p>如果 value 是弱引用：</p>
+<p>只要 ThreadLocal 被回收，value 也会被回收。<br>但这样会导致 ThreadLocal 失去存储能力，因为 value 可能随时被 GC 回收，无法保证数据存活。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal&lt;<span class="keyword">byte</span>[]&gt; tl = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line">tl.set(<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>]); <span class="comment">// 1MB 数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 假设 value 是弱引用，且发生 GC：</span></span><br><span class="line">System.gc();</span><br><span class="line"><span class="keyword">byte</span>[] data = tl.get(); <span class="comment">// 可能返回 null，即使 tl 仍然存活！</span></span><br></pre></td></tr></table></figure>
+<p>JDK 的权衡：</p>
+<p>key 弱引用：防止 ThreadLocal 对象本身泄漏。<br>value 强引用：确保数据可用，但要求开发者 必须手动 remove()</p>
+<h3 id="JDK-的现有设计（key-弱引用-value-强引用）"><a href="#JDK-的现有设计（key-弱引用-value-强引用）" class="headerlink" title="JDK 的现有设计（key 弱引用 + value 强引用）"></a>JDK 的现有设计（key 弱引用 + value 强引用）</h3><p>优点：</p>
+<table>
+<thead>
+<tr>
+<th>设计</th>
+<th>回收时机</th>
+<th>是否可靠</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>key弱引用</td>
+<td>ThreadLocal 无强引用时回收</td>
+<td>❌</td>
+<td>key 可能被回收    防止 ThreadLocal 对象本身泄漏</td>
+</tr>
+<tr>
+<td>value强引用</td>
+<td>必须手动 remove() 或线程结束</td>
+<td>✅ 数据可靠</td>
+<td>保证业务逻辑正确性</td>
+</tr>
+</tbody></table>
+<p>平衡点：<br>key 弱引用 → 防止开发者忘记释放 ThreadLocal 对象（避免 ThreadLocal 本身泄漏）。<br>value 强引用 → 确保数据存活，由开发者控制清理（通过 remove()）。</p>
+<p>缺点:<br>内存泄漏风险：<br>如果开发者忘记 remove()，且 ThreadLocal 被回收（key=null），value 会一直占用内存（直到线程结束，或 ThreadLocalMap 扩容时清理）。</p>
+<h3 id="为什么-key-弱引用-能-避免-ThreadLocal-本身泄漏"><a href="#为什么-key-弱引用-能-避免-ThreadLocal-本身泄漏" class="headerlink" title="为什么 key 弱引用 能 避免 ThreadLocal 本身泄漏"></a>为什么 key 弱引用 能 避免 ThreadLocal 本身泄漏</h3><p>(1) 什么是 ThreadLocal 对象泄漏？</p>
+<p>假设 ThreadLocal 是强引用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal&lt;Object&gt; threadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line">threadLocal.set(<span class="keyword">new</span> Object());</span><br><span class="line">threadLocal = <span class="keyword">null</span>; <span class="comment">// 失去强引用</span></span><br></pre></td></tr></table></figure>
+<p>由于 ThreadLocalMap 的 Entry 对 ThreadLocal 是强引用，即使开发者已经不再使用 threadLocal 变量，ThreadLocal 对象仍然被 ThreadLocalMap 引用，无法被 GC 回收。</p>
+<p>结果：ThreadLocal 对象本身泄漏（即使它已经不再需要）。</p>
+<p>(2) 弱引用如何解决这个问题？</p>
+<p>Entry 对 ThreadLocal（key）是弱引用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">    Object value; <span class="comment">// value 仍然是强引用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当 ThreadLocal 失去所有强引用（如 threadLocal = null），key 会被 GC 回收（因为它是弱引用），此时 Entry 的 key 变为 null。</p>
+<p>效果：</p>
+<p>ThreadLocal 对象可以被回收，避免自身泄漏。<br>但 value 仍然是强引用，需要手动 remove() 或依赖 ThreadLocalMap 的惰性清理。</p>
+<h2 id="ThreadLocal内存溢出例子"><a href="#ThreadLocal内存溢出例子" class="headerlink" title="ThreadLocal内存溢出例子"></a>ThreadLocal内存溢出例子</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMemoryLeakDemo</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 模拟一个大对象</span></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">BigObject</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">byte</span>[] data;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">BigObject</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 每个对象占用约1MB内存</span></span><br><span class="line">            <span class="keyword">this</span>.data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用静态ThreadLocal变量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;BigObject&gt; threadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">            -Xmx12M -Xms12M</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        ExecutorService executor = Executors.newFixedThreadPool(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">            executor.execute(() -&gt; &#123;</span><br><span class="line">                <span class="comment">// 设置ThreadLocal值但不清理</span></span><br><span class="line">                threadLocal.set(<span class="keyword">new</span> BigObject());</span><br><span class="line">                System.out.println(Thread.currentThread().getName() + <span class="string">" set value"</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 模拟工作</span></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">100</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 这里故意不调用threadLocal.remove()</span></span><br><span class="line">            &#125;);</span><br><span class="line">            Thread.sleep(<span class="number">50</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        executor.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h3 id="问题分析："><a href="#问题分析：" class="headerlink" title="问题分析："></a>问题分析：</h3><p>1.线程池复用线程：我们创建了一个固定5个线程的线程池，这些线程会被反复使用</p>
+<p>2.ThreadLocal未清理：每个任务执行时都会设置一个新的BigObject(约1MB)到ThreadLocal中，但从未调用remove()</p>
+<p>3.内存泄漏过程：</p>
+<ul>
+<li><p>第一次任务执行时，线程的ThreadLocalMap中存入一个Entry</p>
+</li>
+<li><p>任务完成后，线程返回线程池，但Entry仍然存在</p>
+</li>
+<li><p>下次该线程执行新任务时，又存入新的BigObject</p>
+</li>
+<li><p>由于线程被复用，旧的Entry不会被自动清理</p>
+</li>
+</ul>
+<p>4.最终结果：</p>
+<ul>
+<li><p>每个线程的ThreadLocalMap中会积累多个BigObject</p>
+</li>
+<li><p>随着任务不断执行，内存占用持续增长</p>
+</li>
+<li><p>最终导致OutOfMemoryError</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">2</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">3</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">4</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">5</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">2</span> set value</span><br><span class="line">Exception in thread <span class="string">"pool-1-thread-3"</span> java.lang.OutOfMemoryError: Java heap space</span><br><span class="line">	at com.wyb.thread.base.threadLocal.ThreadLocalMemoryLeakDemo$BigObject.&lt;init&gt;(ThreadLocalMemoryLeakDemo.java:<span class="number">13</span>)</span><br><span class="line">	at com.wyb.thread.base.threadLocal.ThreadLocalMemoryLeakDemo.lambda$main$<span class="number">0</span>(ThreadLocalMemoryLeakDemo.java:<span class="number">26</span>)</span><br><span class="line">	at com.wyb.thread.base.threadLocal.ThreadLocalMemoryLeakDemo$$Lambda$<span class="number">14</span>/<span class="number">0x0000000800064440</span>.run(Unknown Source)</span><br><span class="line">	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:<span class="number">1128</span>)</span><br><span class="line">	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:<span class="number">628</span>)</span><br><span class="line">	at java.base/java.lang.Thread.run(Thread.java:<span class="number">834</span>)</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">4</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">5</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span> set value</span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">6</span> set value</span><br></pre></td></tr></table></figure>
           
         
       
@@ -2652,7 +2717,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/structure/facade/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/behavioral/chainOfResponsibility/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -2671,7 +2736,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/facade/" itemprop="url">Java设计模式：外观模式</a></h1>
+                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/chainOfResponsibility/" itemprop="url">Java设计模式：责任链模式</a></h1>
         
 
         <div class="post-meta">
@@ -2737,7 +2802,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  244 字
+                  566 字
                 </span>
               
 
@@ -2753,7 +2818,7 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1 分钟
+                  2 分钟
                 </span>
               
             </div>
@@ -2776,44 +2841,125 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>提供了一个统一的接口，用来访问子系统中的一群接口，从而让子系统更容易使用。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义一个外观对象，在内部进行功能的封装，功能具体是在都在外观类的内部，其它方法要使用该功能<br>调用外观对象的方法即可。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个电影播放系统，方法代表需要功能所需步骤</p>
-<pre><code>public class SubSystem {
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些对象连成一条链，并沿着这条链发送该请求，直到有一个对象处理它为止。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义个抽象类，依赖一个本身对象，每个继承类，即可传入其它的继承类实现对象链。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义处理器抽象类 依赖一个本身对象，通过构造器传入，拥有一个处理请求的抽象方法 </p>
+<pre><code>protected Handler successor;
 
-    public void turnOnTV() {
-        System.out.println(&quot;turnOnTV()&quot;);
+    public Handler(Handler successor) {
+        this.successor = successor;
     }
 
-    public void setCD(String cd) {
-        System.out.println(&quot;setCD( &quot; + cd + &quot; )&quot;);
+
+    protected abstract void handleRequest(Request request);</code></pre><p>   请求参数类</p>
+<pre><code>public class Request {
+
+    private RequestType type;
+    private String name;
+
+
+    public Request(RequestType type, String name) {
+        this.type = type;
+        this.name = name;
     }
 
-    public void starWatching() {
-        System.out.println(&quot;starWatching()&quot;);
+
+    public RequestType getType() {
+        return type;
     }
 
-}</code></pre><p>   定义一个外观类，封装了看电影的三步骤，客户端只需调用外观类的方法即可实现功能</p>
-<pre><code>public class Facade {
 
-    private SubSystem subSystem = new SubSystem();
-
-    public void watchMovie(String name) {
-        subSystem.turnOnTV();
-        subSystem.setCD(name);
-        subSystem.starWatching();
+    public String getName() {
+        return name;
     }
+
+}</code></pre><p>   请求类型枚举类 不同的请求类型 调用不同的处理器</p>
+<pre><code>public enum RequestType {
+    TYPE1, TYPE2, TYPE3
+} </code></pre><p>   定义处理器类1继承抽象类处理类型为TYPE1的请求</p>
+<pre><code>public class ConcreteHandler1 extends Handler {
+
+   public ConcreteHandler1(Handler successor) {
+       super(successor);
+   }
+
+   @Override
+   protected void handleRequest(Request request) {
+       if (RequestType.TYPE1 == request.getType()) {
+           System.out.println(request.getName() + &quot; is handle by ConcreteHandler1&quot;);
+           return;
+       }
+       if (successor != null) {
+           successor.handleRequest(request);
+       }
+   }
+}</code></pre><p>   定义处理器类2继承抽象类处理类型为TYPE2的请求</p>
+<pre><code>public class ConcreteHandler2 extends Handler {
+   public ConcreteHandler2(Handler successor) {
+       super(successor);
+   }
+
+   @Override
+   protected void handleRequest(Request request) {
+       if (request.getType() == RequestType.TYPE2) {
+           System.out.println(request.getName() + &quot; is handle by ConcreteHandler2&quot;);
+           return;
+       }
+       if (successor != null) {
+           successor.handleRequest(request);
+       }
+   }
 }</code></pre><p>   测试：</p>
 <pre><code>public class Client {
 
+   public static void main(String[] args) {
+
+       Handler handler1 = new ConcreteHandler1(null);
+       Handler handler2 = new ConcreteHandler2(handler1);
+
+       Request request1 = new Request(RequestType.TYPE1, &quot;request1&quot;);
+       handler2.handleRequest(request1);
+       Request request2 = new Request(RequestType.TYPE2, &quot;request2&quot;);
+       handler2.handleRequest(request2);
+
+       Handler handler3 = new ConcreteHandler3(handler2);
+       Request request3 = new Request(RequestType.TYPE3, &quot;request3&quot;);
+       handler3.handleRequest(request1);
+   }
+}</code></pre><p>   输出：</p>
+<pre><code>request1 is handle by ConcreteHandler1
+request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义处理器类3继承抽象类处理类型为TYPE3的请求</p>
+<pre><code>public class ConcreteHandler3 extends Handler {
+
+   public ConcreteHandler3(Handler successor) {
+       super(successor);
+   }
+
+   @Override
+   protected void handleRequest(Request request) {
+       if (RequestType.TYPE3 == request.getType()) {
+           System.out.println(request.getName() + &quot; is handle by ConcreteHandler3&quot;);
+           return;
+       }
+       if (successor != null) {
+           successor.handleRequest(request);
+       }
+   }
+}</code></pre><p>   测试：使用handler3处理request1请求</p>
+<pre><code>public class Client {
+
     public static void main(String[] args) {
-        Facade facade = new Facade();
-        facade.watchMovie(&quot;家有喜事&quot;);
+
+        Handler handler1 = new ConcreteHandler1(null);
+        Handler handler2 = new ConcreteHandler2(handler1);
+
+        Request request1 = new Request(RequestType.TYPE1, &quot;request1&quot;);
+        Handler handler3 = new ConcreteHandler3(handler2);
+        Request request3 = new Request(RequestType.TYPE3, &quot;request3&quot;);
+        handler3.handleRequest(request1);
     }
-}</code></pre><p>   测试：</p>
-<pre><code>turnOnTV()
-setCD( 家有喜事 )
-starWatching()</code></pre>
+}</code></pre><p>   输出：最外层的Handler即调用所有类型的处理请求</p>
+<pre><code>request1 is handle by ConcreteHandler1</code></pre>
           
         
       
@@ -3048,6 +3194,223 @@ public class Squeak implements CallBehavior {
 <li>javax.servlet.Filter#doFilter()</li>
 </ul>
 
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/structure/facade/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/facade/" itemprop="url">Java设计模式：外观模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  244 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>提供了一个统一的接口，用来访问子系统中的一群接口，从而让子系统更容易使用。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义一个外观对象，在内部进行功能的封装，功能具体是在都在外观类的内部，其它方法要使用该功能<br>调用外观对象的方法即可。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个电影播放系统，方法代表需要功能所需步骤</p>
+<pre><code>public class SubSystem {
+
+    public void turnOnTV() {
+        System.out.println(&quot;turnOnTV()&quot;);
+    }
+
+    public void setCD(String cd) {
+        System.out.println(&quot;setCD( &quot; + cd + &quot; )&quot;);
+    }
+
+    public void starWatching() {
+        System.out.println(&quot;starWatching()&quot;);
+    }
+
+}</code></pre><p>   定义一个外观类，封装了看电影的三步骤，客户端只需调用外观类的方法即可实现功能</p>
+<pre><code>public class Facade {
+
+    private SubSystem subSystem = new SubSystem();
+
+    public void watchMovie(String name) {
+        subSystem.turnOnTV();
+        subSystem.setCD(name);
+        subSystem.starWatching();
+    }
+}</code></pre><p>   测试：</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        Facade facade = new Facade();
+        facade.watchMovie(&quot;家有喜事&quot;);
+    }
+}</code></pre><p>   测试：</p>
+<pre><code>turnOnTV()
+setCD( 家有喜事 )
+starWatching()</code></pre>
           
         
       
@@ -3366,304 +3729,6 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/behavioral/chainOfResponsibility/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/chainOfResponsibility/" itemprop="url">Java设计模式：责任链模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  566 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些对象连成一条链，并沿着这条链发送该请求，直到有一个对象处理它为止。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义个抽象类，依赖一个本身对象，每个继承类，即可传入其它的继承类实现对象链。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义处理器抽象类 依赖一个本身对象，通过构造器传入，拥有一个处理请求的抽象方法 </p>
-<pre><code>protected Handler successor;
-
-    public Handler(Handler successor) {
-        this.successor = successor;
-    }
-
-
-    protected abstract void handleRequest(Request request);</code></pre><p>   请求参数类</p>
-<pre><code>public class Request {
-
-    private RequestType type;
-    private String name;
-
-
-    public Request(RequestType type, String name) {
-        this.type = type;
-        this.name = name;
-    }
-
-
-    public RequestType getType() {
-        return type;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-}</code></pre><p>   请求类型枚举类 不同的请求类型 调用不同的处理器</p>
-<pre><code>public enum RequestType {
-    TYPE1, TYPE2, TYPE3
-} </code></pre><p>   定义处理器类1继承抽象类处理类型为TYPE1的请求</p>
-<pre><code>public class ConcreteHandler1 extends Handler {
-
-   public ConcreteHandler1(Handler successor) {
-       super(successor);
-   }
-
-   @Override
-   protected void handleRequest(Request request) {
-       if (RequestType.TYPE1 == request.getType()) {
-           System.out.println(request.getName() + &quot; is handle by ConcreteHandler1&quot;);
-           return;
-       }
-       if (successor != null) {
-           successor.handleRequest(request);
-       }
-   }
-}</code></pre><p>   定义处理器类2继承抽象类处理类型为TYPE2的请求</p>
-<pre><code>public class ConcreteHandler2 extends Handler {
-   public ConcreteHandler2(Handler successor) {
-       super(successor);
-   }
-
-   @Override
-   protected void handleRequest(Request request) {
-       if (request.getType() == RequestType.TYPE2) {
-           System.out.println(request.getName() + &quot; is handle by ConcreteHandler2&quot;);
-           return;
-       }
-       if (successor != null) {
-           successor.handleRequest(request);
-       }
-   }
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-
-       Handler handler1 = new ConcreteHandler1(null);
-       Handler handler2 = new ConcreteHandler2(handler1);
-
-       Request request1 = new Request(RequestType.TYPE1, &quot;request1&quot;);
-       handler2.handleRequest(request1);
-       Request request2 = new Request(RequestType.TYPE2, &quot;request2&quot;);
-       handler2.handleRequest(request2);
-
-       Handler handler3 = new ConcreteHandler3(handler2);
-       Request request3 = new Request(RequestType.TYPE3, &quot;request3&quot;);
-       handler3.handleRequest(request1);
-   }
-}</code></pre><p>   输出：</p>
-<pre><code>request1 is handle by ConcreteHandler1
-request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义处理器类3继承抽象类处理类型为TYPE3的请求</p>
-<pre><code>public class ConcreteHandler3 extends Handler {
-
-   public ConcreteHandler3(Handler successor) {
-       super(successor);
-   }
-
-   @Override
-   protected void handleRequest(Request request) {
-       if (RequestType.TYPE3 == request.getType()) {
-           System.out.println(request.getName() + &quot; is handle by ConcreteHandler3&quot;);
-           return;
-       }
-       if (successor != null) {
-           successor.handleRequest(request);
-       }
-   }
-}</code></pre><p>   测试：使用handler3处理request1请求</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-
-        Handler handler1 = new ConcreteHandler1(null);
-        Handler handler2 = new ConcreteHandler2(handler1);
-
-        Request request1 = new Request(RequestType.TYPE1, &quot;request1&quot;);
-        Handler handler3 = new ConcreteHandler3(handler2);
-        Request request3 = new Request(RequestType.TYPE3, &quot;request3&quot;);
-        handler3.handleRequest(request1);
-    }
-}</code></pre><p>   输出：最外层的Handler即调用所有类型的处理请求</p>
-<pre><code>request1 is handle by ConcreteHandler1</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3830,7 +3895,7 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">71.5k</span>
+    <span title="Site words total count">72.5k</span>
   
 </div>
 
@@ -3857,7 +3922,7 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共71.5k字</span>
+  <span class="post-count">博客全站共72.5k字</span>
 </div>
 
         
