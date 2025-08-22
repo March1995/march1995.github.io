@@ -10,10 +10,10 @@ categories: [并发编程]
 
 ## ThreadLocal
 
-![ThreadLocal](/hexo/./../uploads/java/concurrent/ThreadLocal.png)
+![ThreadLocal](https://march1995.github.io/uploads/java/concurrent/ThreadLocal.png)
 
 ## Thread
-![Thread](/source/uploads/java/concurrent/Thread.png)
+![Thread](https://march1995.github.io/uploads/java/concurrent/Thread.png)
 
 # 源码：
 ```java
