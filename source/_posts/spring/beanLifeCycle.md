@@ -12,7 +12,7 @@ categories: [Spring]
 
 # 单例模式
 
-![单例模式生命周期](/uploads/spring/单例模式springbean生命周期.jpg)
+![单例模式生命周期](https://march1995.github.io/uploads/spring/单例模式springbean生命周期.jpg)
 
 # 多例模式
 
@@ -23,7 +23,7 @@ LifeCycle lifeCycle = (LifeCycle) applicationContext.getBean("lifeCycle");
 ```
 
 
-![多例模式生命周期](/uploads/spring/多例模式springbean生命周期.jpg)
+![多例模式生命周期](https://march1995.github.io/uploads/spring/多例模式springbean生命周期.jpg)
 
 # 两者区别
 
@@ -40,4 +40,4 @@ bean在多例模式下，spring容器启动时解析xml发下该bean标签后，
 这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。
 
 
-# [相应测试源码](https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java)
+# [相应测试源码](https://github.com/March1995/spring-example/blob/main/spring-example-test/src/main/java/com/wyb/test/spring/beanLifeCycle/LifeCycle.java)
