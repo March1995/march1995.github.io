@@ -88,14 +88,14 @@
 <meta property="og:url" content="https://march1995.github.io/2019/03/02/java/coucurrent/ThreadLocal/index.html">
 <meta property="og:site_name" content="Marcher">
 <meta property="og:description" content="类图：ThreadLocal Thread 源码：123456789101112131415161718192021222324252627282930static class ThreadLocalMap &amp;#123;        &#x2F;**         * The entries in this hash map extend WeakReference, using         * i">
-<meta property="og:image" content="https://march1995.github.io/.io/uploads/java/concurrent/ThreadLocal.png">
-<meta property="og:image" content="https://march1995.github.io/.io//uploads/java/concurrent/Thread.png">
+<meta property="og:image" content="https://march1995.github.io/uploads/java/concurrent/ThreadLocal.png">
+<meta property="og:image" content="https://march1995.github.io/uploads/java/concurrent/Thread.png">
 <meta property="article:published_time" content="2019-03-02T00:00:00.000Z">
-<meta property="article:modified_time" content="2025-08-13T16:13:22.368Z">
+<meta property="article:modified_time" content="2026-01-12T02:34:23.249Z">
 <meta property="article:author" content="Marcher">
 <meta property="article:tag" content="thread">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://march1995.github.io/.io/uploads/java/concurrent/ThreadLocal.png">
+<meta name="twitter:image" content="https://march1995.github.io/uploads/java/concurrent/ThreadLocal.png">
 
 
 
@@ -426,8 +426,8 @@
       
 
       
-        <h1 id="类图："><a href="#类图：" class="headerlink" title="类图："></a>类图：</h1><h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p><img src="/.io//../uploads/java/concurrent/ThreadLocal.png" alt="ThreadLocal"></p>
-<h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h2><p><img src="/.io//uploads/java/concurrent/Thread.png" alt="Thread"></p>
+        <h1 id="类图："><a href="#类图：" class="headerlink" title="类图："></a>类图：</h1><h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/ThreadLocal.png" alt="ThreadLocal"></p>
+<h2 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/Thread.png" alt="Thread"></p>
 <h1 id="源码："><a href="#源码：" class="headerlink" title="源码："></a>源码：</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The entries in this hash map extend WeakReference, using</span></span><br><span class="line"><span class="comment">         * its main ref field as the key (which is always a</span></span><br><span class="line"><span class="comment">         * ThreadLocal object).  Note that null keys (i.e. entry.get()</span></span><br><span class="line"><span class="comment">         * == null) mean that the key is no longer referenced, so the</span></span><br><span class="line"><span class="comment">         * entry can be expunged from table.  Such entries are referred to</span></span><br><span class="line"><span class="comment">         * as "stale entries" in the code that follows.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">            <span class="comment">/** The value associated with this ThreadLocal. */</span></span><br><span class="line">            Object value;</span><br><span class="line"></span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="keyword">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The initial capacity -- MUST be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> INITIAL_CAPACITY = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The table, resized as necessary.</span></span><br><span class="line"><span class="comment">         * table.length MUST always be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br></pre></td></tr></table></figure>
 <h3 id="Thread-1"><a href="#Thread-1" class="headerlink" title="Thread"></a>Thread</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">ThreadLocal.ThreadLocalMap inheritableThreadLocals = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
 <h3 id="流程-先讲一下作用，再说自己看过源码，讲下源码"><a href="#流程-先讲一下作用，再说自己看过源码，讲下源码" class="headerlink" title="流程  先讲一下作用，再说自己看过源码，讲下源码"></a>流程  先讲一下作用，再说自己看过源码，讲下源码</h3><p>ThreadLocal就是让线程有一份自己的数据副本，因此不需要考虑线程安全问题。<br>在我做过的项目中一般用来存储用户信息。因为后台中每一个请求都是一个线程，我们在后续需要这个数据的时候就可以很方便的获取这个信息。<br>ThreadLocal中有一个静态内部类ThreadLocalMap，这个Map里面的key是ThreadLocal这个对象，value就是我们要存储的值。<br>而ThreadLocalMap里面其实是维护了一个Entry数组，而Entry类是ThreadLocalMap的静态内部类，其中key存储的是弱引用的ThreadLocal，value存储的就是要存储的数据。<br>而在每条线程Thread内部有一个ThreadLocal.ThreadLocalMap类型的成员变量threadLocals，<br>这个threadLocals就是每条线程用来存储数据副本的，key值为ThreadLocal对象，value为变量副本。<br>所以ThreadLocal和里面的静态内部类ThreadLocalMap其实是为每一个线程来服务的。在ThreadLocal源码中也可以看到，每次执行get和set方法的时候<br>，都要先获取当前访问的线程，然后再从当前线程获取该线程的ThreadLocalMap属性然后再来操作。</p>
@@ -669,7 +669,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">68</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -792,7 +792,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -806,7 +806,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">78.4k</span>
+    <span title="Site words total count">81.1k</span>
   
 </div>
 
@@ -833,7 +833,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共78.4k字</span>
+  <span class="post-count">博客全站共81.1k字</span>
 </div>
 
         

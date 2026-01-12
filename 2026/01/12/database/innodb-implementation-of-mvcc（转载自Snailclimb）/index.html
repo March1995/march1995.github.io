@@ -85,27 +85,27 @@
 <meta name="description" content="多版本并发控制 (Multi-Version Concurrency Control)MVCC 是一种并发控制机制，用于在多个并发事务同时读写数据库时保持数据的一致性和隔离性。它是通过在每个数据行上维护多个版本的数据来实现的。当一个事务要对数据库中的数据进行修改时，MVCC 会为该事务创建一个数据快照，而不是直接修改实际的数据行。 1、读操作（SELECT）： 当一个事务执行读操作时，它会使用快照">
 <meta property="og:type" content="article">
 <meta property="og:title" content="InnoDB存储引擎对MVCC的实现">
-<meta property="og:url" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/index.html">
+<meta property="og:url" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/index.html">
 <meta property="og:site_name" content="Marcher">
 <meta property="og:description" content="多版本并发控制 (Multi-Version Concurrency Control)MVCC 是一种并发控制机制，用于在多个并发事务同时读写数据库时保持数据的一致性和隔离性。它是通过在每个数据行上维护多个版本的数据来实现的。当一个事务要对数据库中的数据进行修改时，MVCC 会为该事务创建一个数据快照，而不是直接修改实际的数据行。 1、读操作（SELECT）： 当一个事务执行读操作时，它会使用快照">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/trans_visible.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/317e91e1-1ee1-42ad-9412-9098d5c6a9ad.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/c52ff79f-10e6-46cb-b5d4-3c9cbcc1934a.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/6a276e7a-b0da-4c7b-bdf7-c0c7b7b3b31c.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/8778836b-34a8-480b-b8c7-654fe207a8c2.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/6fb2b9a1-5f14-4dec-a797-e4cf388ed413.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/a3fd1ec6-8f37-42fa-b090-7446d488fd04.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/528559e9-dae8-4d14-b78d-a5b657c88391.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/6f82703c-36a1-4458-90fe-d7f4edbac71a.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/0e906b95-c916-4f30-beda-9cb3e49746bf.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/79ed6142-7664-4e0b-9023-cf546586aa39.png">
-<meta property="og:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/cbbedbc5-0e3c-4711-aafd-7f3d68a4ed4e.png">
-<meta property="article:published_time" content="2025-08-13T16:13:22.364Z">
-<meta property="article:modified_time" content="2025-08-13T16:13:22.364Z">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/trans_visible.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/317e91e1-1ee1-42ad-9412-9098d5c6a9ad.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/c52ff79f-10e6-46cb-b5d4-3c9cbcc1934a.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/6a276e7a-b0da-4c7b-bdf7-c0c7b7b3b31c.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/8778836b-34a8-480b-b8c7-654fe207a8c2.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/6fb2b9a1-5f14-4dec-a797-e4cf388ed413.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/a3fd1ec6-8f37-42fa-b090-7446d488fd04.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/528559e9-dae8-4d14-b78d-a5b657c88391.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/6f82703c-36a1-4458-90fe-d7f4edbac71a.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/0e906b95-c916-4f30-beda-9cb3e49746bf.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/79ed6142-7664-4e0b-9023-cf546586aa39.png">
+<meta property="og:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/cbbedbc5-0e3c-4711-aafd-7f3d68a4ed4e.png">
+<meta property="article:published_time" content="2026-01-12T02:34:23.244Z">
+<meta property="article:modified_time" content="2026-01-12T02:34:23.244Z">
 <meta property="article:author" content="Marcher">
 <meta property="article:tag" content="database">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/trans_visible.png">
+<meta name="twitter:image" content="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/images/mvvc/trans_visible.png">
 
 
 
@@ -135,7 +135,7 @@
 
 
 
-  <link rel="canonical" href="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc（转载自Snailclimb）/"/>
+  <link rel="canonical" href="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc（转载自Snailclimb）/"/>
 
 
 
@@ -316,7 +316,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/08/13/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2026/01/12/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -345,8 +345,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-08-13T16:13:22+00:00">
-                2025-08-13
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2026-01-12T02:34:23+00:00">
+                2026-01-12
               </time>
             
 
@@ -399,7 +399,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  4.2k 字
+                  4.3k 字
                 </span>
               
 
@@ -528,9 +528,43 @@
 <ul>
 <li><p>如果在活跃事务列表 m_ids 中能找到 DB_TRX_ID，表明：① 在当前事务创建快照前，该记录行的值被事务 ID 为 DB_TRX_ID 的事务修改了，但没有提交；或者 ② 在当前事务创建快照后，该记录行的值被事务 ID 为 DB_TRX_ID 的事务修改了。这些情况下，这个记录行的值对当前事务都是不可见的。跳到步骤 5</p>
 </li>
-<li><p>在活跃事务列表中找不到，则表明“id 为 trx_id 的事务”在修改“该记录行的值”后，在“当前事务”创建快照前就已经提交了，所以记录行对当前事务可见</p>
+<li><p>在活跃事务列表中找不到，则表明“id 为 trx_id 的事务”在修改“该记录行的值”后，在“当前事务”创建快照前就已经提交了，所以记录行对当前事务可见）（事务1在当前事务之后创建，）</p>
 </li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>时间线</th>
+<th>事务1</th>
+<th>事务1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>✅ 解决</td>
+<td>MVCC 保证一致性视图</td>
+</tr>
+<tr>
+<td><strong>锁定读（<code>SELECT ... FOR UPDATE</code>）</strong></td>
+<td>✅ 解决</td>
+<td>Next-Key Locking 阻止插入</td>
+</tr>
+<tr>
+<td><strong>连续锁定读</strong></td>
+<td>✅ 解决</td>
+<td>临键锁持续生效</td>
+</tr>
+<tr>
+<td><strong>先快照读后当前读</strong></td>
+<td>❌ 未解决</td>
+<td>两次查询模式不同</td>
+</tr>
+<tr>
+<td><strong>先查询后更新</strong></td>
+<td>❌ 未解决</td>
+<td><code>UPDATE</code> 基于最新数据</td>
+</tr>
+</tbody></table>
 </li>
 <li><p>在该记录行的 DB_ROLL_PTR 指针所指向的 <code>undo log</code> 取出快照记录，用快照记录的 DB_TRX_ID 跳到步骤 1 重新开始判断，直到找到满足的快照版本或返回空</p>
 </li>
@@ -689,7 +723,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2025/08/13/database/MVVC/" rel="next" title="database/MVVC">
+              <a href="/2026/01/12/database/MVVC/" rel="next" title="database/MVVC">
                 <i class="fa fa-chevron-left"></i> database/MVVC
               </a>
             
@@ -778,7 +812,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">68</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -901,7 +935,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -915,7 +949,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">78.4k</span>
+    <span title="Site words total count">81.1k</span>
   
 </div>
 
@@ -942,7 +976,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共78.4k字</span>
+  <span class="post-count">博客全站共81.1k字</span>
 </div>
 
         

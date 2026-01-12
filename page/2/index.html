@@ -299,6 +299,721 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2022/03/22/database/3.explain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/03/22/database/3.explain/" itemprop="url">explain工具</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-03-22T00:00:00+00:00">
+                2022-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/database/" itemprop="url" rel="index">
+                    <span itemprop="name">database</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.6k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>使用EXPLAIN关键字可以模拟优化器执行SQL语句，分析你的查询语句或是结构的性能瓶颈在select语句之前增加 xplain 关键字，<br>MySQL 会在查询上设置一个标记，执行查询会返 回执行计划的信息， 而不是执行这条SQL 注意：如果 from 中包含子查询，<br>仍会执行该子查询，将结果放入临时表中</p>
+<h1 id="explain中的列"><a href="#explain中的列" class="headerlink" title="explain中的列"></a>explain中的列</h1><p><strong>1.id列:</strong></p>
+<p>id列的编号是 select 的序列号，有几个 select 就有几个id，并且id的顺序是按 select 出现的 顺序增长的。<br>从大到小，越大的执行优先级越高，相同的从上到下执行，id为null最后执行。</p>
+<p><strong>2.select_type列</strong></p>
+<p>select_type 表示对应行是简单还是复杂的查询。</p>
+<ul>
+<li>simple:简单查询。</li>
+<li>primary:复杂查询中最外层的 select</li>
+<li>subquery:包含在 select 中的子查询（不在 from 子句中）</li>
+<li>derived:包含在 from 子句中的子查询。MySQL会将结果存放在一个临时表中，也称为 派生表（derived的英文含义）</li>
+</ul>
+<p><strong>3.table列</strong></p>
+<p>这一列表示 explain 的一行正在访问哪个表。 当 from 子句中有子查询时，table列是 <derivenN> 格式，表示当前查询依赖 id=N 的查询，<br>于是先执行 id=N 的查询。 当有 union 时，UNION RESULT 的 table 列的值为&lt;union1,2&gt;，1和2表示参与 union 的 select 行id。</derivenN></p>
+<p><strong>4.type列</strong></p>
+<p>这一列表示关联类型或访问类型，即MySQL决定如何查找表中的行，查找数据行记录的大概 范围。</p>
+<p>依次从最优到最差分别为：system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; all</p>
+<p>一般来说，得保证查询达到range级别，最好达到ref。</p>
+<ul>
+<li>NULL：mysql能够在优化阶段分解查询语句，在执行阶段用不着再访问表或索引。例如：在 索引列中选取最小值，可以单独查找索引来完成，不需要在执行时访问表</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain select min(id) from film;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>const, system：mysql能对查询的某部分进行优化并将其转化成一个常量（可以看show warnings 的结果）。<br>用于 primary key 或 unique key 的所有列与常数比较时，所以表最多 有一个匹配行，读取1次，速度比较快。system是const的特例，表里只有一条元组匹配时为 system</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain extended select * from (select * from film where id &#x3D; 1) tmp;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>eq_ref:primary key 或 unique key 索引的所有部分被连接使用 ，最多只会返回一条符合条件的记录。<br>这可能是在 const 之外最好的联接类型了，简单的 select 查询不会出现这种 type。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain select * from film_actor left join film on film_actor.film_id &#x3D; film.id;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>ref:相比 eq_ref，不使用唯一索引，而是使用普通索引或者唯一性索引的部分前缀，索引要和某个值相比较，可能会找到多个符合条件的行。</p>
+</li>
+<li><p>range:范围扫描通常出现在 in(), between ,&gt; ,&lt;, &gt;= 等操作中。使用一个索引来检索给定 范围的行。</p>
+</li>
+<li><p>index：扫描全表索引，这通常比ALL快一些</p>
+</li>
+<li><p>ALL：即全表扫描，意味着mysql需要从头到尾去查找所需要的行。通常情况下这需要增加索 引来进行优化了</p>
+</li>
+</ul>
+<p><strong>5. possible_keys列</strong></p>
+<p>这一列显示查询可能使用哪些索引来查找。 explain 时可能出现 possible_keys 有列，而 key 显示 NULL 的情况，这种情况是因为表中 数据不多，<br>mysql认为索引对此查询帮助不大，选择了全表查询。 如果该列是NULL，则没有相关的索引。在这种情况下，可以通过检查 where 子句看是否可 以创造一个适当的索引来提高查询性能，<br>然后用 explain 查看效果</p>
+<p><strong>6. key列</strong> </p>
+<p>这一列显示mysql实际采用哪个索引来优化对该表的访问。<br>如果没有使用索引，则该列是 NULL。如果想强制mysql使用或忽视possible_keys列中的索 引，在查询中使用 force index、ignore index。</p>
+<p><strong>7. key_len列</strong> </p>
+<p>这一列显示了mysql在索引里使用的字节数，通过这个值可以算出具体使用了索引中的哪些 列。举例来说，film_actor的联合索引 idx_film_actor_id 由 film_id 和 actor_id 两个int列组成，<br>并且每个int是4字节。 通过结果中的key_len=4可推断出查询使用了第一个列：film_id列来执 行索引查找。 mysql&gt; explain sele</p>
+<p>key_len计算规则如下： </p>
+<ul>
+<li>字符串 char(n)：n字节长度 varchar(n)：2字节存储字符串长度，如果是utf-8，则长度 3n + 2</li>
+<li>数值类型tinyint：1字节 smallint：2字节 int：4字节 bigint：8字节 </li>
+<li>时间类型：date：3字节 timestamp：4字节 datetime：8字节</li>
+<li>如果字段允许为 NULL，需要1字节记录是否为 NULL </li>
+</ul>
+<p>索引最大长度是768字节，当字符串过长时，mysql会做一个类似左前缀索引的处理，将前半 部分的字符提取出来做索引。</p>
+<p><strong>8. ref列</strong> </p>
+<p>这一列显示了在key列记录的索引中，表查找值所用到的列或常量，常见的有：const（常 量），字段名（例：film.id）</p>
+<p><strong>9. rows列</strong> </p>
+<p>这一列是mysql估计要读取并检测的行数，注意这个不是结果集里的行数</p>
+<p><strong>10. Extra列</strong> </p>
+<p>这一列展示的是额外信息。常见的重要值如下：</p>
+<ul>
+<li>Using index：使用覆盖索引</li>
+<li>Using where：使用 where 语句来处理结果，查询的列未被索引覆盖</li>
+<li>Using index condition：查询的列不完全被索引覆盖，where条件中是一个前导列的范围</li>
+<li>Using temporary：mysql需要创建一张临时表来处理查询。出现这种情况一般是要进行 优化的，首先是想到用索引来优化。</li>
+<li>Using filesort：将用外部排序而不是索引排序，数据较小时从内存排序，否则需要在磁盘 完成排序。这种情况下一般也是要考虑使用索引来优化的。</li>
+<li>Select tables optimized away：使用某些聚合函数（比如 max、min）来访问存在索引 的某个字段是</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/11/09/java/coucurrent/7.%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1&%E5%AE%9A%E6%97%B6%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/11/09/java/coucurrent/7.%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1&%E5%AE%9A%E6%97%B6%E7%BA%BF%E7%A8%8B%E6%B1%A0/" itemprop="url">定时任务&定时线程池</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-09T00:00:00+00:00">
+                2021-11-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  0 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/11/08/java/coucurrent/6.Executor%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/11/08/java/coucurrent/6.Executor%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/" itemprop="url">Executor线程池原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-08T00:00:00+00:00">
+                2021-11-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.7k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="线程使用过程中存在的问题"><a href="#线程使用过程中存在的问题" class="headerlink" title="线程使用过程中存在的问题"></a>线程使用过程中存在的问题</h1><p>如果并发的请求数量非常多，但每个线程执行的时间很短，这样就会频繁的创建和销毁<br>线程，如此一来会大大降低系统的效率。可能出现服务器在为每个请求创建新线程和销毁线<br>程上花费的时间和消耗的系统资源要比处理实际的用户请求的时间和资源更多。</p>
+<h1 id="线程池的使用场景-amp-优势"><a href="#线程池的使用场景-amp-优势" class="headerlink" title="线程池的使用场景&amp;优势"></a>线程池的使用场景&amp;优势</h1><p>什么时候使用线程池?</p>
+<ul>
+<li>单个任务处理时间比较短</li>
+<li>需要处理的任务数量很大</li>
+</ul>
+<p>线程池优势</p>
+<ul>
+<li>重用存在的线程，减少线程创建，消亡的开销，提高性能 提高响应速度。 </li>
+<li>当任务到达时，任务可以不需要的等到线程创建就能立即执行。 </li>
+<li>提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，<br>使用线程池可以进行统一的分配，调优和监控。</li>
+</ul>
+<h1 id="线程的实现方式"><a href="#线程的实现方式" class="headerlink" title="线程的实现方式"></a>线程的实现方式</h1><p>Runnable,Thread,Callable</p>
+<h3 id="Runnable"><a href="#Runnable" class="headerlink" title="Runnable"></a>Runnable</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实现Runnable接口的类将被Thread执行，表示一个基本的任务 </span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="comment">// run方法就是它所有的内容，就是实际执行的任务 </span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span>; </span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        TestThread thread = <span class="keyword">new</span> TestThread();</span><br><span class="line">        thread.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Callable"><a href="#Callable" class="headerlink" title="Callable"></a>Callable</h3><p>有返回结果，用Future接收</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Callable同样是任务，与Runnable接口的区别在于它接收泛型，同时它执行任务后带 有返回内容</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Callable</span>&lt;<span class="title">V</span>&gt; </span>&#123; </span><br><span class="line">    <span class="comment">// 相对于run方法的带有返回值的call方法</span></span><br><span class="line">    <span class="function">V <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception; </span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Executor框架"><a href="#Executor框架" class="headerlink" title="Executor框架"></a>Executor框架</h1><p>Executor接口是线程池框架中最基础的部分，定义了一个用于执行Runnable的execute方法。</p>
+<p>下图为它的继承与实现.</p>
+<p><img src="/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E6%B1%A0.png" alt="线程池.png"></p>
+<p>从图中可以看出Executor下有一个重要子接口ExecutorService，其中定义了线程池的具体行为<br>1，execute（Runnable command）：履行Ruannable类型的任务,</p>
+<p>2，submit（task）：可用来提交Callable或Runnable任务，并返回代表此任务的Future 对象</p>
+<p>3，shutdown（）：在完成已提交的任务后封闭办事，不再接管新任务,</p>
+<p>4，shutdownNow（）：停止所有正在履行的任务并封闭办事。</p>
+<p>5，isTerminated（）：测试是否所有任务都履行完毕了。</p>
+<p>6，isShutdown（）：测试是否该ExecutorService已被关闭</p>
+<h1 id="线程池重点属性"><a href="#线程池重点属性" class="headerlink" title="线程池重点属性"></a>线程池重点属性</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger ctl = <span class="keyword">new</span> AtomicInteger(ctlOf(RUNNING,<span class="number">0</span>));</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> COUNT_BITS = Integer.SIZE - <span class="number">3</span> = <span class="number">29</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CAPACITY = (<span class="number">1</span> &lt;&lt; COUNT_BITS)  - <span class="number">1</span> = workerCount;</span><br></pre></td></tr></table></figure>
+<p>ctl 是对线程池的运行状态和线程池中有效线程的数量进行控制的一个字段， 它包含两<br>部分的信息: 线程池的运行状态 (runState) 和线程池内有效线程的数量 (workerCount)，这<br>里可以看到，使用了Integer类型来保存，高3位保存runState，低29位保存<br>workerCount。COUNT_BITS 就是29，CAPACITY就是1左移29位减1（29个1），这个常<br>量表示workerCount的上限值，大约是5亿。</p>
+<h3 id="ctl相关方法"><a href="#ctl相关方法" class="headerlink" title="ctl相关方法"></a>ctl相关方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">runStateOf</span><span class="params">(<span class="keyword">int</span> c)</span> </span>&#123; <span class="keyword">return</span> c &amp; ~CAPACITY; &#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">workerCountOf</span><span class="params">(<span class="keyword">int</span> c)</span> </span>&#123; <span class="keyword">return</span> c &amp; CAPACITY; &#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">ctlOf</span><span class="params">(<span class="keyword">int</span> rs, <span class="keyword">int</span> wc)</span> </span>&#123; <span class="keyword">return</span> rs | wc; &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>runStateOf：获取运行状态；</li>
+<li>workerCountOf：获取活动线程数；</li>
+<li>ctlOf：获取运行状态和活动线程数的值。</li>
+</ul>
+<p>线程池存在5种状态</p>
+<ul>
+<li>RUNNING = 1 &lt;&lt; COUNT_BITS; //高3位为111</li>
+<li>SHUTDOWN = 0 &lt;&lt; COUNT_BITS; //高3位为000</li>
+<li>STOP = 1 &lt;&lt; COUNT_BITS; //高3位为001</li>
+<li>TIDYING = 2 &lt;&lt; COUNT_BITS; //高3位为010</li>
+<li>TERMINATED = 3 &lt;&lt; COUNT_BITS; //高3位为011</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      System.out.println(toBin(-<span class="number">1</span> &lt;&lt; Integer.SIZE - <span class="number">3</span>));</span><br><span class="line">      System.out.println(toBin(<span class="number">0</span> &lt;&lt; Integer.SIZE - <span class="number">3</span>));</span><br><span class="line">      System.out.println(toBin(<span class="number">1</span> &lt;&lt; Integer.SIZE - <span class="number">3</span>));</span><br><span class="line">      System.out.println(toBin(<span class="number">2</span> &lt;&lt; Integer.SIZE - <span class="number">3</span>));</span><br><span class="line">      System.out.println(toBin(<span class="number">3</span> &lt;&lt; Integer.SIZE - <span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">      <span class="number">11100000000000000000000000000000</span></span><br><span class="line">      <span class="number">00000000000000000000000000000000</span></span><br><span class="line">      <span class="number">00100000000000000000000000000000</span></span><br><span class="line">      <span class="number">01000000000000000000000000000000</span></span><br><span class="line">      <span class="number">01100000000000000000000000000000</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">toBin</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span>[] chs = <span class="keyword">new</span> <span class="keyword">char</span>[Integer.SIZE];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; Integer.SIZE; i++) &#123;</span><br><span class="line">        chs[Integer.SIZE - <span class="number">1</span> - i] = (<span class="keyword">char</span>) ((num &gt;&gt; i &amp; <span class="number">1</span>) + <span class="string">'0'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> String(chs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>1、RUNNING</p>
+<p>(1) 状态说明：线程池处在RUNNING状态时，能够接收新任务，以及对已添加的任务进行<br>处理。</p>
+<p>(2) 状态切换：线程池的初始化状态是RUNNING。换句话说，线程池被一旦被创建，就处<br>于RUNNING状态，并且线程池中的任务数为0！</p>
+<p>2、 SHUTDOWN</p>
+<p>(1) 状态说明：线程池处在SHUTDOWN状态时，不接收新任务，但能处理已添加的任务。</p>
+<p>(2) 状态切换：调用线程池的shutdown()接口时，线程池由RUNNING -&gt; SHUTDOWN。</p>
+<p>3、STOP</p>
+<p>(1) 状态说明：线程池处在STOP状态时，不接收新任务，不处理已添加的任务，并且会中断正在处理的任务。</p>
+<p>(2) 状态切换：调用线程池的shutdownNow()接口时，线程池由(RUNNING or SHUTDOWN ) -&gt; STOP。</p>
+<p>4、TIDYING</p>
+<p>(1) 状态说明：当所有的任务已终止，ctl记录的”任务数量”为0，线程池会变为TIDYING<br>状态。当线程池变为TIDYING状态时，会执行钩子函数terminated()。terminated()在<br>ThreadPoolExecutor类中是空的，若用户想在线程池变为TIDYING时，进行相应的处理；<br>可以通过重载terminated()函数来实现。</p>
+<p>(2) 状态切换：当线程池在SHUTDOWN状态下，阻塞队列为空并且线程池中执行的任务也<br>为空时，就会由 SHUTDOWN -&gt; TIDYING。 当线程池在STOP状态下，线程池中执行的<br>任务为空时，就会由STOP -&gt; TIDYING。</p>
+<p>5、 TERMINATED</p>
+<p>(1) 状态说明：线程池彻底终止，就变成TERMINATED状态。</p>
+<p>(2) 状态切换：线程池处在TIDYING状态时，执行完terminated()之后，就会由 TIDYING -&gt; TERMINATED。</p>
+<p>进入TERMINATED的条件如下：</p>
+<ul>
+<li>线程池不是RUNNING状态；</li>
+<li>线程池状态不是TIDYING状态或TERMINATED状态；</li>
+<li>如果线程池状态是SHUTDOWN并且workerQueue为空；</li>
+<li>workerCount为0；</li>
+<li>设置TIDYING状态成功</li>
+</ul>
+<p><img src="/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2.jpg" alt="线程池状态切换.jpg"></p>
+<h1 id="线程池的具体实现"><a href="#线程池的具体实现" class="headerlink" title="线程池的具体实现"></a>线程池的具体实现</h1><p>ThreadPoolExecutor 默认线程池</p>
+<p>ScheduledThreadPoolExecutor 定时线程池</p>
+<h2 id="ThreadPoolExecutor"><a href="#ThreadPoolExecutor" class="headerlink" title="ThreadPoolExecutor"></a>ThreadPoolExecutor</h2><h3 id="线程池的创建"><a href="#线程池的创建" class="headerlink" title="线程池的创建"></a>线程池的创建</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">int</span> maximumPoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">long</span> keepAliveTime,</span></span></span><br><span class="line"><span class="function"><span class="params">        TimeUnit unit,</span></span></span><br><span class="line"><span class="function"><span class="params">        BlockingQueue&lt;Runnable&gt; workQueue,</span></span></span><br><span class="line"><span class="function"><span class="params">        ThreadFactory threadFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">        RejectedExecutionHandler handler)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="任务提交"><a href="#任务提交" class="headerlink" title="任务提交"></a>任务提交</h3><p>1、public void execute() //提交任务无返回值</p>
+<p>2、public Future&lt;?&gt; submit() //任务执行完成后有返回值参数</p>
+<h3 id="参数解释"><a href="#参数解释" class="headerlink" title="参数解释"></a>参数解释</h3><h4 id="corePoolSize"><a href="#corePoolSize" class="headerlink" title="corePoolSize"></a>corePoolSize</h4><p>线程池中的核心线程数，当提交一个任务时，线程池创建一个新线程执行任务，直到当<br>前线程数等于corePoolSize；如果当前线程数为corePoolSize，继续提交的任务被保存到<br>阻塞队列中，等待被执行；如果执行了线程池的prestartAllCoreThreads()方法，线程池会<br>提前创建并启动所有核心线程。</p>
+<h4 id="maximumPoolSize"><a href="#maximumPoolSize" class="headerlink" title="maximumPoolSize"></a>maximumPoolSize</h4><p>线程池中允许的最大线程数。如果当前阻塞队列满了，且继续提交任务，则创建新的线<br>程执行任务，前提是当前线程数小于maximumPoolSize；</p>
+<h4 id="keepAliveTime"><a href="#keepAliveTime" class="headerlink" title="keepAliveTime"></a>keepAliveTime</h4><p>线程池维护线程所允许的空闲时间。当线程池中的线程数量大于corePoolSize的时<br>候，如果这时没有新的任务提交，核心线程外的线程不会立即销毁，而是会等待，直到等待<br>的时间超过了keepAliveTime；</p>
+<h4 id="unit"><a href="#unit" class="headerlink" title="unit"></a>unit</h4><p>keepAliveTime的单位；</p>
+<h4 id="workQueue"><a href="#workQueue" class="headerlink" title="workQueue"></a>workQueue</h4><p>用来保存等待被执行的任务的阻塞队列，且任务必须实现Runable接口，在JDK中提供了如下阻塞队列：</p>
+<ul>
+<li>1、ArrayBlockingQueue：基于数组结构的有界阻塞队列，按FIFO排序任务；</li>
+<li>2、LinkedBlockingQuene：基于链表结构的阻塞队列，按FIFO排序任务，吞<br>吐量通常要高于ArrayBlockingQuene；</li>
+<li>3、SynchronousQuene：一个不存储元素的阻塞队列，每个插入操作必须等到<br>另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于<br>LinkedBlockingQuene；</li>
+<li>4、priorityBlockingQuene：具有优先级的无界阻塞队列；</li>
+</ul>
+<h4 id="threadFactory"><a href="#threadFactory" class="headerlink" title="threadFactory"></a>threadFactory</h4><p>它是ThreadFactory类型的变量，用来创建新线程。默认使用<br>Executors.defaultThreadFactory() 来创建线程。使用默认的ThreadFactory来创建线程<br>时，会使新创建的线程具有相同的NORM_PRIORITY优先级并且是非守护线程，同时也设<br>置了线程的名称。</p>
+<h4 id="handler"><a href="#handler" class="headerlink" title="handler"></a>handler</h4><p>线程池的饱和策略，当阻塞队列满了，且没有空闲的工作线程，如果继续提交任务，必须采取一种策略处理该任务，线程池提供了4种策略：</p>
+<ul>
+<li>1、AbortPolicy：直接抛出异常，默认策略；</li>
+<li>2、CallerRunsPolicy：用调用者所在的线程来执行任务；</li>
+<li>3、DiscardOldestPolicy：丢弃阻塞队列中靠最前的任务，并执行当前任务；</li>
+<li>4、DiscardPolicy：直接丢弃任务；</li>
+</ul>
+<h3 id="线程池监控"><a href="#线程池监控" class="headerlink" title="线程池监控"></a>线程池监控</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getTaskCount</span><span class="params">()</span> <span class="comment">//线程池已执行与未执行的任务总数</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getCompletedTaskCount</span><span class="params">()</span> <span class="comment">//已完成的任务数</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPoolSize</span><span class="params">()</span> <span class="comment">//线程池当前的线程数</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getActiveCount</span><span class="params">()</span> <span class="comment">//线程池中正在执行任务的线程数量</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="线程池原理"><a href="#线程池原理" class="headerlink" title="线程池原理"></a>线程池原理</h3><p><img src="https://march1995.github.io/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86.jpg" alt="线程池运行原理.jpg"></p>
+<h3 id="线程池工作线程的生命周期"><a href="#线程池工作线程的生命周期" class="headerlink" title="线程池工作线程的生命周期"></a>线程池工作线程的生命周期</h3><p><img src="https://march1995.github.io/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="线程池工作线程的生命周期.jpg"></p>
+<h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><h2 id="worker为什么不使用ReentrantLock来实现"><a href="#worker为什么不使用ReentrantLock来实现" class="headerlink" title="worker为什么不使用ReentrantLock来实现"></a>worker为什么不使用ReentrantLock来实现</h2><p>之所以设置为不可重入，是因为我们不希望任务在调用像setCorePoolSize这样的 ，线程池控制方法时重新获取锁。如果使用ReentrantLock，它是可重入的，这样如果<br>在任务中调用了如setCorePoolSize这类线程池控制的方法，会中断正在运行的线程</p>
+<h2 id="为什么每一个worker都需要lock"><a href="#为什么每一个worker都需要lock" class="headerlink" title="为什么每一个worker都需要lock"></a>为什么每一个worker都需要lock</h2><p>用于判断线程是否空闲以及是否可以被中断</p>
+<h2 id="worker在构造方法中执行了setState-1-把state变量设置为-1，为什么这么做呢"><a href="#worker在构造方法中执行了setState-1-把state变量设置为-1，为什么这么做呢" class="headerlink" title="worker在构造方法中执行了setState(-1);把state变量设置为-1，为什么这么做呢"></a>worker在构造方法中执行了setState(-1);把state变量设置为-1，为什么这么做呢</h2><p>是因为AQS中默认的state是0，如果刚创建了一个Worker对象，还没有执行任务时，这时<br>就不应该被中断，看一下tryAquire方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> unused)</span> </span>&#123;</span><br><span class="line"><span class="comment">//cas修改state，不可重入</span></span><br><span class="line"><span class="keyword">if</span> (compareAndSetState(<span class="number">0</span>, <span class="number">1</span>)) &#123;</span><br><span class="line">    setExclusiveOwnerThread(Thread.currentThread());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>tryAcquire方法是根据state是否是0来判断的，所以，setState(-1);将state设置为-1是<br>为了禁止在执行任务前对线程进行中断。<br>正因为如此，在runWorker方法中会先调用Worker对象的unlock方法将state设置为0。</p>
+<h2 id="shutdown方法与getTask方法存在竞态条件"><a href="#shutdown方法与getTask方法存在竞态条件" class="headerlink" title="shutdown方法与getTask方法存在竞态条件"></a>shutdown方法与getTask方法存在竞态条件</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">runWorker</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((runStateAtLeast(ctl.get(), STOP) ||</span><br><span class="line">                     (Thread.interrupted() &amp;&amp;</span><br><span class="line">                      runStateAtLeast(ctl.get(), STOP))) &amp;&amp;</span><br><span class="line">                    !wt.isInterrupted())</span><br><span class="line">                    wt.interrupt();</span><br></pre></td></tr></table></figure>
+<p>执行该if语句期间可能也执行了shutdownNow方法，shutdownNow方法会 把状态设置为STOP，<br>回顾一下STOP状态：<br>不能接受新任务，也不处理队列中的任务，会中断正在处理任务的线程。在线程池处于<br>RUNNING 或 SHUTDOWN 状态时，调用 shutdownNow() 方法会使线程池进入到 该状态。<br>STOP状态要中断线程池中的所有线程，而这里使用Thread.interrupted()来判断是否中断<br>是为了确保在RUNNING或者SHUTDOWN状态时线程是非中断状态的，因为Thread.interrupted()方法会复位中断的状态。</p>
+<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/11/07/java/coucurrent/5.Collections&Queue%E4%BD%93%E7%B3%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1097,188 +1812,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/11/active/appH5Token/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/10/11/active/appH5Token/" itemprop="url">app嵌入H5如何同步登录状态</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-11T00:00:00+00:00">
-                2021-10-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/active/" itemprop="url" rel="index">
-                    <span itemprop="name">active</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  149 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
-<p>优化的方向：<br>A.APP登陆状态的变化是请求页面，登录后使用webview调用对应域名下的接口实现H5的登录B.每次请求H5url增加get登陆的信息，例如访问 index.php变成index.php？a=xxx通过附加信息同步登录状态<br>优化的方案不知道那个更好一点</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/11/active/pay/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1448,6 +1981,188 @@
 <td>事务/补偿机制</td>
 </tr>
 </tbody></table>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/11/active/appH5Token/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/11/active/appH5Token/" itemprop="url">app嵌入H5如何同步登录状态</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-11T00:00:00+00:00">
+                2021-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/active/" itemprop="url" rel="index">
+                    <span itemprop="name">active</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  149 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
+<p>优化的方向：<br>A.APP登陆状态的变化是请求页面，登录后使用webview调用对应域名下的接口实现H5的登录B.每次请求H5url增加get登陆的信息，例如访问 index.php变成index.php？a=xxx通过附加信息同步登录状态<br>优化的方案不知道那个更好一点</p>
 
           
         
@@ -1698,881 +2413,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo调用模块</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
-                2021-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.3k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  5 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一、Dubbo-调用模块基本组成"><a href="#一、Dubbo-调用模块基本组成" class="headerlink" title="一、Dubbo 调用模块基本组成"></a>一、Dubbo 调用模块基本组成</h2><ol>
-<li>透明代理：通过动态代理技术，屏蔽远程调用细节以提高编程友好性。</li>
-<li>负载均衡：当有多个提供者是，如何选择哪个进行调用的负载算法。</li>
-<li>容错机制：当服务调用失败时采取的策略</li>
-<li>调用方式：支持同步调用、异步调用</li>
-</ol>
-<p><img src="/uploads/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97.png" alt="调用模块.png"></p>
-<h3 id="透明代理"><a href="#透明代理" class="headerlink" title="透明代理"></a>透明代理</h3><p>参见源码：<br>com.alibaba.dubbo.config.ReferenceConfig#createProxy<br>com.alibaba.dubbo.common.bytecode.ClassGenerator<br>com.alibaba.dubbo.rpc.proxy.javassist.JavassistProxyFactory</p>
-<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>Dubbo 目前官方支持以下负载均衡策略：</p>
-<ol>
-<li>随机(random)：按权重设置随机概率。此为默认算法.</li>
-<li>轮循(roundrobin):按公约后的权重设置轮循比率。</li>
-<li>最少活跃调用数(leastactive):相同活跃数的随机，活跃数指调用前后计数差。</li>
-<li>一致性Hash(consistenthash ):相同的参数总是发到同一台机器</li>
-</ol>
-<p>设置方式支持如下四种方式设置，优先级由低至高:</p>
-<!-- 服务端级别-->
-<p>&lt;dubbo:service interface=”…” loadbalance=”roundrobin” /&gt;</p>
-<!-- 客户端级别-->
-<p>&lt;dubbo:reference interface=”…” loadbalance=”roundrobin” /&gt;</p>
-<!-- 服务端方法级别-->
-<p>&lt;dubbo:service interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
-<!-- 客户端方法级别-->
-<p>&lt;dubbo:reference interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
-<p>一至性hash 算法详解：<br><img src="/uploads/dubbo/%E4%B8%80%E8%87%B3%E6%80%A7hash.png" alt="一至性hash.png"></p>
-<h3 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h3><p>Dubbo 官方目前支持以下容错策略：</p>
-<ol>
-<li>失败自动切换：调用失败后基于retries=“2”属性重试其它服务器</li>
-<li>快速失败：快速失败，只发起一次调用，失败立即报错。</li>
-<li>勿略失败：失败后勿略，不抛出异常给客户端。</li>
-<li>失败重试：失败自动恢复，后台记录失败请求，定时重发。通常用于消息通知操作</li>
-<li>并行调用:只要一个成功即返回，并行调用指定数量机器，可通过 forks=”2”来设置最大并行数。</li>
-<li>广播调用：广播调用所有提供者，逐个调用，任意一台报错则报错 设置方式支持如下两种方式设置，优先级由低至高<br>&lt;!–<br>Failover 失败自动切换 retries=”1” 切换次数<br>Failfast 快速失败<br>Failsafe 勿略失败<br>Failback 失败重试，5秒后仅重试一次<br>Forking 并行调用 forks=”2” 最大并行数<br>Broadcast 广播调用</li>
-</ol>
-<p>–&gt;<br>&lt;dubbo:service interface=”…” cluster=”broadcast” /&gt;<br>&lt;dubbo:reference interface=”…” cluster=”broadcast”/ &gt;<br>注：容错机制 在基于 API设置时无效 如 referenceConfig.setCluster(“failback”); 经测试不启作用 </p>
-<h3 id="异步调用"><a href="#异步调用" class="headerlink" title="异步调用"></a>异步调用</h3><p>异步调用是指发起远程调用之后获取结果的方式。</p>
-<ol>
-<li>同步等待结果返回（默认）</li>
-<li>异步等待结果返回</li>
-<li>不需要返回结果</li>
-</ol>
-<p>Dubbo 中关于异步等待结果返回的实现流程如下图：</p>
-<p><img src="/uploads/dubbo/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8.png" alt="异步调用.png"></p>
-<p>异步调用配置:<br>&lt;dubbo:reference id=”asyncDemoService”<br>interface=”com.tuling.teach.service.async.AsyncDemoService”&gt;</p>
-<!-- 异步调async：true 异步调用 false 同步调用-->
-<p>&lt;dubbo:method name=”sayHello1” async=”false”/&gt;<br>&lt;dubbo:method name=”sayHello2” async=”false”/&gt;<br>&lt;dubbo:method name=”notReturn” return=”false”/&gt;<br></p>
-<p>注：在进行异步调用时 容错机制不能为  cluster=”forking” 或  cluster=”broadcast”</p>
-<h2 id="二、Dubbo-调用非典型使用场景"><a href="#二、Dubbo-调用非典型使用场景" class="headerlink" title="二、Dubbo 调用非典型使用场景"></a>二、Dubbo 调用非典型使用场景</h2><h3 id="泛化提供-amp-引用"><a href="#泛化提供-amp-引用" class="headerlink" title="泛化提供&amp;引用"></a>泛化提供&amp;引用</h3><p>泛化提供<br>是指不通过接口的方式直接将服务暴露出去。通常用于Mock框架或服务降级框架实现。</p>
-<p>泛化引用<br>是指不通过常规接口的方式去引用服务，通常用于测试框架</p>
-<h3 id="隐示传参"><a href="#隐示传参" class="headerlink" title="隐示传参"></a>隐示传参</h3><p>是指通过非常方法参数传递参数，类似于http 调用当中添加cookie值。通常用于分布式追踪框架的实现。使用方式如下 ：<br>//客户端隐示设置值<br>RpcContext.getContext().setAttachment(“index”, “1”); // 隐式传参，后面的远程调用都会隐<br>//服务端隐示获取值<br>String index = RpcContext.getContext().getAttachment(“index”);</p>
-<h3 id="令牌验证"><a href="#令牌验证" class="headerlink" title="令牌验证"></a>令牌验证</h3><p>通过令牌验证在注册中心控制权限，以决定要不要下发令牌给消费者，可以防止消费者绕过注册中心访问提供者，<br>另外通过注册中心可灵活改变授权方式，而不需修改或升级提供者</p>
-<h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><p>类似于 WEB 中的Filter ，Dubbo本身提供了Filter 功能用于拦截远程方法的调用。其支持自定义过滤器与官方的过滤器使用：</p>
-<p>演示添加日志访问过滤:</p>
-<p>&lt;dubbo:provider filter=”accesslog” accesslog=”logs/dubbo.log”/&gt;<br>以上配置 就是 为 服务提供者 添加 日志记录过滤器， 所有访问日志将会集中打印至 accesslog 当中</p>
-<h2 id="三、Dubbo调用流程"><a href="#三、Dubbo调用流程" class="headerlink" title="三、Dubbo调用流程"></a>三、Dubbo调用流程</h2><p><img src="/uploads/dubbo/Dubbo%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png" alt="Dubbo调用流程.png"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//------ 6协议 调用</span></span><br><span class="line">doInvoke:<span class="number">77</span>, DubboInvoker &#123;org.apache.dubbo.rpc.protocol.dubbo&#125;</span><br><span class="line">invoke:<span class="number">155</span>, AbstractInvoker &#123;org.apache.dubbo.rpc.protocol&#125;</span><br><span class="line"><span class="comment">//------ 5异步转同步</span></span><br><span class="line">invoke:<span class="number">52</span>, AsyncToSyncInvoker &#123;org.apache.dubbo.rpc.protocol&#125; <span class="comment">// 异步转同步 ,返回结果之前进行阻塞调用线程</span></span><br><span class="line"><span class="comment">//----- 4过滤器链</span></span><br><span class="line">invoke:<span class="number">92</span>, MonitorFilter &#123;org.apache.dubbo.monitor.support&#125;  <span class="comment">// 过滤链-&gt; 监控器</span></span><br><span class="line">invoke:<span class="number">54</span>, FutureFilter &#123;org.apache.dubbo.rpc.protocol.dubbo.filter&#125;    <span class="comment">//过滤链-&gt; 回调参数</span></span><br><span class="line">invoke:<span class="number">14</span>, ProviderHelloFilter &#123;com.wyb.dubbo&#125;  <span class="comment">// 过滤链-&gt; 自定义过滤器</span></span><br><span class="line">invoke:<span class="number">60</span>, ConsumerContextFilter &#123;org.apache.dubbo.rpc.filter&#125; <span class="comment">// 过滤链-&gt; 消费者环境初始化</span></span><br><span class="line"><span class="comment">//------3集群处理</span></span><br><span class="line">doInvoke:<span class="number">82</span>, FailoverClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">// 集服-失败重试</span></span><br><span class="line">invoke:<span class="number">248</span>, AbstractClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">//</span></span><br><span class="line"><span class="comment">//----- Mock服务</span></span><br><span class="line">invoke:<span class="number">78</span>, MockClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support.wrapper&#125; <span class="comment">// mock 服务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//----- 2动态代理 --透明化</span></span><br><span class="line">invoke:<span class="number">55</span>, InvokerInvocationHandler &#123;org.apache.dubbo.rpc.proxy&#125;<span class="comment">// 代理的中间接口</span></span><br><span class="line">getUser:-<span class="number">1</span>, proxy0 &#123;org.apache.dubbo.common.bytecode&#125; <span class="comment">// 代理对象</span></span><br><span class="line"><span class="comment">//----- 1调用客户端</span></span><br><span class="line">main:<span class="number">53</span>, DubboClient &#123;com.wyb.dubbo&#125;  <span class="comment">// 客户端</span></span><br><span class="line"></span><br><span class="line">RegistryProtocol --&gt; Cluster --&gt; MockClusterInvoker:ClusterInvoker-&gt;DubboProtocol-&gt;FilterChain:AsyncToSyncInvoker:DubboInvoker</span><br><span class="line">协议--》(注册协议)---&gt;MockClusterInvoker ---》ClusterInvoker---&gt; RegistryDirectory ---&gt;(DubboProtcol)-&gt;FilterChain--&gt;DubboInvoker</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo协议模块</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
-                2021-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2.2k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  8 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>课程概要：</strong></p>
-<ol>
-<li>RPC协议基本组成</li>
-<li>RPC协议报文编码与实现详解</li>
-<li>Dubbo中所支持RPC协议与使用<h3 id="RPC协议基本组成"><a href="#RPC协议基本组成" class="headerlink" title="## RPC协议基本组成"></a>## <strong>RPC协议基本组成</strong></h3></li>
-</ol>
-<hr>
-<h3 id="RPC-协议名词解释"><a href="#RPC-协议名词解释" class="headerlink" title="RPC 协议名词解释"></a><strong>RPC 协议名词解释</strong></h3><p>在一个典型RPC的使用场景中，包含了服务发现、负载、容错、网络传输、序列化等组件，其中RPC协议就指明了程序如何进行网络传输和序列化 。也就是说一个RPC协议的实现就等于一个非透明的远程调用实现，如何做到的的呢？</p>
-<p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE.png" alt="Rpc协议.png"></p>
-<h3 id="协议基本组成："><a href="#协议基本组成：" class="headerlink" title="协议基本组成："></a><strong>协议基本组成：</strong></h3><p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90.png" alt="Rpc协议基本组成.png"></p>
-<ol>
-<li>地址：服务提供者地址</li>
-<li>端口：协议指定开放的端口</li>
-<li>报文编码：协议报文编码 ，分为请求头和请求体两部分。</li>
-<li>序列化方式：将请求体序列化成对象<ol>
-<li>Hessian2Serialization、</li>
-<li>DubboSerialization、</li>
-<li>JavaSerialization</li>
-<li>JsonSerialization</li>
-</ol>
-</li>
-<li>运行服务: 网络传输实现<ol>
-<li>netty</li>
-<li>mina</li>
-<li>RMI 服务</li>
-<li>servlet 容器（jetty、Tomcat、Jboss）<h2 id="Dubbo中所支持RPC协议使用"><a href="#Dubbo中所支持RPC协议使用" class="headerlink" title="Dubbo中所支持RPC协议使用"></a><strong>Dubbo中所支持RPC协议使用</strong></h2></li>
-</ol>
-</li>
-</ol>
-<hr>
-<p><strong>dubbo 支持的RPC协议列表</strong></p>
-<table>
-<thead>
-<tr>
-<th align="left"><strong>名称</strong></th>
-<th align="left"><strong>实现描述</strong></th>
-<th align="left"><strong>连接描述</strong></th>
-<th align="left"><strong>适用场景</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>dubbo</strong></td>
-<td align="left">传输服务: mina, netty(默认), grizzy序列化: hessian2(默认), java, fastjson自定义报文</td>
-<td align="left">单个长连接NIO异步传输</td>
-<td align="left">1、常规RPC调用2、传输数据量小3、提供者少于消费者</td>
-</tr>
-<tr>
-<td align="left"><strong>rmi</strong></td>
-<td align="left">传输：java rmi 服务序列化：java原生二进制序列化</td>
-<td align="left">多个短连接BIO同步传输</td>
-<td align="left">1、常规RPC调用  2、与原RMI客户端集成  3、可传少量文件  4、不防火墙穿透</td>
-</tr>
-<tr>
-<td align="left"><strong>hessian</strong></td>
-<td align="left">传输服务：servlet容器序列化：hessian二进制序列化</td>
-<td align="left">基于Http 协议传输，依懒servlet容器配置</td>
-<td align="left">1、提供者多于消费者  2、可传大字段和文件  <del>3、跨语言调用</del></td>
-</tr>
-<tr>
-<td align="left"><strong>http</strong></td>
-<td align="left">传输服务：servlet容器序列化：java原生二进制序列化</td>
-<td align="left">依懒servlet容器配置</td>
-<td align="left">1、数据包大小混合</td>
-</tr>
-<tr>
-<td align="left"><strong>thrift</strong></td>
-<td align="left">与thrift RPC 实现集成，并在其基础上修改了报文头</td>
-<td align="left">长连接、NIO异步传输</td>
-<td align="left"></td>
-</tr>
-</tbody></table>
-<p><strong><em>关于RMI不支持防火墙穿透的补充说明：</em></strong></p>
-<p>原因在于RMI 底层实现中会有两个端口，一个是固定的用于服务发现的注册端口，另外会生成一个<strong><em>随机</em></strong>端口用于网络传输。因为这个随机端口就不能在防火墙中提前设置开放开。所以存在<em>防火墙穿透问题</em></p>
-<h3 id="协议的使用与配置"><a href="#协议的使用与配置" class="headerlink" title="协议的使用与配置:"></a><strong>协议的使用与配置:</strong></h3><p>Dubbo框架配置协议非常方便，用户只需要在 provider 应用中 配置*&lt;*<em>dubbo:protocol&gt;</em>元素即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line"> name: 协议名称 dubbo|rmi|hessian|http|</span><br><span class="line"> host:本机IP可不填，则系统自动获取</span><br><span class="line"> port：端口、填-1表示系统自动选择</span><br><span class="line"> server：运行服务 mina|netty|grizzy|servlet|jetty</span><br><span class="line"> serialization：序列化方式 hessian2|java|compactedjava|fastjson</span><br><span class="line"> 详细配置参见dubbo 官网 dubbo.io</span><br><span class="line">--&gt;</span><br><span class="line">&lt;dubbo:protocol name&#x3D;&quot;dubbo&quot; host&#x3D;&quot;192.168.0.11&quot; port&#x3D;&quot;20880&quot; server&#x3D;&quot;netty&quot;</span><br><span class="line"> serialization&#x3D;“hessian2” charset&#x3D;“UTF-8” &#x2F;&gt;</span><br></pre></td></tr></table></figure>
-<p>#TODO 演示采用其它协议来配置Dubbo</p>
-<ul>
-<li><input disabled type="checkbox"> dubbo 协议采用 json 进行序列化(源码参见：com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol<em>)</em></li>
-<li><input disabled type="checkbox"> 采用RMI协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.rmi.RmiProtocol)</em></li>
-<li><input disabled type="checkbox"> 采用Http协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.http.HttpProtocol.InternalHandler)</em></li>
-<li><input disabled type="checkbox"> 采用Heason协议(源码参见:com.alibaba.dubbo.rpc.protocol.hessian.HessianProtocol.HessianHandler)</li>
-</ul>
-<p>new PrintWriter(System.out)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -aon|findstr &quot;17732&quot;</span><br></pre></td></tr></table></figure>
-<p>序列化：</p>
-<table>
-<thead>
-<tr>
-<th align="left"></th>
-<th align="left">特点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">fastjson</td>
-<td align="left">文本型：体积较大，性能慢、跨语言、可读性高</td>
-</tr>
-<tr>
-<td align="left">fst</td>
-<td align="left">二进制型：体积小、兼容 JDK 原生的序列化。要求 JDK 1.7 支持。</td>
-</tr>
-<tr>
-<td align="left">hessian2</td>
-<td align="left">二进制型：跨语言、容错性高、体积小</td>
-</tr>
-<tr>
-<td align="left">java</td>
-<td align="left">二进制型：在JAVA原生的基础上 可以写入Null</td>
-</tr>
-<tr>
-<td align="left">compactedjava</td>
-<td align="left">二进制型：与java 类似，内容做了压缩</td>
-</tr>
-<tr>
-<td align="left">nativejava</td>
-<td align="left">二进制型：原生的JAVA 序列化</td>
-</tr>
-<tr>
-<td align="left">kryo</td>
-<td align="left">二进制型：体积比hessian2 还要小，但容错性 没有hessian2 好</td>
-</tr>
-</tbody></table>
-<h3 id="Hessian-序列化："><a href="#Hessian-序列化：" class="headerlink" title="Hessian 序列化："></a>Hessian 序列化：</h3><ul>
-<li>参数及返回值需实现Serializable接口</li>
-<li>参数及返回值不能自定义实现List,Map,Number,Date,Calendar等接口，只能用 JDK 自带的实现，因为 hessian 会做特殊处理，自定义实现类中的属性值都会丢失。</li>
-<li>Hessian 序列化，只传成员属性值和值的类型，不传方法或静态变量，兼容情况<a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn1" target="_blank" rel="noopener">[1]</a><br><a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn2" target="_blank" rel="noopener">[2]</a></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="left"><strong>数据通讯</strong></th>
-<th align="left"><strong>情况</strong></th>
-<th align="left"><strong>结果</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">A-&gt;B</td>
-<td align="left">类A多一种 属性（或者说类B少一种 属性）</td>
-<td align="left">不抛异常，A多的那 个属性的值，B没有， 其他正常</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A使用多 出来的枚举进行传输</td>
-<td align="left">抛异常</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A不使用 多出来的枚举进行传输</td>
-<td align="left">不抛异常，B正常接 收数据</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">A和B的属性 名相同，但类型不相同</td>
-<td align="left">抛异常</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">serialId 不相同</td>
-<td align="left">正常传输</td>
-</tr>
-</tbody></table>
-<p>接口增加方法，对客户端无影响，如果该方法不是客户端需要的，客户端不需要重新部署。输入参数和结果集中增加属性，对客户端无影响，如果客户端并不需要新属性，不用重新部署。</p>
-<p>输入参数和结果集属性名变化，对客户端序列化无影响，但是如果客户端不重新部署，不管输入还是输出，属性名变化的属性值是获取不到的。</p>
-<p>总结：服务器端和客户端对领域对象并不需要完全一致，而是按照最大匹配原则。</p>
-<ul>
-<li><input disabled type="checkbox"> 演示Hession2 序列化的容错性</li>
-</ul>
-<h2 id="三-、RPC协议报文编码与实现详解"><a href="#三-、RPC协议报文编码与实现详解" class="headerlink" title="三 、RPC协议报文编码与实现详解"></a><strong>三 、RPC协议报文编码与实现详解</strong></h2><hr>
-<h3 id="RPC-传输实现："><a href="#RPC-传输实现：" class="headerlink" title="RPC 传输实现："></a><strong>RPC 传输实现：</strong></h3><p>RPC的协议的传输是基于 TCP/IP 做为基础使用Socket 或Netty、mina等网络编程组件实现。但有个问题是TCP是面向字节流的无边边界协议，其只管负责数据传输并不会区分每次请求所对应的消息，这样就会出现TCP协义传输当中的拆包与粘包问题</p>
-<h3 id="拆包与粘包产生的原因："><a href="#拆包与粘包产生的原因：" class="headerlink" title="拆包与粘包产生的原因："></a><strong>拆包与粘包产生的原因：</strong></h3><p>我们知道tcp是以流动的方式传输数据，传输的最小单位为一个报文段（segment）。tcp Header中有个Options标识位，常见的标识为mss(Maximum Segment Size)指的是，连接层每次传输的数据有个最大限制MTU(Maximum Transmission Unit)，一般是1500比特，超过这个量要分成多个报文段，mss则是这个最大限制减去TCP的header，光是要传输的数据的大小，一般为1460比特。换算成字节，也就是180多字节。</p>
-<p>tcp为提高性能，发送端会将需要发送的数据发送到缓冲区，等待缓冲区满了之后，再将缓冲中的数据发送到接收方。同理，接收方也有缓冲区这样的机制，来接收数据。这时就会出现以下情况：</p>
-<ol>
-<li>应用程序写入的数据大于MSS大小，这将会发生拆包。</li>
-<li>应用程序写入数据小于MSS大小，这将会发生粘包。</li>
-<li>接收方法不及时读取套接字缓冲区数据，这将发生粘包。<h3 id="拆包与粘包解决办法："><a href="#拆包与粘包解决办法：" class="headerlink" title="拆包与粘包解决办法："></a><strong>拆包与粘包解决办法：</strong></h3></li>
-<li>设置定长消息，服务端每次读取既定长度的内容作为一条完整消息。</li>
-<li>{“type”:”message”,”content”:”hello”}\n</li>
-<li>使用带消息头的协议、消息头存储消息开始标识及消息长度信息，服务端获取消息头的时候解析出消息长度，然后向后读取该长度的内容。</li>
-</ol>
-<p><strong>比如：</strong>Http协议 heade 中的 Content-Length 就表示消息体的大小。</p>
-<p><img src="/uploads/dubbo/Http%E5%8D%8F%E8%AE%AEhead.png" alt="http协议head.png"></p>
-<h3 id="Dubbo-协议报文编码："><a href="#Dubbo-协议报文编码：" class="headerlink" title="Dubbo 协议报文编码："></a>Dubbo 协议报文编码：</h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E7%BC%96%E7%A0%81.png" alt="Dubbo协议报文编码.png"></p>
-<ul>
-<li><strong>magic</strong>：类似java字节码文件里的魔数，用来判断是不是dubbo协议的数据包。魔数是常量0xdabb,用于判断报文的开始。</li>
-<li><strong>flag</strong>：标志位, 一共8个地址位。低四位用来表示消息体数据用的序列化工具的类型（默认hessian），高四位中，第一位为1表示是request请求，第二位为1表示双向传输（即有返回response），第三位为1表示是心跳ping事件。</li>
-<li><strong>status</strong>：状态位, 设置请求响应状态，dubbo定义了一些响应的类型。具体类型见 com.alibaba.dubbo.remoting.exchange.Response</li>
-<li><strong>invoke id：</strong>消息id, long 类型。每一个请求的唯一识别id（由于采用异步通讯的方式，用来把请求request和返回的response对应上）</li>
-<li><strong>body length：</strong>消息体 body 长度, int 类型，即记录Body Content有多少个字节。</li>
-</ul>
-<p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt="img.png"></p>
-<pre><code>*（注：相关源码参见**c**om.alibaba.dubbo.rpc.protocol.dubbo.DubboCodec**）*</code></pre><h3 id="Dubbo协议的编解码过程："><a href="#Dubbo协议的编解码过程：" class="headerlink" title="Dubbo协议的编解码过程："></a><strong><em>Dubbo协议的编解码过程：</em></strong></h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E7%9A%84%E7%BC%96%E8%A7%A3%E7%A0%81%E8%BF%87%E7%A8%8B.png" alt="Dubbo协议的编解码过程.png"></p>
-<p><strong>Dubbo 协议编解码实现过程*</strong>(源码来源于<em>*dubbo2.5.8 )</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、DubboCodec.encodeRequestData() 116L &#x2F;&#x2F; 编码request</span><br><span class="line">2、DecodeableRpcInvocation.decode()  89L   &#x2F;&#x2F; 解码request</span><br><span class="line">3、DubboCodec.encodeResponseData()   184L  &#x2F;&#x2F; 编码response    </span><br><span class="line">4、DecodeableRpcResult.decode()      73L   &#x2F;&#x2F; 解码response</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/06/09/java/coucurrent/2.synchronized&Lock&AQS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/06/09/java/coucurrent/2.synchronized&Lock&AQS/" itemprop="url">synchronized&Lock&AQS</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-09T00:00:00+00:00">
-                2021-06-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">并发编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.1k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  3 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="并发同步器"><a href="#并发同步器" class="headerlink" title="并发同步器"></a>并发同步器</h1><p>多线程编程中，有可能会出现多个线程同时访问同一个共享、可变资源的情况；这种资源可能是：对象、变量、文件等。</p>
-<ul>
-<li>共享：资源可以由多个线程同时访问</li>
-<li>可变：资源可以在其生命周期内被修改</li>
-</ul>
-<p>引出的问题：<br>由于线程执行的过程是不可控的，所以需要采用同步机制来协同对对象可变状态的访问</p>
-<p>加锁目的：序列化访问临界资源，即同一时刻只能有一个线程访问临界资源(同步互斥访问)</p>
-<h1 id="Java锁体系"><a href="#Java锁体系" class="headerlink" title="Java锁体系"></a>Java锁体系</h1><p><img src="/uploads/java/concurrent/Java%E9%94%81%E4%BD%93%E7%B3%BB.png" alt="Java锁体系"></p>
-<blockquote>
-<p><a href="https://juejin.cn/post/6844904110085373966" target="_blank" rel="noopener">https://juejin.cn/post/6844904110085373966</a></p>
-</blockquote>
-<h1 id="synchronized使用与原理"><a href="#synchronized使用与原理" class="headerlink" title="synchronized使用与原理"></a>synchronized使用与原理</h1><p>加锁方式：</p>
-<ul>
-<li>同步实例方法，锁是当前实例对象</li>
-<li>同步类方法，锁是当前类对象</li>
-<li>同步代码块，锁是括号里面的对象</li>
-</ul>
-<p>底层原理:</p>
-<p>JVM内置锁通过synchronized使用，通过内部对象Monitor(监视器锁)实现，基于进入与退出Monitor对象实现方法与<br>代码块同步，监视器锁的实现依赖底层操作系统的Mutex lock（互斥锁）实现，它是一个重量级锁性能较低</p>
-<p><img src="/uploads/java/concurrent/synchronized.png" alt="synchronized"></p>
-<h2 id="Monitor"><a href="#Monitor" class="headerlink" title="Monitor"></a>Monitor</h2><p>每个对象都有一个自己的Monitor(监视器锁)</p>
-<p>JVM加锁过程：</p>
-<p><img src="/uploads/java/concurrent/synchronized%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B.png" alt="synchronized加锁过程"></p>
-<h2 id="对象内存结构详见jvm"><a href="#对象内存结构详见jvm" class="headerlink" title="对象内存结构详见jvm"></a>对象内存结构<a href="https://march1995.github.io/2018/10/31/java/jvm/jvm(1">详见jvm</a></h2><p>认识对象的内存结构：</p>
-<ul>
-<li>对象头：比如 hash码，对象所属的年代，对象锁，锁状态标志，偏向锁（线程）ID，偏向时间，数组长度（数组对象）等</li>
-<li>对象实际数据：即创建对象时，对象中成员变量，方法等</li>
-<li>对齐填充：对象的大小必须是8字节的整数倍</li>
-</ul>
-<p>面试问题：</p>
-<p>实例对象内存中存储在哪？</p>
-<p>如果实例对象存储在堆区时：实例对象内存存在堆区，实例的引用存在栈上，实例的元数据class存在方法区或者元空间</p>
-<p>Object实例对象一定是存在堆区的吗？</p>
-<p>不一定，如果实例对象没有线程逃逸行为</p>
-<p><img src="/uploads/java/concurrent/%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.png" alt="对象的内存结构"></p>
-<h3 id="MarkWord"><a href="#MarkWord" class="headerlink" title="MarkWord"></a>MarkWord</h3><p>以32位JVM中存储内容为例</p>
-<p><img src="/uploads/java/concurrent/MarkWord.png" alt="MarkWord"></p>
-<h2 id="锁优化升级过程"><a href="#锁优化升级过程" class="headerlink" title="锁优化升级过程"></a>锁优化升级过程</h2><p>JDK1.6版本之后对synchronized的实现进行了各种优化，如自旋锁、偏向锁和轻量级锁<br>并默认开启偏向锁<br>开启偏向锁：-XX:+UseBiasedLocking -XX:BiasedLockingStartupDelay=0<br>关闭偏向锁：-XX:-UseBiasedLocking</p>
-<p>偏向锁：单线程场景<br>轻量级锁：线程间交替执行场景，本身竞争不是很激烈。</p>
-<p><img src="/uploads/java/concurrent/JVM%E5%86%85%E7%BD%AE%E9%94%81%E4%BC%98%E5%8C%96%E5%8D%87%E7%BA%A7%E8%BF%87%E7%A8%8B.png" alt="JVM内置锁优化升级过程"></p>
-<p><img src="/uploads/java/concurrent/%E9%94%81%E4%BC%98%E5%8C%96%E5%8D%87%E7%BA%A7%E8%BF%87%E7%A8%8B.png" alt="锁优化升级过程"></p>
-<p><img src="/uploads/java/concurrent/JVM%E9%94%81%E7%9A%84%E8%86%A8%E8%83%80%E5%8D%87%E7%BA%A7.jpg" alt="JVM锁的膨胀升级"></p>
-<h1 id="Lock"><a href="#Lock" class="headerlink" title="Lock"></a>Lock</h1><p><img src="/uploads/java/concurrent/lock.png" alt="lock"></p>
-<h2 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h2><blockquote>
-<p><a href="https://juejin.cn/post/6844903598984282119" target="_blank" rel="noopener">https://juejin.cn/post/6844903598984282119</a></p>
-</blockquote>
-<h2 id="ReentrantReadWriteLock"><a href="#ReentrantReadWriteLock" class="headerlink" title="ReentrantReadWriteLock"></a>ReentrantReadWriteLock</h2><h1 id="AbstractQueuedSynchronizer"><a href="#AbstractQueuedSynchronizer" class="headerlink" title="AbstractQueuedSynchronizer"></a>AbstractQueuedSynchronizer</h1><p>Java并发编程核心在于java.concurrent.util包<br>而juc当中的大多数同步器实现都是围绕着共同的基础行为，比如等待队列、条件队列、独占获取、共享获取等，而这个行为的抽象就是基于AbstractQueuedSynchronizer简称AQS，<br>AQS定义了一套多线程访问共享资源的同步器框架，是一个依赖状态(state)的同步器。</p>
-<p>AQS具备特性</p>
-<ul>
-<li>阻塞等待队列</li>
-<li>共享/独占</li>
-<li>公平/非公平</li>
-<li>可重入</li>
-<li>允许中断</li>
-</ul>
-<h2 id="并发编程包依赖于AQS的内部实现"><a href="#并发编程包依赖于AQS的内部实现" class="headerlink" title="并发编程包依赖于AQS的内部实现"></a>并发编程包依赖于AQS的内部实现</h2><p>Java.concurrent.util当中同步器的实现如Lock,Latch,Barrier等，都是基于AQS框架实现</p>
-<ul>
-<li>一般通过定义内部类Sync继承AQS</li>
-<li>将同步器所有调用都映射到Sync对应的方法</li>
-</ul>
-<p>AQS框架-管理状态</p>
-<p>AQS内部维护属性volatile int state (32位)</p>
-<ul>
-<li>state表示资源的可用状态</li>
-</ul>
-<p>State三种访问方式</p>
-<ul>
-<li>getState()、setState()、compareAndSetState()</li>
-</ul>
-<p>AQS定义两种资源共享方式</p>
-<ul>
-<li>Exclusive-独占，只有一个线程能执行，如ReentrantLock</li>
-<li>Share-共享，多个线程可以同时执行，如Semaphore/CountDownLatch</li>
-</ul>
-<p>AQS定义两种队列</p>
-<ul>
-<li>同步等待队列</li>
-<li>条件等待队列</li>
-</ul>
-<h2 id="同步队列"><a href="#同步队列" class="headerlink" title="同步队列"></a>同步队列</h2><p>CLH队列是Craig、Landin、Hagersten三人发明的一种基于双向链表数据结构的队列， 是FIFO先入先出线程等待队列，<br>Java中的CLH队列是原CLH队列的一个变种, 线程由原自旋机制改为阻塞机制。</p>
-<p><img src="/uploads/java/concurrent/CLH%E9%98%9F%E5%88%97.png" alt="CLH队列"></p>
-<h2 id="条件队列"><a href="#条件队列" class="headerlink" title="条件队列"></a>条件队列</h2><p>Condition是一个多线程间协调通信的工具类，使得某个，或者某些线程一起等待某个条件（Condition）,只有当该条件具备时 ，这些等待线程才会被唤醒，从而重新争夺锁</p>
-<p><img src="/uploads/java/concurrent/%E6%9D%A1%E4%BB%B6%E9%98%9F%E5%88%97.png" alt="条件队列"></p>
-<h2 id="公平锁"><a href="#公平锁" class="headerlink" title="公平锁"></a>公平锁</h2><p><img src="/uploads/java/concurrent/%E5%85%AC%E5%B9%B3%E9%94%81.png" alt="公平锁"></p>
-<h2 id="非公平锁"><a href="#非公平锁" class="headerlink" title="非公平锁"></a>非公平锁</h2><p><img src="/uploads/java/concurrent/%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81.png" alt="非公平锁"></p>
-<h2 id="重入锁"><a href="#重入锁" class="headerlink" title="重入锁"></a>重入锁</h2><p><img src="/uploads/java/concurrent/%E9%87%8D%E5%85%A5%E9%94%81.png" alt="重入锁"></p>
-<h2 id="不可重入锁"><a href="#不可重入锁" class="headerlink" title="不可重入锁"></a>不可重入锁</h2><p><img src="/uploads/java/concurrent/%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81.png" alt="不可重入锁"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2627,7 +2467,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">68</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2734,7 +2574,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -2748,7 +2588,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">78.4k</span>
+    <span title="Site words total count">81.1k</span>
   
 </div>
 
@@ -2775,7 +2615,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共78.4k字</span>
+  <span class="post-count">博客全站共81.1k字</span>
 </div>
 
         

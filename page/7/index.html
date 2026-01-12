@@ -299,6 +299,692 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/08/08/java/javase/exception/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/08/java/javase/exception/" itemprop="url">java异常体系结构</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-08T00:00:00+00:00">
+                2018-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaSE</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  509 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="java异常体系结构图"><a href="#java异常体系结构图" class="headerlink" title="java异常体系结构图"></a>java异常体系结构图</h1><p><img src="/uploads/java/javase/%E5%BC%82%E5%B8%B8%E7%BB%93%E6%9E%84%E4%BD%93%E7%B3%BB.png" alt="java异常体系结构"></p>
+<p>从图中可以发现（列出要点，简要说明）：</p>
+<ul>
+<li>所以异常类的父类为Throwable类（表示可抛出），直接继承为Error和Exception两个子类，Error也是异常的一种。</li>
+<li>Error是程序无法处理的错误，它是由JVM产生和抛出的，比如OutOfMemoryError、ThreadDeath等。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。Exception是程序本身可以处理的异常，这种异常分两大类运行时异常和非运行时异常。程序中应当尽可能去处理这些异常。</li>
+<li>RuntimeException（也称不检查异常）：即可以编译通过，一般由程序的逻辑错误引起，开发过程中应尽量避免。例如：NullPointerException，IndexOutOfBoundsException等。<strong>自定义异常一般继承此类</strong>。</li>
+<li>RuntimeException以外的异常（IOException）：编译器在编译阶段进行处理，程序必须处理此类异常否则无法通过编译。</li>
+</ul>
+<h1 id="try-catch-finally-return"><a href="#try-catch-finally-return" class="headerlink" title="try-catch-finally-return"></a>try-catch-finally-return</h1><p>具体例子见(个人demo):</p>
+<blockquote>
+<p><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java" target="_blank" rel="noopener">https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java</a></p>
+</blockquote>
+<h1 id="自定义全局异常处理（配套源码）"><a href="#自定义全局异常处理（配套源码）" class="headerlink" title="自定义全局异常处理（配套源码）"></a>自定义全局异常处理（配套源码）</h1><blockquote>
+<p><a href="https://github.com/march1995/spring-example/tree/master/spring-example-exception" target="_blank" rel="noopener">https://github.com/march1995/spring-example/tree/master/spring-example-exception</a></p>
+</blockquote>
+<h1 id="常见的异常打印信息"><a href="#常见的异常打印信息" class="headerlink" title="常见的异常打印信息"></a>常见的异常打印信息</h1><ul>
+<li>getMessage(): 返回此throwable的详细消息字符串，只会获得具体的异常名称，比如说NullPoint 空指针,就告诉你说是空指针。</li>
+<li>printStackTrace():提供对打印的堆栈跟踪信息的编程访问,会打出详细异常,异常名称,出错位置,便于调试用。</li>
+<li>toString():返回此throwable的简短描述。</li>
+</ul>
+<h2 id="注意要点："><a href="#注意要点：" class="headerlink" title="注意要点："></a>注意要点：</h2><ul>
+<li>多个catch模块，子类在先，为了保证所有的catch都有存在的意义</li>
+<li>finally模块在try-catch的return或者异常处理之前执行</li>
+<li>在以下4种特殊情况下，finally块不会被执行：<br>1）在finally语句块中抛出了异常且未处理。<br>2）在前面的代码中用了System.exit()退出程序。<br>3）程序所在的线程死亡。<br>4）CPU出现异常被关闭。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/05/17/java/javase/dataType/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/17/java/javase/dataType/" itemprop="url">java数据类型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-17T00:00:00+00:00">
+                2018-05-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaSE</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.7k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-Java-八大基本数据类型及其封装器类（位数为二进制位）"><a href="#1-Java-八大基本数据类型及其封装器类（位数为二进制位）" class="headerlink" title="1.Java 八大基本数据类型及其封装器类（位数为二进制位）"></a>1.Java 八大基本数据类型及其封装器类（位数为二进制位）</h1><h2 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h2><p>char：默认值：\u0000，16位，数据范围：\u0000 - u\ffff，存储Unicode码，用单引号赋值。封装类：Character</p>
+<h2 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h2><p>boolean：默认值：false，1位，只有true和false两个取值。封装类：Boolean</p>
+<h2 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h2><p>整数类型：(最大存储容量为2的n次方减一，范围为负数2的n减一次方至2的n减一次方减一，n为位数，原理见计算机组成原理无符号数与有符号数)</p>
+<p>byte：默认值：0，8位，字节，最大存储数据量是255，存放的数据范围是-128~127之间。封装类：Byte</p>
+<p>short：默认值：0，16位，最大数据存储量是65536，数据范围是-32768~32767之间。封装类：Short</p>
+<p>int：默认值：0，32位，最大数据存储容量是2的32次方减1，数据范围是负的2的31次方到正的2的31次方减1。封装类：Integer</p>
+<p>long：默认值：0，64位，最大数据存储容量是2的64次方减1，数据范围为负的2的63次方到正的2的63次方减1。封装类：Long</p>
+<p>浮点数类型：</p>
+<p>float：默认值：0.0f，32位，数据范围在3.4e-45~1.4e38，直接赋值时必须在数字后加上f或F。封装类：Float</p>
+<p>double：默认值：0.0d，64位，数据范围在4.9e-324~1.8e308，赋值时可以加d或D也可以不加。封装类：Double</p>
+<p>对于数值类型的基本类型的取值范围，我们无需强制去记忆，因为它们的值都已经以常量的形式定义在对应的包装类中了。如：</p>
+<p>基本类型byte 二进制位数：Byte.SIZE最小值：Byte.MIN_VALUE最大值：Byte.MAX_VALUE</p>
+<p>基本类型short二进制位数：Short.SIZE最小值：Short.MIN_VALUE最大值：Short.MAX_VALUE</p>
+<p>基本类型char二进制位数：Character.SIZE最小值：Character.MIN_VALUE最大值：Character.MAX_VALUE</p>
+<p>基本类型double 二进制位数：Double.SIZE最小值：Double.MIN_VALUE最大值：Double.MAX_VALUE</p>
+<blockquote>
+<p>注意：float、double两种类型的最小值与Float.MIN_VALUE、 Double.MIN_VALUE的值并不相同，实际上Float.MIN_VALUE和Double.MIN_VALUE分别指的是 float和double类型所能表示的最小正数。也就是说存在这样一种情况，0到±Float.MIN_VALUE之间的值float类型无法表示，0 到±Double.MIN_VALUE之间的值double类型无法表示。这并没有什么好奇怪的，因为这些范围内的数值超出了它们的精度范围。</p>
+</blockquote>
+<h1 id="2-数据类型之间的转换："><a href="#2-数据类型之间的转换：" class="headerlink" title="2.数据类型之间的转换："></a>2.数据类型之间的转换：</h1><h2 id="简单类型数据间的转换"><a href="#简单类型数据间的转换" class="headerlink" title="简单类型数据间的转换"></a>简单类型数据间的转换</h2><p>自动转换：运算或者方法调用时，低精度自动转化为高精度，从低到高顺序：(byte，short，char)–int–long–float—double；<br>        特例：int到float，long到float，long到double 是不会自动转换的，不然将会丢失精度。</p>
+<p>强制转换：高精度转为低精度，可以使用强制转换；即你必须采用下面这种语句格式： int n=(int)3.14159/2;可以想象，这种转换肯定可能会导致溢出或精度的下降。</p>
+<h2 id="表达式的数据类型自动提升"><a href="#表达式的数据类型自动提升" class="headerlink" title="表达式的数据类型自动提升"></a>表达式的数据类型自动提升</h2><p>注意一下规则：</p>
+<pre><code>①所有的byte,short,char型的值将被提升为int型；
+②如果有一个操作数是long型，计算结果是long型；
+③如果有一个操作数是float型，计算结果是float型；
+④如果有一个操作数是double型，计算结果是double型；
+例， byte b; b=3; b=(byte)(b*3);//必须声明byte。 </code></pre><h2 id="包装类过渡类型转换"><a href="#包装类过渡类型转换" class="headerlink" title="包装类过渡类型转换"></a>包装类过渡类型转换</h2><ul>
+<li>简单类型的变量转换为相应的包装类，可以利用包装类的构造函数。即：Boolean(boolean value)、Character(char value)、Integer(int value)、Long(long value)、Float(float value)、Double(double value)</li>
+<li>在各个包装类中，总有形为××Value()的方法，来得到其对应的简单类型数据。利用这种方法，也可以实现不同数值型变量间的转换，例如，对于一个双精度实型类，intValue()可以得到其对应的整型变量，而doubleValue()可以得到其对应的双精度实型变量</li>
+</ul>
+<h2 id="字符串与其它类型间的转换"><a href="#字符串与其它类型间的转换" class="headerlink" title="字符串与其它类型间的转换"></a>字符串与其它类型间的转换</h2><p>其它类型向字符串的转换：</p>
+<pre><code>①调用类的串转换方法:X.toString();
+②自动转换:X+&quot;&quot;;
+③使用String的方法:String.valueOf(X);</code></pre><p>字符串作为值,向其它类型的转换：</p>
+<pre><code>①先转换成相应的封装器实例,再调用对应的方法转换成其它类型。例：new Float(&quot;11&quot;).doubleValue()
+②静态parseXXX方法。
+    String s = &quot;1&quot;;
+    byte b = Byte.parseByte( s );
+    short t = Short.parseShort( s );
+    int i = Integer.parseInt( s );
+    long l = Long.parseLong( s );
+    Float f = Float.parseFloat( s );
+    Double d = Double.parseDouble( s );
+③Character的getNumericValue(char ch)方法</code></pre><h2 id="自动拆箱与自动装箱"><a href="#自动拆箱与自动装箱" class="headerlink" title="自动拆箱与自动装箱"></a><strong>自动拆箱与自动装箱</strong></h2><p>自动装箱：把基本类型用它们对应的包装类包装起来，使它们具有对象的特质，可以调用所对应的包装类所定义的方法，比如toString()等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Integer i0 &#x3D; new Integer(0);&#x2F;&#x2F;基本的创建封装类对象</span><br><span class="line">Integer i1 &#x3D; 2;&#x2F;&#x2F;自动装箱</span><br><span class="line">Integer i1_ &#x3D; Integer.valueOf(2);&#x2F;&#x2F;自动装箱的本质，调用XX.valueof()方法</span><br><span class="line">&#96;&#96;&#96;    </span><br><span class="line"></span><br><span class="line">自动拆箱：跟自动装箱的方向相反，将Integer及Double这样的包装类的对象重新简化为基本类型的数据(自动拆箱时，一定要确保包装类的引用不为空)</span><br></pre></td></tr></table></figure>
+<p>System.out.println(i1+2);<br>//i1是我们上面通过自动装箱得到的一个integer对象，而这个对象是不能直接进行四则运算的，但是我们却给它+2，<br>这样就必须将integer对象转变为基本数据类型（int），这个过程就是自动拆箱的过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">jdk装箱池（方法区中的常量池）：java的八种基本类型（Byte Short、Integer、Long、Character、Boolean、Float、Double），除Float及Double意外，其它六种都实现了常量池，但是他们只在大于等于-128且小于等于127时才能使用常量池，如果不在此范围内，则会new一个出来，保存在堆内存中。</span><br><span class="line"></span><br><span class="line">例子：</span><br></pre></td></tr></table></figure>
+<pre><code>Integer a = 1;
+Integer b = 1;
+Integer c = 144;
+Integer d = 144;
+Integer a1 = new Integer(1);
+Integer b1 = new Integer(1);
+System.out.println(a == b);         //true
+System.out.println(a.equals(b));    //true
+System.out.println(a1 == b1);       //false
+System.out.println(a1.equals(b1));  //true
+System.out.println(c == d);         //false
+System.out.println(c.equals(d));    //true</code></pre><pre><code>
+在进行==比较的时候，在自动装箱池范围内的数据的引用是相同的，范围外的是不同的。 
+
+# 3.Java引用类型
+Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
+引申：Java中的堆内存、栈内存、静态存储区
+&gt; http://www.cnblogs.com/mingziday/p/4899212.html
+
+栈（stack）存放基础数据类型以及对象的对象的引用
+
+堆（heap）存放由new创建的对象和数组，即堆主要是用来存储对象的
+
+方法区中的静态存储区存储static声明的静态变量
+
+# 4.java字符编码
+&gt; http://kxjhlele.iteye.com/blog/333211
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/05/16/java/javase/javaKeyWord/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/16/java/javase/javaKeyWord/" itemprop="url">java标识符与关键字</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-16T00:00:00+00:00">
+                2018-05-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaSE</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  414 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h1><ul>
+<li><p>概念：就是用于给程序中的变量、类、方法命名的符号;</p>
+</li>
+<li><p>标识符规则：标识符可以有字母、数字、下划线_、和美元符号$组成，并且数字不能打头<br>   标识符不能使java关键字和保留字，但可以包含关键字和保留字<br>   标识符不能包含空格 标识符只能包含美元符号$，不能包含@、#等其他特殊字符</p>
+</li>
+<li><p>分隔符：分号; 花括号{} 方括号[] 括号() 空格 圆点.;</p>
+</li>
+</ul>
+<h1 id="Java关键字"><a href="#Java关键字" class="headerlink" title="Java关键字"></a>Java关键字</h1><p>java中包含50个关键，所有关键字都是小写的</p>
+<pre><code>关键字列表：
+ abstract抽象的            assert 
+ boolean                   break 
+ byte                      case
+ catch                     char
+ const(保留字)             continue
+default                    do
+ double                    else
+ enum                      extends
+ final                     finally
+ float                     for
+ if                        goto(保留字)
+ implements                import
+ int                       interface
+ long                      native
+ new                       package
+ private                   protected
+ public                    return 
+ short                     static 
+ strictfp                  super
+ switch                    synchronized
+ this                      throw
+ throws                    transient
+ try                       void 
+ volatile                  while
+
+ 三个特殊的直接量（iteral）;true false null 都不是关键字
+
+
+ final、finally、finalize的区别:
+ final:
+ final修饰变量，则等同于常量,变量不能修改
+ final修饰方法中的参数，称为最终参数，参数不能修改。
+ final修饰类，则类不能被继承
+ final修饰方法，则方法不能被重写。
+ finally:
+ try-catch模块中使用finally，表示finally块则是无论异常是否发生，都会执行finally块的内容
+ finalize:
+ 使用finalize在垃圾收集器确定这个对象未被引用时调用，表示在垃圾收集器将对象从内存中清除出去之前做一些清理工作。
+ 子类可以覆盖该方法以实现资源清理工作，GC在回收对象之前调用该方法</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2017/07/05/spring/springXMLSchema/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1540,7 +2226,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">68</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1647,7 +2333,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -1661,7 +2347,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">78.4k</span>
+    <span title="Site words total count">81.1k</span>
   
 </div>
 
@@ -1688,7 +2374,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共78.4k字</span>
+  <span class="post-count">博客全站共81.1k字</span>
 </div>
 
         

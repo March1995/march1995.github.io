@@ -105,7 +105,7 @@
 <meta property="og:image" content="https://march1995.github.io/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E5%90%8C%E6%AD%A5%E8%A7%84%E5%88%99.png">
 <meta property="og:image" content="https://march1995.github.io/uploads/java/concurrent/%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92.png">
 <meta property="article:published_time" content="2021-06-08T00:00:00.000Z">
-<meta property="article:modified_time" content="2025-08-13T16:13:22.368Z">
+<meta property="article:modified_time" content="2026-01-12T02:34:23.249Z">
 <meta property="article:author" content="Marcher">
 <meta property="article:tag" content="JMM volatile">
 <meta name="twitter:card" content="summary">
@@ -440,11 +440,11 @@
       
 
       
-        <h1 id="现代计算机模型"><a href="#现代计算机模型" class="headerlink" title="现代计算机模型"></a>现代计算机模型</h1><p>冯诺依曼计算机模型<br><img src="/uploads/java/concurrent/%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%A8%A1%E5%9E%8B.png" alt="冯诺依曼计算机模型"></p>
-<p>现代计算机硬件基本结构<br><img src="/uploads/java/concurrent/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.png" alt="现代计算机硬件基本结构"></p>
-<p>CPU内部结构<br><img src="/uploads/java/concurrent/CPU%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="CPU内部结构"></p>
-<p>CPU多核缓存架构<br><img src="/uploads/java/concurrent/CPU%E5%A4%9A%E6%A0%B8%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84.png" alt="CPU多核缓存架构"></p>
-<p>缓存一致性协议(MESI)<br><img src="/uploads/java/concurrent/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE.png" alt="缓存一致性协议"></p>
+        <h1 id="现代计算机模型"><a href="#现代计算机模型" class="headerlink" title="现代计算机模型"></a>现代计算机模型</h1><p>冯诺依曼计算机模型<br><img src="https://march1995.github.io/uploads/java/concurrent/%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%A8%A1%E5%9E%8B.png" alt="冯诺依曼计算机模型"></p>
+<p>现代计算机硬件基本结构<br><img src="https://march1995.github.io/uploads/java/concurrent/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.png" alt="现代计算机硬件基本结构"></p>
+<p>CPU内部结构<br><img src="https://march1995.github.io/uploads/java/concurrent/CPU%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="CPU内部结构"></p>
+<p>CPU多核缓存架构<br><img src="https://march1995.github.io/uploads/java/concurrent/CPU%E5%A4%9A%E6%A0%B8%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84.png" alt="CPU多核缓存架构"></p>
+<p>缓存一致性协议(MESI)<br><img src="https://march1995.github.io/uploads/java/concurrent/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE.png" alt="缓存一致性协议"></p>
 <h1 id="缓存一致性协议-MESI-数据操作流程"><a href="#缓存一致性协议-MESI-数据操作流程" class="headerlink" title="缓存一致性协议(MESI) 数据操作流程"></a>缓存一致性协议(MESI) 数据操作流程</h1><p>MESI协议是一种广泛使用的缓存一致性协议，它定义了缓存行(Cache Line)的四种状态，并通过这四种状态的转换来维护多核处理器中缓存的一致性。以下是MESI协议的核心内容和数据操作流程：</p>
 <h2 id="MESI四种状态"><a href="#MESI四种状态" class="headerlink" title="MESI四种状态"></a>MESI四种状态</h2><ol>
 <li><p><strong>Modified (已修改)</strong>：</p>
@@ -557,8 +557,8 @@
 <p>线程分为两类：<br>用户级线程(User-Level Thread)<br>内核线线程(Kernel-Level Thread)</p>
 <p>用户空间划分：<br>内核空间<br>用户空间</p>
 <p><img src="/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E6%B7%B1%E5%85%A5%E8%A7%A3%E8%AF%BB.png" alt="线程深入解读"></p>
-<h2 id="Java线程与内核线程的关系"><a href="#Java线程与内核线程的关系" class="headerlink" title="Java线程与内核线程的关系"></a>Java线程与内核线程的关系</h2><p><img src="/uploads/java/concurrent/Java%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="Java线程与内核线程的关系"></p>
-<h2 id="Java线程生命状态"><a href="#Java线程生命状态" class="headerlink" title="Java线程生命状态"></a>Java线程生命状态</h2><p><img src="/uploads/java/concurrent/Java%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E7%8A%B6%E6%80%81.png" alt="Java线程生命状态"></p>
+<h2 id="Java线程与内核线程的关系"><a href="#Java线程与内核线程的关系" class="headerlink" title="Java线程与内核线程的关系"></a>Java线程与内核线程的关系</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/Java%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="Java线程与内核线程的关系"></p>
+<h2 id="Java线程生命状态"><a href="#Java线程生命状态" class="headerlink" title="Java线程生命状态"></a>Java线程生命状态</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/Java%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E7%8A%B6%E6%80%81.png" alt="Java线程生命状态"></p>
 <h1 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h1><h2 id="为什么用到并发"><a href="#为什么用到并发" class="headerlink" title="为什么用到并发"></a>为什么用到并发</h2><ul>
 <li>充分利用多核CPU的计算能力</li>
 <li>方便业务拆分，提升应用性能</li>
@@ -568,18 +568,18 @@
 <li>临界区线程安全问题，容易出现死锁的，产生死锁就会造成系统功能不可用</li>
 <li>其它</li>
 </ul>
-<p><img src="/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2%E8%BF%87%E7%A8%8B.png" alt="线程上下文切换过程"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2%E8%BF%87%E7%A8%8B.png" alt="线程上下文切换过程"></p>
 <h1 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h1><p>JMM与JVM内存区域的划分是不同的概念层次，更恰当说JMM描述的是一组规则，通过这组规则控制程序中各个变量在共享数据区域和私有数据区域的访问方式，<br>JMM是围绕原子性，有序性、可见性展开。</p>
 <p>简单来说：JMM是计算机CPU多核缓存架构java实现，是一种规则。</p>
-<p><img src="/uploads/java/concurrent/JMM%E6%A8%A1%E5%9E%8B.png" alt="JMM模型"></p>
-<h2 id="JVM虚拟机规范主内存与工作内存"><a href="#JVM虚拟机规范主内存与工作内存" class="headerlink" title="JVM虚拟机规范主内存与工作内存"></a>JVM虚拟机规范主内存与工作内存</h2><p><img src="/uploads/java/concurrent/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%A7%84%E8%8C%83%E4%B8%BB%E5%86%85%E5%AD%98%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AD%98.png" alt="JVM虚拟机规范主内存与工作内存"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/JMM%E6%A8%A1%E5%9E%8B.png" alt="JMM模型"></p>
+<h2 id="JVM虚拟机规范主内存与工作内存"><a href="#JVM虚拟机规范主内存与工作内存" class="headerlink" title="JVM虚拟机规范主内存与工作内存"></a>JVM虚拟机规范主内存与工作内存</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%A7%84%E8%8C%83%E4%B8%BB%E5%86%85%E5%AD%98%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AD%98.png" alt="JVM虚拟机规范主内存与工作内存"></p>
 <h2 id="Java内存模型与硬件内存架构的关系"><a href="#Java内存模型与硬件内存架构的关系" class="headerlink" title="Java内存模型与硬件内存架构的关系"></a>Java内存模型与硬件内存架构的关系</h2><p>JMM模型跟CPU缓存模型结构类似，是基于CPU缓存模型建立起来的，JMM模型是标准化的，<br>屏蔽掉了底层不同计算机的区别。对于硬件内存来说只有寄存器、缓存内存、主内存的概念，并没有工作内存(线程私有数据区域)和主内存(堆内存)之分，<br>也就是说Java内存模型对内存的划分对硬件内存并没有任何影响</p>
-<p><img src="/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%A1%AC%E4%BB%B6%E5%86%85%E5%AD%98%E6%9E%B6%E6%9E%84%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="Java内存模型与硬件内存架构的关系"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%A1%AC%E4%BB%B6%E5%86%85%E5%AD%98%E6%9E%B6%E6%9E%84%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="Java内存模型与硬件内存架构的关系"></p>
 <h2 id="Java内存模型内存交互操作"><a href="#Java内存模型内存交互操作" class="headerlink" title="Java内存模型内存交互操作"></a>Java内存模型内存交互操作</h2><p>1.lock(锁定)：作用于主内存的变量，把一个变量标记为一条线程独占状态<br>2.unlock(解锁)：作用于主内存的变量，把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定<br>3.read(读取)：作用于主内存的变量，把一个变量值从主内存传输到线程的工作内存中，以便随后的load动作使用<br>4.load(载入)：作用于工作内存的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中<br>5.use(使用)：作用于工作内存的变量，把工作内存中的一个变量值传递给执行引擎<br>6.assign(赋值)：作用于工作内存的变量，它把一个从执行引擎接收到的值赋给工作内存的变量<br>7.store(存储)：作用于工作内存的变量，把工作内存中的一个变量的值传送到主内存中，以便随后的write的操作<br>8.write(写入)：作用于工作内存的变量，它把store操作从工作内存中的一个变量的值传送到主内存的变量中</p>
 <p>把一个变量从主内存中复制到工作内存中，就需要按顺序地执行read和load操作，如果把变量从工作内存中同步到主内存中，<br>就需要按顺序地执行store和write操作。但Java内存模型只要求上述8大操作(原子操作)必须按顺序执行，而没有保证必须是连续执行。</p>
 <p><strong>read和load同时出现，store和write同时出现</strong></p>
-<p><img src="/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E4%BA%A4%E4%BA%92%E6%93%8D%E4%BD%9C.png" alt="Java内存模型内存交互操作"></p>
-<h2 id="Java内存模型内存同步规则"><a href="#Java内存模型内存同步规则" class="headerlink" title="Java内存模型内存同步规则"></a>Java内存模型内存同步规则</h2><p><img src="/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E5%90%8C%E6%AD%A5%E8%A7%84%E5%88%99.png" alt="Java内存模型内存同步规则"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E4%BA%A4%E4%BA%92%E6%93%8D%E4%BD%9C.png" alt="Java内存模型内存交互操作"></p>
+<h2 id="Java内存模型内存同步规则"><a href="#Java内存模型内存同步规则" class="headerlink" title="Java内存模型内存同步规则"></a>Java内存模型内存同步规则</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E5%90%8C%E6%AD%A5%E8%A7%84%E5%88%99.png" alt="Java内存模型内存同步规则"></p>
 <h1 id="volatile原理与内存语义"><a href="#volatile原理与内存语义" class="headerlink" title="volatile原理与内存语义"></a>volatile原理与内存语义</h1><p>volatile是Java虚拟机提供的轻量级的同步机制</p>
 <p>volatile语义有如下两个作用</p>
 <ul>
@@ -708,7 +708,7 @@
 <h1 id="有序性-amp-指令重排"><a href="#有序性-amp-指令重排" class="headerlink" title="有序性&amp;指令重排"></a>有序性&amp;指令重排</h1><p>java语言规范规定JVM线程内部维持顺序化语义。即只要程序的最终结果与它顺序化情况的结果相等，那么指令的执行顺序可以与代码顺序不一致，此过程叫指令的重排序。</p>
 <p>指令重排序的意义：JVM能根据处理器特性（CPU多级缓存系统、多核处理器等）适当的对机器指令进行重排序，使机器指令能更符合CPU的执行特性，最大限度的发挥机器性能。</p>
 <p>在编译器与CPU处理器中都能执行指令重排优化操作</p>
-<p><img src="/uploads/java/concurrent/%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92.png" alt="指令重排"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92.png" alt="指令重排"></p>
 <h1 id="总线风暴–过度使用volatile可能产生的问题"><a href="#总线风暴–过度使用volatile可能产生的问题" class="headerlink" title="总线风暴–过度使用volatile可能产生的问题"></a>总线风暴–过度使用volatile可能产生的问题</h1>
       
     </div>
@@ -881,7 +881,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">68</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1004,7 +1004,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -1018,7 +1018,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">78.4k</span>
+    <span title="Site words total count">81.1k</span>
   
 </div>
 
@@ -1045,7 +1045,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共78.4k字</span>
+  <span class="post-count">博客全站共81.1k字</span>
 </div>
 
         

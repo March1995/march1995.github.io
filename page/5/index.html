@@ -299,6 +299,580 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/behavioral/observer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/observer/" itemprop="url">Java设计模式：观察者模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  564 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义对象之间的一对多依赖，当一个对象状态改变时，它的所有依赖都会收到通知并且自动更新状态。</p>
+<p>主题（Subject）是被观察的对象，而其所有依赖者（Observer）称为观察者。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>主题依赖了观察者的一个集合，观察者依赖了一个主题，生成一个观察者需要在主题进行注册，主题更新后对每个观察者进行推送</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义主题接口，拥有对观察者的操作方法</p>
+<pre><code>public interface Subject {
+
+    // 注册观察者
+    public void registerObserver(Observer observer);
+
+    // 移除观察者
+    public void removeObserver(Observer observer);
+
+    // 提醒观察者
+    public void notifyObserver();
+}</code></pre><p>   定义一个观察者接口，提供一个操作接口，方便主题更新时对观察者进行操作</p>
+<pre><code>public interface Observer {
+
+    void update(float temp, float humidity, float pressure);
+}</code></pre><p>   定义主题接口实现类，依赖了一个观察者集合，当对主题进行更新时，循环通知各个观察者</p>
+<pre><code>public class WeatherSubject implements Subject {
+
+    private List&lt;Observer&gt; observers;
+    private float temperature;
+    private float humidity;
+    private float pressure;
+
+    public WeatherSubject() {
+        observers = new ArrayList&lt;&gt;();
+    }
+
+    public void setMeasurements(float temperature, float humidity, float pressure) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        notifyObserver();
+    }
+
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        int i = observers.indexOf(observer);
+        if (i &gt;= 0) {
+            observers.remove(i);
+        }
+    }
+
+    @Override
+    public void notifyObserver() {
+        for (Observer o : observers) {
+            o.update(temperature, humidity, pressure);
+        }
+    }
+}</code></pre><p>   定义观察者实现类，每个观察者通过构造方法传入它所订阅的主题，并在主题中注册该观察者</p>
+<pre><code>public class StatisticsDisplay implements Observer {
+
+    public StatisticsDisplay(Subject weatherData) {
+        weatherData.registerObserver(this);
+    }
+
+    @Override
+    public void update(float temp, float humidity, float pressure) {
+        System.out.println(&quot;StatisticsDisplay.update: &quot; + temp + &quot; &quot; + humidity + &quot; &quot; + pressure);
+    }
+}</code></pre><p>   定义另一个观察者实现类</p>
+<pre><code>public class CurrentConditionsDisplay implements Observer {
+
+    public CurrentConditionsDisplay(Subject weatherData) {
+        weatherData.registerObserver(this);
+    }
+
+    @Override
+    public void update(float temp, float humidity, float pressure) {
+        System.out.println(&quot;CurrentConditionsDisplay.update: &quot; + temp + &quot; &quot; + humidity + &quot; &quot; + pressure);
+    }
+
+}</code></pre><p>   测试：</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        WeatherSubject subject = new WeatherSubject();
+        Observer statis = new StatisticsDisplay(subject);
+        Observer current = new CurrentConditionsDisplay(subject);
+        subject.setMeasurements(22f, 29f, 100f);
+    }
+}</code></pre><p>   输出：</p>
+<pre><code>StatisticsDisplay.update: 22.0 29.0 100.0
+CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><p>第一眼看到这个模式就感觉这不就是java的监听器嘛，其实监听器就是通过这种模式实现的。</p>
+<ul>
+<li>java.util.Observer</li>
+<li>java.util.EventListener</li>
+<li>javax.servlet.http.HttpSessionBindingListener</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/behavioral/chainOfResponsibility/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/chainOfResponsibility/" itemprop="url">Java设计模式：责任链模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  566 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些对象连成一条链，并沿着这条链发送该请求，直到有一个对象处理它为止。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义个抽象类，依赖一个本身对象，每个继承类，即可传入其它的继承类实现对象链。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义处理器抽象类 依赖一个本身对象，通过构造器传入，拥有一个处理请求的抽象方法 </p>
+<pre><code>protected Handler successor;
+
+    public Handler(Handler successor) {
+        this.successor = successor;
+    }
+
+
+    protected abstract void handleRequest(Request request);</code></pre><p>   请求参数类</p>
+<pre><code>public class Request {
+
+    private RequestType type;
+    private String name;
+
+
+    public Request(RequestType type, String name) {
+        this.type = type;
+        this.name = name;
+    }
+
+
+    public RequestType getType() {
+        return type;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+}</code></pre><p>   请求类型枚举类 不同的请求类型 调用不同的处理器</p>
+<pre><code>public enum RequestType {
+    TYPE1, TYPE2, TYPE3
+} </code></pre><p>   定义处理器类1继承抽象类处理类型为TYPE1的请求</p>
+<pre><code>public class ConcreteHandler1 extends Handler {
+
+   public ConcreteHandler1(Handler successor) {
+       super(successor);
+   }
+
+   @Override
+   protected void handleRequest(Request request) {
+       if (RequestType.TYPE1 == request.getType()) {
+           System.out.println(request.getName() + &quot; is handle by ConcreteHandler1&quot;);
+           return;
+       }
+       if (successor != null) {
+           successor.handleRequest(request);
+       }
+   }
+}</code></pre><p>   定义处理器类2继承抽象类处理类型为TYPE2的请求</p>
+<pre><code>public class ConcreteHandler2 extends Handler {
+   public ConcreteHandler2(Handler successor) {
+       super(successor);
+   }
+
+   @Override
+   protected void handleRequest(Request request) {
+       if (request.getType() == RequestType.TYPE2) {
+           System.out.println(request.getName() + &quot; is handle by ConcreteHandler2&quot;);
+           return;
+       }
+       if (successor != null) {
+           successor.handleRequest(request);
+       }
+   }
+}</code></pre><p>   测试：</p>
+<pre><code>public class Client {
+
+   public static void main(String[] args) {
+
+       Handler handler1 = new ConcreteHandler1(null);
+       Handler handler2 = new ConcreteHandler2(handler1);
+
+       Request request1 = new Request(RequestType.TYPE1, &quot;request1&quot;);
+       handler2.handleRequest(request1);
+       Request request2 = new Request(RequestType.TYPE2, &quot;request2&quot;);
+       handler2.handleRequest(request2);
+
+       Handler handler3 = new ConcreteHandler3(handler2);
+       Request request3 = new Request(RequestType.TYPE3, &quot;request3&quot;);
+       handler3.handleRequest(request1);
+   }
+}</code></pre><p>   输出：</p>
+<pre><code>request1 is handle by ConcreteHandler1
+request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义处理器类3继承抽象类处理类型为TYPE3的请求</p>
+<pre><code>public class ConcreteHandler3 extends Handler {
+
+   public ConcreteHandler3(Handler successor) {
+       super(successor);
+   }
+
+   @Override
+   protected void handleRequest(Request request) {
+       if (RequestType.TYPE3 == request.getType()) {
+           System.out.println(request.getName() + &quot; is handle by ConcreteHandler3&quot;);
+           return;
+       }
+       if (successor != null) {
+           successor.handleRequest(request);
+       }
+   }
+}</code></pre><p>   测试：使用handler3处理request1请求</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+
+        Handler handler1 = new ConcreteHandler1(null);
+        Handler handler2 = new ConcreteHandler2(handler1);
+
+        Request request1 = new Request(RequestType.TYPE1, &quot;request1&quot;);
+        Handler handler3 = new ConcreteHandler3(handler2);
+        Request request3 = new Request(RequestType.TYPE3, &quot;request3&quot;);
+        handler3.handleRequest(request1);
+    }
+}</code></pre><p>   输出：最外层的Handler即调用所有类型的处理请求</p>
+<pre><code>request1 is handle by ConcreteHandler1</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/structure/flyweight/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -485,6 +1059,223 @@ ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" clas
 <li>java.lang.Character#valueOf(char)</li>
 </ul>
 
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/structure/facade/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/facade/" itemprop="url">Java设计模式：外观模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  244 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>提供了一个统一的接口，用来访问子系统中的一群接口，从而让子系统更容易使用。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义一个外观对象，在内部进行功能的封装，功能具体是在都在外观类的内部，其它方法要使用该功能<br>调用外观对象的方法即可。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个电影播放系统，方法代表需要功能所需步骤</p>
+<pre><code>public class SubSystem {
+
+    public void turnOnTV() {
+        System.out.println(&quot;turnOnTV()&quot;);
+    }
+
+    public void setCD(String cd) {
+        System.out.println(&quot;setCD( &quot; + cd + &quot; )&quot;);
+    }
+
+    public void starWatching() {
+        System.out.println(&quot;starWatching()&quot;);
+    }
+
+}</code></pre><p>   定义一个外观类，封装了看电影的三步骤，客户端只需调用外观类的方法即可实现功能</p>
+<pre><code>public class Facade {
+
+    private SubSystem subSystem = new SubSystem();
+
+    public void watchMovie(String name) {
+        subSystem.turnOnTV();
+        subSystem.setCD(name);
+        subSystem.starWatching();
+    }
+}</code></pre><p>   测试：</p>
+<pre><code>public class Client {
+
+    public static void main(String[] args) {
+        Facade facade = new Facade();
+        facade.watchMovie(&quot;家有喜事&quot;);
+    }
+}</code></pre><p>   测试：</p>
+<pre><code>turnOnTV()
+setCD( 家有喜事 )
+starWatching()</code></pre>
           
         
       
@@ -1307,6 +2098,242 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/java-design/structure/decorator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/decorator/" itemprop="url">Java设计模式：装饰者</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
+                2019-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  578 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>为对象动态添加功能。组合模式是部分和整理的关系，而装饰器模式只是额外增加某些功能。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>装饰者（Decorator）和具体组件（ConcreteComponent）都继承自组件（Component）,<strong>装饰者组合了一个组件</strong>，这样它可以装饰其它装饰者或者具体组件。</p>
+<p>就是把这个装饰者套在被装饰者之上，从而动态扩展被装饰者的功能。</p>
+<p>装饰者的方法有一部分是自己的，这属于它的功能，然后调用被装饰者的方法实现，从而也保留了被装饰者的功能。可以看到，具体组件应当是装饰层次的最低层，因为只有具体组件的方法实现不需要依赖于其它对象。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>设计不同种类的饮料，饮料可以添加配料，比如可以添加牛奶，并且支持动态添加新配料。每增加一种配料，该饮料的价格就会增加，要求计算一种饮料的价格。</p>
+<p>下面实现在 DarkRoast 饮料上新增新添加 Mocha 配料，之后又添加了 Milk 配料。DarkRoast 被 Mocha 包裹，Mocha 又被 Milk 包裹。它们都继承自相同父类，都有 cost() 方法，外层类的 cost() 方法调用了内层类的 cost() 方法。</p>
+<p>   定义一个组件（Component）接口,这里为饮料。装饰者和具体组件都要实现它。</p>
+<pre><code>public interface Beverage {
+
+    public double cost();
+}</code></pre><p>   具体组件实现DarkRoast饮料</p>
+<pre><code>public class DarkRoast implements Beverage {
+
+   @Override
+   public double cost() {
+       return 1;
+   }
+}</code></pre><p>   定义一个装饰者抽象类，实现了饮料接口，拥有饮料的方法，并关联了饮料接口对象。</p>
+<pre><code>public abstract class CondimentDecorator implements Beverage {
+
+    protected Beverage beverage;
+
+    public CondimentDecorator(Beverage beverage) {
+        this.beverage = beverage;
+    }
+}</code></pre><p>   装饰者实现类Milk，继承了装饰者类</p>
+<pre><code>public class Milk extends CondimentDecorator {
+
+    public Milk(Beverage beverage) {
+        super(beverage);
+    }
+
+    @Override
+    public double cost() {
+        return 1 + beverage.cost();
+    }
+}</code></pre><p>   装饰者实现类Mocha，继承了装饰者类</p>
+<pre><code>public class Mocha extends CondimentDecorator {
+
+    public Mocha(Beverage beverage) {
+        super(beverage);
+    }
+
+    @Override
+    public double cost() {
+        return 1 + beverage.cost();
+    }
+}</code></pre><p>   测试：当执行cost()方法时会一层一层从内往外调用。</p>
+<pre><code>public class Client {
+
+   public static void main(String[] args) {
+       Beverage beverage = new DarkRoast();// 一杯饮料
+       beverage = new Mocha(beverage);// 饮料里加mocha
+       beverage = new Milk(beverage);// 饮料里加牛奶
+       System.out.println(beverage.cost());//总价
+   }</code></pre><p>   }</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/java-design/structure/adapter/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2053,1025 +3080,6 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/java-design/structure/decorator/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/decorator/" itemprop="url">Java设计模式：装饰者</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  578 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>为对象动态添加功能。组合模式是部分和整理的关系，而装饰器模式只是额外增加某些功能。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>装饰者（Decorator）和具体组件（ConcreteComponent）都继承自组件（Component）,<strong>装饰者组合了一个组件</strong>，这样它可以装饰其它装饰者或者具体组件。</p>
-<p>就是把这个装饰者套在被装饰者之上，从而动态扩展被装饰者的功能。</p>
-<p>装饰者的方法有一部分是自己的，这属于它的功能，然后调用被装饰者的方法实现，从而也保留了被装饰者的功能。可以看到，具体组件应当是装饰层次的最低层，因为只有具体组件的方法实现不需要依赖于其它对象。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>设计不同种类的饮料，饮料可以添加配料，比如可以添加牛奶，并且支持动态添加新配料。每增加一种配料，该饮料的价格就会增加，要求计算一种饮料的价格。</p>
-<p>下面实现在 DarkRoast 饮料上新增新添加 Mocha 配料，之后又添加了 Milk 配料。DarkRoast 被 Mocha 包裹，Mocha 又被 Milk 包裹。它们都继承自相同父类，都有 cost() 方法，外层类的 cost() 方法调用了内层类的 cost() 方法。</p>
-<p>   定义一个组件（Component）接口,这里为饮料。装饰者和具体组件都要实现它。</p>
-<pre><code>public interface Beverage {
-
-    public double cost();
-}</code></pre><p>   具体组件实现DarkRoast饮料</p>
-<pre><code>public class DarkRoast implements Beverage {
-
-   @Override
-   public double cost() {
-       return 1;
-   }
-}</code></pre><p>   定义一个装饰者抽象类，实现了饮料接口，拥有饮料的方法，并关联了饮料接口对象。</p>
-<pre><code>public abstract class CondimentDecorator implements Beverage {
-
-    protected Beverage beverage;
-
-    public CondimentDecorator(Beverage beverage) {
-        this.beverage = beverage;
-    }
-}</code></pre><p>   装饰者实现类Milk，继承了装饰者类</p>
-<pre><code>public class Milk extends CondimentDecorator {
-
-    public Milk(Beverage beverage) {
-        super(beverage);
-    }
-
-    @Override
-    public double cost() {
-        return 1 + beverage.cost();
-    }
-}</code></pre><p>   装饰者实现类Mocha，继承了装饰者类</p>
-<pre><code>public class Mocha extends CondimentDecorator {
-
-    public Mocha(Beverage beverage) {
-        super(beverage);
-    }
-
-    @Override
-    public double cost() {
-        return 1 + beverage.cost();
-    }
-}</code></pre><p>   测试：当执行cost()方法时会一层一层从内往外调用。</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-       Beverage beverage = new DarkRoast();// 一杯饮料
-       beverage = new Mocha(beverage);// 饮料里加mocha
-       beverage = new Milk(beverage);// 饮料里加牛奶
-       System.out.println(beverage.cost());//总价
-   }</code></pre><p>   }</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/04/datastructure/index/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/04/datastructure/index/" itemprop="url">数据结构概念</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-04T00:00:00+00:00">
-                2019-01-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/datastructure/" itemprop="url" rel="index">
-                    <span itemprop="name">datastructure</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.4k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  5 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="数据结构算法学习（一）：数据结构与算法概念解析"><a href="#数据结构算法学习（一）：数据结构与算法概念解析" class="headerlink" title="数据结构算法学习（一）：数据结构与算法概念解析"></a>数据结构算法学习（一）：数据结构与算法概念解析</h1><h2 id="什么是数据结构"><a href="#什么是数据结构" class="headerlink" title="什么是数据结构"></a>什么是数据结构</h2><p>数据（data）：符号集合，处理对象。</p>
-<p>数据元素（data element），由数据项（data item） 组成。</p>
-<p>关键字（key）识别元素，主关键字（primary key） 唯一识别元素。</p>
-<p>数据结构（data structure）指数据元素之间存在的关系。包含以下三方面：</p>
-<ul>
-<li>数据的逻辑结构</li>
-<li>数据的存储结构</li>
-<li>数据操作</li>
-</ul>
-<h3 id="数据的逻辑结构"><a href="#数据的逻辑结构" class="headerlink" title="数据的逻辑结构"></a>数据的逻辑结构</h3><p>线性结构：数据元素只有一个前驱数据元素和一个后继数据元素。结构中的数据元素之间存在<strong>一对一</strong>的关系。</p>
-<p>非线性结构：</p>
-<p>1.树结构：每个数据元素只有一个前驱数据元素，可有零个或若干个后继数据元素。结构中的数据元素之间存在<strong>一对多</strong>的关系。</p>
-<p>2.图结构：每个数据元素可有零个或若干个前驱数据元素，零个或若干个后继数据元素。结构中的数据元素之间存在<strong>多对多</strong>的关系。</p>
-<h3 id="数据的存储结构"><a href="#数据的存储结构" class="headerlink" title="数据的存储结构"></a>数据的存储结构</h3><p>顺序存储结构:用数据元素在存储器中的<strong>相对位置</strong>来表示数据元素之间的逻辑关系。 </p>
-<p>链式存储结构：在每一个数据元素中增加一个存放地址的<strong>指针</strong>，用此指针来表示数据元素之间的逻辑关系。 </p>
-<h3 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h3><p>1.初始化。<br>2.判断是否空状态。<br>3.存取，指获得、设置指定元素值。<br>4.统计数据元素个数。<br>5.遍历（traverse），指按照某种次序访问一个数据结构中的所有元素，并且每个数据元素只被访问一次。遍历一种数据结构，将得到一个所有数据元素的线性序列。<br>6.插入（insert）、删除（remove）指定元素。<br>7.查找（search），指在数据结构中寻找满足给定条件的数据元素。<br>8.排序（sort），指对数据元素按照指定关键字值的大小递增（或递减）次序重新排列。</p>
-<h2 id="什么是算法"><a href="#什么是算法" class="headerlink" title="什么是算法"></a>什么是算法</h2><p>一个算法（Algorithm）是一个有穷规则的集合，其规则确定一个解决某一特定类型问题的操作序列。 </p>
-<p>算法定义：有穷性，确定性，输入，输出，可行性</p>
-<p>算法设计目标：正确性，可读性，健壮性，高时间效率，高空间效率</p>
-<h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><p>算法的时间效率指算法的执行时间随问题规模的增长而增长的趋势，通常采用时间复杂度来度量算法的时间效率。T(n)=O(f(n)) </p>
-<p>一个算法花费的时间与算法中语句的执行次数成正比例，哪个算法中语句执行次数多，它花费时间就多。一个算法中的语句执行次数称为语句频度或时间频度。记为T(n)</p>
-<p>一般情况下，算法中基本操作重复执行的次数是问题规模n的某个函数，用T(n)表示，若有某个辅助函数f(n),使得当n趋近于无穷大时，T(n)/f(n)的极限值为不等于零的常数，则称f(n)是T(n)的同数量级函数。记作T(n)=O(f(n)),称O(f(n)) 为算法的渐进时间复杂度，简称时间复杂度。</p>
-<p>常见的算法的时间 复杂度之间的关系为：</p>
-<p>O(1)&lt;O(logn)&lt;O(n)&lt;O(nlog n)&lt;O(n2)&lt;O(2n)&lt;O(n!)&lt;O(n的n次幂) </p>
-<pre><code>1.一条简单语句的时间复杂度是O(1)。
-int count=0; 
-2.一个循环的时间复杂度是O(n)。
-int n=8, count=0;
-for (int i=1; i&lt;=n; i++)
-    count++;                              //循环体执行n次
-3.以下循环语句的时间复杂度是O(log2 n)。
-for (int i=1; i&lt;=n; i*=2)        //i按2的幂（1,2,4,8）递增
-    count++;                           //循环体执行1+               次
-4.以下二重循环的时间复杂度为O(n2)。
-for (int i=1; i&lt;=n; i++) 
-    for (int j=1; j&lt;=n; j++)
-5.以下二重循环的时间复杂度是O(n×log2n)。
-for (int i=1; i&lt;=n; i*=2)        //循环log2n次
-    for (int j=1; j&lt;=n; j++)     //循环n次
-6.以下二重循环的时间复杂度是O(n)。
-for (int i=1; i&lt;=n; i*=2)        //循环log2n次
-    for (int j=1; j&lt;=i; j++)      //循环i次
-    //循环次数 </code></pre><h3 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h3><p>算法所需存储空间的度量，记作： S(n)=O( f(n) ) 其中 n 为问题的规模。</p>
-<p>一个算法在计算机存储器上所占用的存储空间，包括存储算法本身所占用的存储空间，算法的输入输出数据所占用的存储空间和算法在运行过程中临时占用的存储空间这三个方面。如果额外空间相对于输入数据量来说是个常数，则称此算法是原地工作。</p>
-<p>算法的输入输出数据所占用的存储空间是由要解决的问题决定的，是通过参数表由调用函数传递而来的，它不随本算法的不同而改变。存储算法本身所占用的存储空间与算法书写的长短成正比，要压缩这方面的存储空间，就必须编写出较短的算法。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/12/04/linux-command/which&whereis&locate/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/04/linux-command/which&whereis&locate/" itemprop="url">文件查找之which&whereis&locate</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-04T00:00:00+00:00">
-                2018-12-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux-command/" itemprop="url" rel="index">
-                    <span itemprop="name">linux-command</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.3k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  4 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="which"><a href="#which" class="headerlink" title="which"></a>which</h1><h2 id="which命令格式："><a href="#which命令格式：" class="headerlink" title="which命令格式："></a>which命令格式：</h2><p>which 可执行文件名称 </p>
-<h2 id="命令功能："><a href="#命令功能：" class="headerlink" title="命令功能："></a>命令功能：</h2><p>在<strong>PATH变量指定的路径</strong>中，搜索某个系统命令的位置，并且返回第一个搜索结果。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。 </p>
-<h3 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h3><pre><code>-n 　指定文件名长度，指定的长度必须大于或等于所有文件中最长的文件名。
-
--p 　与-n参数相同，但此处的包括了文件的路径。
-
--w 　指定输出时栏位的宽度。
-
--V 　显示版本信息</code></pre><h1 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h1><p>whereis命令只能用于程序名的搜索，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。</p>
-<p>和find相比，whereis查找的速度非常快，这是因为linux系统会将 系统内的所有文件都记录在一个数据库文件中，当使用whereis和下面即将介绍的locate时，会从数据库中查找数据，而不是像find命令那样，通 过遍历硬盘来查找，效率自然会很高。 </p>
-<p>但是该数据库文件并不是实时更新，默认情况下时一星期更新一次，因此，我们在用whereis和locate 查找文件时，有时会找到已经被删除的数据，或者刚刚建立文件，却无法查找到，原因就是因为数据库文件没有被更新。 </p>
-<h2 id="whereis命令格式："><a href="#whereis命令格式：" class="headerlink" title="whereis命令格式："></a>whereis命令格式：</h2><p>whereis [-bmsu] [BMS 目录名 -f ] 文件名</p>
-<h2 id="命令功能：-1"><a href="#命令功能：-1" class="headerlink" title="命令功能："></a>命令功能：</h2><p>whereis命令是定位<strong>可执行文件</strong>、<strong>源代码文件</strong>、<strong>帮助文件在文件系统中的位置</strong>。这些文件的属性应属于原始代码，二进制文件，或是帮助文件。whereis 程序还具有搜索源代码、指定备用搜索路径和搜索不寻常项的能力</p>
-<h2 id="命令参数-1"><a href="#命令参数-1" class="headerlink" title="命令参数"></a>命令参数</h2><pre><code>-b   定位可执行文件。
-
--m   定位帮助文件。
-
--s   定位源代码文件。
-
--u   搜索默认路径下除可执行文件、源代码文件、帮助文件以外的其它文件。
-
--B   指定搜索可执行文件的路径。
-
--M   指定搜索帮助文件的路径。
-
--S   指定搜索源代码文件的路径。</code></pre><h1 id="locate"><a href="#locate" class="headerlink" title="locate"></a>locate</h1><p>locate 让使用者可以很快速的搜寻档案系统内是否有指定的档案。其方法是先建立一个包括系统内所有档案名称及路径的数据库，之后当寻找时就只需查询这个数据库，而不必实际深入档案系统之中了。在一般的 distribution 之中，数据库的建立都被放在 crontab 中自动执行。</p>
-<h2 id="locate命令格式："><a href="#locate命令格式：" class="headerlink" title="locate命令格式："></a>locate命令格式：</h2><p>whereis [-bmsu] [BMS 目录名 -f ] 文件名</p>
-<h2 id="命令功能：-2"><a href="#命令功能：-2" class="headerlink" title="命令功能："></a>命令功能：</h2><p>locate命令可以在搜寻数据库时快速找到档案，数据库由updatedb程序来更新，updatedb是由cron daemon周期性建立的，locate命令在搜寻数据库时比由整个由硬盘资料来搜寻资料来得快，但较差劲的是locate所找到的档案若是最近才建立或 刚更名的，可能会找不到，在内定值中，updatedb每天会跑一次，可以由修改crontab来更新设定值。(etc/crontab)</p>
-<p>locate指定用在搜寻符合条件的档案，它会去储存档案与目录名称的数据库内，寻找合乎范本样式条件的档案或目录录，可以使用特殊字元（如”<em>” 或”?”等）来指定范本样式，如指定范本为kcpa</em>ner, locate会找出所有起始字串为kcpa且结尾为ner的档案或目录，如名称为kcpartner若目录录名称为kcpa_ner则会列出该目录下包括 子目录在内的所有档案。</p>
-<p>locate指令和find找寻档案的功能类似，但locate是透过update程序将硬盘中的所有档案和目录资料先建立一个索引数据库，在 执行loacte时直接找该索引，查询速度会较快，索引数据库一般是由操作系统管理，但也可以直接下达update强迫系统立即修改索引数据库。</p>
-<h2 id="命令参数-2"><a href="#命令参数-2" class="headerlink" title="命令参数"></a>命令参数</h2><pre><code>-e   将排除在寻找的范围之外。
-
--1  如果 是 1．则启动安全模式。在安全模式下，使用者不会看到权限无法看到    的档案。这会始速度减慢，因为 locate 必须至实际的档案系统中取得档案的    权限资料。
-
--f   将特定的档案系统排除在外，例如我们没有到理要把 proc 档案系统中的档案    放在资料库中。
-
--q  安静模式，不会显示任何错误讯息。
-
--n 至多显示 n个输出。
-
--r 使用正规运算式 做寻找的条件。
-
--o 指定资料库存的名称。
-
--d 指定资料库的路径
-
--h 显示辅助讯息
-
--V 显示程式的版本讯息  </code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/12/03/nginx/nginxBase/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/03/nginx/nginxBase/" itemprop="url">nginx基础配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-03T00:00:00+00:00">
-                2018-12-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/nginx/" itemprop="url" rel="index">
-                    <span itemprop="name">nginx</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.1k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  4 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <pre><code>#全局块 start
-#配置影响nginx全局的指令。一般有运行nginx服务器的用户组，nginx进程pid存放路径，日志存放路径，配置文件引入，允许生成worker process数等。
-########### 每个指令必须有分号结束。#################
-
-#user  nobody; #配置用户或者组，默认为nobody nobody。
-worker_processes  1;#允许生成的进程数，默认为1
-
-#制定日志路径，级别。这个设置可以放入全局块，http块，server块，级别以此为：debug|info|notice|warn|error|crit|alert|emerg
-#error_log  logs/error.log;
-#error_log  logs/error.log  notice;
-#error_log  logs/error.log  info;
-
-#pid        logs/nginx.pid;#指定nginx进程运行文件存放地址
-
-#全局块 end
-
-#events块 start
-#配置影响nginx服务器或与用户的网络连接。有每个进程的最大连接数，选取哪种事件驱动模型处理连接请求，是否允许同时接受多个网路连接，开启多个网络连接序列化等
-
-events {
-    accept_mutex on;   #设置网路连接序列化，防止惊群现象发生，默认为on
-    multi_accept on;  #设置一个进程是否同时接受多个网络连接，默认为off
-    #use epoll;      #事件驱动模型，select|poll|kqueue|epoll|resig|/dev/poll|eventport
-    worker_connections  1024;    #最大连接数，默认为1024
-}
-
-#events块 end
-
-#http块 start
-#可以嵌套多个server，配置代理，缓存，日志定义等绝大多数功能和第三方模块的配置。如文件引入，mime-type定义，日志自定义，是否使用sendfile传输文件，连接超时时间，单连接请求数等。
-http {
-    include       mime.types;#文件扩展名与文件类型映射表 
-    default_type  application/octet-stream;#默认文件类型
-    #access_log off; #取消服务日志   
-
-    #log_format  main  &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos; #自定义格式
-    #                  &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;
-    #                  &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;
-
-    #access_log  logs/access.log  main;  #combined为日志格式的默认值
-
-    sendfile        on; #允许sendfile方式传输文件，默认为off，可以在http块，server块，location块。
-    #sendfile_max_chunk 100k;  #每个进程每次调用传输数量不能大于设定的值，默认为0，即不设上限。
-
-    #tcp_nopush     on; 
-    #开启或者关闭nginx在FreeBSD上使用TCP_NOPUSH套接字选项， 在Linux上使用TCP_CORK套接字选项。 选项仅在使用sendfile的时候才开启。 #开启此选项允许在Linux和FreeBSD4.*上将响应头和正文的开始部分一起发送；一次性发送整个文件
-
-    #keepalive_timeout  0; #连接超时时间，默认为65s，可以在http，server，location块。
-    keepalive_timeout  65;
-
-    #gzip  on;是否开启Gzip 压缩
-    #gzip_min_length 1k; 不压缩临界值，大于1K的才压缩，一般不用改
-    #gzip_buffers 4 16k;
-    #gzip_http_version 1.0; 用了反向代理的话，末端通信是HTTP/1.0，默认是HTTP/1.1
-    #gzip_comp_level 2; 压缩级别，1-10，数字越大压缩的越好，时间也越长
-    #gzip_types text/plain application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png; #进行压缩的文件类型，缺啥补啥就行了，JavaScript有两种写法，最好都写上吧，总有人抱怨js文件没有压缩，其实多写一种格式就行了
-    #gzip_vary off; 跟Squid等缓存服务有关，on的话会在Header里增加&quot;Vary: Accept-Encoding&quot;
-    #gzip_disable &quot;MSIE [1-6]\.&quot;; IE6对Gzip不怎么友好，不给它Gzip了
-
-    #server块 start
-    #配置虚拟主机的相关参数，一个http中可以有多个server。
-
-    server {
-        listen       8080; #监听端口
-        server_name  localhost; #监听地址 
-
-        #charset koi8-r;
-
-        #access_log  logs/host.access.log  main;
-
-        #location块 start 
-        #配置请求的路由，以及各种页面的处理情况。
-
-        location / {
-            root   html; #根目录
-            index  index.html index.htm; #设置默认页
-        }
-        #location块 end 
-
-        #error_page  404              /404.html;
-
-        # redirect server error pages to the static page /50x.html
-        #
-        error_page   500 502 503 504  /50x.html;
-        location = /50x.html {
-            root   html;
-        }
-
-        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
-        #
-        #location ~ \.php$ {
-        #    proxy_pass   http://127.0.0.1;
-        #}
-
-        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
-        #
-        #location ~ \.php$ {
-        #    root           html;
-        #    fastcgi_pass   127.0.0.1:9000;
-        #    fastcgi_index  index.php;
-        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
-        #    include        fastcgi_params;
-        #}
-
-        # deny access to .htaccess files, if Apache&apos;s document root
-        # concurs with nginx&apos;s one
-        #
-        #location ~ /\.ht {
-        #    deny  all;
-        #}
-    }
-
-    #server块 end
-
-    # another virtual host using mix of IP-, name-, and port-based configuration
-    #
-    #server {
-    #    listen       8000;
-    #    listen       somename:8080;
-    #    server_name  somename  alias  another.alias;
-
-    #    location / {
-    #        root   html;
-    #        index  index.html index.htm;
-    #    }
-    #}
-
-
-    # HTTPS server
-    #
-    #server {
-    #    listen       443 ssl;
-    #    server_name  localhost;
-
-    #    ssl_certificate      cert.pem;
-    #    ssl_certificate_key  cert.key;
-
-    #    ssl_session_cache    shared:SSL:1m;
-    #    ssl_session_timeout  5m;
-
-    #    ssl_ciphers  HIGH:!aNULL:!MD5;
-    #    ssl_prefer_server_ciphers  on;
-
-    #    location / {
-    #        root   html;
-    #        index  index.html index.htm;
-    #    }
-    #}
-
-}
-#http块 end</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3126,7 +3134,7 @@ http {
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">68</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3233,7 +3241,7 @@ http {
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -3247,7 +3255,7 @@ http {
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">78.4k</span>
+    <span title="Site words total count">81.1k</span>
   
 </div>
 
@@ -3274,7 +3282,7 @@ http {
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共78.4k字</span>
+  <span class="post-count">博客全站共81.1k字</span>
 </div>
 
         

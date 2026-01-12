@@ -299,6 +299,881 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo调用模块</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
+                2021-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.3k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一、Dubbo-调用模块基本组成"><a href="#一、Dubbo-调用模块基本组成" class="headerlink" title="一、Dubbo 调用模块基本组成"></a>一、Dubbo 调用模块基本组成</h2><ol>
+<li>透明代理：通过动态代理技术，屏蔽远程调用细节以提高编程友好性。</li>
+<li>负载均衡：当有多个提供者是，如何选择哪个进行调用的负载算法。</li>
+<li>容错机制：当服务调用失败时采取的策略</li>
+<li>调用方式：支持同步调用、异步调用</li>
+</ol>
+<p><img src="/uploads/dubbo/%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9D%97.png" alt="调用模块.png"></p>
+<h3 id="透明代理"><a href="#透明代理" class="headerlink" title="透明代理"></a>透明代理</h3><p>参见源码：<br>com.alibaba.dubbo.config.ReferenceConfig#createProxy<br>com.alibaba.dubbo.common.bytecode.ClassGenerator<br>com.alibaba.dubbo.rpc.proxy.javassist.JavassistProxyFactory</p>
+<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>Dubbo 目前官方支持以下负载均衡策略：</p>
+<ol>
+<li>随机(random)：按权重设置随机概率。此为默认算法.</li>
+<li>轮循(roundrobin):按公约后的权重设置轮循比率。</li>
+<li>最少活跃调用数(leastactive):相同活跃数的随机，活跃数指调用前后计数差。</li>
+<li>一致性Hash(consistenthash ):相同的参数总是发到同一台机器</li>
+</ol>
+<p>设置方式支持如下四种方式设置，优先级由低至高:</p>
+<!-- 服务端级别-->
+<p>&lt;dubbo:service interface=”…” loadbalance=”roundrobin” /&gt;</p>
+<!-- 客户端级别-->
+<p>&lt;dubbo:reference interface=”…” loadbalance=”roundrobin” /&gt;</p>
+<!-- 服务端方法级别-->
+<p>&lt;dubbo:service interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
+<!-- 客户端方法级别-->
+<p>&lt;dubbo:reference interface=”…”&gt;<br>    &lt;dubbo:method name=”…” loadbalance=”roundrobin”/&gt;<br></p>
+<p>一至性hash 算法详解：<br><img src="/uploads/dubbo/%E4%B8%80%E8%87%B3%E6%80%A7hash.png" alt="一至性hash.png"></p>
+<h3 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h3><p>Dubbo 官方目前支持以下容错策略：</p>
+<ol>
+<li>失败自动切换：调用失败后基于retries=“2”属性重试其它服务器</li>
+<li>快速失败：快速失败，只发起一次调用，失败立即报错。</li>
+<li>勿略失败：失败后勿略，不抛出异常给客户端。</li>
+<li>失败重试：失败自动恢复，后台记录失败请求，定时重发。通常用于消息通知操作</li>
+<li>并行调用:只要一个成功即返回，并行调用指定数量机器，可通过 forks=”2”来设置最大并行数。</li>
+<li>广播调用：广播调用所有提供者，逐个调用，任意一台报错则报错 设置方式支持如下两种方式设置，优先级由低至高<br>&lt;!–<br>Failover 失败自动切换 retries=”1” 切换次数<br>Failfast 快速失败<br>Failsafe 勿略失败<br>Failback 失败重试，5秒后仅重试一次<br>Forking 并行调用 forks=”2” 最大并行数<br>Broadcast 广播调用</li>
+</ol>
+<p>–&gt;<br>&lt;dubbo:service interface=”…” cluster=”broadcast” /&gt;<br>&lt;dubbo:reference interface=”…” cluster=”broadcast”/ &gt;<br>注：容错机制 在基于 API设置时无效 如 referenceConfig.setCluster(“failback”); 经测试不启作用 </p>
+<h3 id="异步调用"><a href="#异步调用" class="headerlink" title="异步调用"></a>异步调用</h3><p>异步调用是指发起远程调用之后获取结果的方式。</p>
+<ol>
+<li>同步等待结果返回（默认）</li>
+<li>异步等待结果返回</li>
+<li>不需要返回结果</li>
+</ol>
+<p>Dubbo 中关于异步等待结果返回的实现流程如下图：</p>
+<p><img src="/uploads/dubbo/%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8.png" alt="异步调用.png"></p>
+<p>异步调用配置:<br>&lt;dubbo:reference id=”asyncDemoService”<br>interface=”com.tuling.teach.service.async.AsyncDemoService”&gt;</p>
+<!-- 异步调async：true 异步调用 false 同步调用-->
+<p>&lt;dubbo:method name=”sayHello1” async=”false”/&gt;<br>&lt;dubbo:method name=”sayHello2” async=”false”/&gt;<br>&lt;dubbo:method name=”notReturn” return=”false”/&gt;<br></p>
+<p>注：在进行异步调用时 容错机制不能为  cluster=”forking” 或  cluster=”broadcast”</p>
+<h2 id="二、Dubbo-调用非典型使用场景"><a href="#二、Dubbo-调用非典型使用场景" class="headerlink" title="二、Dubbo 调用非典型使用场景"></a>二、Dubbo 调用非典型使用场景</h2><h3 id="泛化提供-amp-引用"><a href="#泛化提供-amp-引用" class="headerlink" title="泛化提供&amp;引用"></a>泛化提供&amp;引用</h3><p>泛化提供<br>是指不通过接口的方式直接将服务暴露出去。通常用于Mock框架或服务降级框架实现。</p>
+<p>泛化引用<br>是指不通过常规接口的方式去引用服务，通常用于测试框架</p>
+<h3 id="隐示传参"><a href="#隐示传参" class="headerlink" title="隐示传参"></a>隐示传参</h3><p>是指通过非常方法参数传递参数，类似于http 调用当中添加cookie值。通常用于分布式追踪框架的实现。使用方式如下 ：<br>//客户端隐示设置值<br>RpcContext.getContext().setAttachment(“index”, “1”); // 隐式传参，后面的远程调用都会隐<br>//服务端隐示获取值<br>String index = RpcContext.getContext().getAttachment(“index”);</p>
+<h3 id="令牌验证"><a href="#令牌验证" class="headerlink" title="令牌验证"></a>令牌验证</h3><p>通过令牌验证在注册中心控制权限，以决定要不要下发令牌给消费者，可以防止消费者绕过注册中心访问提供者，<br>另外通过注册中心可灵活改变授权方式，而不需修改或升级提供者</p>
+<h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><p>类似于 WEB 中的Filter ，Dubbo本身提供了Filter 功能用于拦截远程方法的调用。其支持自定义过滤器与官方的过滤器使用：</p>
+<p>演示添加日志访问过滤:</p>
+<p>&lt;dubbo:provider filter=”accesslog” accesslog=”logs/dubbo.log”/&gt;<br>以上配置 就是 为 服务提供者 添加 日志记录过滤器， 所有访问日志将会集中打印至 accesslog 当中</p>
+<h2 id="三、Dubbo调用流程"><a href="#三、Dubbo调用流程" class="headerlink" title="三、Dubbo调用流程"></a>三、Dubbo调用流程</h2><p><img src="/uploads/dubbo/Dubbo%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png" alt="Dubbo调用流程.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//------ 6协议 调用</span></span><br><span class="line">doInvoke:<span class="number">77</span>, DubboInvoker &#123;org.apache.dubbo.rpc.protocol.dubbo&#125;</span><br><span class="line">invoke:<span class="number">155</span>, AbstractInvoker &#123;org.apache.dubbo.rpc.protocol&#125;</span><br><span class="line"><span class="comment">//------ 5异步转同步</span></span><br><span class="line">invoke:<span class="number">52</span>, AsyncToSyncInvoker &#123;org.apache.dubbo.rpc.protocol&#125; <span class="comment">// 异步转同步 ,返回结果之前进行阻塞调用线程</span></span><br><span class="line"><span class="comment">//----- 4过滤器链</span></span><br><span class="line">invoke:<span class="number">92</span>, MonitorFilter &#123;org.apache.dubbo.monitor.support&#125;  <span class="comment">// 过滤链-&gt; 监控器</span></span><br><span class="line">invoke:<span class="number">54</span>, FutureFilter &#123;org.apache.dubbo.rpc.protocol.dubbo.filter&#125;    <span class="comment">//过滤链-&gt; 回调参数</span></span><br><span class="line">invoke:<span class="number">14</span>, ProviderHelloFilter &#123;com.wyb.dubbo&#125;  <span class="comment">// 过滤链-&gt; 自定义过滤器</span></span><br><span class="line">invoke:<span class="number">60</span>, ConsumerContextFilter &#123;org.apache.dubbo.rpc.filter&#125; <span class="comment">// 过滤链-&gt; 消费者环境初始化</span></span><br><span class="line"><span class="comment">//------3集群处理</span></span><br><span class="line">doInvoke:<span class="number">82</span>, FailoverClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">// 集服-失败重试</span></span><br><span class="line">invoke:<span class="number">248</span>, AbstractClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support&#125; <span class="comment">//</span></span><br><span class="line"><span class="comment">//----- Mock服务</span></span><br><span class="line">invoke:<span class="number">78</span>, MockClusterInvoker &#123;org.apache.dubbo.rpc.cluster.support.wrapper&#125; <span class="comment">// mock 服务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//----- 2动态代理 --透明化</span></span><br><span class="line">invoke:<span class="number">55</span>, InvokerInvocationHandler &#123;org.apache.dubbo.rpc.proxy&#125;<span class="comment">// 代理的中间接口</span></span><br><span class="line">getUser:-<span class="number">1</span>, proxy0 &#123;org.apache.dubbo.common.bytecode&#125; <span class="comment">// 代理对象</span></span><br><span class="line"><span class="comment">//----- 1调用客户端</span></span><br><span class="line">main:<span class="number">53</span>, DubboClient &#123;com.wyb.dubbo&#125;  <span class="comment">// 客户端</span></span><br><span class="line"></span><br><span class="line">RegistryProtocol --&gt; Cluster --&gt; MockClusterInvoker:ClusterInvoker-&gt;DubboProtocol-&gt;FilterChain:AsyncToSyncInvoker:DubboInvoker</span><br><span class="line">协议--》(注册协议)---&gt;MockClusterInvoker ---》ClusterInvoker---&gt; RegistryDirectory ---&gt;(DubboProtcol)-&gt;FilterChain--&gt;DubboInvoker</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo协议模块</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
+                2021-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.2k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>课程概要：</strong></p>
+<ol>
+<li>RPC协议基本组成</li>
+<li>RPC协议报文编码与实现详解</li>
+<li>Dubbo中所支持RPC协议与使用<h3 id="RPC协议基本组成"><a href="#RPC协议基本组成" class="headerlink" title="## RPC协议基本组成"></a>## <strong>RPC协议基本组成</strong></h3></li>
+</ol>
+<hr>
+<h3 id="RPC-协议名词解释"><a href="#RPC-协议名词解释" class="headerlink" title="RPC 协议名词解释"></a><strong>RPC 协议名词解释</strong></h3><p>在一个典型RPC的使用场景中，包含了服务发现、负载、容错、网络传输、序列化等组件，其中RPC协议就指明了程序如何进行网络传输和序列化 。也就是说一个RPC协议的实现就等于一个非透明的远程调用实现，如何做到的的呢？</p>
+<p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE.png" alt="Rpc协议.png"></p>
+<h3 id="协议基本组成："><a href="#协议基本组成：" class="headerlink" title="协议基本组成："></a><strong>协议基本组成：</strong></h3><p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90.png" alt="Rpc协议基本组成.png"></p>
+<ol>
+<li>地址：服务提供者地址</li>
+<li>端口：协议指定开放的端口</li>
+<li>报文编码：协议报文编码 ，分为请求头和请求体两部分。</li>
+<li>序列化方式：将请求体序列化成对象<ol>
+<li>Hessian2Serialization、</li>
+<li>DubboSerialization、</li>
+<li>JavaSerialization</li>
+<li>JsonSerialization</li>
+</ol>
+</li>
+<li>运行服务: 网络传输实现<ol>
+<li>netty</li>
+<li>mina</li>
+<li>RMI 服务</li>
+<li>servlet 容器（jetty、Tomcat、Jboss）<h2 id="Dubbo中所支持RPC协议使用"><a href="#Dubbo中所支持RPC协议使用" class="headerlink" title="Dubbo中所支持RPC协议使用"></a><strong>Dubbo中所支持RPC协议使用</strong></h2></li>
+</ol>
+</li>
+</ol>
+<hr>
+<p><strong>dubbo 支持的RPC协议列表</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>名称</strong></th>
+<th align="left"><strong>实现描述</strong></th>
+<th align="left"><strong>连接描述</strong></th>
+<th align="left"><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>dubbo</strong></td>
+<td align="left">传输服务: mina, netty(默认), grizzy序列化: hessian2(默认), java, fastjson自定义报文</td>
+<td align="left">单个长连接NIO异步传输</td>
+<td align="left">1、常规RPC调用2、传输数据量小3、提供者少于消费者</td>
+</tr>
+<tr>
+<td align="left"><strong>rmi</strong></td>
+<td align="left">传输：java rmi 服务序列化：java原生二进制序列化</td>
+<td align="left">多个短连接BIO同步传输</td>
+<td align="left">1、常规RPC调用  2、与原RMI客户端集成  3、可传少量文件  4、不防火墙穿透</td>
+</tr>
+<tr>
+<td align="left"><strong>hessian</strong></td>
+<td align="left">传输服务：servlet容器序列化：hessian二进制序列化</td>
+<td align="left">基于Http 协议传输，依懒servlet容器配置</td>
+<td align="left">1、提供者多于消费者  2、可传大字段和文件  <del>3、跨语言调用</del></td>
+</tr>
+<tr>
+<td align="left"><strong>http</strong></td>
+<td align="left">传输服务：servlet容器序列化：java原生二进制序列化</td>
+<td align="left">依懒servlet容器配置</td>
+<td align="left">1、数据包大小混合</td>
+</tr>
+<tr>
+<td align="left"><strong>thrift</strong></td>
+<td align="left">与thrift RPC 实现集成，并在其基础上修改了报文头</td>
+<td align="left">长连接、NIO异步传输</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p><strong><em>关于RMI不支持防火墙穿透的补充说明：</em></strong></p>
+<p>原因在于RMI 底层实现中会有两个端口，一个是固定的用于服务发现的注册端口，另外会生成一个<strong><em>随机</em></strong>端口用于网络传输。因为这个随机端口就不能在防火墙中提前设置开放开。所以存在<em>防火墙穿透问题</em></p>
+<h3 id="协议的使用与配置"><a href="#协议的使用与配置" class="headerlink" title="协议的使用与配置:"></a><strong>协议的使用与配置:</strong></h3><p>Dubbo框架配置协议非常方便，用户只需要在 provider 应用中 配置*&lt;*<em>dubbo:protocol&gt;</em>元素即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line"> name: 协议名称 dubbo|rmi|hessian|http|</span><br><span class="line"> host:本机IP可不填，则系统自动获取</span><br><span class="line"> port：端口、填-1表示系统自动选择</span><br><span class="line"> server：运行服务 mina|netty|grizzy|servlet|jetty</span><br><span class="line"> serialization：序列化方式 hessian2|java|compactedjava|fastjson</span><br><span class="line"> 详细配置参见dubbo 官网 dubbo.io</span><br><span class="line">--&gt;</span><br><span class="line">&lt;dubbo:protocol name&#x3D;&quot;dubbo&quot; host&#x3D;&quot;192.168.0.11&quot; port&#x3D;&quot;20880&quot; server&#x3D;&quot;netty&quot;</span><br><span class="line"> serialization&#x3D;“hessian2” charset&#x3D;“UTF-8” &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+<p>#TODO 演示采用其它协议来配置Dubbo</p>
+<ul>
+<li><input disabled type="checkbox"> dubbo 协议采用 json 进行序列化(源码参见：com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol<em>)</em></li>
+<li><input disabled type="checkbox"> 采用RMI协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.rmi.RmiProtocol)</em></li>
+<li><input disabled type="checkbox"> 采用Http协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.http.HttpProtocol.InternalHandler)</em></li>
+<li><input disabled type="checkbox"> 采用Heason协议(源码参见:com.alibaba.dubbo.rpc.protocol.hessian.HessianProtocol.HessianHandler)</li>
+</ul>
+<p>new PrintWriter(System.out)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -aon|findstr &quot;17732&quot;</span><br></pre></td></tr></table></figure>
+<p>序列化：</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">fastjson</td>
+<td align="left">文本型：体积较大，性能慢、跨语言、可读性高</td>
+</tr>
+<tr>
+<td align="left">fst</td>
+<td align="left">二进制型：体积小、兼容 JDK 原生的序列化。要求 JDK 1.7 支持。</td>
+</tr>
+<tr>
+<td align="left">hessian2</td>
+<td align="left">二进制型：跨语言、容错性高、体积小</td>
+</tr>
+<tr>
+<td align="left">java</td>
+<td align="left">二进制型：在JAVA原生的基础上 可以写入Null</td>
+</tr>
+<tr>
+<td align="left">compactedjava</td>
+<td align="left">二进制型：与java 类似，内容做了压缩</td>
+</tr>
+<tr>
+<td align="left">nativejava</td>
+<td align="left">二进制型：原生的JAVA 序列化</td>
+</tr>
+<tr>
+<td align="left">kryo</td>
+<td align="left">二进制型：体积比hessian2 还要小，但容错性 没有hessian2 好</td>
+</tr>
+</tbody></table>
+<h3 id="Hessian-序列化："><a href="#Hessian-序列化：" class="headerlink" title="Hessian 序列化："></a>Hessian 序列化：</h3><ul>
+<li>参数及返回值需实现Serializable接口</li>
+<li>参数及返回值不能自定义实现List,Map,Number,Date,Calendar等接口，只能用 JDK 自带的实现，因为 hessian 会做特殊处理，自定义实现类中的属性值都会丢失。</li>
+<li>Hessian 序列化，只传成员属性值和值的类型，不传方法或静态变量，兼容情况<a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn1" target="_blank" rel="noopener">[1]</a><br><a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn2" target="_blank" rel="noopener">[2]</a></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>数据通讯</strong></th>
+<th align="left"><strong>情况</strong></th>
+<th align="left"><strong>结果</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">A-&gt;B</td>
+<td align="left">类A多一种 属性（或者说类B少一种 属性）</td>
+<td align="left">不抛异常，A多的那 个属性的值，B没有， 其他正常</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A使用多 出来的枚举进行传输</td>
+<td align="left">抛异常</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A不使用 多出来的枚举进行传输</td>
+<td align="left">不抛异常，B正常接 收数据</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">A和B的属性 名相同，但类型不相同</td>
+<td align="left">抛异常</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">serialId 不相同</td>
+<td align="left">正常传输</td>
+</tr>
+</tbody></table>
+<p>接口增加方法，对客户端无影响，如果该方法不是客户端需要的，客户端不需要重新部署。输入参数和结果集中增加属性，对客户端无影响，如果客户端并不需要新属性，不用重新部署。</p>
+<p>输入参数和结果集属性名变化，对客户端序列化无影响，但是如果客户端不重新部署，不管输入还是输出，属性名变化的属性值是获取不到的。</p>
+<p>总结：服务器端和客户端对领域对象并不需要完全一致，而是按照最大匹配原则。</p>
+<ul>
+<li><input disabled type="checkbox"> 演示Hession2 序列化的容错性</li>
+</ul>
+<h2 id="三-、RPC协议报文编码与实现详解"><a href="#三-、RPC协议报文编码与实现详解" class="headerlink" title="三 、RPC协议报文编码与实现详解"></a><strong>三 、RPC协议报文编码与实现详解</strong></h2><hr>
+<h3 id="RPC-传输实现："><a href="#RPC-传输实现：" class="headerlink" title="RPC 传输实现："></a><strong>RPC 传输实现：</strong></h3><p>RPC的协议的传输是基于 TCP/IP 做为基础使用Socket 或Netty、mina等网络编程组件实现。但有个问题是TCP是面向字节流的无边边界协议，其只管负责数据传输并不会区分每次请求所对应的消息，这样就会出现TCP协义传输当中的拆包与粘包问题</p>
+<h3 id="拆包与粘包产生的原因："><a href="#拆包与粘包产生的原因：" class="headerlink" title="拆包与粘包产生的原因："></a><strong>拆包与粘包产生的原因：</strong></h3><p>我们知道tcp是以流动的方式传输数据，传输的最小单位为一个报文段（segment）。tcp Header中有个Options标识位，常见的标识为mss(Maximum Segment Size)指的是，连接层每次传输的数据有个最大限制MTU(Maximum Transmission Unit)，一般是1500比特，超过这个量要分成多个报文段，mss则是这个最大限制减去TCP的header，光是要传输的数据的大小，一般为1460比特。换算成字节，也就是180多字节。</p>
+<p>tcp为提高性能，发送端会将需要发送的数据发送到缓冲区，等待缓冲区满了之后，再将缓冲中的数据发送到接收方。同理，接收方也有缓冲区这样的机制，来接收数据。这时就会出现以下情况：</p>
+<ol>
+<li>应用程序写入的数据大于MSS大小，这将会发生拆包。</li>
+<li>应用程序写入数据小于MSS大小，这将会发生粘包。</li>
+<li>接收方法不及时读取套接字缓冲区数据，这将发生粘包。<h3 id="拆包与粘包解决办法："><a href="#拆包与粘包解决办法：" class="headerlink" title="拆包与粘包解决办法："></a><strong>拆包与粘包解决办法：</strong></h3></li>
+<li>设置定长消息，服务端每次读取既定长度的内容作为一条完整消息。</li>
+<li>{“type”:”message”,”content”:”hello”}\n</li>
+<li>使用带消息头的协议、消息头存储消息开始标识及消息长度信息，服务端获取消息头的时候解析出消息长度，然后向后读取该长度的内容。</li>
+</ol>
+<p><strong>比如：</strong>Http协议 heade 中的 Content-Length 就表示消息体的大小。</p>
+<p><img src="/uploads/dubbo/Http%E5%8D%8F%E8%AE%AEhead.png" alt="http协议head.png"></p>
+<h3 id="Dubbo-协议报文编码："><a href="#Dubbo-协议报文编码：" class="headerlink" title="Dubbo 协议报文编码："></a>Dubbo 协议报文编码：</h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E7%BC%96%E7%A0%81.png" alt="Dubbo协议报文编码.png"></p>
+<ul>
+<li><strong>magic</strong>：类似java字节码文件里的魔数，用来判断是不是dubbo协议的数据包。魔数是常量0xdabb,用于判断报文的开始。</li>
+<li><strong>flag</strong>：标志位, 一共8个地址位。低四位用来表示消息体数据用的序列化工具的类型（默认hessian），高四位中，第一位为1表示是request请求，第二位为1表示双向传输（即有返回response），第三位为1表示是心跳ping事件。</li>
+<li><strong>status</strong>：状态位, 设置请求响应状态，dubbo定义了一些响应的类型。具体类型见 com.alibaba.dubbo.remoting.exchange.Response</li>
+<li><strong>invoke id：</strong>消息id, long 类型。每一个请求的唯一识别id（由于采用异步通讯的方式，用来把请求request和返回的response对应上）</li>
+<li><strong>body length：</strong>消息体 body 长度, int 类型，即记录Body Content有多少个字节。</li>
+</ul>
+<p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt="img.png"></p>
+<pre><code>*（注：相关源码参见**c**om.alibaba.dubbo.rpc.protocol.dubbo.DubboCodec**）*</code></pre><h3 id="Dubbo协议的编解码过程："><a href="#Dubbo协议的编解码过程：" class="headerlink" title="Dubbo协议的编解码过程："></a><strong><em>Dubbo协议的编解码过程：</em></strong></h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E7%9A%84%E7%BC%96%E8%A7%A3%E7%A0%81%E8%BF%87%E7%A8%8B.png" alt="Dubbo协议的编解码过程.png"></p>
+<p><strong>Dubbo 协议编解码实现过程*</strong>(源码来源于<em>*dubbo2.5.8 )</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、DubboCodec.encodeRequestData() 116L &#x2F;&#x2F; 编码request</span><br><span class="line">2、DecodeableRpcInvocation.decode()  89L   &#x2F;&#x2F; 解码request</span><br><span class="line">3、DubboCodec.encodeResponseData()   184L  &#x2F;&#x2F; 编码response    </span><br><span class="line">4、DecodeableRpcResult.decode()      73L   &#x2F;&#x2F; 解码response</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/06/09/java/coucurrent/2.synchronized&Lock&AQS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/06/09/java/coucurrent/2.synchronized&Lock&AQS/" itemprop="url">synchronized&Lock&AQS</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-09T00:00:00+00:00">
+                2021-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.1k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="并发同步器"><a href="#并发同步器" class="headerlink" title="并发同步器"></a>并发同步器</h1><p>多线程编程中，有可能会出现多个线程同时访问同一个共享、可变资源的情况；这种资源可能是：对象、变量、文件等。</p>
+<ul>
+<li>共享：资源可以由多个线程同时访问</li>
+<li>可变：资源可以在其生命周期内被修改</li>
+</ul>
+<p>引出的问题：<br>由于线程执行的过程是不可控的，所以需要采用同步机制来协同对对象可变状态的访问</p>
+<p>加锁目的：序列化访问临界资源，即同一时刻只能有一个线程访问临界资源(同步互斥访问)</p>
+<h1 id="Java锁体系"><a href="#Java锁体系" class="headerlink" title="Java锁体系"></a>Java锁体系</h1><p><img src="/uploads/java/concurrent/Java%E9%94%81%E4%BD%93%E7%B3%BB.png" alt="Java锁体系"></p>
+<blockquote>
+<p><a href="https://juejin.cn/post/6844904110085373966" target="_blank" rel="noopener">https://juejin.cn/post/6844904110085373966</a></p>
+</blockquote>
+<h1 id="synchronized使用与原理"><a href="#synchronized使用与原理" class="headerlink" title="synchronized使用与原理"></a>synchronized使用与原理</h1><p>加锁方式：</p>
+<ul>
+<li>同步实例方法，锁是当前实例对象</li>
+<li>同步类方法，锁是当前类对象</li>
+<li>同步代码块，锁是括号里面的对象</li>
+</ul>
+<p>底层原理:</p>
+<p>JVM内置锁通过synchronized使用，通过内部对象Monitor(监视器锁)实现，基于进入与退出Monitor对象实现方法与<br>代码块同步，监视器锁的实现依赖底层操作系统的Mutex lock（互斥锁）实现，它是一个重量级锁性能较低</p>
+<p><img src="/uploads/java/concurrent/synchronized.png" alt="synchronized"></p>
+<h2 id="Monitor"><a href="#Monitor" class="headerlink" title="Monitor"></a>Monitor</h2><p>每个对象都有一个自己的Monitor(监视器锁)</p>
+<p>JVM加锁过程：</p>
+<p><img src="/uploads/java/concurrent/synchronized%E5%8A%A0%E9%94%81%E8%BF%87%E7%A8%8B.png" alt="synchronized加锁过程"></p>
+<h2 id="对象内存结构详见jvm"><a href="#对象内存结构详见jvm" class="headerlink" title="对象内存结构详见jvm"></a>对象内存结构<a href="https://march1995.github.io/2018/10/31/java/jvm/jvm(1">详见jvm</a></h2><p>认识对象的内存结构：</p>
+<ul>
+<li>对象头：比如 hash码，对象所属的年代，对象锁，锁状态标志，偏向锁（线程）ID，偏向时间，数组长度（数组对象）等</li>
+<li>对象实际数据：即创建对象时，对象中成员变量，方法等</li>
+<li>对齐填充：对象的大小必须是8字节的整数倍</li>
+</ul>
+<p>面试问题：</p>
+<p>实例对象内存中存储在哪？</p>
+<p>如果实例对象存储在堆区时：实例对象内存存在堆区，实例的引用存在栈上，实例的元数据class存在方法区或者元空间</p>
+<p>Object实例对象一定是存在堆区的吗？</p>
+<p>不一定，如果实例对象没有线程逃逸行为</p>
+<p><img src="/uploads/java/concurrent/%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.png" alt="对象的内存结构"></p>
+<h3 id="MarkWord"><a href="#MarkWord" class="headerlink" title="MarkWord"></a>MarkWord</h3><p>以32位JVM中存储内容为例</p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/MarkWord.png" alt="MarkWord"></p>
+<h2 id="锁优化升级过程"><a href="#锁优化升级过程" class="headerlink" title="锁优化升级过程"></a>锁优化升级过程</h2><p>JDK1.6版本之后对synchronized的实现进行了各种优化，如自旋锁、偏向锁和轻量级锁<br>并默认开启偏向锁<br>开启偏向锁：-XX:+UseBiasedLocking -XX:BiasedLockingStartupDelay=0<br>关闭偏向锁：-XX:-UseBiasedLocking</p>
+<p>偏向锁：单线程场景<br>轻量级锁：线程间交替执行场景，本身竞争不是很激烈。</p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/JVM%E5%86%85%E7%BD%AE%E9%94%81%E4%BC%98%E5%8C%96%E5%8D%87%E7%BA%A7%E8%BF%87%E7%A8%8B.png" alt="JVM内置锁优化升级过程"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/%E9%94%81%E4%BC%98%E5%8C%96%E5%8D%87%E7%BA%A7%E8%BF%87%E7%A8%8B.png" alt="锁优化升级过程"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/JVM%E9%94%81%E7%9A%84%E8%86%A8%E8%83%80%E5%8D%87%E7%BA%A7.jpg" alt="JVM锁的膨胀升级"></p>
+<h1 id="Lock"><a href="#Lock" class="headerlink" title="Lock"></a>Lock</h1><p><img src="https://march1995.github.io/uploads/java/concurrent/lock.png" alt="lock"></p>
+<h2 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h2><blockquote>
+<p><a href="https://juejin.cn/post/6844903598984282119" target="_blank" rel="noopener">https://juejin.cn/post/6844903598984282119</a></p>
+</blockquote>
+<h2 id="ReentrantReadWriteLock"><a href="#ReentrantReadWriteLock" class="headerlink" title="ReentrantReadWriteLock"></a>ReentrantReadWriteLock</h2><h1 id="AbstractQueuedSynchronizer"><a href="#AbstractQueuedSynchronizer" class="headerlink" title="AbstractQueuedSynchronizer"></a>AbstractQueuedSynchronizer</h1><p>Java并发编程核心在于java.concurrent.util包<br>而juc当中的大多数同步器实现都是围绕着共同的基础行为，比如等待队列、条件队列、独占获取、共享获取等，而这个行为的抽象就是基于AbstractQueuedSynchronizer简称AQS，<br>AQS定义了一套多线程访问共享资源的同步器框架，是一个依赖状态(state)的同步器。</p>
+<p>AQS具备特性</p>
+<ul>
+<li>阻塞等待队列</li>
+<li>共享/独占</li>
+<li>公平/非公平</li>
+<li>可重入</li>
+<li>允许中断</li>
+</ul>
+<h2 id="并发编程包依赖于AQS的内部实现"><a href="#并发编程包依赖于AQS的内部实现" class="headerlink" title="并发编程包依赖于AQS的内部实现"></a>并发编程包依赖于AQS的内部实现</h2><p>Java.concurrent.util当中同步器的实现如Lock,Latch,Barrier等，都是基于AQS框架实现</p>
+<ul>
+<li>一般通过定义内部类Sync继承AQS</li>
+<li>将同步器所有调用都映射到Sync对应的方法</li>
+</ul>
+<p>AQS框架-管理状态</p>
+<p>AQS内部维护属性volatile int state (32位)</p>
+<ul>
+<li>state表示资源的可用状态</li>
+</ul>
+<p>State三种访问方式</p>
+<ul>
+<li>getState()、setState()、compareAndSetState()</li>
+</ul>
+<p>AQS定义两种资源共享方式</p>
+<ul>
+<li>Exclusive-独占，只有一个线程能执行，如ReentrantLock</li>
+<li>Share-共享，多个线程可以同时执行，如Semaphore/CountDownLatch</li>
+</ul>
+<p>AQS定义两种队列</p>
+<ul>
+<li>同步等待队列</li>
+<li>条件等待队列</li>
+</ul>
+<h2 id="同步队列"><a href="#同步队列" class="headerlink" title="同步队列"></a>同步队列</h2><p>CLH队列是Craig、Landin、Hagersten三人发明的一种基于双向链表数据结构的队列， 是FIFO先入先出线程等待队列，<br>Java中的CLH队列是原CLH队列的一个变种, 线程由原自旋机制改为阻塞机制。</p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/CLH%E9%98%9F%E5%88%97.png" alt="CLH队列"></p>
+<h2 id="条件队列"><a href="#条件队列" class="headerlink" title="条件队列"></a>条件队列</h2><p>Condition是一个多线程间协调通信的工具类，使得某个，或者某些线程一起等待某个条件（Condition）,只有当该条件具备时 ，这些等待线程才会被唤醒，从而重新争夺锁</p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/%E6%9D%A1%E4%BB%B6%E9%98%9F%E5%88%97.png" alt="条件队列"></p>
+<h2 id="公平锁"><a href="#公平锁" class="headerlink" title="公平锁"></a>公平锁</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/%E5%85%AC%E5%B9%B3%E9%94%81.png" alt="公平锁"></p>
+<h2 id="非公平锁"><a href="#非公平锁" class="headerlink" title="非公平锁"></a>非公平锁</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81.png" alt="非公平锁"></p>
+<h2 id="重入锁"><a href="#重入锁" class="headerlink" title="重入锁"></a>重入锁</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/%E9%87%8D%E5%85%A5%E9%94%81.png" alt="重入锁"></p>
+<h2 id="不可重入锁"><a href="#不可重入锁" class="headerlink" title="不可重入锁"></a>不可重入锁</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81.png" alt="不可重入锁"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/06/08/java/coucurrent/1.JMM&volatile/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -423,11 +1298,11 @@
       
         
           
-            <h1 id="现代计算机模型"><a href="#现代计算机模型" class="headerlink" title="现代计算机模型"></a>现代计算机模型</h1><p>冯诺依曼计算机模型<br><img src="/uploads/java/concurrent/%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%A8%A1%E5%9E%8B.png" alt="冯诺依曼计算机模型"></p>
-<p>现代计算机硬件基本结构<br><img src="/uploads/java/concurrent/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.png" alt="现代计算机硬件基本结构"></p>
-<p>CPU内部结构<br><img src="/uploads/java/concurrent/CPU%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="CPU内部结构"></p>
-<p>CPU多核缓存架构<br><img src="/uploads/java/concurrent/CPU%E5%A4%9A%E6%A0%B8%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84.png" alt="CPU多核缓存架构"></p>
-<p>缓存一致性协议(MESI)<br><img src="/uploads/java/concurrent/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE.png" alt="缓存一致性协议"></p>
+            <h1 id="现代计算机模型"><a href="#现代计算机模型" class="headerlink" title="现代计算机模型"></a>现代计算机模型</h1><p>冯诺依曼计算机模型<br><img src="https://march1995.github.io/uploads/java/concurrent/%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%A8%A1%E5%9E%8B.png" alt="冯诺依曼计算机模型"></p>
+<p>现代计算机硬件基本结构<br><img src="https://march1995.github.io/uploads/java/concurrent/%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.png" alt="现代计算机硬件基本结构"></p>
+<p>CPU内部结构<br><img src="https://march1995.github.io/uploads/java/concurrent/CPU%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="CPU内部结构"></p>
+<p>CPU多核缓存架构<br><img src="https://march1995.github.io/uploads/java/concurrent/CPU%E5%A4%9A%E6%A0%B8%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84.png" alt="CPU多核缓存架构"></p>
+<p>缓存一致性协议(MESI)<br><img src="https://march1995.github.io/uploads/java/concurrent/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE.png" alt="缓存一致性协议"></p>
 <h1 id="缓存一致性协议-MESI-数据操作流程"><a href="#缓存一致性协议-MESI-数据操作流程" class="headerlink" title="缓存一致性协议(MESI) 数据操作流程"></a>缓存一致性协议(MESI) 数据操作流程</h1><p>MESI协议是一种广泛使用的缓存一致性协议，它定义了缓存行(Cache Line)的四种状态，并通过这四种状态的转换来维护多核处理器中缓存的一致性。以下是MESI协议的核心内容和数据操作流程：</p>
 <h2 id="MESI四种状态"><a href="#MESI四种状态" class="headerlink" title="MESI四种状态"></a>MESI四种状态</h2><ol>
 <li><p><strong>Modified (已修改)</strong>：</p>
@@ -540,8 +1415,8 @@
 <p>线程分为两类：<br>用户级线程(User-Level Thread)<br>内核线线程(Kernel-Level Thread)</p>
 <p>用户空间划分：<br>内核空间<br>用户空间</p>
 <p><img src="/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E6%B7%B1%E5%85%A5%E8%A7%A3%E8%AF%BB.png" alt="线程深入解读"></p>
-<h2 id="Java线程与内核线程的关系"><a href="#Java线程与内核线程的关系" class="headerlink" title="Java线程与内核线程的关系"></a>Java线程与内核线程的关系</h2><p><img src="/uploads/java/concurrent/Java%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="Java线程与内核线程的关系"></p>
-<h2 id="Java线程生命状态"><a href="#Java线程生命状态" class="headerlink" title="Java线程生命状态"></a>Java线程生命状态</h2><p><img src="/uploads/java/concurrent/Java%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E7%8A%B6%E6%80%81.png" alt="Java线程生命状态"></p>
+<h2 id="Java线程与内核线程的关系"><a href="#Java线程与内核线程的关系" class="headerlink" title="Java线程与内核线程的关系"></a>Java线程与内核线程的关系</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/Java%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="Java线程与内核线程的关系"></p>
+<h2 id="Java线程生命状态"><a href="#Java线程生命状态" class="headerlink" title="Java线程生命状态"></a>Java线程生命状态</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/Java%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E7%8A%B6%E6%80%81.png" alt="Java线程生命状态"></p>
 <h1 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h1><h2 id="为什么用到并发"><a href="#为什么用到并发" class="headerlink" title="为什么用到并发"></a>为什么用到并发</h2><ul>
 <li>充分利用多核CPU的计算能力</li>
 <li>方便业务拆分，提升应用性能</li>
@@ -551,18 +1426,18 @@
 <li>临界区线程安全问题，容易出现死锁的，产生死锁就会造成系统功能不可用</li>
 <li>其它</li>
 </ul>
-<p><img src="/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2%E8%BF%87%E7%A8%8B.png" alt="线程上下文切换过程"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/%E7%BA%BF%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2%E8%BF%87%E7%A8%8B.png" alt="线程上下文切换过程"></p>
 <h1 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h1><p>JMM与JVM内存区域的划分是不同的概念层次，更恰当说JMM描述的是一组规则，通过这组规则控制程序中各个变量在共享数据区域和私有数据区域的访问方式，<br>JMM是围绕原子性，有序性、可见性展开。</p>
 <p>简单来说：JMM是计算机CPU多核缓存架构java实现，是一种规则。</p>
-<p><img src="/uploads/java/concurrent/JMM%E6%A8%A1%E5%9E%8B.png" alt="JMM模型"></p>
-<h2 id="JVM虚拟机规范主内存与工作内存"><a href="#JVM虚拟机规范主内存与工作内存" class="headerlink" title="JVM虚拟机规范主内存与工作内存"></a>JVM虚拟机规范主内存与工作内存</h2><p><img src="/uploads/java/concurrent/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%A7%84%E8%8C%83%E4%B8%BB%E5%86%85%E5%AD%98%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AD%98.png" alt="JVM虚拟机规范主内存与工作内存"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/JMM%E6%A8%A1%E5%9E%8B.png" alt="JMM模型"></p>
+<h2 id="JVM虚拟机规范主内存与工作内存"><a href="#JVM虚拟机规范主内存与工作内存" class="headerlink" title="JVM虚拟机规范主内存与工作内存"></a>JVM虚拟机规范主内存与工作内存</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%A7%84%E8%8C%83%E4%B8%BB%E5%86%85%E5%AD%98%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AD%98.png" alt="JVM虚拟机规范主内存与工作内存"></p>
 <h2 id="Java内存模型与硬件内存架构的关系"><a href="#Java内存模型与硬件内存架构的关系" class="headerlink" title="Java内存模型与硬件内存架构的关系"></a>Java内存模型与硬件内存架构的关系</h2><p>JMM模型跟CPU缓存模型结构类似，是基于CPU缓存模型建立起来的，JMM模型是标准化的，<br>屏蔽掉了底层不同计算机的区别。对于硬件内存来说只有寄存器、缓存内存、主内存的概念，并没有工作内存(线程私有数据区域)和主内存(堆内存)之分，<br>也就是说Java内存模型对内存的划分对硬件内存并没有任何影响</p>
-<p><img src="/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%A1%AC%E4%BB%B6%E5%86%85%E5%AD%98%E6%9E%B6%E6%9E%84%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="Java内存模型与硬件内存架构的关系"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%A1%AC%E4%BB%B6%E5%86%85%E5%AD%98%E6%9E%B6%E6%9E%84%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="Java内存模型与硬件内存架构的关系"></p>
 <h2 id="Java内存模型内存交互操作"><a href="#Java内存模型内存交互操作" class="headerlink" title="Java内存模型内存交互操作"></a>Java内存模型内存交互操作</h2><p>1.lock(锁定)：作用于主内存的变量，把一个变量标记为一条线程独占状态<br>2.unlock(解锁)：作用于主内存的变量，把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定<br>3.read(读取)：作用于主内存的变量，把一个变量值从主内存传输到线程的工作内存中，以便随后的load动作使用<br>4.load(载入)：作用于工作内存的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中<br>5.use(使用)：作用于工作内存的变量，把工作内存中的一个变量值传递给执行引擎<br>6.assign(赋值)：作用于工作内存的变量，它把一个从执行引擎接收到的值赋给工作内存的变量<br>7.store(存储)：作用于工作内存的变量，把工作内存中的一个变量的值传送到主内存中，以便随后的write的操作<br>8.write(写入)：作用于工作内存的变量，它把store操作从工作内存中的一个变量的值传送到主内存的变量中</p>
 <p>把一个变量从主内存中复制到工作内存中，就需要按顺序地执行read和load操作，如果把变量从工作内存中同步到主内存中，<br>就需要按顺序地执行store和write操作。但Java内存模型只要求上述8大操作(原子操作)必须按顺序执行，而没有保证必须是连续执行。</p>
 <p><strong>read和load同时出现，store和write同时出现</strong></p>
-<p><img src="/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E4%BA%A4%E4%BA%92%E6%93%8D%E4%BD%9C.png" alt="Java内存模型内存交互操作"></p>
-<h2 id="Java内存模型内存同步规则"><a href="#Java内存模型内存同步规则" class="headerlink" title="Java内存模型内存同步规则"></a>Java内存模型内存同步规则</h2><p><img src="/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E5%90%8C%E6%AD%A5%E8%A7%84%E5%88%99.png" alt="Java内存模型内存同步规则"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E4%BA%A4%E4%BA%92%E6%93%8D%E4%BD%9C.png" alt="Java内存模型内存交互操作"></p>
+<h2 id="Java内存模型内存同步规则"><a href="#Java内存模型内存同步规则" class="headerlink" title="Java内存模型内存同步规则"></a>Java内存模型内存同步规则</h2><p><img src="https://march1995.github.io/uploads/java/concurrent/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%86%85%E5%AD%98%E5%90%8C%E6%AD%A5%E8%A7%84%E5%88%99.png" alt="Java内存模型内存同步规则"></p>
 <h1 id="volatile原理与内存语义"><a href="#volatile原理与内存语义" class="headerlink" title="volatile原理与内存语义"></a>volatile原理与内存语义</h1><p>volatile是Java虚拟机提供的轻量级的同步机制</p>
 <p>volatile语义有如下两个作用</p>
 <ul>
@@ -691,7 +1566,7 @@
 <h1 id="有序性-amp-指令重排"><a href="#有序性-amp-指令重排" class="headerlink" title="有序性&amp;指令重排"></a>有序性&amp;指令重排</h1><p>java语言规范规定JVM线程内部维持顺序化语义。即只要程序的最终结果与它顺序化情况的结果相等，那么指令的执行顺序可以与代码顺序不一致，此过程叫指令的重排序。</p>
 <p>指令重排序的意义：JVM能根据处理器特性（CPU多级缓存系统、多核处理器等）适当的对机器指令进行重排序，使机器指令能更符合CPU的执行特性，最大限度的发挥机器性能。</p>
 <p>在编译器与CPU处理器中都能执行指令重排优化操作</p>
-<p><img src="/uploads/java/concurrent/%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92.png" alt="指令重排"></p>
+<p><img src="https://march1995.github.io/uploads/java/concurrent/%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92.png" alt="指令重排"></p>
 <h1 id="总线风暴–过度使用volatile可能产生的问题"><a href="#总线风暴–过度使用volatile可能产生的问题" class="headerlink" title="总线风暴–过度使用volatile可能产生的问题"></a>总线风暴–过度使用volatile可能产生的问题</h1>
           
         
@@ -1598,15 +2473,15 @@
         
           
             <h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p><img src="/uploads/spring/springBeanLifeCycle.png" alt="生命周期"></p>
-<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p><img src="/uploads/spring/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="单例模式生命周期"></p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p><img src="https://march1995.github.io/uploads/spring/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="单例模式生命周期"></p>
 <h1 id="多例模式"><a href="#多例模式" class="headerlink" title="多例模式"></a>多例模式</h1><p>需求主动调用才会创建对象，原因见下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LifeCycle lifeCycle &#x3D; (LifeCycle) applicationContext.getBean(&quot;lifeCycle&quot;);</span><br></pre></td></tr></table></figure>
 
 
-<p><img src="/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
+<p><img src="https://march1995.github.io/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
 <h1 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h1><h2 id="单例模式-1"><a href="#单例模式-1" class="headerlink" title="单例模式"></a>单例模式</h2><p>bean在单例模式下，spring容器启动时解析xml文件发现该bean标签后，直接创建该bean对象存入内部map中保存，<br>此后无论调用多少次getBean()获取该bean都是从map中获取该对象返回，一直是一个对象。<br>此对象一直被spring容器持有，直到容器推出时，随着容器的退出对象被销毁。</p>
 <h2 id="多例模式-1"><a href="#多例模式-1" class="headerlink" title="多例模式"></a>多例模式</h2><p>bean在多例模式下，spring容器启动时解析xml发下该bean标签后，只是将该bean进行管理，并不会创建对象，<br>此后每层使用getBean()获取该bean时，spring都会重新创建该对象返回，每层都是一个新的对象。<br>这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。</p>
-<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/spring/bean/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>
+<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/March1995/spring-example/blob/main/spring-example-test/src/main/java/com/wyb/test/spring/beanLifeCycle/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>
           
         
       
@@ -2042,785 +2917,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/10/25/cache/redis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/25/cache/redis/" itemprop="url">redis</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-25T00:00:00+00:00">
-                2019-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cache/" itemprop="url" rel="index">
-                    <span itemprop="name">cache</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2.2k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  7 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="一、概述（什么是redis）"><a href="#一、概述（什么是redis）" class="headerlink" title="一、概述（什么是redis）"></a>一、概述（什么是redis）</h1><p>redis是开源免费的key-value内存数据库。</p>
-<p>redis可以存储5种数据类型。键只支持string，值支持string，list，map，set，zset五种。</p>
-<p>redis支持数据持久化，使用复制来扩展读性能，使用分片来扩展写性能。</p>
-<h1 id="二、数据类型"><a href="#二、数据类型" class="headerlink" title="二、数据类型"></a>二、数据类型</h1><table>
-<thead>
-<tr>
-<th align="center">数据类型</th>
-<th align="center">可以存储的值</th>
-<th align="center">操作</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">STRING</td>
-<td align="center">字符串、整数或者浮点数</td>
-<td align="center">对整个字符串或者字符串的其中一部分执行操作<br> 对整数和浮点数执行自增或者自减操作</td>
-</tr>
-<tr>
-<td align="center">LIST</td>
-<td align="center">列表</td>
-<td align="center">从两端压入或者弹出元素 <br> 对单个或者多个元素进行修剪，<br> 只保留一个范围内的元素</td>
-</tr>
-<tr>
-<td align="center">SET</td>
-<td align="center">无序集合</td>
-<td align="center">添加、获取、移除单个元素<br> 检查一个元素是否存在于集合中<br> 计算交集、并集、差集<br> 从集合里面随机获取元素</td>
-</tr>
-<tr>
-<td align="center">HASH</td>
-<td align="center">包含键值对的无序散列表</td>
-<td align="center">添加、获取、移除单个键值对<br> 获取所有键值对<br> 检查某个键是否存在</td>
-</tr>
-<tr>
-<td align="center">ZSET</td>
-<td align="center">有序集合</td>
-<td align="center">添加、获取、删除元素<br> 根据分值范围或者成员来获取元素<br> 计算一个键的排名</td>
-</tr>
-</tbody></table>
-<h1 id="三、数据结构"><a href="#三、数据结构" class="headerlink" title="三、数据结构"></a>三、数据结构</h1><h1 id="四、redis应用场景"><a href="#四、redis应用场景" class="headerlink" title="四、redis应用场景"></a>四、redis应用场景</h1><h2 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h2><p>利用string类型可以存储整数和浮点数，进行自增自减操作。</p>
-<h2 id="缓存（用的最多的场景）"><a href="#缓存（用的最多的场景）" class="headerlink" title="缓存（用的最多的场景）"></a>缓存（用的最多的场景）</h2><p>将热点数据放到内存中，设置内存的最大使用量以及淘汰策略来保证缓存的命中率。</p>
-<p>将不经常改变的数据存入缓存，访问频繁访问数据库。</p>
-<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>List 是一个双向链表，可以通过 lpush 和 rpop 写入和读取消息</p>
-<p>不过最好使用 Kafka、RabbitMQ 等消息中间件。</p>
-<p><a href="https://github.com/march1995/spring-example/blob/master/spring-example-cache/src/test/java/com/wyb/cache/RedisMqTests.java" target="_blank" rel="noopener">redis 实现 点对点  发布/订阅 消息队列 </a></p>
-<h2 id="会话缓存"><a href="#会话缓存" class="headerlink" title="会话缓存"></a>会话缓存</h2><p>可以使用 Redis 来统一存储多台应用服务器的会话信息。</p>
-<p>当应用服务器不再存储用户的会话信息，也就不再具有状态，一个用户可以请求任意一个应用服务器，从而更容易实现高可用性以及可伸缩性。</p>
-<h2 id="分布式锁实现"><a href="#分布式锁实现" class="headerlink" title="分布式锁实现"></a>分布式锁实现</h2><p>在分布式场景下，无法使用单机环境下的锁来对多个节点上的进程进行同步。</p>
-<p>可以使用 Redis 自带的 SETNX 命令实现分布式锁，除此之外，还可以使用官方提供的 RedLock 分布式锁实现。</p>
-<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p>Set 可以实现交集、并集等操作，从而实现共同好友等功能。</p>
-<p>ZSet 可以实现有序性操作，从而实现排行榜等功能。</p>
-<h1 id="五、数据淘汰策略"><a href="#五、数据淘汰策略" class="headerlink" title="五、数据淘汰策略"></a>五、数据淘汰策略</h1><p>可以设置内存最大使用量，当内存使用量超出时，会施行数据淘汰策略。</p>
-<p>Redis 具体有 6 种淘汰策略：</p>
-<table>
-<thead>
-<tr>
-<th align="center">策略</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">volatile-lru</td>
-<td align="center">从已设置过期时间的数据集中挑选最近最少使用的数据淘汰</td>
-</tr>
-<tr>
-<td align="center">volatile-ttl</td>
-<td align="center">从已设置过期时间的数据集中挑选将要过期的数据淘汰</td>
-</tr>
-<tr>
-<td align="center">volatile-random</td>
-<td align="center">从已设置过期时间的数据集中任意选择数据淘汰</td>
-</tr>
-<tr>
-<td align="center">allkeys-lru</td>
-<td align="center">从所有数据集中挑选最近最少使用的数据淘汰</td>
-</tr>
-<tr>
-<td align="center">allkeys-random</td>
-<td align="center">从所有数据集中任意选择数据进行淘汰</td>
-</tr>
-<tr>
-<td align="center">noeviction</td>
-<td align="center">禁止驱逐数据</td>
-</tr>
-</tbody></table>
-<p>作为内存数据库，出于对性能和内存消耗的考虑，Redis 的淘汰算法实际实现上并非针对所有 key，而是抽样一小部分并且从中选出被淘汰的 key。</p>
-<p>使用 Redis 缓存数据时，为了提高缓存命中率，需要保证缓存数据都是热点数据。可以将内存最大使用量设置为热点数据占用的内存量，然后启用 allkeys-lru 淘汰策略，将最近最少使用的数据淘汰。</p>
-<p>Redis 4.0 引入了 volatile-lfu 和 allkeys-lfu 淘汰策略，LFU 策略通过统计访问频率，将访问频率最少的键值对淘汰。</p>
-<h1 id="六、持久化"><a href="#六、持久化" class="headerlink" title="六、持久化"></a>六、持久化</h1><h2 id="RDB-持久化"><a href="#RDB-持久化" class="headerlink" title="RDB 持久化"></a>RDB 持久化</h2><p>将某个时间点的所有数据都存放到硬盘上。</p>
-<p>可以将快照复制到其它服务器从而创建具有相同数据的服务器副本。</p>
-<p>如果系统发生故障，将会丢失最后一次创建快照之后的数据。</p>
-<p>如果数据量很大，保存快照的时间会很长。</p>
-<h2 id="AOF-持久化"><a href="#AOF-持久化" class="headerlink" title="AOF 持久化"></a>AOF 持久化</h2><p>将写命令添加到 AOF 文件（Append Only File）的末尾。</p>
-<p>使用 AOF 持久化需要设置同步选项，从而确保写命令同步到磁盘文件上的时机。这是因为对文件进行写入并不会马上将内容同步到磁盘上，而是先存储到缓冲区，然后由操作系统决定什么时候同步到磁盘。有以下同步选项：</p>
-<table>
-<thead>
-<tr>
-<th align="center">选项</th>
-<th align="center">同步频率</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">always</td>
-<td align="center">每个写命令都同步</td>
-</tr>
-<tr>
-<td align="center">everysec</td>
-<td align="center">每秒同步一次</td>
-</tr>
-<tr>
-<td align="center">no</td>
-<td align="center">让操作系统来决定何时同步</td>
-</tr>
-</tbody></table>
-<ul>
-<li>always 选项会严重减低服务器的性能；</li>
-<li>everysec 选项比较合适，可以保证系统崩溃时只会丢失一秒左右的数据，并且 Redis 每秒执行一次同步对服务器性能几乎没有任何影响；</li>
-<li>no 选项并不能给服务器性能带来多大的提升，而且也会增加系统崩溃时数据丢失的数量。</li>
-</ul>
-<p>随着服务器写请求的增多，AOF 文件会越来越大。Redis 提供了一种将 AOF 重写的特性，能够去除 AOF 文件中的冗余写命令。</p>
-<h1 id="七、事务"><a href="#七、事务" class="headerlink" title="七、事务"></a>七、事务</h1><p>一个事务包含了多个命令，服务器在执行事务期间，不会改去执行其它客户端的命令请求。</p>
-<p>事务中的多个命令被一次性发送给服务器，而不是一条一条发送，这种方式被称为流水线，它可以减少客户端与服务器之间的网络通信次数从而提升性能。</p>
-<p>Redis 最简单的事务实现方式是使用 MULTI 和 EXEC 命令将事务操作包围起来。</p>
-<p>通过使用 slaveof host port 命令来让一个服务器成为另一个服务器的从服务器。</p>
-<p>一个从服务器只能有一个主服务器，并且不支持主主复制。</p>
-<h1 id="八、复制"><a href="#八、复制" class="headerlink" title="八、复制"></a>八、复制</h1><h2 id="连接过程"><a href="#连接过程" class="headerlink" title="连接过程"></a>连接过程</h2><ol>
-<li><p>主服务器创建快照文件，发送给从服务器，并在发送期间使用缓冲区记录执行的写命令。快照文件发送完毕之后，开始向从服务器发送存储在缓冲区中的写命令；</p>
-</li>
-<li><p>从服务器丢弃所有旧数据，载入主服务器发来的快照文件，之后从服务器开始接受主服务器发来的写命令；</p>
-</li>
-<li><p>主服务器每执行一次写命令，就向从服务器发送相同的写命令。</p>
-</li>
-</ol>
-<h2 id="主从链"><a href="#主从链" class="headerlink" title="主从链"></a>主从链</h2><p>随着负载不断上升，主服务器可能无法很快地更新所有从服务器，或者重新连接和重新同步从服务器将导致系统超载。为了解决这个问题，可以创建一个中间层来分担主服务器的复制工作。中间层的服务器是最上层服务器的从服务器，又是最下层服务器的主服务器。</p>
-<h1 id="九、Sentinel"><a href="#九、Sentinel" class="headerlink" title="九、Sentinel"></a>九、Sentinel</h1><p>Sentinel（哨兵）可以监听集群中的服务器，并在主服务器进入下线状态时，自动从从服务器中选举出新的主服务器。</p>
-<h1 id="十、分片"><a href="#十、分片" class="headerlink" title="十、分片"></a>十、分片</h1><p>分片是将数据划分为多个部分的方法，可以将数据存储到多台机器里面，这种方法在解决某些问题时可以获得线性级别的性能提升。</p>
-<p>假设有 4 个 Redis 实例 R0，R1，R2，R3，还有很多表示用户的键 user:1，user:2，… ，有不同的方式来选择一个指定的键存储在哪个实例中。</p>
-<ul>
-<li>最简单的方式是范围分片，例如用户 id 从 0~1000 的存储到实例 R0 中，用户 id 从 1001~2000 的存储到实例 R1 中，等等。但是这样需要维护一张映射范围表，维护操作代价很高。</li>
-<li>还有一种方式是哈希分片，使用 CRC32 哈希函数将键转换为一个数字，再对实例数量求模就能知道应该存储的实例。</li>
-</ul>
-<p>根据执行分片的位置，可以分为三种分片方式：</p>
-<ul>
-<li>客户端分片：客户端使用一致性哈希等算法决定键应当分布到哪个节点。</li>
-<li>代理分片：将客户端请求发送到代理上，由代理转发请求到正确的节点上。</li>
-<li>服务器分片：Redis Cluster。</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/10/25/cache/index/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/25/cache/index/" itemprop="url">缓存概要</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-25T00:00:00+00:00">
-                2019-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cache/" itemprop="url" rel="index">
-                    <span itemprop="name">cache</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.9k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="一、缓存特征"><a href="#一、缓存特征" class="headerlink" title="一、缓存特征"></a>一、缓存特征</h1><h2 id="命中率"><a href="#命中率" class="headerlink" title="命中率"></a>命中率</h2><p>当某个请求能够通过访问缓存而得到响应时，称为缓存命中。</p>
-<p>缓存命中率越高，缓存的利用率也就越高。</p>
-<h2 id="最大空间"><a href="#最大空间" class="headerlink" title="最大空间"></a>最大空间</h2><p>缓存通常位于内存中，内存的空间通常比磁盘空间小的多，因此缓存的最大空间不可能非常大。</p>
-<p>当缓存存放的数据量超过最大空间时，就需要淘汰部分数据来存放新到达的数据。</p>
-<h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><ul>
-<li><p>FIFO（First In First Out）：先进先出策略，在实时性的场景下，需要经常访问最新的数据，那么就可以使用 FIFO，使得最先进入的数据（最晚的数据）被淘汰。</p>
-</li>
-<li><p>LRU（Least Recently Used）：最近最久未使用策略，优先淘汰最久未使用的数据，也就是上次被访问时间距离现在最久的数据。该策略可以保证内存中的数据都是热点数据，也就是经常被访问的数据，从而保证缓存命中率。</p>
-</li>
-<li><p>LFU（Least Frequently Used）：最不经常使用策略，优先淘汰一段时间内使用次数最少的数据。</p>
-</li>
-</ul>
-<h1 id="二、LRU"><a href="#二、LRU" class="headerlink" title="二、LRU"></a>二、LRU</h1><p>以下是基于 双向链表 + HashMap 的 LRU 算法实现，对算法的解释如下：</p>
-<p>访问某个节点时，将其从原来的位置删除，并重新插入到链表头部。这样就能保证链表尾部存储的就是最近最久未使用的节点，当节点数量大于缓存最大空间时就淘汰链表尾部的节点。<br>为了使删除操作时间复杂度为 O(1)，就不能采用遍历的方式找到某个节点。HashMap 存储着 Key 到节点的映射，通过 Key 就能以 O(1) 的时间得到节点，然后再以 O(1) 的时间将其从双向队列中删除。</p>
-<p><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/algorithms/cache/LRU.java" target="_blank" rel="noopener">LRU实现</a></p>
-<h1 id="三、CDN"><a href="#三、CDN" class="headerlink" title="三、CDN"></a>三、CDN</h1><p>内容分发网络（Content distribution network，CDN）是一种互连的网络系统，它利用更靠近用户的服务器从而更快更可靠地将 HTML、CSS、JavaScript、音乐、图片、视频等静态资源分发给用户。</p>
-<p>CDN 主要有以下优点：</p>
-<ul>
-<li>更快地将数据分发给用户；</li>
-<li>通过部署多台服务器，从而提高系统整体的带宽性能；</li>
-<li>多台服务器可以看成是一种冗余机制，从而具有高可用性。</li>
-</ul>
-<h1 id="四、缓存问题"><a href="#四、缓存问题" class="headerlink" title="四、缓存问题"></a>四、缓存问题</h1><h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>指对某一个一定不存在的数据进行请求，该请求会将穿透缓存到达数据库。</p>
-<p>解决方案：</p>
-<ul>
-<li>对这些不存在的数据缓存一个空数据</li>
-<li>对这类请求进行过滤</li>
-</ul>
-<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>指的是由于数据没有被加载到缓存中，或者缓存数据在同一时间大面积失效（过期），又或者缓存服务器宕机，导致大量的请求都到达数据库。</p>
-<p>在有缓存的系统中，系统非常依赖于缓存，缓存分担了很大一部分的数据请求。当发生缓存雪崩时，数据库无法处理这么大的请求，导致数据库崩溃。</p>
-<p>解决方案：</p>
-<ul>
-<li>为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；</li>
-<li>为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存，分布式缓存中每一个节点只缓存部分的数据，当某个节点宕机时可以保证其它节点的缓存仍然可用。</li>
-<li>也可以进行缓存预热，避免在系统刚启动不久由于还未将大量数据进行缓存而导致缓存雪崩。</li>
-</ul>
-<h2 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h2><p>缓存一致性要求数据更新的同时缓存数据也能够实时更新。</p>
-<p>解决方案：</p>
-<ul>
-<li>在数据更新的同时立即去更新缓存；</li>
-<li>在读缓存之前先判断缓存是否是最新的，如果不是最新的先进行更新。</li>
-</ul>
-<h2 id="缓存-“无底洞”-现象"><a href="#缓存-“无底洞”-现象" class="headerlink" title="缓存 “无底洞” 现象"></a>缓存 “无底洞” 现象</h2><p>指的是为了满足业务要求添加了大量缓存节点，但是性能不但没有好转反而下降了的现象。</p>
-<p>产生原因：缓存系统通常采用 hash 函数将 key 映射到对应的缓存节点，随着缓存节点数目的增加，键值分布到更多的节点上，导致客户端一次批量操作会涉及多次网络操作，这意味着批量操作的耗时会随着节点数目的增加而不断增大。此外，网络连接数变多，对节点的性能也有一定影响。</p>
-<p>解决方案：</p>
-<ul>
-<li>优化批量数据操作命令；</li>
-<li>减少网络通信次数；</li>
-<li>降低接入成本，使用长连接 / 连接池，NIO 等。</li>
-</ul>
-<h1 id="五、数据分布"><a href="#五、数据分布" class="headerlink" title="五、数据分布"></a>五、数据分布</h1><h2 id="哈希分布"><a href="#哈希分布" class="headerlink" title="哈希分布"></a>哈希分布</h2><p>哈希分布就是将数据计算哈希值之后，按照哈希值分配到不同的节点上。例如有 N 个节点，数据的主键为 key，则将该数据分配的节点序号为：hash(key)%N。</p>
-<p>传统的哈希分布算法存在一个问题：当节点数量变化时，也就是 N 值变化，那么几乎所有的数据都需要重新分布，将导致大量的数据迁移。</p>
-<h2 id="顺序分布"><a href="#顺序分布" class="headerlink" title="顺序分布"></a>顺序分布</h2><p>将数据划分为多个连续的部分，按数据的 ID 或者时间分布到不同节点上。例如 User 表的 ID 范围为 1 ~ 7000，使用顺序分布可以将其划分成多个子表，对应的主键范围为 1 ~ 1000，1001 ~ 2000，…，6001 ~ 7000。</p>
-<p>顺序分布相比于哈希分布的主要优点如下：</p>
-<ul>
-<li>能保持数据原有的顺序；</li>
-<li>并且能够准确控制每台服务器存储的数据量，从而使得存储空间的利用率最大。</li>
-</ul>
-<h1 id="六、一致性哈希"><a href="#六、一致性哈希" class="headerlink" title="六、一致性哈希"></a>六、一致性哈希</h1><p>Distributed Hash Table（DHT） 是一种哈希分布方式，其目的是为了克服传统哈希分布在服务器节点数量变化时大量数据迁移的问题。</p>
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>将哈希空间 [0, 2n-1] 看成一个哈希环，每个服务器节点都配置到哈希环上。每个数据对象通过哈希取模得到哈希值之后，存放到哈希环中顺时针方向第一个大于等于该哈希值的节点上。</p>
-<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="一致性hash原理图"></p>
-<p>一致性哈希在增加或者删除节点时只会影响到哈希环中相邻的节点，例如下图中新增节点 X，只需要将它前一个节点 C 上的数据重新进行分布即可，对于节点 A、B、D 都没有影响。</p>
-<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="一致性hash增加节点示意图"></p>
-<h2 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h2><p>上面描述的一致性哈希存在数据分布不均匀的问题，节点存储的数据量有可能会存在很大的不同。</p>
-<p>数据不均匀主要是因为节点在哈希环上分布的不均匀，这种情况在节点数量很少的情况下尤其明显。</p>
-<p>解决方式是通过增加虚拟节点，然后将虚拟节点映射到真实节点上。虚拟节点的数量比真实节点来得多，那么虚拟节点在哈希环上分布的均匀性就会比原来的真实节点好，从而使得数据分布也更加均匀。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/10/17/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/webXml%E5%92%8Cspring%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/17/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/webXml%E5%92%8Cspring%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98/" itemprop="url">webXml和spring初始化顺序问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-17T00:00:00+00:00">
-                2019-10-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index">
-                    <span itemprop="name">日常问题记录</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.2k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  5 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="问题产生"><a href="#问题产生" class="headerlink" title="问题产生"></a>问题产生</h1><p>同事想要在项目初始化完成后，开启线程池执行业务逻辑的代码，其中需要注入spring的bean，他想到使用servlet的listener，但是无法在listener中无法直接通过@Resource注解获取实例。</p>
-<h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><p>在tomcat容器中，listener，filter，servlet等都不是交给spring容器管理，两者环境不一致当然就获取不到了。</p>
-<h1 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h1><p>如果需要在tomcat等web容器环境中获取spring实例需要获取ServletContext，通过webContext去获取springIOC容器从而获取spring实例。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;ServletContext,是一个全局的储存信息的空间，服务器开始，其就存在，服务器关闭，其才释放。request，一个用户可有多个；session，一个用户一个；而servletContext，所有用户共用一个。</span><br><span class="line">&#x2F;&#x2F;所以，为了节省空间，提高效率，ServletContext中，要放必须的、重要的、所有用户需要共享的线程又是安全的一些信息。</span><br><span class="line">    @Override</span><br><span class="line">    public void contextInitialized(ServletContextEvent servletContextEvent) &#123;</span><br><span class="line">        WebApplicationContext springContext &#x3D; WebApplicationContextUtils.getWebApplicationContext(servletContextEvent.getServletContext());</span><br><span class="line">        Init init &#x3D; (Init) springContext.getBean(&quot;Init&quot;);</span><br><span class="line"></span><br><span class="line">        System.out.println(init);</span><br><span class="line">        System.out.println(&quot;listener init&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="问题延伸"><a href="#问题延伸" class="headerlink" title="问题延伸"></a>问题延伸</h1><h2 id="web-xml文件中各个节点参数的启动顺序"><a href="#web-xml文件中各个节点参数的启动顺序" class="headerlink" title="web.xml文件中各个节点参数的启动顺序"></a>web.xml文件中各个节点参数的启动顺序</h2><p>可以明确的是初始化顺序context-param -&gt; listener-&gt; filter -&gt; servlet。</p>
-<p>在代码中分别自定义listener，filter，spring bean（Init）。启动项目可以看出先打印 listener init,再打印filter init。</p>
-<p>那么spring容器的bean呢，在什么时候会进行初始化。新建Init类实现InitializingBean，然后在xml中配置该bean，这样spring容器初始化是会去执行afterPropertiesSet方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">    public void afterPropertiesSet() throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;InitializingBean&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>创建完java文件后，咱们先来看看 web.xml。</p>
-<p>一般springIOC容器在context-param进行初始化，<strong>此时spring就已经在初始化xml文件中的实例了</strong>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--在web.xml中通过contextConfigLocation配置spring，contextConfigLocation--&gt;</span><br><span class="line">    &lt;context-param&gt;</span><br><span class="line">        &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">        &lt;param-value&gt;</span><br><span class="line">            classpath:spring-context.xml</span><br><span class="line">        &lt;&#x2F;param-value&gt;</span><br><span class="line">    &lt;&#x2F;context-param&gt;</span><br></pre></td></tr></table></figure>
-
-<p>spring的xml其实也可以放在其它地方进行加载，比如说listener，servlet中，例如springMVC的xml文件，会配置在servlet中，进行路由转发。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 请求转发器 --&gt;</span><br><span class="line">  &lt;servlet&gt;</span><br><span class="line">    &lt;servlet-name&gt;dispatcher&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;&#x2F;servlet-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">      &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">      &lt;param-value&gt;classpath:spring-mvc.xml&lt;&#x2F;param-value&gt;</span><br><span class="line">    &lt;&#x2F;init-param&gt;</span><br><span class="line">    &lt;load-on-startup&gt;1&lt;&#x2F;load-on-startup&gt;</span><br><span class="line">  &lt;&#x2F;servlet&gt;</span><br><span class="line">  &lt;servlet-mapping&gt;</span><br><span class="line">  &lt;servlet-name&gt;dispatcher&lt;&#x2F;servlet-name&gt;</span><br><span class="line">  &lt;url-pattern&gt;&#x2F;&lt;&#x2F;url-pattern&gt;</span><br><span class="line">  &lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
-
-<p>如若此时在contextConfigLocation下增加classpath:spring-context.xml，spring同样也会去初始化配置文件。所以可以得出结论，springIOC环境的<br>初始化与web context的初始化顺序无直接关联。</p>
-<p>那么问题来了，在listener，filter中获取WebApplicationContext可以获得spring bean吗？</p>
-<p>我们先把spring-context.xml放在context-param中，让它在lister之前进行spring初始化，看看效果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">   修改xml文件</span><br><span class="line">   &lt;context-param&gt;</span><br><span class="line">       &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">       &lt;param-value&gt;</span><br><span class="line">           classpath:spring-context.xml</span><br><span class="line">       &lt;&#x2F;param-value&gt;</span><br><span class="line">   &lt;&#x2F;context-param&gt;</span><br><span class="line">   </span><br><span class="line">修改自定义CustomListener   </span><br><span class="line">@Override</span><br><span class="line">   public void contextInitialized(ServletContextEvent servletContextEvent) &#123;</span><br><span class="line">       WebApplicationContext springContext &#x3D; WebApplicationContextUtils.getWebApplicationContext(servletContextEvent.getServletContext());</span><br><span class="line">       Init init &#x3D; (Init) springContext.getBean(&quot;init&quot;);</span><br><span class="line"></span><br><span class="line">       System.out.println(init);</span><br><span class="line">       System.out.println(&quot;listener init&quot;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<p>此时InitializingBean最先打印出来，说明其在listener，filter之前执行了。<br>控制台输出 com.wyb.web.config.Init@e082c17，说明在listen之前，spring的Context已经初始化，可以获取到bean，那么我们把spring-context.xml<br>放在servlet中去初始化，即在listener之后初始化会怎么样呢？</p>
-<p>修改web.xml代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet&gt;</span><br><span class="line">    &lt;servlet-name&gt;dispatcher&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;&#x2F;servlet-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">      &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">      &lt;param-value&gt;classpath:spring-mvc.xml,classpath:spring-context.xml&lt;&#x2F;param-value&gt;</span><br><span class="line">    &lt;&#x2F;init-param&gt;</span><br><span class="line">    &lt;load-on-startup&gt;1&lt;&#x2F;load-on-startup&gt;</span><br><span class="line">  &lt;&#x2F;servlet&gt;</span><br><span class="line">  &lt;servlet-mapping&gt;</span><br><span class="line">  &lt;servlet-name&gt;dispatcher&lt;&#x2F;servlet-name&gt;</span><br><span class="line">  &lt;url-pattern&gt;&#x2F;&lt;&#x2F;url-pattern&gt;</span><br><span class="line">  &lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
-
-<p>此时InitializingBean最后打印，说明其在listener，filter之后执行了。<br>CustomListener抛出NoSuchBeanDefinitionException异常，即无法获得该实例，由此得出结论，spring bean的初始化顺序由配置文件在web.xml中什么时候加载有关，与listener，filter无直接关系。<br><strong>若listener想获得spring bean，该bean需要在listener之前<br>进行初始化</strong>。</p>
-<p>两个spring bean之间进行相互注入依赖，则要看xml文件在web.xml进行加载的顺序。绝对了spring bean初始化的顺序。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2875,7 +2971,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">68</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2982,7 +3078,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -2996,7 +3092,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">78.4k</span>
+    <span title="Site words total count">81.1k</span>
   
 </div>
 
@@ -3023,7 +3119,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共78.4k字</span>
+  <span class="post-count">博客全站共81.1k字</span>
 </div>
 
         
