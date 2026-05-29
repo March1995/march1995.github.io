@@ -1,9 +1,10 @@
 ---
-title: jvm基础学习
-date: 2018-10-31 
+title: JVM基础
+date: 2018-10-31
 desc: jvm知识要点,jvm学习笔记
 keywords: jvm
-categories: [JVM]
+categories:
+  - JVM
 ---
 
 # 一：内存区域

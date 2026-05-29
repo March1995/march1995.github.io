@@ -9,7 +9,7 @@ categories: [ JVM ]
 # 📘 JVM 启动参数前缀详解（-D / -X / -XX）
 
 > **适用版本**：OpenJDK / Oracle JDK（HotSpot JVM）  
-> **最后更新时间**：2026年1月  
+> **最后更新时间**：2026年1月 
 > **目标读者**：Java 开发者、SRE、性能工程师
 
 ---

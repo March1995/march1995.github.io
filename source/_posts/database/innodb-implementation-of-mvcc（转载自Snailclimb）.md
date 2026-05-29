@@ -1,6 +1,7 @@
 ---
 title: InnoDB存储引擎对MVCC的实现
-category: 数据库
+date: 2025-08-14 
+category: database
 tags:
   - database
 ---
