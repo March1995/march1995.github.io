@@ -299,452 +299,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/06/06/spring/Scheduler/Spring%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2025/06/06/spring/Scheduler/Spring%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%8E%9F%E7%90%86/" itemprop="url">Spring AOP模块</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-06-06T00:00:00+00:00">
-                2025-06-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.2k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><h1 id="一：初始化自动配置-TaskSchedulingAutoConfiguration"><a href="#一：初始化自动配置-TaskSchedulingAutoConfiguration" class="headerlink" title="一：初始化自动配置(TaskSchedulingAutoConfiguration)"></a>一：初始化自动配置(TaskSchedulingAutoConfiguration)</h1><p><img src="/.io//img.png" alt="img.png"></p>
-<h2 id="若没有自定义配置，则初始化ThreadPoolTaskScheduler-initializeExecutor默认线程池"><a href="#若没有自定义配置，则初始化ThreadPoolTaskScheduler-initializeExecutor默认线程池" class="headerlink" title="若没有自定义配置，则初始化ThreadPoolTaskScheduler.initializeExecutor默认线程池"></a>若没有自定义配置，则初始化ThreadPoolTaskScheduler.initializeExecutor默认线程池</h2><h1 id="二：初始化流程"><a href="#二：初始化流程" class="headerlink" title="二：初始化流程"></a>二：初始化流程</h1><h2 id="2-1-EnableScheduling"><a href="#2-1-EnableScheduling" class="headerlink" title="2.1 @EnableScheduling"></a>2.1 @EnableScheduling</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="comment">// 导入配置类</span></span><br><span class="line"><span class="meta">@Import</span>(&#123;SchedulingConfiguration<span class="class">.<span class="keyword">class</span>&#125;)</span></span><br><span class="line"><span class="class">@<span class="title">Documented</span></span></span><br><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">EnableScheduling</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-2-注册核心处理器-ScheduledAnnotationBeanPostProcessor"><a href="#2-2-注册核心处理器-ScheduledAnnotationBeanPostProcessor" class="headerlink" title="2.2 注册核心处理器 ScheduledAnnotationBeanPostProcessor"></a>2.2 注册核心处理器 ScheduledAnnotationBeanPostProcessor</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SchedulingConfiguration</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span>(</span><br><span class="line">        name = &#123;<span class="string">"org.springframework.context.annotation.internalScheduledAnnotationProcessor"</span>&#125;</span><br><span class="line">    )</span><br><span class="line">    <span class="meta">@Role</span>(<span class="number">2</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ScheduledAnnotationBeanPostProcessor <span class="title">scheduledAnnotationProcessor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ScheduledAnnotationBeanPostProcessor();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-3-BeanPostProcessor初始化-注册器：ScheduledTaskRegistrar"><a href="#2-3-BeanPostProcessor初始化-注册器：ScheduledTaskRegistrar" class="headerlink" title="2.3 BeanPostProcessor初始化 注册器：ScheduledTaskRegistrar"></a>2.3 BeanPostProcessor初始化 注册器：ScheduledTaskRegistrar</h2><h3 id="2-3-1-finishRegistration-完成注册"><a href="#2-3-1-finishRegistration-完成注册" class="headerlink" title="2.3.1 finishRegistration(完成注册)"></a>2.3.1 finishRegistration(完成注册)</h3><p>注册taskScheduler、Tasks</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">finishRegistration</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.scheduler != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.registrar.setScheduler(<span class="keyword">this</span>.scheduler);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory <span class="keyword">instanceof</span> ListableBeanFactory) &#123;</span><br><span class="line">            Map&lt;String, SchedulingConfigurer&gt; beans = ((ListableBeanFactory)<span class="keyword">this</span>.beanFactory).getBeansOfType(SchedulingConfigurer<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">            List&lt;SchedulingConfigurer&gt; configurers = <span class="keyword">new</span> ArrayList(beans.values());</span><br><span class="line">            AnnotationAwareOrderComparator.sort(configurers);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 使用用户自定义的SchedulingConfigurer，例如传入一个线程池</span></span><br><span class="line">            <span class="keyword">for</span>(SchedulingConfigurer configurer : configurers) &#123;</span><br><span class="line">                configurer.configureTasks(<span class="keyword">this</span>.registrar);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 用户没有自定义的SchedulingConfigurer，就去取 springboot 初始化自动配置的</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.registrar.hasTasks() &amp;&amp; <span class="keyword">this</span>.registrar.getScheduler() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            Assert.state(<span class="keyword">this</span>.beanFactory != <span class="keyword">null</span>, <span class="string">"BeanFactory must be set to find scheduler by type"</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 寻找默认的线程池</span></span><br><span class="line">                <span class="keyword">this</span>.registrar.setTaskScheduler((TaskScheduler) <span class="keyword">this</span>.resolveSchedulerBean(<span class="keyword">this</span>.beanFactory, TaskScheduler<span class="class">.<span class="keyword">class</span>, <span class="title">false</span>))</span></span><br><span class="line"><span class="class">            &#125; <span class="title">catch</span> (<span class="title">Exception</span> <span class="title">e</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.registrar.afterPropertiesSet();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="resolveSchedulerBean"><a href="#resolveSchedulerBean" class="headerlink" title="resolveSchedulerBean"></a>resolveSchedulerBean</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 寻找默认的线程池</span></span><br><span class="line"><span class="keyword">private</span> &lt;T&gt; <span class="function">T <span class="title">resolveSchedulerBean</span><span class="params">(BeanFactory beanFactory, Class&lt;T&gt; schedulerType, <span class="keyword">boolean</span> byName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (byName) &#123;</span><br><span class="line">            T scheduler = (T)beanFactory.getBean(<span class="string">"taskScheduler"</span>, schedulerType);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.beanName != <span class="keyword">null</span> &amp;&amp; <span class="keyword">this</span>.beanFactory <span class="keyword">instanceof</span> ConfigurableBeanFactory) &#123;</span><br><span class="line">                ((ConfigurableBeanFactory)<span class="keyword">this</span>.beanFactory).registerDependentBean(<span class="string">"taskScheduler"</span>, <span class="keyword">this</span>.beanName);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> scheduler;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (beanFactory <span class="keyword">instanceof</span> AutowireCapableBeanFactory) &#123;</span><br><span class="line">            NamedBeanHolder&lt;T&gt; holder = ((AutowireCapableBeanFactory)beanFactory).resolveNamedBean(schedulerType);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.beanName != <span class="keyword">null</span> &amp;&amp; beanFactory <span class="keyword">instanceof</span> ConfigurableBeanFactory) &#123;</span><br><span class="line">                ((ConfigurableBeanFactory)beanFactory).registerDependentBean(holder.getBeanName(), <span class="keyword">this</span>.beanName);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> (T)holder.getBeanInstance();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> (T)beanFactory.getBean(schedulerType);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="三：任务扫描与注册"><a href="#三：任务扫描与注册" class="headerlink" title="三：任务扫描与注册"></a>三：任务扫描与注册</h1><h2 id="3-1-扫描-Scheduled-方法"><a href="#3-1-扫描-Scheduled-方法" class="headerlink" title="3.1 扫描 @Scheduled 方法"></a>3.1 扫描 @Scheduled 方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ScheduledAnnotationBeanPostProcessor 核心方法</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> AopInfrastructureBean || </span><br><span class="line">        bean <span class="keyword">instanceof</span> TaskScheduler || </span><br><span class="line">        bean <span class="keyword">instanceof</span> ScheduledExecutorService) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;  <span class="comment">// 忽略基础设施 Bean</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    Class&lt;?&gt; targetClass = AopProxyUtils.ultimateTargetClass(bean);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 6. 扫描目标类中的 @Scheduled 方法</span></span><br><span class="line">    Map&lt;Method, Set&lt;Scheduled&gt;&gt; annotatedMethods = </span><br><span class="line">        MethodIntrospector.selectMethods(targetClass,</span><br><span class="line">            (MethodIntrospector.MetadataLookup&lt;Set&lt;Scheduled&gt;&gt;) method -&gt; &#123;</span><br><span class="line">                Set&lt;Scheduled&gt; scheduledAnnotations = AnnotatedElementUtils</span><br><span class="line">                    .getMergedRepeatableAnnotations(method, Scheduled<span class="class">.<span class="keyword">class</span>, <span class="title">Schedules</span>.<span class="title">class</span>)</span>;</span><br><span class="line">                <span class="keyword">return</span> (!scheduledAnnotations.isEmpty() ? scheduledAnnotations : <span class="keyword">null</span>);</span><br><span class="line">            &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (annotatedMethods.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 7. 处理每个标注了 @Scheduled 的方法</span></span><br><span class="line">    annotatedMethods.forEach((method, scheduledAnnotations) -&gt;</span><br><span class="line">        scheduledAnnotations.forEach(scheduled -&gt; </span><br><span class="line">            processScheduled(scheduled, method, bean)));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-创建并注册任务"><a href="#3-2-创建并注册任务" class="headerlink" title="3.2 创建并注册任务"></a>3.2 创建并注册任务</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 8. 处理单个定时任务</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processScheduled</span><span class="params">(Scheduled scheduled, Method method, Object bean)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 创建可执行任务</span></span><br><span class="line">        Runnable runnable = createRunnable(bean, method);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 收集所有需要调度的任务</span></span><br><span class="line">        Set&lt;ScheduledTask&gt; tasks = <span class="keyword">new</span> LinkedHashSet&lt;&gt;(<span class="number">4</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 9. 解析 cron 表达式</span></span><br><span class="line">        String cron = scheduled.cron();</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.hasText(cron)) &#123;</span><br><span class="line">            String zone = scheduled.zone();</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.hasText(zone)) &#123;</span><br><span class="line">                tasks.add(<span class="keyword">this</span>.registrar.scheduleCronTask(</span><br><span class="line">                    <span class="keyword">new</span> CronTask(runnable, <span class="keyword">new</span> CronTrigger(cron, timeZone))));</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                tasks.add(<span class="keyword">this</span>.registrar.scheduleCronTask(</span><br><span class="line">                    <span class="keyword">new</span> CronTask(runnable, cron)));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 10. 处理 fixedDelay（单位：毫秒）</span></span><br><span class="line">        <span class="keyword">long</span> fixedDelay = scheduled.fixedDelay();</span><br><span class="line">        <span class="keyword">if</span> (fixedDelay &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            tasks.add(<span class="keyword">this</span>.registrar.scheduleFixedDelayTask(</span><br><span class="line">                <span class="keyword">new</span> FixedDelayTask(runnable, fixedDelay, initialDelay)));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 11. 处理 fixedRate（单位：毫秒）</span></span><br><span class="line">        <span class="keyword">long</span> fixedRate = scheduled.fixedRate();</span><br><span class="line">        <span class="keyword">if</span> (fixedRate &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            tasks.add(<span class="keyword">this</span>.registrar.scheduleFixedRateTask(</span><br><span class="line">                <span class="keyword">new</span> FixedRateTask(runnable, fixedRate, initialDelay)));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 保存任务引用</span></span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.scheduledTasks) &#123;</span><br><span class="line">            <span class="keyword">this</span>.scheduledTasks.put(processedBean, tasks);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalArgumentException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Encountered invalid @Scheduled method"</span>, ex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 12. 创建可执行任务</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> Runnable <span class="title">createRunnable</span><span class="params">(Object target, Method method)</span> </span>&#123;</span><br><span class="line">    Assert.isTrue(method.getParameterCount() == <span class="number">0</span>, </span><br><span class="line">        <span class="string">"Only no-arg methods may be annotated with @Scheduled"</span>);</span><br><span class="line">    </span><br><span class="line">    Method invocableMethod = AopUtils.selectInvocableMethod(method, target.getClass());</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ScheduledMethodRunnable(target, invocableMethod);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="四：任务调度执行"><a href="#四：任务调度执行" class="headerlink" title="四：任务调度执行"></a>四：任务调度执行</h1><h2 id="4-1-调度器配置-ScheduledTaskRegistrar"><a href="#4-1-调度器配置-ScheduledTaskRegistrar" class="headerlink" title="4.1 调度器配置 ScheduledTaskRegistrar"></a>4.1 调度器配置 ScheduledTaskRegistrar</h2><p>afterPropertiesSet.scheduleTasks</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduledTaskRegistrar</span> <span class="keyword">implements</span> <span class="title">InitializingBean</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> TaskScheduler taskScheduler;</span><br><span class="line">    <span class="keyword">private</span> ScheduledExecutorService localExecutor;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        scheduleTasks();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 14. 初始化调度器</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">scheduleTasks</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.taskScheduler == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 使用默认的线程池调度器</span></span><br><span class="line">            <span class="keyword">this</span>.localExecutor = Executors.newSingleThreadScheduledExecutor();</span><br><span class="line">            <span class="keyword">this</span>.taskScheduler = <span class="keyword">new</span> ConcurrentTaskScheduler(<span class="keyword">this</span>.localExecutor);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.triggerTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.triggerTasks.forEach(<span class="keyword">this</span>::scheduleCronTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.cronTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.cronTasks.forEach(<span class="keyword">this</span>::scheduleCronTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.fixedRateTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.fixedRateTasks.forEach(<span class="keyword">this</span>::scheduleFixedRateTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.fixedDelayTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.fixedDelayTasks.forEach(<span class="keyword">this</span>::scheduleFixedDelayTask);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-2-任务调度实现"><a href="#4-2-任务调度实现" class="headerlink" title="4.2 任务调度实现"></a>4.2 任务调度实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调度 Cron 任务</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ScheduledTask <span class="title">scheduleCronTask</span><span class="params">(CronTask task)</span> </span>&#123;</span><br><span class="line">    ScheduledTask scheduledTask = <span class="keyword">this</span>.unresolvedTasks.remove(task);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (scheduledTask == <span class="keyword">null</span>) &#123;</span><br><span class="line">        scheduledTask = <span class="keyword">new</span> ScheduledTask();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 16. 使用 TaskScheduler 调度任务</span></span><br><span class="line">    scheduledTask.future = <span class="keyword">this</span>.taskScheduler.schedule(</span><br><span class="line">        task.getRunnable(), task.getTrigger());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> scheduledTask;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ThreadPoolTaskScheduler 实际调度</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolTaskScheduler</span> <span class="keyword">extends</span> <span class="title">ExecutorConfigurationSupport</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">TaskScheduler</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule(Runnable task, Trigger trigger) &#123;</span><br><span class="line">        ScheduledExecutorService executor = getScheduledExecutor();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 包装错误处理</span></span><br><span class="line">            ErrorHandler errorHandler = <span class="keyword">this</span>.errorHandler;</span><br><span class="line">            <span class="keyword">if</span> (errorHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">                task = <span class="keyword">new</span> DelegatingErrorHandlingRunnable(task, errorHandler);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 18. 使用 ReschedulingRunnable 实现重新调度</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ReschedulingRunnable(task, trigger, executor).schedule();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RejectedExecutionException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> TaskRejectedException(<span class="string">"Executor did not accept task"</span>, ex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-3-ReschedulingRunnable-核心实现"><a href="#4-3-ReschedulingRunnable-核心实现" class="headerlink" title="4.3 ReschedulingRunnable 核心实现"></a>4.3 ReschedulingRunnable 核心实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 19. 可重新调度的任务包装器</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReschedulingRunnable</span> <span class="keyword">extends</span> <span class="title">DelegatingErrorHandlingRunnable</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">ScheduledFuture</span>&lt;<span class="title">Object</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Trigger trigger;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ScheduledExecutorService executor;</span><br><span class="line">    <span class="keyword">private</span> ScheduledFuture&lt;?&gt; currentFuture;</span><br><span class="line">    <span class="keyword">private</span> Date scheduledExecutionTime;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule() &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.triggerContextMonitor) &#123;</span><br><span class="line">            <span class="comment">// 20. 计算下次执行时间</span></span><br><span class="line">            <span class="keyword">this</span>.scheduledExecutionTime = <span class="keyword">this</span>.trigger.nextExecutionTime(</span><br><span class="line">                <span class="keyword">this</span>.triggerContext);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.scheduledExecutionTime == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;  <span class="comment">// 没有下次执行时间，任务结束</span></span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 21. 计算延迟时间</span></span><br><span class="line">            <span class="keyword">long</span> initialDelay = <span class="keyword">this</span>.scheduledExecutionTime.getTime() - </span><br><span class="line">                System.currentTimeMillis();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 22. 提交任务到线程池</span></span><br><span class="line">            <span class="keyword">this</span>.currentFuture = <span class="keyword">this</span>.executor.schedule(<span class="keyword">this</span>, initialDelay, </span><br><span class="line">                TimeUnit.MILLISECONDS);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Date actualExecutionTime = <span class="keyword">new</span> Date();</span><br><span class="line">        <span class="comment">// 23. 执行实际任务</span></span><br><span class="line">        <span class="keyword">super</span>.run();</span><br><span class="line">        </span><br><span class="line">        Date completionTime = <span class="keyword">new</span> Date();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.triggerContextMonitor) &#123;</span><br><span class="line">            <span class="comment">// 24. 更新触发上下文</span></span><br><span class="line">            <span class="keyword">this</span>.triggerContext.update(<span class="keyword">this</span>.scheduledExecutionTime, </span><br><span class="line">                actualExecutionTime, completionTime);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 25. 重新调度（关键：实现循环执行）</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.currentFuture.isCancelled()) &#123;</span><br><span class="line">            schedule();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/06/05/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2025/06/05/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98/" itemprop="url">数据库死锁问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-06-05T00:00:00+00:00">
-                2025-06-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index">
-                    <span itemprop="name">日常问题记录</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  582 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE SchRSolutionRosterWarning (</span><br><span class="line">    id INT PRIMARY KEY AUTO_INCREMENT,</span><br><span class="line">    task_id INT NOT NULL,</span><br><span class="line">    person_id INT NOT NULL,</span><br><span class="line">    task_date DATE NOT NULL,</span><br><span class="line">    solution_id INT NOT NULL</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO SchRSolutionRosterWarning (task_id, person_id, task_date, solution_id) VALUES</span><br><span class="line">(1, 101, &#39;2025-07-01&#39;, 100),  -- 记录A：被事务1的taskIds和事务2的personIds命中</span><br><span class="line">(2, 102, &#39;2025-07-02&#39;, 100);  -- 记录B：被事务1的personIds和事务2的taskIds命中</span><br></pre></td></tr></table></figure>
-
-<h3 id="模拟并发事务"><a href="#模拟并发事务" class="headerlink" title="模拟并发事务"></a>模拟并发事务</h3><p>假设有两个并发事务（事务1和事务2），执行顺序如下：</p>
-<table>
-<thead>
-<tr>
-<th>时间线</th>
-<th>事务1</th>
-<th>事务2</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>t1</strong></td>
-<td><code>DELETE WHERE task_id IN (1)</code>  <br>（锁定<strong>记录A</strong>）</td>
-<td></td>
-</tr>
-<tr>
-<td><strong>t2</strong></td>
-<td></td>
-<td><code>DELETE WHERE task_id IN (2)</code>  <br>（锁定<strong>记录B</strong>）</td>
-</tr>
-<tr>
-<td><strong>t3</strong></td>
-<td><code>DELETE WHERE person_id IN (102)</code>  <br>（尝试锁定<strong>记录B</strong>，等待事务2释放）</td>
-<td></td>
-</tr>
-<tr>
-<td><strong>t4</strong></td>
-<td></td>
-<td><code>DELETE WHERE person_id IN (101)</code>  <br>（尝试锁定<strong>记录A</strong>，等待事务1释放）</td>
-</tr>
-<tr>
-<td><strong>结果</strong></td>
-<td>⚠️ 死锁发生！</td>
-<td>⚠️ 死锁发生！</td>
-</tr>
-</tbody></table>
-<hr>
-<h3 id="关键点解析"><a href="#关键点解析" class="headerlink" title="关键点解析"></a><strong>关键点解析</strong></h3><ol>
-<li><p><strong>循环等待条件</strong>：</p>
-<ul>
-<li><p>事务1持有<strong>记录A</strong>的锁，请求<strong>记录B</strong>的锁</p>
-</li>
-<li><p>事务2持有<strong>记录B</strong>的锁，请求<strong>记录A</strong>的锁</p>
-</li>
-</ul>
-</li>
-<li><p><strong>代码触发路径</strong>：</p>
-<ul>
-<li><p>事务1：<code>taskIds = [1]</code> → <code>personIds = [102]</code></p>
-</li>
-<li><p>事务2：<code>taskIds = [2]</code> → <code>personIds = [101]</code></p>
-</li>
-</ul>
-</li>
-<li><p><strong>锁机制</strong>：</p>
-<ul>
-<li><p><code>DELETE</code>语句会获取行的<strong>排他锁（X锁）</strong></p>
-</li>
-<li><p>当两个事务以相反顺序访问相同行时，形成死锁环路</p>
-</li>
-</ul>
-</li>
-</ol>
-<h3 id="解决方案建议"><a href="#解决方案建议" class="headerlink" title="解决方案建议"></a><strong>解决方案建议</strong></h3><p>破掉循环，查的时候不会加锁，delete的时候排队等待。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果在事务中，就不去用线程池去读了，会读不到未提交的  </span></span><br><span class="line"><span class="keyword">if</span> (CollectionUtils.isNotEmpty(taskIds)) &#123;  </span><br><span class="line">    List&lt;Collection&lt;String&gt;&gt; splitList = MathUtil.batchList(taskIds, <span class="number">2000</span>);  </span><br><span class="line">    splitList.parallelStream().forEach(list -&gt; &#123;  </span><br><span class="line">        LambdaQueryWrapper&lt;SchRSolutionRosterWarning&gt; queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;SchRSolutionRosterWarning&gt;().lambda()  </span><br><span class="line">                .in(SchRSolutionRosterWarning::getTaskId, list)  </span><br><span class="line">                .eq(SchRSolutionRosterWarning::getSolutionId, SolutionIdHolder.threadLocal.get())  </span><br><span class="line">                .eq(SchRSolutionRosterWarning::getModuleFlag, ModuleFlagHolder.threadLocal.get())  </span><br><span class="line">                .in(CollUtil.isNotEmpty(ruleIdList), SchRSolutionRosterWarning::getRuleId, ruleIdList);  </span><br><span class="line">        queryWrapper.select(SchRSolutionRosterWarning::getId);  </span><br><span class="line">        warningIds.addAll(baseMapper.selectList(queryWrapper).stream().map(SchRSolutionRosterWarning::getId).collect(Collectors.toSet()));  </span><br><span class="line">    &#125;);  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span> (CollectionUtils.isNotEmpty(personIds)) &#123;  </span><br><span class="line">    List&lt;Collection&lt;String&gt;&gt; splitList = MathUtil.batchList(personIds, <span class="number">2000</span>);  </span><br><span class="line">    splitList.parallelStream().forEach(list -&gt; &#123;  </span><br><span class="line">        LambdaQueryWrapper&lt;SchRSolutionRosterWarning&gt; queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;SchRSolutionRosterWarning&gt;().lambda()  </span><br><span class="line">                .in(SchRSolutionRosterWarning::getPersonId, list)  </span><br><span class="line">                .eq(SchRSolutionRosterWarning::getSolutionId, SolutionIdHolder.threadLocal.get())  </span><br><span class="line">                .eq(SchRSolutionRosterWarning::getModuleFlag, ModuleFlagHolder.threadLocal.get())  </span><br><span class="line">                .ge(SchRSolutionRosterWarning::getTaskDate, startDate)  </span><br><span class="line">                .in(CollUtil.isNotEmpty(ruleIdList), SchRSolutionRosterWarning::getRuleId, ruleIdList);  </span><br><span class="line">        queryWrapper.select(SchRSolutionRosterWarning::getId);  </span><br><span class="line">        warningIds.addAll(baseMapper.selectList(queryWrapper).stream().map(SchRSolutionRosterWarning::getId).collect(Collectors.toSet()));  </span><br><span class="line">    &#125;);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span> (CollUtil.isNotEmpty(warningIds)) &#123;  </span><br><span class="line">    List&lt;Collection&lt;String&gt;&gt; splitList = MathUtil.batchList(warningIds, <span class="number">5000</span>);  </span><br><span class="line">    splitList.parallelStream().forEach(list -&gt; &#123;  </span><br><span class="line">        baseMapper.deleteBatchIds(list);  </span><br><span class="line">    &#125;);  </span><br><span class="line">  </span><br><span class="line">&#125;tt(schRosterQuery);  </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (CollectionUtils.isNotEmpty(taskIds) || CollectionUtils.isNotEmpty(personIds)) &#123;</span><br><span class="line">    baseMapper.delete(<span class="keyword">new</span> QueryWrapper&lt;SchRSolutionRosterWarning&gt;().lambda()</span><br><span class="line">        .and(wrapper -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (CollectionUtils.isNotEmpty(taskIds)) &#123;</span><br><span class="line">                wrapper.in(SchRSolutionRosterWarning::getTaskId, taskIds);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (CollectionUtils.isNotEmpty(personIds)) &#123;</span><br><span class="line">                wrapper.or().in(SchRSolutionRosterWarning::getPersonId, personIds)</span><br><span class="line">                       .ge(SchRSolutionRosterWarning::getTaskDate, startDate);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .eq(SchRSolutionRosterWarning::getSolutionId, SolutionIdHolder.threadLocal.get())</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/05/05/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/Mybatis%E4%B8%80%E7%BA%A7%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -884,6 +438,343 @@
 <h3 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h3><p>1.在xml方法中 添加 flushCache=”true”，不使用一级缓存</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=<span class="string">"ruleChoiceList"</span> resultMap=<span class="string">"choiceMap"</span> flushCache=<span class="string">"true"</span>&gt;</span><br></pre></td></tr></table></figure>
 <p>2.事务粒度的问题，尽量不要使用大事务</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2023/11/27/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/ShardingSphere/ShardingSphere-Proxy%20%E5%9F%BA%E4%BA%8EDocker%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/11/27/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/ShardingSphere/ShardingSphere-Proxy%20%E5%9F%BA%E4%BA%8EDocker%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/" itemprop="url">ShardingSphere-Proxy 基于Docker搭建部署文档</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-11-27T00:00:00+00:00">
+                2023-11-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.9k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  18 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="ShardingSphere-Proxy-基于Docker搭建部署文档"><a href="#ShardingSphere-Proxy-基于Docker搭建部署文档" class="headerlink" title="ShardingSphere-Proxy 基于Docker搭建部署文档"></a>ShardingSphere-Proxy 基于Docker搭建部署文档</h1><h2 id="文档说明"><a href="#文档说明" class="headerlink" title="文档说明"></a>文档说明</h2><p>本文档详细记录基于Docker搭建ShardingSphere-Proxy的完整步骤、前置数据准备、分片规则配置流程，并整理实操过程中遇到的问题及解决方案，适用于分库分表场景的快速部署落地。文档中已隐藏私密IP、账号等敏感信息，可直接作为标准化部署参考，使用时需根据实际环境替换占位符内容。</p>
+<h2 id="一、环境准备"><a href="#一、环境准备" class="headerlink" title="一、环境准备"></a>一、环境准备</h2><ul>
+<li><p>宿主机已安装Docker环境（推荐Docker Engine 20.10及以上版本，确保容器正常启动和挂载功能可用）；</p>
+</li>
+<li><p>已搭建MySQL数据库集群（作为分片物理库，数量根据业务分库需求准备，确保各物理库网络互通）；</p>
+</li>
+<li><p>宿主机具备目录挂载权限，用于映射容器内配置文件（conf）和扩展库（ext-lib）目录，避免容器重启后配置丢失；</p>
+</li>
+<li><p>网络互通：宿主机可正常访问MySQL集群，应用服务可访问ShardingSphere-Proxy映射的宿主机端口。</p>
+</li>
+</ul>
+<h2 id="二、ShardingSphere-Proxy-容器部署"><a href="#二、ShardingSphere-Proxy-容器部署" class="headerlink" title="二、ShardingSphere-Proxy 容器部署"></a>二、ShardingSphere-Proxy 容器部署</h2><h3 id="2-1-拉取官方Docker镜像"><a href="#2-1-拉取官方Docker镜像" class="headerlink" title="2.1 拉取官方Docker镜像"></a>2.1 拉取官方Docker镜像</h3><p>推荐从DockerHub拉取Apache官方镜像，确保镜像版本稳定，执行命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull apache/shardingsphere-proxy</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-拷贝容器内配置文件模板到宿主机"><a href="#2-2-拷贝容器内配置文件模板到宿主机" class="headerlink" title="2.2 拷贝容器内配置文件模板到宿主机"></a>2.2 拷贝容器内配置文件模板到宿主机</h3><p>容器内置默认配置文件模板，需先拷贝到宿主机自定义目录，方便后续修改配置（如数据源、端口等），执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 临时启动容器用于拷贝配置文件</span></span><br><span class="line">docker run -d --name tmp --entrypoint=bash apache/shardingsphere-proxy</span><br><span class="line"><span class="comment"># 将容器内conf目录拷贝到宿主机自定义路径（替换/host/path/to/conf为实际宿主机路径，如/root/shardingsphere/conf）</span></span><br><span class="line">docker cp tmp:/opt/shardingsphere-proxy/conf /host/path/to/conf</span><br><span class="line"><span class="comment"># 删除临时容器（拷贝完成后无需保留）</span></span><br><span class="line">docker rm tmp</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-启动ShardingSphere-Proxy容器"><a href="#2-3-启动ShardingSphere-Proxy容器" class="headerlink" title="2.3 启动ShardingSphere-Proxy容器"></a>2.3 启动ShardingSphere-Proxy容器</h3><p>将宿主机的conf配置目录和ext-lib扩展库目录挂载到容器，指定容器内端口、宿主机映射端口及JVM内存参数，启动命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">    -v /host/path/to/conf:/opt/shardingsphere-proxy/conf \</span><br><span class="line">    -v /host/path/to/ext-lib:/opt/shardingsphere-proxy/ext-lib \</span><br><span class="line">    -e PORT=3308 -p13308:3308 \</span><br><span class="line">    -e <span class="string">"CGROUP_MEM_OPTS=-XX:InitialRAMPercentage=5.0 -XX:MaxRAMPercentage=5.0 -XX:MinRAMPercentage=5.0"</span> \</span><br><span class="line">    apache/shardingsphere-proxy:latest</span><br></pre></td></tr></table></figure>
+
+<h4 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h4><ul>
+<li><p>-v /host/path/to/conf:/opt/shardingsphere-proxy/conf：宿主机配置目录与容器配置目录映射，后续修改配置直接操作宿主机目录即可；</p>
+</li>
+<li><p>-v /host/path/to/ext-lib:/opt/shardingsphere-proxy/ext-lib：宿主机扩展库目录与容器扩展库目录映射，用于放置MySQL JDBC驱动包等扩展文件；</p>
+</li>
+<li><p>PORT=3308：容器内ShardingSphere-Proxy的监听端口，可根据容器内端口占用情况调整；</p>
+</li>
+<li><p>p13308:3308：宿主机端口与容器端口映射，应用服务通过宿主机13308端口访问Proxy（宿主机端口可自定义，避免端口冲突）；</p>
+</li>
+<li><p>CGROUP_MEM_OPTS：JVM内存占比配置，可根据宿主机资源情况按需调整（如宿主机内存较大，可提高MaxRAMPercentage）。</p>
+</li>
+</ul>
+<h2 id="三、MySQL物理库前置数据准备"><a href="#三、MySQL物理库前置数据准备" class="headerlink" title="三、MySQL物理库前置数据准备"></a>三、MySQL物理库前置数据准备</h2><p>在配置ShardingSphere-Proxy分片规则前，需先对MySQL物理库做前置准备，确保各物理库表结构一致、分片字段齐全，避免后续数据路由异常。</p>
+<h3 id="3-1-创建分片物理库"><a href="#3-1-创建分片物理库" class="headerlink" title="3.1 创建分片物理库"></a>3.1 创建分片物理库</h3><p>根据业务分库需求，在MySQL集群中创建对应的物理数据库，示例命名：pilotroster_caac_0、pilotroster_caac_1、pilotroster_caac_2（可按业务规范自定义命名，确保名称统一，便于后续配置分片规则）。</p>
+<h3 id="3-2-为所有表统一添加分片字段"><a href="#3-2-为所有表统一添加分片字段" class="headerlink" title="3.2 为所有表统一添加分片字段"></a>3.2 为所有表统一添加分片字段</h3><p>为所有物理库中的基础表添加分片键字段SIMULATION_INSTANCE_ID（仿真实例ID，可按业务需求自定义分片键名），先执行查询语句生成新增字段的SQL，再执行生成的SQL完成字段添加，避免重复添加：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(<span class="string">'ALTER TABLE `'</span>, t.table_name, <span class="string">'` ADD COLUMN SIMULATION_INSTANCE_ID int null comment \'</span>仿真实例<span class="keyword">ID</span>\<span class="string">';'</span>) <span class="keyword">AS</span> sql_statement</span><br><span class="line"><span class="keyword">FROM</span> information_schema.tables t</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> information_schema.columns c</span><br><span class="line">  <span class="keyword">ON</span> t.table_name = c.table_name</span><br><span class="line">  <span class="keyword">AND</span> c.table_schema = t.table_schema</span><br><span class="line">  <span class="keyword">AND</span> c.column_name = <span class="string">'SIMULATION_INSTANCE_ID'</span>  <span class="comment">-- 替换为实际分片键字段名</span></span><br><span class="line"><span class="keyword">WHERE</span> t.table_schema = <span class="string">'目标物理库名'</span>  <span class="comment">-- 替换为实际MySQL物理库名（如pilotroster_caac_0）</span></span><br><span class="line">  <span class="keyword">AND</span> t.table_type = <span class="string">'BASE TABLE'</span>     <span class="comment">-- 仅处理基础表，不处理视图</span></span><br><span class="line">  <span class="keyword">AND</span> c.column_name <span class="keyword">IS</span> <span class="literal">NULL</span>;          <span class="comment">-- 仅对无该分片字段的表生成SQL</span></span><br></pre></td></tr></table></figure>
+
+<p>说明：需为所有分片物理库逐一执行上述操作，确保各物理库的同一张表结构完全一致，避免分片路由时出现表结构不匹配错误。</p>
+<h3 id="3-3-初始化分片字段值"><a href="#3-3-初始化分片字段值" class="headerlink" title="3.3 初始化分片字段值"></a>3.3 初始化分片字段值</h3><p>为已有数据的表统一初始化分片字段值，先执行查询语句生成更新SQL，再执行生成的SQL（避免手动逐表更新，提高效率）：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(<span class="string">'UPDATE `'</span>, t.table_name, <span class="string">'` SET `SIMULATION_INSTANCE_ID` = 1 where 1=1;'</span>) <span class="keyword">AS</span> sql_statement</span><br><span class="line"><span class="keyword">FROM</span> information_schema.tables t</span><br><span class="line"><span class="keyword">JOIN</span> information_schema.columns c</span><br><span class="line">  <span class="keyword">ON</span> t.table_name = c.table_name</span><br><span class="line">  <span class="keyword">AND</span> t.table_schema = c.table_schema</span><br><span class="line"><span class="keyword">WHERE</span> t.table_schema = <span class="string">'目标物理库名'</span>       <span class="comment">-- 替换为实际MySQL物理库名</span></span><br><span class="line">  <span class="keyword">AND</span> t.table_type = <span class="string">'BASE TABLE'</span>                 <span class="comment">-- 仅处理基础表</span></span><br><span class="line">  <span class="keyword">AND</span> c.column_name = <span class="string">'SIMULATION_INSTANCE_ID'</span>;   <span class="comment">-- 替换为实际分片键字段名</span></span><br></pre></td></tr></table></figure>
+
+<p>说明：示例中分片字段值设为1，可根据业务实际数据规则调整赋值（如按业务ID范围分配分片值），确保数据能按预期路由到对应物理库。</p>
+<h2 id="四、ShardingSphere-Proxy-分片规则配置"><a href="#四、ShardingSphere-Proxy-分片规则配置" class="headerlink" title="四、ShardingSphere-Proxy 分片规则配置"></a>四、ShardingSphere-Proxy 分片规则配置</h2><p>通过DistSQL语句连接ShardingSphere-Proxy进行配置，核心步骤为：创建逻辑数据库→注册物理数据源→创建表分片规则→验证路由规则，所有操作需在Proxy连接会话中执行，确保上下文正确。</p>
+<h3 id="4-1-连接ShardingSphere-Proxy"><a href="#4-1-连接ShardingSphere-Proxy" class="headerlink" title="4.1 连接ShardingSphere-Proxy"></a>4.1 连接ShardingSphere-Proxy</h3><p>使用MySQL客户端（如Navicat、DBeaver、命令行）连接Proxy，连接信息如下：</p>
+<ul>
+<li><p>地址：宿主机IP（无需填写容器IP，通过宿主机映射端口访问）；</p>
+</li>
+<li><p>端口：宿主机映射端口（本文示例为13308，与容器启动时配置一致）；</p>
+</li>
+<li><p>账号/密码：默认root/root（可在容器conf目录的server.yaml配置文件中修改，提高安全性）。</p>
+</li>
+</ul>
+<h3 id="4-2-执行DistSQL配置分片规则"><a href="#4-2-执行DistSQL配置分片规则" class="headerlink" title="4.2 执行DistSQL配置分片规则"></a>4.2 执行DistSQL配置分片规则</h3><p>连接Proxy后，执行以下DistSQL语句，完成逻辑库创建、数据源注册和分片规则配置（按实际环境替换占位符内容）：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 1. 创建逻辑数据库（首次配置必做，自定义逻辑库名，如pilotroster）</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> pilotroster;</span><br><span class="line"><span class="keyword">USE</span> pilotroster;  <span class="comment">-- 切换到创建的逻辑库，后续操作均在该上下文下执行</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 注册物理数据源（按实际物理库数量逐一注册，替换为实际配置）</span></span><br><span class="line">REGISTER STORAGE UNIT 物理库名1 (</span><br><span class="line">    URL="jdbc:mysql://MySQL地址:MySQL端口/物理库名1?serverTimezone=GMT%2B8&amp;useSSL=false",</span><br><span class="line">    USER="MySQL账号",</span><br><span class="line">    PASSWORD="MySQL密码",</span><br><span class="line">    PROPERTIES("maximumPoolSize"=10,"idleTimeout"=30000)</span><br><span class="line">);</span><br><span class="line">REGISTER STORAGE UNIT 物理库名2 (</span><br><span class="line">    URL="jdbc:mysql://MySQL地址:MySQL端口/物理库名2?serverTimezone=GMT%2B8&amp;useSSL=false",</span><br><span class="line">    USER="MySQL账号",</span><br><span class="line">    PASSWORD="MySQL密码",</span><br><span class="line">    PROPERTIES("maximumPoolSize"=10,"idleTimeout"=30000)</span><br><span class="line">);</span><br><span class="line">REGISTER STORAGE UNIT 物理库名3 (</span><br><span class="line">    URL="jdbc:mysql://MySQL地址:MySQL端口/物理库名3?serverTimezone=GMT%2B8&amp;useSSL=false",</span><br><span class="line">    USER="MySQL账号",</span><br><span class="line">    PASSWORD="MySQL密码",</span><br><span class="line">    PROPERTIES("maximumPoolSize"=10,"idleTimeout"=30000)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 创建表分片规则（以opt_filiale表为例，仅分库不分表，适配业务需求）</span></span><br><span class="line"><span class="keyword">CREATE</span> SHARDING <span class="keyword">TABLE</span> RULE opt_filiale (</span><br><span class="line">    DATANODES(<span class="string">"物理库名$&#123;0..2&#125;.opt_filiale"</span>),  <span class="comment">-- 匹配已注册的物理库名，表名与物理库表名一致</span></span><br><span class="line">    DATABASE_STRATEGY(</span><br><span class="line">        <span class="keyword">TYPE</span>=<span class="string">"standard"</span>,</span><br><span class="line">        SHARDING_COLUMN=SIMULATION_INSTANCE_ID,  <span class="comment">-- 分片键字段名，与物理库表中字段一致</span></span><br><span class="line">        SHARDING_ALGORITHM(</span><br><span class="line">            <span class="keyword">TYPE</span>(<span class="keyword">NAME</span>=<span class="string">"inline"</span>,PROPERTIES(<span class="string">"algorithm-expression"</span>=<span class="string">"物理库名$&#123;SIMULATION_INSTANCE_ID.intdiv(1000)&#125;"</span>))</span><br><span class="line">        )</span><br><span class="line">    ),</span><br><span class="line">    <span class="comment">-- 审计策略：禁止无分片条件的操作，避免全库扫描导致性能下降（按需配置）</span></span><br><span class="line">    AUDIT_STRATEGY (<span class="keyword">TYPE</span>(<span class="keyword">NAME</span>=<span class="string">"DML_SHARDING_CONDITIONS"</span>),ALLOW_HINT_DISABLE=<span class="literal">true</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 4. 验证路由规则（插入测试数据，按需修改字段和值，确保字段与物理表结构一致）</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> opt_filiale (code, SIMULATION_INSTANCE_ID) <span class="keyword">values</span> (<span class="string">'MF'</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置说明"><a href="#配置说明" class="headerlink" title="配置说明"></a>配置说明</h4><ul>
+<li><p>逻辑数据库：ShardingSphere-Proxy的虚拟库，仅用于管理物理数据源和分片规则，不实际存储数据，所有数据最终存储在注册的物理库中；</p>
+</li>
+<li><p>物理数据源注册：maximumPoolSize（连接池最大连接数）、idleTimeout（连接空闲超时时间）可按业务性能需求调整，避免连接池耗尽或空闲连接过多；</p>
+</li>
+<li><p>分片算法：本文使用inline行内算法，通过SIMULATION_INSTANCE_ID.intdiv(1000)实现按分片键整数除法分库（每1000个ID分一个库），可按业务需求替换为hash_mod、range等算法；</p>
+</li>
+<li><p>审计策略：DML_SHARDING_CONDITIONS用于拦截无分片条件的DML/查询操作，防止全库扫描导致Proxy性能暴跌，属于推荐配置。</p>
+</li>
+</ul>
+<h3 id="4-3-规则验证方法"><a href="#4-3-规则验证方法" class="headerlink" title="4.3 规则验证方法"></a>4.3 规则验证方法</h3><p>配置完成后，通过以下方法验证分片规则是否生效，确保数据路由正常：</p>
+<ol>
+<li>查看分片规则：验证规则是否成功创建，确认配置与预期一致<pre><code>`-- 查看当前逻辑库下所有分片表规则</code></pre>SHOW SHARDING TABLE RULES;</li>
+</ol>
+<p>– 查看指定表的详细分片规则（如opt_filiale）<br><code></code>DESCRIBE SHARDING TABLE RULE opt_filiale;`</p>
+<ol start="2">
+<li><p>验证路由逻辑：通过EXPLAIN查看SQL路由到的物理库，确认分库规则生效</p>
+<pre><code>`EXPLAIN SELECT * FROM opt_filiale WHERE SIMULATION_INSTANCE_ID=2;`预期结果：输出中会显示SQL路由到的具体物理库（如物理库名2.opt_filiale），无分表后缀，说明仅分库规则生效。</code></pre></li>
+<li><p>数据操作验证：插入/查询数据，确认数据能正确路由到对应物理库（注：无分片条件的全局查询会被审计策略拦截，无法执行）<br>`– 插入不同分片键的数据<br>insert into opt_filiale (code, SIMULATION_INSTANCE_ID) values (‘MF1’, 999), (‘MF2’, 1000), (‘MF3’, 2001);</p>
+</li>
+</ol>
+<p>– 指定分片键查询（精准路由到对应物理库，可正常执行）<br>SELECT * FROM opt_filiale WHERE SIMULATION_INSTANCE_ID=999;<br>– 注意：无分片条件的全局查询（如下）会被审计策略拦截，执行失败<br><code></code>– SELECT * FROM opt_filiale;`</p>
+<h2 id="五、实操常见问题及解决方案"><a href="#五、实操常见问题及解决方案" class="headerlink" title="五、实操常见问题及解决方案"></a>五、实操常见问题及解决方案</h2><p>结合实操过程中遇到的各类问题，整理以下高频问题及解决方案，帮助快速避坑、定位问题，提高部署效率。</p>
+<h3 id="问题1：注册物理数据源时报错，无法连接MySQL数据库"><a href="#问题1：注册物理数据源时报错，无法连接MySQL数据库" class="headerlink" title="问题1：注册物理数据源时报错，无法连接MySQL数据库"></a>问题1：注册物理数据源时报错，无法连接MySQL数据库</h3><h4 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h4><p>在ShardingSphere-Proxy中执行DistSQL注册物理数据源（即添加物理库）时，直接报错提示“无法连接数据源”，无法完成物理库注册。排查过程中发现，此前部署容器时虽挂载了ext-lib扩展目录，但未将MySQL JDBC驱动jar包拷贝到该目录，倒回去将驱动包补充到宿主机挂载的ext-lib目录并重启容器后，重新注册物理数据源，报错解决。</p>
+<h4 id="根因"><a href="#根因" class="headerlink" title="根因"></a>根因</h4><p>ShardingSphere-Proxy官方Docker镜像默认未内置MySQL JDBC驱动包，仅内置PostgreSQL等其他数据库驱动；且部署时虽配置了ext-lib目录挂载（用于放置扩展驱动），但未及时补充MySQL驱动包，导致Proxy无法加载MySQL驱动，进而无法连接物理库，注册数据源时触发报错。</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li><p>下载与MySQL版本匹配的MySQL Connector/J驱动包（推荐8.0+版本，兼容性更好），下载地址：<a href="https://dev.mysql.com/downloads/connector/j/；" target="_blank" rel="noopener">https://dev.mysql.com/downloads/connector/j/；</a></p>
+</li>
+<li><p>将下载的mysql-connector-java-8.0.xx.jar驱动包，拷贝到宿主机挂载的ext-lib目录（即/host/path/to/ext-lib）；</p>
+</li>
+<li><p>重启ShardingSphere-Proxy容器，使驱动包生效：docker restart &lt;容器ID&gt;。</p>
+</li>
+</ol>
+<p>注意：1. 驱动版本需与MySQL服务版本兼容，8.0版本驱动可兼容5.7版本MySQL，但5.1版本驱动不兼容8.0版本MySQL，避免版本不匹配导致连接失败；2. 建议在容器启动前，提前将驱动包拷贝到ext-lib目录，避免后续注册物理数据源时出现报错，节省排查时间。</p>
+<h3 id="问题2：DistSQL语法错误提示不友好，无法定位错误原因"><a href="#问题2：DistSQL语法错误提示不友好，无法定位错误原因" class="headerlink" title="问题2：DistSQL语法错误提示不友好，无法定位错误原因"></a>问题2：DistSQL语法错误提示不友好，无法定位错误原因</h3><h4 id="现象-1"><a href="#现象-1" class="headerlink" title="现象"></a>现象</h4><p>编写分片规则DistSQL后执行失败，仅返回模糊提示，无具体错误位置和真实原因，难以定位问题，甚至会误导排查方向。例如实操中曾遇到报错：[2026-02-27 14:15:44] [42000][1064] You have an error in your SQL syntax: no viable alternative at input ‘CREATESHARDING’ near ‘[@2,47:54=’SHARDING’,&lt;882&gt;,1:47]’ at line 1，实际编写的SQL是“CREATE SHARDING”（中间有空格），并非提示中显示的“CREATESHARDING”（无空格），但由于整体SQL存在其他语法问题，报错却误导性地指向“CREATESHARDING”拼写错误，导致在错误方向浪费大量排查时间，最终通过参考他人可正常运行的DistSQL语句修改后，才成功解决问题，避免了继续在错误方向内消耗精力。</p>
+<h4 id="根因-1"><a href="#根因-1" class="headerlink" title="根因"></a>根因</h4><p>ShardingSphere-Proxy对DistSQL语法校验的错误提示未做精细化处理，不仅无具体错误位置，还可能出现误导性提示——即使SQL中某部分书写正确（如“CREATE SHARDING”中间有空格），若整体存在其他语法问题，报错也可能指向该正确部分，误导排查方向；同时，无论是括号缺失、引号错误、参数写错、关键词空格缺失等小错误，均会返回通用提示，大幅增加排查难度。</p>
+<h4 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li><p>逐段拆分DistSQL执行：先创建逻辑库，再注册数据源，最后创建分片规则，逐步缩小错误范围，定位到具体出错的语句段；</p>
+</li>
+<li><p>严格检查语法细节：括号、逗号需成对且位置正确，分片键、物理库、表名需与实际一致（区分大小写，MySQL表名默认小写），算法表达式语法正确（如整数除法用intdiv而非/）；</p>
+</li>
+<li><p>对照官方文档：根据当前ShardingSphere-Proxy版本，参考官方DistSQL语法规范编写语句，避免语法错误；</p>
+</li>
+<li><p>避免手动输入：可复制官方示例语句或他人可正常运行的DistSQL语句，替换占位符内容，减少手动输入导致的空格、符号错误，同时也能规避因整体语法错误引发的误导性提示。</p>
+</li>
+</ol>
+<h3 id="问题3：DistSQL语法向下兼容性差，旧版本语法无法在新版本执行"><a href="#问题3：DistSQL语法向下兼容性差，旧版本语法无法在新版本执行" class="headerlink" title="问题3：DistSQL语法向下兼容性差，旧版本语法无法在新版本执行"></a>问题3：DistSQL语法向下兼容性差，旧版本语法无法在新版本执行</h3><h4 id="现象-2"><a href="#现象-2" class="headerlink" title="现象"></a>现象</h4><p>参考ShardingSphere-Proxy旧版本（如5.0）的DistSQL示例编写语句，在高版本（如5.4+）中执行直接失败，无“语法过时”“版本不兼容”等提示，仅返回语法错误。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><p>5.0版本分片算法写法（5.4+版本不兼容）：SHARDING_ALGORITHM(TYPE=”inline”,PROPERTIES(“algorithm-expression”=”库名${字段/1000}”))；</p>
+</li>
+<li><p>5.4+版本正确写法：SHARDING_ALGORITHM(TYPE(NAME=”inline”,PROPERTIES(“algorithm-expression”=”库名${字段.intdiv(1000)}”)))。</p>
+</li>
+</ul>
+<h4 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li><p>确认当前ShardingSphere-Proxy版本：执行docker exec &lt;容器ID&gt; cat /opt/shardingsphere-proxy/VERSION，获取准确版本号；</p>
+</li>
+<li><p>严格参考对应版本的官方文档，避免混用不同版本语法，优先使用当前版本的示例语句；</p>
+</li>
+<li><p>若从旧版本升级，参考官方提供的语法迁移指南，对旧版本DistSQL语句进行调整后再执行。</p>
+</li>
+</ol>
+<h3 id="问题4：删除分片规则后重建失败，提示物理数据节点已被占用"><a href="#问题4：删除分片规则后重建失败，提示物理数据节点已被占用" class="headerlink" title="问题4：删除分片规则后重建失败，提示物理数据节点已被占用"></a>问题4：删除分片规则后重建失败，提示物理数据节点已被占用</h3><h4 id="现象-3"><a href="#现象-3" class="headerlink" title="现象"></a>现象</h4><p>执行DROP SHARDING TABLE RULE 表名（如DROP SHARDING TABLE RULE opt_filiale）删除规则后，重新创建同名表的分片规则，提示“Same actual data node cannot be configured in multiple logic tables”，即使执行SHOW SHARDING TABLE RULES显示无规则，重启容器也无法解决。</p>
+<h4 id="根因-2"><a href="#根因-2" class="headerlink" title="根因"></a>根因</h4><p>ShardingSphere-Proxy元数据管理存在残留问题，删除表规则后，逻辑库的元数据未完全清理，物理数据节点（物理库.物理表）仍被标记为“已占用”，导致重建时触发唯一性校验。</p>
+<h4 id="解决方案-3"><a href="#解决方案-3" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li><p>备份分片规则配置：先将当前逻辑库的DistSQL配置（创建逻辑库、注册数据源、分片规则）备份，避免删除后需重新编写；</p>
+</li>
+<li><p>彻底删除逻辑库：执行DROP DATABASE 逻辑库名（如DROP DATABASE pilotroster），清理所有关联的元数据残留；</p>
+</li>
+<li><p>重新执行完整的DistSQL配置：从头创建逻辑库→注册物理数据源→创建分片规则，此时无元数据残留，可正常创建。</p>
+</li>
+</ol>
+<p>注意：生产环境修改分片规则前，务必先备份当前DistSQL配置，避免删除后需重新编写，影响业务正常运行。</p>
+<h3 id="问题5：执行无分片条件的查询，提示Not-allow-DML-operation-without-sharding-conditions"><a href="#问题5：执行无分片条件的查询，提示Not-allow-DML-operation-without-sharding-conditions" class="headerlink" title="问题5：执行无分片条件的查询，提示Not allow DML operation without sharding conditions"></a>问题5：执行无分片条件的查询，提示Not allow DML operation without sharding conditions</h3><h4 id="现象-4"><a href="#现象-4" class="headerlink" title="现象"></a>现象</h4><p>执行SELECT * FROM 表名 WHERE 1=1等无分片键条件的查询时，被拦截并返回该提示，无法执行查询。</p>
+<h4 id="根因-3"><a href="#根因-3" class="headerlink" title="根因"></a>根因</h4><p>创建分片规则时配置了DML_SHARDING_CONDITIONS审计策略，该策略的作用是禁止无分片条件的DML/查询操作，避免全库扫描导致Proxy性能下降，属于正常的策略生效行为，并非报错。</p>
+<h4 id="解决方案-4"><a href="#解决方案-4" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li><p>正常业务查询（推荐）：必须携带分片键条件（如WHERE SIMULATION_INSTANCE_ID=999），使SQL能精准路由到对应物理库，避免全库扫描；</p>
+</li>
+<li><p>临时测试查询（仅测试用）：通过提示绕过审计规则，执行语句如下（生产环境禁止使用，避免影响性能）：</p>
+<pre><code>`/*+SHARDINGSPHERE:ALLOW_HINT_DISABLE_AUDIT()*/ SELECT * FROM opt_filiale WHERE 1=1;`</code></pre></li>
+<li><p>永久关闭审计（不推荐）：若业务确有频繁执行无分片条件查询的需求，可删除分片规则后重新创建，去掉AUDIT_STRATEGY相关配置。</p>
+</li>
+</ol>
+<h2 id="六、总结与注意事项"><a href="#六、总结与注意事项" class="headerlink" title="六、总结与注意事项"></a>六、总结与注意事项</h2><h3 id="部署总结"><a href="#部署总结" class="headerlink" title="部署总结"></a>部署总结</h3><p>基于Docker搭建ShardingSphere-Proxy的核心流程为：镜像拉取→配置文件拷贝→容器启动→MySQL物理库准备→DistSQL规则配置，其中补充MySQL JDBC驱动包（避免注册物理数据源时报错）和保证物理库表结构一致性是部署成功的关键前提；同时，DistSQL语法版本依赖性极强，配置时需严格匹配当前Proxy版本，且其语法错误提示不友好，建议优先参考官方示例或他人可正常运行的语句，避免因语法问题及误导性提示导致部署失败、浪费排查时间；此外，开启审计策略后，无分片条件的全局查询会被拦截，需注意查询时必须携带分片键条件。</p>
+<h3 id="核心注意事项"><a href="#核心注意事项" class="headerlink" title="核心注意事项"></a>核心注意事项</h3><ul>
+<li><p>配置文件与驱动包：宿主机需持久化挂载conf和ext-lib目录，避免容器重启后配置和驱动丢失，驱动包版本需与MySQL版本兼容；</p>
+</li>
+<li><p>语法兼容性：DistSQL语法版本依赖性强，不同版本语法差异较大，需严格对照当前Proxy版本的官方文档编写语句，避免混用旧版本语法；</p>
+</li>
+<li><p>元数据管理：修改/删除分片规则后若出现元数据残留，会导致规则重建失败，可通过删除并重建逻辑库解决，操作前务必备份配置，避免数据或配置丢失；</p>
+</li>
+<li><p>性能优化：开启审计策略防止无分片条件的全库扫描，根据业务需求调整数据源连接池参数（如maximumPoolSize），避免性能瓶颈；</p>
+</li>
+<li><p>表结构一致性：所有分片物理库的同一张表，表结构（字段、类型、分片键）必须完全一致，否则会导致数据插入、查询异常；</p>
+</li>
+<li><p>私密信息保护：部署文档中需隐藏IP、账号、密码等敏感信息，实际使用时替换占位符内容，避免信息泄露；</p>
+</li>
+<li><p>上下文一致性：执行DistSQL配置时，需先切换到目标逻辑库（USE 逻辑库名），避免因上下文错误导致规则配置失败。</p>
+<blockquote>
+<p>（注：文档部分内容可能由 AI 生成）</p>
+</blockquote>
+</li>
+</ul>
 
           
         
@@ -2429,6 +2320,187 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/31/java/coucurrent/3.CountDownLatch&Semaphore/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/31/java/coucurrent/3.CountDownLatch&Semaphore/" itemprop="url">CountDownLatch&Semaphore-共享锁</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-31T00:00:00+00:00">
+                2021-10-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  35 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-Semaphore-是什么？"><a href="#1-Semaphore-是什么？" class="headerlink" title="1. Semaphore 是什么？"></a>1. Semaphore 是什么？</h1><p>Semaphore 字面意思是信号量的意思，它的作用是控制访问特定资源的线程数目。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2483,7 +2555,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-count">81</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2494,7 +2566,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2604,7 +2676,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">105.4k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 
@@ -2631,7 +2703,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共105.4k字</span>
+  <span class="post-count">博客全站共100.6k字</span>
 </div>
 
         

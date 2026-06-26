@@ -518,7 +518,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/31/java/coucurrent/3.CountDownLatch&Semaphore/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/11/active/appH5Token/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -537,7 +537,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/10/31/java/coucurrent/3.CountDownLatch&Semaphore/" itemprop="url">CountDownLatch&Semaphore-共享锁</a></h1>
+                <a class="post-title-link" href="/2021/10/11/active/appH5Token/" itemprop="url">app嵌入H5如何同步登录状态</a></h1>
         
 
         <div class="post-meta">
@@ -549,8 +549,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-31T00:00:00+00:00">
-                2021-10-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-11T00:00:00+00:00">
+                2021-10-11
               </time>
             
 
@@ -572,8 +572,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">并发编程</span>
+                  <a href="/categories/active/" itemprop="url" rel="index">
+                    <span itemprop="name">active</span>
                   </a>
                 </span>
 
@@ -603,7 +603,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  35 字
+                  149 字
                 </span>
               
 
@@ -642,7 +642,8 @@
       
         
           
-            <h1 id="1-Semaphore-是什么？"><a href="#1-Semaphore-是什么？" class="headerlink" title="1. Semaphore 是什么？"></a>1. Semaphore 是什么？</h1><p>Semaphore 字面意思是信号量的意思，它的作用是控制访问特定资源的线程数目。</p>
+            <p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
+<p>优化的方向：<br>A.APP登陆状态的变化是请求页面，登录后使用webview调用对应域名下的接口实现H5的登录B.每次请求H5url增加get登陆的信息，例如访问 index.php变成index.php？a=xxx通过附加信息同步登录状态<br>优化的方案不知道那个更好一点</p>
 
           
         
@@ -924,7 +925,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/11/active/appH5Token/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -943,7 +944,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/10/11/active/appH5Token/" itemprop="url">app嵌入H5如何同步登录状态</a></h1>
+                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo协议模块</a></h1>
         
 
         <div class="post-meta">
@@ -955,8 +956,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-11T00:00:00+00:00">
-                2021-10-11
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
+                2021-09-12
               </time>
             
 
@@ -978,8 +979,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/active/" itemprop="url" rel="index">
-                    <span itemprop="name">active</span>
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
                   </a>
                 </span>
 
@@ -1009,7 +1010,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  149 字
+                  2.2k 字
                 </span>
               
 
@@ -1025,7 +1026,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1 分钟
+                  8 分钟
                 </span>
               
             </div>
@@ -1048,8 +1049,199 @@
       
         
           
-            <p>目前使用的方案：<br>1.h5通过js和app交互调用app的token<br>2.拿到token后使用ajax做异步登录并刷新页面<br>目前的缺点：<br>1.会多次刷新页面<br>2.通过js调用时H5需要做部分改动</p>
-<p>优化的方向：<br>A.APP登陆状态的变化是请求页面，登录后使用webview调用对应域名下的接口实现H5的登录B.每次请求H5url增加get登陆的信息，例如访问 index.php变成index.php？a=xxx通过附加信息同步登录状态<br>优化的方案不知道那个更好一点</p>
+            <p><strong>课程概要：</strong></p>
+<ol>
+<li>RPC协议基本组成</li>
+<li>RPC协议报文编码与实现详解</li>
+<li>Dubbo中所支持RPC协议与使用<h3 id="RPC协议基本组成"><a href="#RPC协议基本组成" class="headerlink" title="## RPC协议基本组成"></a>## <strong>RPC协议基本组成</strong></h3></li>
+</ol>
+<hr>
+<h3 id="RPC-协议名词解释"><a href="#RPC-协议名词解释" class="headerlink" title="RPC 协议名词解释"></a><strong>RPC 协议名词解释</strong></h3><p>在一个典型RPC的使用场景中，包含了服务发现、负载、容错、网络传输、序列化等组件，其中RPC协议就指明了程序如何进行网络传输和序列化 。也就是说一个RPC协议的实现就等于一个非透明的远程调用实现，如何做到的的呢？</p>
+<p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE.png" alt="Rpc协议.png"></p>
+<h3 id="协议基本组成："><a href="#协议基本组成：" class="headerlink" title="协议基本组成："></a><strong>协议基本组成：</strong></h3><p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90.png" alt="Rpc协议基本组成.png"></p>
+<ol>
+<li>地址：服务提供者地址</li>
+<li>端口：协议指定开放的端口</li>
+<li>报文编码：协议报文编码 ，分为请求头和请求体两部分。</li>
+<li>序列化方式：将请求体序列化成对象<ol>
+<li>Hessian2Serialization、</li>
+<li>DubboSerialization、</li>
+<li>JavaSerialization</li>
+<li>JsonSerialization</li>
+</ol>
+</li>
+<li>运行服务: 网络传输实现<ol>
+<li>netty</li>
+<li>mina</li>
+<li>RMI 服务</li>
+<li>servlet 容器（jetty、Tomcat、Jboss）<h2 id="Dubbo中所支持RPC协议使用"><a href="#Dubbo中所支持RPC协议使用" class="headerlink" title="Dubbo中所支持RPC协议使用"></a><strong>Dubbo中所支持RPC协议使用</strong></h2></li>
+</ol>
+</li>
+</ol>
+<hr>
+<p><strong>dubbo 支持的RPC协议列表</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>名称</strong></th>
+<th align="left"><strong>实现描述</strong></th>
+<th align="left"><strong>连接描述</strong></th>
+<th align="left"><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>dubbo</strong></td>
+<td align="left">传输服务: mina, netty(默认), grizzy序列化: hessian2(默认), java, fastjson自定义报文</td>
+<td align="left">单个长连接NIO异步传输</td>
+<td align="left">1、常规RPC调用2、传输数据量小3、提供者少于消费者</td>
+</tr>
+<tr>
+<td align="left"><strong>rmi</strong></td>
+<td align="left">传输：java rmi 服务序列化：java原生二进制序列化</td>
+<td align="left">多个短连接BIO同步传输</td>
+<td align="left">1、常规RPC调用  2、与原RMI客户端集成  3、可传少量文件  4、不防火墙穿透</td>
+</tr>
+<tr>
+<td align="left"><strong>hessian</strong></td>
+<td align="left">传输服务：servlet容器序列化：hessian二进制序列化</td>
+<td align="left">基于Http 协议传输，依懒servlet容器配置</td>
+<td align="left">1、提供者多于消费者  2、可传大字段和文件  <del>3、跨语言调用</del></td>
+</tr>
+<tr>
+<td align="left"><strong>http</strong></td>
+<td align="left">传输服务：servlet容器序列化：java原生二进制序列化</td>
+<td align="left">依懒servlet容器配置</td>
+<td align="left">1、数据包大小混合</td>
+</tr>
+<tr>
+<td align="left"><strong>thrift</strong></td>
+<td align="left">与thrift RPC 实现集成，并在其基础上修改了报文头</td>
+<td align="left">长连接、NIO异步传输</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p><strong><em>关于RMI不支持防火墙穿透的补充说明：</em></strong></p>
+<p>原因在于RMI 底层实现中会有两个端口，一个是固定的用于服务发现的注册端口，另外会生成一个<strong><em>随机</em></strong>端口用于网络传输。因为这个随机端口就不能在防火墙中提前设置开放开。所以存在<em>防火墙穿透问题</em></p>
+<h3 id="协议的使用与配置"><a href="#协议的使用与配置" class="headerlink" title="协议的使用与配置:"></a><strong>协议的使用与配置:</strong></h3><p>Dubbo框架配置协议非常方便，用户只需要在 provider 应用中 配置*&lt;*<em>dubbo:protocol&gt;</em>元素即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line"> name: 协议名称 dubbo|rmi|hessian|http|</span><br><span class="line"> host:本机IP可不填，则系统自动获取</span><br><span class="line"> port：端口、填-1表示系统自动选择</span><br><span class="line"> server：运行服务 mina|netty|grizzy|servlet|jetty</span><br><span class="line"> serialization：序列化方式 hessian2|java|compactedjava|fastjson</span><br><span class="line"> 详细配置参见dubbo 官网 dubbo.io</span><br><span class="line">--&gt;</span><br><span class="line">&lt;dubbo:protocol name&#x3D;&quot;dubbo&quot; host&#x3D;&quot;192.168.0.11&quot; port&#x3D;&quot;20880&quot; server&#x3D;&quot;netty&quot;</span><br><span class="line"> serialization&#x3D;“hessian2” charset&#x3D;“UTF-8” &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+<p>#TODO 演示采用其它协议来配置Dubbo</p>
+<ul>
+<li><input disabled type="checkbox"> dubbo 协议采用 json 进行序列化(源码参见：com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol<em>)</em></li>
+<li><input disabled type="checkbox"> 采用RMI协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.rmi.RmiProtocol)</em></li>
+<li><input disabled type="checkbox"> 采用Http协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.http.HttpProtocol.InternalHandler)</em></li>
+<li><input disabled type="checkbox"> 采用Heason协议(源码参见:com.alibaba.dubbo.rpc.protocol.hessian.HessianProtocol.HessianHandler)</li>
+</ul>
+<p>new PrintWriter(System.out)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -aon|findstr &quot;17732&quot;</span><br></pre></td></tr></table></figure>
+<p>序列化：</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">fastjson</td>
+<td align="left">文本型：体积较大，性能慢、跨语言、可读性高</td>
+</tr>
+<tr>
+<td align="left">fst</td>
+<td align="left">二进制型：体积小、兼容 JDK 原生的序列化。要求 JDK 1.7 支持。</td>
+</tr>
+<tr>
+<td align="left">hessian2</td>
+<td align="left">二进制型：跨语言、容错性高、体积小</td>
+</tr>
+<tr>
+<td align="left">java</td>
+<td align="left">二进制型：在JAVA原生的基础上 可以写入Null</td>
+</tr>
+<tr>
+<td align="left">compactedjava</td>
+<td align="left">二进制型：与java 类似，内容做了压缩</td>
+</tr>
+<tr>
+<td align="left">nativejava</td>
+<td align="left">二进制型：原生的JAVA 序列化</td>
+</tr>
+<tr>
+<td align="left">kryo</td>
+<td align="left">二进制型：体积比hessian2 还要小，但容错性 没有hessian2 好</td>
+</tr>
+</tbody></table>
+<h3 id="Hessian-序列化："><a href="#Hessian-序列化：" class="headerlink" title="Hessian 序列化："></a>Hessian 序列化：</h3><ul>
+<li>参数及返回值需实现Serializable接口</li>
+<li>参数及返回值不能自定义实现List,Map,Number,Date,Calendar等接口，只能用 JDK 自带的实现，因为 hessian 会做特殊处理，自定义实现类中的属性值都会丢失。</li>
+<li>Hessian 序列化，只传成员属性值和值的类型，不传方法或静态变量，兼容情况<a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn1" target="_blank" rel="noopener">[1]</a><br><a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn2" target="_blank" rel="noopener">[2]</a></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>数据通讯</strong></th>
+<th align="left"><strong>情况</strong></th>
+<th align="left"><strong>结果</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">A-&gt;B</td>
+<td align="left">类A多一种 属性（或者说类B少一种 属性）</td>
+<td align="left">不抛异常，A多的那 个属性的值，B没有， 其他正常</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A使用多 出来的枚举进行传输</td>
+<td align="left">抛异常</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A不使用 多出来的枚举进行传输</td>
+<td align="left">不抛异常，B正常接 收数据</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">A和B的属性 名相同，但类型不相同</td>
+<td align="left">抛异常</td>
+</tr>
+<tr>
+<td align="left">A-&gt;B</td>
+<td align="left">serialId 不相同</td>
+<td align="left">正常传输</td>
+</tr>
+</tbody></table>
+<p>接口增加方法，对客户端无影响，如果该方法不是客户端需要的，客户端不需要重新部署。输入参数和结果集中增加属性，对客户端无影响，如果客户端并不需要新属性，不用重新部署。</p>
+<p>输入参数和结果集属性名变化，对客户端序列化无影响，但是如果客户端不重新部署，不管输入还是输出，属性名变化的属性值是获取不到的。</p>
+<p>总结：服务器端和客户端对领域对象并不需要完全一致，而是按照最大匹配原则。</p>
+<ul>
+<li><input disabled type="checkbox"> 演示Hession2 序列化的容错性</li>
+</ul>
+<h2 id="三-、RPC协议报文编码与实现详解"><a href="#三-、RPC协议报文编码与实现详解" class="headerlink" title="三 、RPC协议报文编码与实现详解"></a><strong>三 、RPC协议报文编码与实现详解</strong></h2><hr>
+<h3 id="RPC-传输实现："><a href="#RPC-传输实现：" class="headerlink" title="RPC 传输实现："></a><strong>RPC 传输实现：</strong></h3><p>RPC的协议的传输是基于 TCP/IP 做为基础使用Socket 或Netty、mina等网络编程组件实现。但有个问题是TCP是面向字节流的无边边界协议，其只管负责数据传输并不会区分每次请求所对应的消息，这样就会出现TCP协义传输当中的拆包与粘包问题</p>
+<h3 id="拆包与粘包产生的原因："><a href="#拆包与粘包产生的原因：" class="headerlink" title="拆包与粘包产生的原因："></a><strong>拆包与粘包产生的原因：</strong></h3><p>我们知道tcp是以流动的方式传输数据，传输的最小单位为一个报文段（segment）。tcp Header中有个Options标识位，常见的标识为mss(Maximum Segment Size)指的是，连接层每次传输的数据有个最大限制MTU(Maximum Transmission Unit)，一般是1500比特，超过这个量要分成多个报文段，mss则是这个最大限制减去TCP的header，光是要传输的数据的大小，一般为1460比特。换算成字节，也就是180多字节。</p>
+<p>tcp为提高性能，发送端会将需要发送的数据发送到缓冲区，等待缓冲区满了之后，再将缓冲中的数据发送到接收方。同理，接收方也有缓冲区这样的机制，来接收数据。这时就会出现以下情况：</p>
+<ol>
+<li>应用程序写入的数据大于MSS大小，这将会发生拆包。</li>
+<li>应用程序写入数据小于MSS大小，这将会发生粘包。</li>
+<li>接收方法不及时读取套接字缓冲区数据，这将发生粘包。<h3 id="拆包与粘包解决办法："><a href="#拆包与粘包解决办法：" class="headerlink" title="拆包与粘包解决办法："></a><strong>拆包与粘包解决办法：</strong></h3></li>
+<li>设置定长消息，服务端每次读取既定长度的内容作为一条完整消息。</li>
+<li>{“type”:”message”,”content”:”hello”}\n</li>
+<li>使用带消息头的协议、消息头存储消息开始标识及消息长度信息，服务端获取消息头的时候解析出消息长度，然后向后读取该长度的内容。</li>
+</ol>
+<p><strong>比如：</strong>Http协议 heade 中的 Content-Length 就表示消息体的大小。</p>
+<p><img src="/uploads/dubbo/Http%E5%8D%8F%E8%AE%AEhead.png" alt="http协议head.png"></p>
+<h3 id="Dubbo-协议报文编码："><a href="#Dubbo-协议报文编码：" class="headerlink" title="Dubbo 协议报文编码："></a>Dubbo 协议报文编码：</h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E7%BC%96%E7%A0%81.png" alt="Dubbo协议报文编码.png"></p>
+<ul>
+<li><strong>magic</strong>：类似java字节码文件里的魔数，用来判断是不是dubbo协议的数据包。魔数是常量0xdabb,用于判断报文的开始。</li>
+<li><strong>flag</strong>：标志位, 一共8个地址位。低四位用来表示消息体数据用的序列化工具的类型（默认hessian），高四位中，第一位为1表示是request请求，第二位为1表示双向传输（即有返回response），第三位为1表示是心跳ping事件。</li>
+<li><strong>status</strong>：状态位, 设置请求响应状态，dubbo定义了一些响应的类型。具体类型见 com.alibaba.dubbo.remoting.exchange.Response</li>
+<li><strong>invoke id：</strong>消息id, long 类型。每一个请求的唯一识别id（由于采用异步通讯的方式，用来把请求request和返回的response对应上）</li>
+<li><strong>body length：</strong>消息体 body 长度, int 类型，即记录Body Content有多少个字节。</li>
+</ul>
+<p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt="img.png"></p>
+<pre><code>*（注：相关源码参见**c**om.alibaba.dubbo.rpc.protocol.dubbo.DubboCodec**）*</code></pre><h3 id="Dubbo协议的编解码过程："><a href="#Dubbo协议的编解码过程：" class="headerlink" title="Dubbo协议的编解码过程："></a><strong><em>Dubbo协议的编解码过程：</em></strong></h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E7%9A%84%E7%BC%96%E8%A7%A3%E7%A0%81%E8%BF%87%E7%A8%8B.png" alt="Dubbo协议的编解码过程.png"></p>
+<p><strong>Dubbo 协议编解码实现过程*</strong>(源码来源于<em>*dubbo2.5.8 )</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、DubboCodec.encodeRequestData() 116L &#x2F;&#x2F; 编码request</span><br><span class="line">2、DecodeableRpcInvocation.decode()  89L   &#x2F;&#x2F; 解码request</span><br><span class="line">3、DubboCodec.encodeResponseData()   184L  &#x2F;&#x2F; 编码response    </span><br><span class="line">4、DecodeableRpcResult.decode()      73L   &#x2F;&#x2F; 解码response</span><br></pre></td></tr></table></figure>
+
 
           
         
@@ -1492,379 +1684,6 @@
 <p>com.alibaba.dubbo.registry.redis.RedisRegistry#deferExpired<br>com.alibaba.dubbo.registry.integration.RegistryDirectory<br>com.alibaba.dubbo.registry.support.ProviderConsumerRegTable</p>
 <h1 id="Zookeeper-注册中心"><a href="#Zookeeper-注册中心" class="headerlink" title="Zookeeper 注册中心"></a>Zookeeper 注册中心</h1><p>Zookeper是一个树型的目录服务，本身支持变更推送相比redis的实现Publish/Subscribe功能更稳定。</p>
 <p>结构：<br><img src="/uploads/dubbo/Zookeeper%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83.png" alt="Zookeeper注册中心.png"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/09/12/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/dubbo/%E5%8D%8F%E8%AE%AE%E6%A8%A1%E5%9D%97/" itemprop="url">dubbo协议模块</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-12T00:00:00+00:00">
-                2021-09-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2.2k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  8 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>课程概要：</strong></p>
-<ol>
-<li>RPC协议基本组成</li>
-<li>RPC协议报文编码与实现详解</li>
-<li>Dubbo中所支持RPC协议与使用<h3 id="RPC协议基本组成"><a href="#RPC协议基本组成" class="headerlink" title="## RPC协议基本组成"></a>## <strong>RPC协议基本组成</strong></h3></li>
-</ol>
-<hr>
-<h3 id="RPC-协议名词解释"><a href="#RPC-协议名词解释" class="headerlink" title="RPC 协议名词解释"></a><strong>RPC 协议名词解释</strong></h3><p>在一个典型RPC的使用场景中，包含了服务发现、负载、容错、网络传输、序列化等组件，其中RPC协议就指明了程序如何进行网络传输和序列化 。也就是说一个RPC协议的实现就等于一个非透明的远程调用实现，如何做到的的呢？</p>
-<p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE.png" alt="Rpc协议.png"></p>
-<h3 id="协议基本组成："><a href="#协议基本组成：" class="headerlink" title="协议基本组成："></a><strong>协议基本组成：</strong></h3><p><img src="/uploads/dubbo/Rpc%E5%8D%8F%E8%AE%AE%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90.png" alt="Rpc协议基本组成.png"></p>
-<ol>
-<li>地址：服务提供者地址</li>
-<li>端口：协议指定开放的端口</li>
-<li>报文编码：协议报文编码 ，分为请求头和请求体两部分。</li>
-<li>序列化方式：将请求体序列化成对象<ol>
-<li>Hessian2Serialization、</li>
-<li>DubboSerialization、</li>
-<li>JavaSerialization</li>
-<li>JsonSerialization</li>
-</ol>
-</li>
-<li>运行服务: 网络传输实现<ol>
-<li>netty</li>
-<li>mina</li>
-<li>RMI 服务</li>
-<li>servlet 容器（jetty、Tomcat、Jboss）<h2 id="Dubbo中所支持RPC协议使用"><a href="#Dubbo中所支持RPC协议使用" class="headerlink" title="Dubbo中所支持RPC协议使用"></a><strong>Dubbo中所支持RPC协议使用</strong></h2></li>
-</ol>
-</li>
-</ol>
-<hr>
-<p><strong>dubbo 支持的RPC协议列表</strong></p>
-<table>
-<thead>
-<tr>
-<th align="left"><strong>名称</strong></th>
-<th align="left"><strong>实现描述</strong></th>
-<th align="left"><strong>连接描述</strong></th>
-<th align="left"><strong>适用场景</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>dubbo</strong></td>
-<td align="left">传输服务: mina, netty(默认), grizzy序列化: hessian2(默认), java, fastjson自定义报文</td>
-<td align="left">单个长连接NIO异步传输</td>
-<td align="left">1、常规RPC调用2、传输数据量小3、提供者少于消费者</td>
-</tr>
-<tr>
-<td align="left"><strong>rmi</strong></td>
-<td align="left">传输：java rmi 服务序列化：java原生二进制序列化</td>
-<td align="left">多个短连接BIO同步传输</td>
-<td align="left">1、常规RPC调用  2、与原RMI客户端集成  3、可传少量文件  4、不防火墙穿透</td>
-</tr>
-<tr>
-<td align="left"><strong>hessian</strong></td>
-<td align="left">传输服务：servlet容器序列化：hessian二进制序列化</td>
-<td align="left">基于Http 协议传输，依懒servlet容器配置</td>
-<td align="left">1、提供者多于消费者  2、可传大字段和文件  <del>3、跨语言调用</del></td>
-</tr>
-<tr>
-<td align="left"><strong>http</strong></td>
-<td align="left">传输服务：servlet容器序列化：java原生二进制序列化</td>
-<td align="left">依懒servlet容器配置</td>
-<td align="left">1、数据包大小混合</td>
-</tr>
-<tr>
-<td align="left"><strong>thrift</strong></td>
-<td align="left">与thrift RPC 实现集成，并在其基础上修改了报文头</td>
-<td align="left">长连接、NIO异步传输</td>
-<td align="left"></td>
-</tr>
-</tbody></table>
-<p><strong><em>关于RMI不支持防火墙穿透的补充说明：</em></strong></p>
-<p>原因在于RMI 底层实现中会有两个端口，一个是固定的用于服务发现的注册端口，另外会生成一个<strong><em>随机</em></strong>端口用于网络传输。因为这个随机端口就不能在防火墙中提前设置开放开。所以存在<em>防火墙穿透问题</em></p>
-<h3 id="协议的使用与配置"><a href="#协议的使用与配置" class="headerlink" title="协议的使用与配置:"></a><strong>协议的使用与配置:</strong></h3><p>Dubbo框架配置协议非常方便，用户只需要在 provider 应用中 配置*&lt;*<em>dubbo:protocol&gt;</em>元素即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line"> name: 协议名称 dubbo|rmi|hessian|http|</span><br><span class="line"> host:本机IP可不填，则系统自动获取</span><br><span class="line"> port：端口、填-1表示系统自动选择</span><br><span class="line"> server：运行服务 mina|netty|grizzy|servlet|jetty</span><br><span class="line"> serialization：序列化方式 hessian2|java|compactedjava|fastjson</span><br><span class="line"> 详细配置参见dubbo 官网 dubbo.io</span><br><span class="line">--&gt;</span><br><span class="line">&lt;dubbo:protocol name&#x3D;&quot;dubbo&quot; host&#x3D;&quot;192.168.0.11&quot; port&#x3D;&quot;20880&quot; server&#x3D;&quot;netty&quot;</span><br><span class="line"> serialization&#x3D;“hessian2” charset&#x3D;“UTF-8” &#x2F;&gt;</span><br></pre></td></tr></table></figure>
-<p>#TODO 演示采用其它协议来配置Dubbo</p>
-<ul>
-<li><input disabled type="checkbox"> dubbo 协议采用 json 进行序列化(源码参见：com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol<em>)</em></li>
-<li><input disabled type="checkbox"> 采用RMI协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.rmi.RmiProtocol)</em></li>
-<li><input disabled type="checkbox"> 采用Http协议(源码参见：<em>com.alibaba.dubbo.rpc.protocol.http.HttpProtocol.InternalHandler)</em></li>
-<li><input disabled type="checkbox"> 采用Heason协议(源码参见:com.alibaba.dubbo.rpc.protocol.hessian.HessianProtocol.HessianHandler)</li>
-</ul>
-<p>new PrintWriter(System.out)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -aon|findstr &quot;17732&quot;</span><br></pre></td></tr></table></figure>
-<p>序列化：</p>
-<table>
-<thead>
-<tr>
-<th align="left"></th>
-<th align="left">特点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">fastjson</td>
-<td align="left">文本型：体积较大，性能慢、跨语言、可读性高</td>
-</tr>
-<tr>
-<td align="left">fst</td>
-<td align="left">二进制型：体积小、兼容 JDK 原生的序列化。要求 JDK 1.7 支持。</td>
-</tr>
-<tr>
-<td align="left">hessian2</td>
-<td align="left">二进制型：跨语言、容错性高、体积小</td>
-</tr>
-<tr>
-<td align="left">java</td>
-<td align="left">二进制型：在JAVA原生的基础上 可以写入Null</td>
-</tr>
-<tr>
-<td align="left">compactedjava</td>
-<td align="left">二进制型：与java 类似，内容做了压缩</td>
-</tr>
-<tr>
-<td align="left">nativejava</td>
-<td align="left">二进制型：原生的JAVA 序列化</td>
-</tr>
-<tr>
-<td align="left">kryo</td>
-<td align="left">二进制型：体积比hessian2 还要小，但容错性 没有hessian2 好</td>
-</tr>
-</tbody></table>
-<h3 id="Hessian-序列化："><a href="#Hessian-序列化：" class="headerlink" title="Hessian 序列化："></a>Hessian 序列化：</h3><ul>
-<li>参数及返回值需实现Serializable接口</li>
-<li>参数及返回值不能自定义实现List,Map,Number,Date,Calendar等接口，只能用 JDK 自带的实现，因为 hessian 会做特殊处理，自定义实现类中的属性值都会丢失。</li>
-<li>Hessian 序列化，只传成员属性值和值的类型，不传方法或静态变量，兼容情况<a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn1" target="_blank" rel="noopener">[1]</a><br><a href="http://dubbo.apache.org/zh-cn/docs/user/references/protocol/dubbo.html#fn2" target="_blank" rel="noopener">[2]</a></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="left"><strong>数据通讯</strong></th>
-<th align="left"><strong>情况</strong></th>
-<th align="left"><strong>结果</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">A-&gt;B</td>
-<td align="left">类A多一种 属性（或者说类B少一种 属性）</td>
-<td align="left">不抛异常，A多的那 个属性的值，B没有， 其他正常</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A使用多 出来的枚举进行传输</td>
-<td align="left">抛异常</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">枚举A多一种 枚举（或者说B少一种 枚举），A不使用 多出来的枚举进行传输</td>
-<td align="left">不抛异常，B正常接 收数据</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">A和B的属性 名相同，但类型不相同</td>
-<td align="left">抛异常</td>
-</tr>
-<tr>
-<td align="left">A-&gt;B</td>
-<td align="left">serialId 不相同</td>
-<td align="left">正常传输</td>
-</tr>
-</tbody></table>
-<p>接口增加方法，对客户端无影响，如果该方法不是客户端需要的，客户端不需要重新部署。输入参数和结果集中增加属性，对客户端无影响，如果客户端并不需要新属性，不用重新部署。</p>
-<p>输入参数和结果集属性名变化，对客户端序列化无影响，但是如果客户端不重新部署，不管输入还是输出，属性名变化的属性值是获取不到的。</p>
-<p>总结：服务器端和客户端对领域对象并不需要完全一致，而是按照最大匹配原则。</p>
-<ul>
-<li><input disabled type="checkbox"> 演示Hession2 序列化的容错性</li>
-</ul>
-<h2 id="三-、RPC协议报文编码与实现详解"><a href="#三-、RPC协议报文编码与实现详解" class="headerlink" title="三 、RPC协议报文编码与实现详解"></a><strong>三 、RPC协议报文编码与实现详解</strong></h2><hr>
-<h3 id="RPC-传输实现："><a href="#RPC-传输实现：" class="headerlink" title="RPC 传输实现："></a><strong>RPC 传输实现：</strong></h3><p>RPC的协议的传输是基于 TCP/IP 做为基础使用Socket 或Netty、mina等网络编程组件实现。但有个问题是TCP是面向字节流的无边边界协议，其只管负责数据传输并不会区分每次请求所对应的消息，这样就会出现TCP协义传输当中的拆包与粘包问题</p>
-<h3 id="拆包与粘包产生的原因："><a href="#拆包与粘包产生的原因：" class="headerlink" title="拆包与粘包产生的原因："></a><strong>拆包与粘包产生的原因：</strong></h3><p>我们知道tcp是以流动的方式传输数据，传输的最小单位为一个报文段（segment）。tcp Header中有个Options标识位，常见的标识为mss(Maximum Segment Size)指的是，连接层每次传输的数据有个最大限制MTU(Maximum Transmission Unit)，一般是1500比特，超过这个量要分成多个报文段，mss则是这个最大限制减去TCP的header，光是要传输的数据的大小，一般为1460比特。换算成字节，也就是180多字节。</p>
-<p>tcp为提高性能，发送端会将需要发送的数据发送到缓冲区，等待缓冲区满了之后，再将缓冲中的数据发送到接收方。同理，接收方也有缓冲区这样的机制，来接收数据。这时就会出现以下情况：</p>
-<ol>
-<li>应用程序写入的数据大于MSS大小，这将会发生拆包。</li>
-<li>应用程序写入数据小于MSS大小，这将会发生粘包。</li>
-<li>接收方法不及时读取套接字缓冲区数据，这将发生粘包。<h3 id="拆包与粘包解决办法："><a href="#拆包与粘包解决办法：" class="headerlink" title="拆包与粘包解决办法："></a><strong>拆包与粘包解决办法：</strong></h3></li>
-<li>设置定长消息，服务端每次读取既定长度的内容作为一条完整消息。</li>
-<li>{“type”:”message”,”content”:”hello”}\n</li>
-<li>使用带消息头的协议、消息头存储消息开始标识及消息长度信息，服务端获取消息头的时候解析出消息长度，然后向后读取该长度的内容。</li>
-</ol>
-<p><strong>比如：</strong>Http协议 heade 中的 Content-Length 就表示消息体的大小。</p>
-<p><img src="/uploads/dubbo/Http%E5%8D%8F%E8%AE%AEhead.png" alt="http协议head.png"></p>
-<h3 id="Dubbo-协议报文编码："><a href="#Dubbo-协议报文编码：" class="headerlink" title="Dubbo 协议报文编码："></a>Dubbo 协议报文编码：</h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E7%BC%96%E7%A0%81.png" alt="Dubbo协议报文编码.png"></p>
-<ul>
-<li><strong>magic</strong>：类似java字节码文件里的魔数，用来判断是不是dubbo协议的数据包。魔数是常量0xdabb,用于判断报文的开始。</li>
-<li><strong>flag</strong>：标志位, 一共8个地址位。低四位用来表示消息体数据用的序列化工具的类型（默认hessian），高四位中，第一位为1表示是request请求，第二位为1表示双向传输（即有返回response），第三位为1表示是心跳ping事件。</li>
-<li><strong>status</strong>：状态位, 设置请求响应状态，dubbo定义了一些响应的类型。具体类型见 com.alibaba.dubbo.remoting.exchange.Response</li>
-<li><strong>invoke id：</strong>消息id, long 类型。每一个请求的唯一识别id（由于采用异步通讯的方式，用来把请求request和返回的response对应上）</li>
-<li><strong>body length：</strong>消息体 body 长度, int 类型，即记录Body Content有多少个字节。</li>
-</ul>
-<p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt="img.png"></p>
-<pre><code>*（注：相关源码参见**c**om.alibaba.dubbo.rpc.protocol.dubbo.DubboCodec**）*</code></pre><h3 id="Dubbo协议的编解码过程："><a href="#Dubbo协议的编解码过程：" class="headerlink" title="Dubbo协议的编解码过程："></a><strong><em>Dubbo协议的编解码过程：</em></strong></h3><p><img src="/uploads/dubbo/Dubbo%E5%8D%8F%E8%AE%AE%E7%9A%84%E7%BC%96%E8%A7%A3%E7%A0%81%E8%BF%87%E7%A8%8B.png" alt="Dubbo协议的编解码过程.png"></p>
-<p><strong>Dubbo 协议编解码实现过程*</strong>(源码来源于<em>*dubbo2.5.8 )</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、DubboCodec.encodeRequestData() 116L &#x2F;&#x2F; 编码request</span><br><span class="line">2、DecodeableRpcInvocation.decode()  89L   &#x2F;&#x2F; 解码request</span><br><span class="line">3、DubboCodec.encodeResponseData()   184L  &#x2F;&#x2F; 编码response    </span><br><span class="line">4、DecodeableRpcResult.decode()      73L   &#x2F;&#x2F; 解码response</span><br></pre></td></tr></table></figure>
-
 
           
         
@@ -2947,6 +2766,227 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/12/20/active/miaosha/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/12/20/active/miaosha/" itemprop="url">秒杀场景</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-20T00:00:00+00:00">
+                2019-12-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/active/" itemprop="url" rel="index">
+                    <span itemprop="name">active</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  703 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="秒杀场景可能遇到的问题（用户流程角度）"><a href="#秒杀场景可能遇到的问题（用户流程角度）" class="headerlink" title="秒杀场景可能遇到的问题（用户流程角度）"></a>秒杀场景可能遇到的问题（用户流程角度）</h1><ul>
+<li><p>问题一.即将到秒杀时间，同时请求网页过多，打开网页速度慢</p>
+</li>
+<li><p>问题二.进入页面后，未到秒杀时间，用户一直点击购买按钮，一直发起请求</p>
+</li>
+<li><p>问题三.用户拿到接口地址，恶意请求（用脚本）</p>
+</li>
+<li><p>问题四.超卖现象</p>
+</li>
+<li><p>问题五.数据库请求过多，数据库奔溃</p>
+</li>
+</ul>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h2><ul>
+<li><p>针对于动态页面（jsp，ftl）可以把整个页面存储在redis中，避免页面渲染。</p>
+</li>
+<li><p>前后端分离项目，页面单独部署，使用cdn加速，资源静态</p>
+</li>
+<li><p>打开网页速度慢，除了页面的原因外，后台请求返回慢也有很大的关系，简单说就是后台高并发能力不足，一遇到此类场景，cpu，内存飚升，程序响应慢。单台tomcat并发量不足，可以集群部署然后使用nginx做负载均衡，恶意请求也可以在此拦截。</p>
+</li>
+<li><p>后台对请求限流</p>
+</li>
+</ul>
+<h2 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h2><ul>
+<li>页面按钮控制，未到时间按钮不能点击，需要页面定时请求后台获取最新的北京时间，不能以页面本地时间为准</li>
+<li>在用户点击过后，再把按钮设置无效，防止无效重复点击</li>
+</ul>
+<h2 id="问题三"><a href="#问题三" class="headerlink" title="问题三"></a>问题三</h2><p>接口地址动态化，通过MD5之类的加密算法加密随机的字符串去做url，然后通过前端代码获取url后台校验才能通过</p>
+<h2 id="问题四"><a href="#问题四" class="headerlink" title="问题四"></a>问题四</h2><h3 id="处理流程："><a href="#处理流程：" class="headerlink" title="处理流程："></a>处理流程：</h3><p>典型的读多先少场景，使用mysql等nosql，把库存存入redis中，进行库存预热。通过三级缓冲保证数据库压力，本地内存标记，库存修改在redis中进行预存，接着通过mq进行异步下单，处理数据库。若下单成功，页面轮询接口返回订单处理状态。</p>
+<h3 id="解决超卖方案"><a href="#解决超卖方案" class="headerlink" title="解决超卖方案"></a>解决超卖方案</h3><ul>
+<li>防止数据库内存为0，在修改时进行库存判断，大于0才更新。</li>
+<li>用户id与商品id建立唯一所以，防止同一用户重复购买同一件商品。</li>
+<li>实现乐观锁，商品信息中年增加version字段。每次更新时version+1，更新时候带上版本号，当提交前版本号等于更新前版本号，说明此时没有被其他线程影响到，正常更新，如果冲突了则不会进行提交更新。当库存是足够的情况下发生乐观锁冲突就进行一定次数的重试。</li>
+</ul>
+<p>一整套解决方案</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/11/16/16e72d24415cb009?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="秒杀"></p>
+<h2 id="产生更多的问题"><a href="#产生更多的问题" class="headerlink" title="产生更多的问题"></a>产生更多的问题</h2><ul>
+<li>redis集群，数据同步,分布式锁等</li>
+<li>mq高可用</li>
+<li>限流&amp;降级&amp;熔断&amp;隔离</li>
+<li>分布式服务，事务处理。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -3001,7 +3041,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-count">81</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3012,7 +3052,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -3122,7 +3162,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">105.4k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 
@@ -3149,7 +3189,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共105.4k字</span>
+  <span class="post-count">博客全站共100.6k字</span>
 </div>
 
         
