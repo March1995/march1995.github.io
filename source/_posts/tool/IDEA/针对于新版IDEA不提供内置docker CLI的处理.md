@@ -1,3 +1,11 @@
+---
+title: 针对于新版IDEA不提供内置docker CLI的处理
+date: 2026-05-01 
+keywords: Docker IDEA
+categories: [IDEA]
+---
+
+
 # 注意：如果你本地已经安装了 Docker Desktop 或其他完整 Docker 发行版，一般可以忽略本文
 
 # 1. 背景
@@ -12,7 +20,7 @@
 
 # 2. 配置位置
 
-![[Pasted image 20260319095859.png]]
+![[attachments/Pasted image 20260319095859.png]]
 
 进入 Docker 配置页面后：
 
