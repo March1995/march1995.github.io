@@ -479,6 +479,273 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/08/14/database/MysqlRR%E7%BA%A7%E5%88%AB%E5%B9%BB%E8%AF%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/08/14/database/MysqlRR%E7%BA%A7%E5%88%AB%E5%B9%BB%E8%AF%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/" itemprop="url">MysqlRR级别幻读解决方案解析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-08-14T00:00:00+00:00">
+                2025-08-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/database/" itemprop="url" rel="index">
+                    <span itemprop="name">database</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  855 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="MysqlRR级别幻读解决方案解析-SQL优化技术"><a href="#MysqlRR级别幻读解决方案解析-SQL优化技术" class="headerlink" title="MysqlRR级别幻读解决方案解析 SQL优化技术"></a>MysqlRR级别幻读解决方案解析 SQL优化技术</h1><p>InnoDB 在 <strong>RR（Repeatable Read）</strong> 隔离级别下，主要通过 <strong>MVCC（多版本并发控制）</strong> 和 <strong>Next-Key Locking（临键锁）</strong> 解决了 <strong>大部分常见的幻读问题</strong>，但并非所有场景。具体来说，它解决了以下场景的幻读：  </p>
+<hr>
+<h3 id="1-纯快照读（非锁定读）场景下的幻读"><a href="#1-纯快照读（非锁定读）场景下的幻读" class="headerlink" title="1. 纯快照读（非锁定读）场景下的幻读"></a><strong>1. 纯快照读（非锁定读）场景下的幻读</strong></h3><p><strong>场景</strong>：  </p>
+<ul>
+<li>事务 A 执行 <code>SELECT * FROM t WHERE id &gt; 100</code>（普通查询，不加锁）  </li>
+<li>事务 B 插入 <code>id = 101</code> 并提交  </li>
+<li>事务 A 再次执行相同的 <code>SELECT</code>  </li>
+</ul>
+<p><strong>InnoDB 的解决方案</strong>：  </p>
+<ul>
+<li>通过 <strong>MVCC</strong>，事务 A 的两次查询会基于 <strong>同一快照</strong>，因此不会看到事务 B 新插入的行，避免了幻读。  </li>
+</ul>
+<p><strong>结论</strong>：<strong>纯 <code>SELECT</code> 查询不会出现幻读</strong>。  </p>
+<hr>
+<h3 id="2-锁定读（当前读）场景下的幻读"><a href="#2-锁定读（当前读）场景下的幻读" class="headerlink" title="2. 锁定读（当前读）场景下的幻读"></a><strong>2. 锁定读（当前读）场景下的幻读</strong></h3><p><strong>场景</strong>：  </p>
+<ul>
+<li>事务 A 执行 <code>SELECT * FROM t WHERE id &gt; 100 FOR UPDATE</code>（加锁读）  </li>
+<li>事务 B 尝试插入 <code>id = 101</code>  </li>
+</ul>
+<p><strong>InnoDB 的解决方案</strong>：  </p>
+<ul>
+<li>使用 <strong>Next-Key Locking</strong>（临键锁），锁定 <code>id &gt; 100</code> 的索引记录及其间隙，阻止事务 B 插入 <code>id = 101</code>，从而避免幻读。  </li>
+</ul>
+<p><strong>结论</strong>：<strong><code>SELECT ... FOR UPDATE</code> 或 <code>SELECT ... LOCK IN SHARE MODE</code> 可以防止幻读</strong>。  </p>
+<hr>
+<h3 id="3-连续两次当前读的场景"><a href="#3-连续两次当前读的场景" class="headerlink" title="3. 连续两次当前读的场景"></a><strong>3. 连续两次当前读的场景</strong></h3><p><strong>场景</strong>：  </p>
+<ul>
+<li>事务 A 执行 <code>SELECT * FROM t WHERE id &gt; 100 FOR UPDATE</code>  </li>
+<li>事务 B 尝试插入 <code>id = 101</code>（被阻塞）  </li>
+<li>事务 A 再次执行相同的 <code>SELECT ... FOR UPDATE</code>  </li>
+</ul>
+<p><strong>InnoDB 的解决方案</strong>：  </p>
+<ul>
+<li>由于临键锁的存在，事务 B 无法插入数据，事务 A 的两次查询结果一致，不会出现幻读。  </li>
+</ul>
+<p><strong>结论</strong>：<strong>连续锁定读不会出现幻读</strong>。  </p>
+<hr>
+<h3 id="🔴-未解决的幻读场景（例外情况）"><a href="#🔴-未解决的幻读场景（例外情况）" class="headerlink" title="🔴 未解决的幻读场景（例外情况）"></a><strong>🔴 未解决的幻读场景（例外情况）</strong></h3><p>InnoDB 的 RR 隔离级别 <strong>并非完全解决所有幻读</strong>，在以下情况仍可能出现幻读：  </p>
+<h4 id="情况-1：先快照读，后当前读"><a href="#情况-1：先快照读，后当前读" class="headerlink" title="情况 1：先快照读，后当前读"></a><strong>情况 1：先快照读，后当前读</strong></h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 事务 A</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;          <span class="comment">-- 快照读，看不到新数据（无幻读）</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>; <span class="comment">-- 当前读，可能看到新插入的数据（幻读）</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一次查询是 <strong>快照读</strong>（MVCC），第二次是 <strong>当前读</strong>（临键锁），如果事务 B 在两次查询之间插入了数据，第二次查询可能会看到新数据，导致幻读。  </li>
+</ul>
+<h4 id="情况-2：先查询后更新"><a href="#情况-2：先查询后更新" class="headerlink" title="情况 2：先查询后更新"></a><strong>情况 2：先查询后更新</strong></h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 事务 A</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;          <span class="comment">-- 快照读，看不到新数据</span></span><br><span class="line"><span class="comment">-- 事务 B 插入 id=101 并提交</span></span><br><span class="line"><span class="keyword">UPDATE</span> t <span class="keyword">SET</span> <span class="keyword">name</span>=<span class="string">'new'</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;  <span class="comment">-- 更新会作用到新插入的行</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;          <span class="comment">-- 现在能看到 id=101（幻读）</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>虽然第一次 <code>SELECT</code> 是快照读，但 <code>UPDATE</code> 会基于 <strong>最新数据</strong> 执行，可能修改其他事务新插入的行，导致后续查询出现幻读。  </li>
+</ul>
+<hr>
+<h3 id="📌-总结"><a href="#📌-总结" class="headerlink" title="📌 总结"></a><strong>📌 总结</strong></h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>是否解决幻读</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>纯快照读（普通 <code>SELECT</code>）</strong></td>
+<td>✅ 解决</td>
+<td>MVCC 保证一致性视图</td>
+</tr>
+<tr>
+<td><strong>锁定读（<code>SELECT ... FOR UPDATE</code>）</strong></td>
+<td>✅ 解决</td>
+<td>Next-Key Locking 阻止插入</td>
+</tr>
+<tr>
+<td><strong>连续锁定读</strong></td>
+<td>✅ 解决</td>
+<td>临键锁持续生效</td>
+</tr>
+<tr>
+<td><strong>先快照读后当前读</strong></td>
+<td>❌ 未解决</td>
+<td>两次查询模式不同</td>
+</tr>
+<tr>
+<td><strong>先查询后更新</strong></td>
+<td>❌ 未解决</td>
+<td><code>UPDATE</code> 基于最新数据</td>
+</tr>
+</tbody></table>
+<p><strong>结论</strong>：  </p>
+<ul>
+<li>InnoDB 在 RR 级别下 <strong>解决了大部分幻读问题</strong>，尤其是纯查询和锁定读场景。  </li>
+<li>但在 <strong>混合使用快照读和当前读</strong> 或 <strong>先查询后更新</strong> 时，仍可能出现幻读。  </li>
+<li>如果业务要求 <strong>完全避免幻读</strong>，可以使用 <strong>Serializable（串行化）</strong> 隔离级别，或合理使用 <code>SELECT ... FOR UPDATE</code> 进行锁定。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/08/14/database/innodb-implementation-of-mvcc%EF%BC%88%E8%BD%AC%E8%BD%BD%E8%87%AASnailclimb%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -861,7 +1128,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/08/14/database/MysqlRR%E7%BA%A7%E5%88%AB%E5%B9%BB%E8%AF%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/06/10/spring/IOC/AnnotatedBeanDefinitionReader/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -880,7 +1147,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2025/08/14/database/MysqlRR%E7%BA%A7%E5%88%AB%E5%B9%BB%E8%AF%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/" itemprop="url">MysqlRR级别幻读解决方案解析</a></h1>
+                <a class="post-title-link" href="/2025/06/10/spring/IOC/AnnotatedBeanDefinitionReader/" itemprop="url">Spring AnnotatedBeanDefinitionReader</a></h1>
         
 
         <div class="post-meta">
@@ -892,8 +1159,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-08-14T00:00:00+00:00">
-                2025-08-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-06-10T00:00:00+00:00">
+                2025-06-10
               </time>
             
 
@@ -915,8 +1182,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/database/" itemprop="url" rel="index">
-                    <span itemprop="name">database</span>
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
                   </a>
                 </span>
 
@@ -946,7 +1213,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  855 字
+                  925 字
                 </span>
               
 
@@ -985,93 +1252,54 @@
       
         
           
-            <h1 id="MysqlRR级别幻读解决方案解析-SQL优化技术"><a href="#MysqlRR级别幻读解决方案解析-SQL优化技术" class="headerlink" title="MysqlRR级别幻读解决方案解析 SQL优化技术"></a>MysqlRR级别幻读解决方案解析 SQL优化技术</h1><p>InnoDB 在 <strong>RR（Repeatable Read）</strong> 隔离级别下，主要通过 <strong>MVCC（多版本并发控制）</strong> 和 <strong>Next-Key Locking（临键锁）</strong> 解决了 <strong>大部分常见的幻读问题</strong>，但并非所有场景。具体来说，它解决了以下场景的幻读：  </p>
-<hr>
-<h3 id="1-纯快照读（非锁定读）场景下的幻读"><a href="#1-纯快照读（非锁定读）场景下的幻读" class="headerlink" title="1. 纯快照读（非锁定读）场景下的幻读"></a><strong>1. 纯快照读（非锁定读）场景下的幻读</strong></h3><p><strong>场景</strong>：  </p>
+            <p>在 <code>AnnotationConfigApplicationContext</code> 的无参构造函数中，<code>AnnotatedBeanDefinitionReader</code> 的主要作用是为后续手动注册基于注解的 <code>BeanDefinition</code> 做准备。以下详细介绍其逻辑流程和作用：</p>
+<ol>
+<li><p><strong><code>AnnotationConfigApplicationContext</code> 无参构造函数调用 <code>AnnotatedBeanDefinitionReader</code> 相关逻辑</strong></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AnnotationConfigApplicationContext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.reader = <span class="keyword">new</span> AnnotatedBeanDefinitionReader(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">this</span>.scanner = <span class="keyword">new</span> ClassPathBeanDefinitionScanner(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 在无参构造函数中，创建了 <code>AnnotatedBeanDefinitionReader</code> 和 <code>ClassPathBeanDefinitionScanner</code> 实例。这里重点分析 <code>AnnotatedBeanDefinitionReader</code>。</p>
+</li>
+<li><p><strong><code>AnnotatedBeanDefinitionReader</code> 的构造函数</strong></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AnnotatedBeanDefinitionReader</span><span class="params">(BeanDefinitionRegistry registry, Environment environment)</span> </span>&#123;</span><br><span class="line">    Assert.notNull(registry, <span class="string">"BeanDefinitionRegistry must not be null"</span>);</span><br><span class="line">    Assert.notNull(environment, <span class="string">"Environment must not be null"</span>);</span><br><span class="line">    <span class="keyword">this</span>.registry = registry;</span><br><span class="line">    <span class="keyword">this</span>.conditionEvaluator = <span class="keyword">new</span> ConditionEvaluator(registry, environment, <span class="keyword">null</span>);</span><br><span class="line">    AnnotationConfigUtils.registerAnnotationConfigProcessors(<span class="keyword">this</span>.registry);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>事务 A 执行 <code>SELECT * FROM t WHERE id &gt; 100</code>（普通查询，不加锁）  </li>
-<li>事务 B 插入 <code>id = 101</code> 并提交  </li>
-<li>事务 A 再次执行相同的 <code>SELECT</code>  </li>
+<li><strong>参数校验</strong>：确保传入的 <code>BeanDefinitionRegistry</code> 和 <code>Environment</code> 不为空。<code>BeanDefinitionRegistry</code> 用于注册 <code>BeanDefinition</code>，在 <code>AnnotationConfigApplicationContext</code> 中，它自身实现了该接口。</li>
+<li><strong>初始化条件评估器</strong>：创建 <code>ConditionEvaluator</code>，用于评估 <code>@Conditional</code> 注解。<code>@Conditional</code> 注解允许根据特定条件决定是否注册某个 <code>Bean</code>。例如，如果系统属性满足特定条件，才注册某个 <code>Bean</code>。</li>
+<li><strong>注册注解配置处理器</strong>：调用 <code>AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry)</code> 方法，注册一系列与注解处理相关的 <code>BeanDefinition</code>。这些处理器包括：<ul>
+<li><code>ConfigurationClassPostProcessor</code>：处理 <code>@Configuration</code> 注解的配置类，解析配置类中的 <code>@Bean</code> 方法等。</li>
+<li><code>AutowiredAnnotationBeanPostProcessor</code>：处理 <code>@Autowired</code> 注解，实现自动装配功能。</li>
+<li><code>RequiredAnnotationBeanPostProcessor</code>：处理 <code>@Required</code> 注解，确保被注解的属性被设置。</li>
+<li><code>CommonAnnotationBeanPostProcessor</code>：处理 <code>@Resource</code>、<code>@PostConstruct</code> 和 <code>@PreDestroy</code> 等注解。</li>
+<li><code>PersistenceAnnotationBeanPostProcessor</code>（如果类路径中有相关的持久化依赖）：处理持久化相关的注解。</li>
 </ul>
-<p><strong>InnoDB 的解决方案</strong>：  </p>
+</li>
+</ul>
+</li>
+<li><p><strong><code>AnnotatedBeanDefinitionReader</code> 的 <code>register</code> 方法逻辑（用于注册Bean）</strong></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Class&lt;?&gt;... componentClasses)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (Class&lt;?&gt; componentClass : componentClasses) &#123;</span><br><span class="line">        registerBean(componentClass);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>通过 <strong>MVCC</strong>，事务 A 的两次查询会基于 <strong>同一快照</strong>，因此不会看到事务 B 新插入的行，避免了幻读。  </li>
+<li><p><strong>遍历注册类</strong>：<code>register</code> 方法接受多个 <code>Class</code> 参数，遍历这些类，对每个类调用 <code>registerBean</code> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">registerBean</span><span class="params">(Class&lt;T&gt; beanClass, @Nullable Supplier&lt;T&gt; supplier, @Nullable String... names,</span></span></span><br><span class="line"><span class="function"><span class="params">                             @Nullable Class&lt;? extends Annotation&gt;... qualifiers,</span></span></span><br><span class="line"><span class="function"><span class="params">                             BeanDefinitionCustomizer... definitionCustomizers)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    AnnotatedGenericBeanDefinition abd = <span class="keyword">new</span> AnnotatedGenericBeanDefinition(beanClass);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.conditionEvaluator.shouldSkip(abd.getMetadata())) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    abd.setInstanceSupplier(supplier);</span><br><span class="line">    ScopeMetadata scopeMetadata = <span class="keyword">this</span>.scopeMetadataResolver.resolveScopeMetadata(abd);</span><br><span class="line">    abd.setScope(scopeMetadata.getScopeName());</span><br><span class="line">    String beanName = (names != <span class="keyword">null</span> &amp;&amp; names.length &gt; <span class="number">0</span>)? names[<span class="number">0</span>] : BeanDefinitionReaderUtils.generateBeanName(abd, <span class="keyword">this</span>.registry);</span><br><span class="line">    <span class="keyword">for</span> (Class&lt;? extends Annotation&gt; qualifier : qualifiers) &#123;</span><br><span class="line">        <span class="keyword">if</span> (Primary<span class="class">.<span class="keyword">class</span> </span>== qualifier) &#123;</span><br><span class="line">            abd.setPrimary(<span class="keyword">true</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Lazy<span class="class">.<span class="keyword">class</span> </span>== qualifier) &#123;</span><br><span class="line">            abd.setLazyInit(<span class="keyword">true</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            abd.addQualifier(<span class="keyword">new</span> AutowireCandidateQualifier(qualifier));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (BeanDefinitionCustomizer customizer : definitionCustomizers) &#123;</span><br><span class="line">        customizer.customize(abd);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    BeanDefinitionHolder definitionHolder = <span class="keyword">new</span> BeanDefinitionHolder(abd, beanName);</span><br><span class="line">    definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, <span class="keyword">this</span>.registry);</span><br><span class="line">    BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, <span class="keyword">this</span>.registry);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>创建 <code>AnnotatedGenericBeanDefinition</code></strong>：根据传入的 <code>beanClass</code> 创建 <code>AnnotatedGenericBeanDefinition</code>，它是 <code>BeanDefinition</code> 的一种实现，用于描述基于注解的Bean定义。</p>
+</li>
+<li><p><strong>条件评估</strong>：使用 <code>ConditionEvaluator</code> 判断是否应跳过该 <code>BeanDefinition</code> 的注册，如果 <code>@Conditional</code> 注解条件不满足，则直接返回，不进行后续注册操作。</p>
+</li>
+<li><p><strong>设置实例供应商</strong>：如果传入了 <code>Supplier</code>，则设置为 <code>BeanDefinition</code> 的实例供应商，用于创建Bean实例。</p>
+</li>
+<li><p><strong>解析作用域</strong>：通过 <code>ScopeMetadataResolver</code> 解析 <code>BeanDefinition</code> 的作用域，如 <code>singleton</code>、<code>prototype</code> 等，并设置到 <code>BeanDefinition</code> 中。</p>
+</li>
+<li><p><strong>生成或指定Bean名称</strong>：如果传入了自定义的Bean名称数组，则使用第一个名称；否则，通过 <code>BeanDefinitionReaderUtils.generateBeanName</code> 方法生成一个唯一的Bean名称。</p>
+</li>
+<li><p><strong>处理限定符</strong>：遍历传入的限定符注解数组，根据不同的限定符注解设置 <code>BeanDefinition</code> 的相关属性，如 <code>@Primary</code> 注解设置 <code>BeanDefinition</code> 为主要的，<code>@Lazy</code> 注解设置为懒加载等。</p>
+</li>
+<li><p><strong>应用自定义器</strong>：遍历 <code>BeanDefinitionCustomizer</code> 数组，对 <code>BeanDefinition</code> 进行自定义修改。</p>
+</li>
+<li><p><strong>创建 <code>BeanDefinitionHolder</code> 并应用作用域代理</strong>：将 <code>BeanDefinition</code> 和Bean名称包装成 <code>BeanDefinitionHolder</code>，并根据作用域类型应用作用域代理（如果需要）。</p>
+</li>
+<li><p><strong>注册 <code>BeanDefinition</code></strong>：最后通过 <code>BeanDefinitionReaderUtils.registerBeanDefinition</code> 方法将 <code>BeanDefinitionHolder</code> 注册到 <code>BeanDefinitionRegistry</code> 中。</p>
+</li>
 </ul>
-<p><strong>结论</strong>：<strong>纯 <code>SELECT</code> 查询不会出现幻读</strong>。  </p>
-<hr>
-<h3 id="2-锁定读（当前读）场景下的幻读"><a href="#2-锁定读（当前读）场景下的幻读" class="headerlink" title="2. 锁定读（当前读）场景下的幻读"></a><strong>2. 锁定读（当前读）场景下的幻读</strong></h3><p><strong>场景</strong>：  </p>
-<ul>
-<li>事务 A 执行 <code>SELECT * FROM t WHERE id &gt; 100 FOR UPDATE</code>（加锁读）  </li>
-<li>事务 B 尝试插入 <code>id = 101</code>  </li>
-</ul>
-<p><strong>InnoDB 的解决方案</strong>：  </p>
-<ul>
-<li>使用 <strong>Next-Key Locking</strong>（临键锁），锁定 <code>id &gt; 100</code> 的索引记录及其间隙，阻止事务 B 插入 <code>id = 101</code>，从而避免幻读。  </li>
-</ul>
-<p><strong>结论</strong>：<strong><code>SELECT ... FOR UPDATE</code> 或 <code>SELECT ... LOCK IN SHARE MODE</code> 可以防止幻读</strong>。  </p>
-<hr>
-<h3 id="3-连续两次当前读的场景"><a href="#3-连续两次当前读的场景" class="headerlink" title="3. 连续两次当前读的场景"></a><strong>3. 连续两次当前读的场景</strong></h3><p><strong>场景</strong>：  </p>
-<ul>
-<li>事务 A 执行 <code>SELECT * FROM t WHERE id &gt; 100 FOR UPDATE</code>  </li>
-<li>事务 B 尝试插入 <code>id = 101</code>（被阻塞）  </li>
-<li>事务 A 再次执行相同的 <code>SELECT ... FOR UPDATE</code>  </li>
-</ul>
-<p><strong>InnoDB 的解决方案</strong>：  </p>
-<ul>
-<li>由于临键锁的存在，事务 B 无法插入数据，事务 A 的两次查询结果一致，不会出现幻读。  </li>
-</ul>
-<p><strong>结论</strong>：<strong>连续锁定读不会出现幻读</strong>。  </p>
-<hr>
-<h3 id="🔴-未解决的幻读场景（例外情况）"><a href="#🔴-未解决的幻读场景（例外情况）" class="headerlink" title="🔴 未解决的幻读场景（例外情况）"></a><strong>🔴 未解决的幻读场景（例外情况）</strong></h3><p>InnoDB 的 RR 隔离级别 <strong>并非完全解决所有幻读</strong>，在以下情况仍可能出现幻读：  </p>
-<h4 id="情况-1：先快照读，后当前读"><a href="#情况-1：先快照读，后当前读" class="headerlink" title="情况 1：先快照读，后当前读"></a><strong>情况 1：先快照读，后当前读</strong></h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 事务 A</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;          <span class="comment">-- 快照读，看不到新数据（无幻读）</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>; <span class="comment">-- 当前读，可能看到新插入的数据（幻读）</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>第一次查询是 <strong>快照读</strong>（MVCC），第二次是 <strong>当前读</strong>（临键锁），如果事务 B 在两次查询之间插入了数据，第二次查询可能会看到新数据，导致幻读。  </li>
-</ul>
-<h4 id="情况-2：先查询后更新"><a href="#情况-2：先查询后更新" class="headerlink" title="情况 2：先查询后更新"></a><strong>情况 2：先查询后更新</strong></h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 事务 A</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;          <span class="comment">-- 快照读，看不到新数据</span></span><br><span class="line"><span class="comment">-- 事务 B 插入 id=101 并提交</span></span><br><span class="line"><span class="keyword">UPDATE</span> t <span class="keyword">SET</span> <span class="keyword">name</span>=<span class="string">'new'</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;  <span class="comment">-- 更新会作用到新插入的行</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;          <span class="comment">-- 现在能看到 id=101（幻读）</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>虽然第一次 <code>SELECT</code> 是快照读，但 <code>UPDATE</code> 会基于 <strong>最新数据</strong> 执行，可能修改其他事务新插入的行，导致后续查询出现幻读。  </li>
-</ul>
-<hr>
-<h3 id="📌-总结"><a href="#📌-总结" class="headerlink" title="📌 总结"></a><strong>📌 总结</strong></h3><table>
-<thead>
-<tr>
-<th>场景</th>
-<th>是否解决幻读</th>
-<th>原因</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>纯快照读（普通 <code>SELECT</code>）</strong></td>
-<td>✅ 解决</td>
-<td>MVCC 保证一致性视图</td>
-</tr>
-<tr>
-<td><strong>锁定读（<code>SELECT ... FOR UPDATE</code>）</strong></td>
-<td>✅ 解决</td>
-<td>Next-Key Locking 阻止插入</td>
-</tr>
-<tr>
-<td><strong>连续锁定读</strong></td>
-<td>✅ 解决</td>
-<td>临键锁持续生效</td>
-</tr>
-<tr>
-<td><strong>先快照读后当前读</strong></td>
-<td>❌ 未解决</td>
-<td>两次查询模式不同</td>
-</tr>
-<tr>
-<td><strong>先查询后更新</strong></td>
-<td>❌ 未解决</td>
-<td><code>UPDATE</code> 基于最新数据</td>
-</tr>
-</tbody></table>
-<p><strong>结论</strong>：  </p>
-<ul>
-<li>InnoDB 在 RR 级别下 <strong>解决了大部分幻读问题</strong>，尤其是纯查询和锁定读场景。  </li>
-<li>但在 <strong>混合使用快照读和当前读</strong> 或 <strong>先查询后更新</strong> 时，仍可能出现幻读。  </li>
-<li>如果业务要求 <strong>完全避免幻读</strong>，可以使用 <strong>Serializable（串行化）</strong> 隔离级别，或合理使用 <code>SELECT ... FOR UPDATE</code> 进行锁定。</li>
-</ul>
+</li>
+</ol>
+<p>综上，<code>AnnotatedBeanDefinitionReader</code> 在 <code>AnnotationConfigApplicationContext</code> 的无参构造函数中初始化，并在后续手动注册基于注解的 <code>BeanDefinition</code> 时，负责解析注解、评估条件、设置属性和注册 <code>BeanDefinition</code> 等关键操作。 </p>
 
           
         
@@ -1569,234 +1797,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/06/10/spring/IOC/AnnotatedBeanDefinitionReader/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2025/06/10/spring/IOC/AnnotatedBeanDefinitionReader/" itemprop="url">Spring AnnotatedBeanDefinitionReader</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-06-10T00:00:00+00:00">
-                2025-06-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  925 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  3 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在 <code>AnnotationConfigApplicationContext</code> 的无参构造函数中，<code>AnnotatedBeanDefinitionReader</code> 的主要作用是为后续手动注册基于注解的 <code>BeanDefinition</code> 做准备。以下详细介绍其逻辑流程和作用：</p>
-<ol>
-<li><p><strong><code>AnnotationConfigApplicationContext</code> 无参构造函数调用 <code>AnnotatedBeanDefinitionReader</code> 相关逻辑</strong></p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AnnotationConfigApplicationContext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.reader = <span class="keyword">new</span> AnnotatedBeanDefinitionReader(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">this</span>.scanner = <span class="keyword">new</span> ClassPathBeanDefinitionScanner(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p> 在无参构造函数中，创建了 <code>AnnotatedBeanDefinitionReader</code> 和 <code>ClassPathBeanDefinitionScanner</code> 实例。这里重点分析 <code>AnnotatedBeanDefinitionReader</code>。</p>
-</li>
-<li><p><strong><code>AnnotatedBeanDefinitionReader</code> 的构造函数</strong></p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AnnotatedBeanDefinitionReader</span><span class="params">(BeanDefinitionRegistry registry, Environment environment)</span> </span>&#123;</span><br><span class="line">    Assert.notNull(registry, <span class="string">"BeanDefinitionRegistry must not be null"</span>);</span><br><span class="line">    Assert.notNull(environment, <span class="string">"Environment must not be null"</span>);</span><br><span class="line">    <span class="keyword">this</span>.registry = registry;</span><br><span class="line">    <span class="keyword">this</span>.conditionEvaluator = <span class="keyword">new</span> ConditionEvaluator(registry, environment, <span class="keyword">null</span>);</span><br><span class="line">    AnnotationConfigUtils.registerAnnotationConfigProcessors(<span class="keyword">this</span>.registry);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>参数校验</strong>：确保传入的 <code>BeanDefinitionRegistry</code> 和 <code>Environment</code> 不为空。<code>BeanDefinitionRegistry</code> 用于注册 <code>BeanDefinition</code>，在 <code>AnnotationConfigApplicationContext</code> 中，它自身实现了该接口。</li>
-<li><strong>初始化条件评估器</strong>：创建 <code>ConditionEvaluator</code>，用于评估 <code>@Conditional</code> 注解。<code>@Conditional</code> 注解允许根据特定条件决定是否注册某个 <code>Bean</code>。例如，如果系统属性满足特定条件，才注册某个 <code>Bean</code>。</li>
-<li><strong>注册注解配置处理器</strong>：调用 <code>AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry)</code> 方法，注册一系列与注解处理相关的 <code>BeanDefinition</code>。这些处理器包括：<ul>
-<li><code>ConfigurationClassPostProcessor</code>：处理 <code>@Configuration</code> 注解的配置类，解析配置类中的 <code>@Bean</code> 方法等。</li>
-<li><code>AutowiredAnnotationBeanPostProcessor</code>：处理 <code>@Autowired</code> 注解，实现自动装配功能。</li>
-<li><code>RequiredAnnotationBeanPostProcessor</code>：处理 <code>@Required</code> 注解，确保被注解的属性被设置。</li>
-<li><code>CommonAnnotationBeanPostProcessor</code>：处理 <code>@Resource</code>、<code>@PostConstruct</code> 和 <code>@PreDestroy</code> 等注解。</li>
-<li><code>PersistenceAnnotationBeanPostProcessor</code>（如果类路径中有相关的持久化依赖）：处理持久化相关的注解。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong><code>AnnotatedBeanDefinitionReader</code> 的 <code>register</code> 方法逻辑（用于注册Bean）</strong></p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Class&lt;?&gt;... componentClasses)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (Class&lt;?&gt; componentClass : componentClasses) &#123;</span><br><span class="line">        registerBean(componentClass);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p><strong>遍历注册类</strong>：<code>register</code> 方法接受多个 <code>Class</code> 参数，遍历这些类，对每个类调用 <code>registerBean</code> 方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">registerBean</span><span class="params">(Class&lt;T&gt; beanClass, @Nullable Supplier&lt;T&gt; supplier, @Nullable String... names,</span></span></span><br><span class="line"><span class="function"><span class="params">                             @Nullable Class&lt;? extends Annotation&gt;... qualifiers,</span></span></span><br><span class="line"><span class="function"><span class="params">                             BeanDefinitionCustomizer... definitionCustomizers)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    AnnotatedGenericBeanDefinition abd = <span class="keyword">new</span> AnnotatedGenericBeanDefinition(beanClass);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.conditionEvaluator.shouldSkip(abd.getMetadata())) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    abd.setInstanceSupplier(supplier);</span><br><span class="line">    ScopeMetadata scopeMetadata = <span class="keyword">this</span>.scopeMetadataResolver.resolveScopeMetadata(abd);</span><br><span class="line">    abd.setScope(scopeMetadata.getScopeName());</span><br><span class="line">    String beanName = (names != <span class="keyword">null</span> &amp;&amp; names.length &gt; <span class="number">0</span>)? names[<span class="number">0</span>] : BeanDefinitionReaderUtils.generateBeanName(abd, <span class="keyword">this</span>.registry);</span><br><span class="line">    <span class="keyword">for</span> (Class&lt;? extends Annotation&gt; qualifier : qualifiers) &#123;</span><br><span class="line">        <span class="keyword">if</span> (Primary<span class="class">.<span class="keyword">class</span> </span>== qualifier) &#123;</span><br><span class="line">            abd.setPrimary(<span class="keyword">true</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Lazy<span class="class">.<span class="keyword">class</span> </span>== qualifier) &#123;</span><br><span class="line">            abd.setLazyInit(<span class="keyword">true</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            abd.addQualifier(<span class="keyword">new</span> AutowireCandidateQualifier(qualifier));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (BeanDefinitionCustomizer customizer : definitionCustomizers) &#123;</span><br><span class="line">        customizer.customize(abd);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    BeanDefinitionHolder definitionHolder = <span class="keyword">new</span> BeanDefinitionHolder(abd, beanName);</span><br><span class="line">    definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, <span class="keyword">this</span>.registry);</span><br><span class="line">    BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, <span class="keyword">this</span>.registry);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p><strong>创建 <code>AnnotatedGenericBeanDefinition</code></strong>：根据传入的 <code>beanClass</code> 创建 <code>AnnotatedGenericBeanDefinition</code>，它是 <code>BeanDefinition</code> 的一种实现，用于描述基于注解的Bean定义。</p>
-</li>
-<li><p><strong>条件评估</strong>：使用 <code>ConditionEvaluator</code> 判断是否应跳过该 <code>BeanDefinition</code> 的注册，如果 <code>@Conditional</code> 注解条件不满足，则直接返回，不进行后续注册操作。</p>
-</li>
-<li><p><strong>设置实例供应商</strong>：如果传入了 <code>Supplier</code>，则设置为 <code>BeanDefinition</code> 的实例供应商，用于创建Bean实例。</p>
-</li>
-<li><p><strong>解析作用域</strong>：通过 <code>ScopeMetadataResolver</code> 解析 <code>BeanDefinition</code> 的作用域，如 <code>singleton</code>、<code>prototype</code> 等，并设置到 <code>BeanDefinition</code> 中。</p>
-</li>
-<li><p><strong>生成或指定Bean名称</strong>：如果传入了自定义的Bean名称数组，则使用第一个名称；否则，通过 <code>BeanDefinitionReaderUtils.generateBeanName</code> 方法生成一个唯一的Bean名称。</p>
-</li>
-<li><p><strong>处理限定符</strong>：遍历传入的限定符注解数组，根据不同的限定符注解设置 <code>BeanDefinition</code> 的相关属性，如 <code>@Primary</code> 注解设置 <code>BeanDefinition</code> 为主要的，<code>@Lazy</code> 注解设置为懒加载等。</p>
-</li>
-<li><p><strong>应用自定义器</strong>：遍历 <code>BeanDefinitionCustomizer</code> 数组，对 <code>BeanDefinition</code> 进行自定义修改。</p>
-</li>
-<li><p><strong>创建 <code>BeanDefinitionHolder</code> 并应用作用域代理</strong>：将 <code>BeanDefinition</code> 和Bean名称包装成 <code>BeanDefinitionHolder</code>，并根据作用域类型应用作用域代理（如果需要）。</p>
-</li>
-<li><p><strong>注册 <code>BeanDefinition</code></strong>：最后通过 <code>BeanDefinitionReaderUtils.registerBeanDefinition</code> 方法将 <code>BeanDefinitionHolder</code> 注册到 <code>BeanDefinitionRegistry</code> 中。</p>
-</li>
-</ul>
-</li>
-</ol>
-<p>综上，<code>AnnotatedBeanDefinitionReader</code> 在 <code>AnnotationConfigApplicationContext</code> 的无参构造函数中初始化，并在后续手动注册基于注解的 <code>BeanDefinition</code> 时，负责解析注解、评估条件、设置属性和注册 <code>BeanDefinition</code> 等关键操作。 </p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/06/07/spring/Springboot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2011,205 +2011,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/06/06/spring/Scheduler/Spring%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2025/06/06/spring/Scheduler/Spring%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%8E%9F%E7%90%86/" itemprop="url">Spring AOP模块</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-06-06T00:00:00+00:00">
-                2025-06-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.2k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><h1 id="一：初始化自动配置-TaskSchedulingAutoConfiguration"><a href="#一：初始化自动配置-TaskSchedulingAutoConfiguration" class="headerlink" title="一：初始化自动配置(TaskSchedulingAutoConfiguration)"></a>一：初始化自动配置(TaskSchedulingAutoConfiguration)</h1><p><img src="/.io//img.png" alt="img.png"></p>
-<h2 id="若没有自定义配置，则初始化ThreadPoolTaskScheduler-initializeExecutor默认线程池"><a href="#若没有自定义配置，则初始化ThreadPoolTaskScheduler-initializeExecutor默认线程池" class="headerlink" title="若没有自定义配置，则初始化ThreadPoolTaskScheduler.initializeExecutor默认线程池"></a>若没有自定义配置，则初始化ThreadPoolTaskScheduler.initializeExecutor默认线程池</h2><h1 id="二：初始化流程"><a href="#二：初始化流程" class="headerlink" title="二：初始化流程"></a>二：初始化流程</h1><h2 id="2-1-EnableScheduling"><a href="#2-1-EnableScheduling" class="headerlink" title="2.1 @EnableScheduling"></a>2.1 @EnableScheduling</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="comment">// 导入配置类</span></span><br><span class="line"><span class="meta">@Import</span>(&#123;SchedulingConfiguration<span class="class">.<span class="keyword">class</span>&#125;)</span></span><br><span class="line"><span class="class">@<span class="title">Documented</span></span></span><br><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">EnableScheduling</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-2-注册核心处理器-ScheduledAnnotationBeanPostProcessor"><a href="#2-2-注册核心处理器-ScheduledAnnotationBeanPostProcessor" class="headerlink" title="2.2 注册核心处理器 ScheduledAnnotationBeanPostProcessor"></a>2.2 注册核心处理器 ScheduledAnnotationBeanPostProcessor</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SchedulingConfiguration</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span>(</span><br><span class="line">        name = &#123;<span class="string">"org.springframework.context.annotation.internalScheduledAnnotationProcessor"</span>&#125;</span><br><span class="line">    )</span><br><span class="line">    <span class="meta">@Role</span>(<span class="number">2</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ScheduledAnnotationBeanPostProcessor <span class="title">scheduledAnnotationProcessor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ScheduledAnnotationBeanPostProcessor();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-3-BeanPostProcessor初始化-注册器：ScheduledTaskRegistrar"><a href="#2-3-BeanPostProcessor初始化-注册器：ScheduledTaskRegistrar" class="headerlink" title="2.3 BeanPostProcessor初始化 注册器：ScheduledTaskRegistrar"></a>2.3 BeanPostProcessor初始化 注册器：ScheduledTaskRegistrar</h2><h3 id="2-3-1-finishRegistration-完成注册"><a href="#2-3-1-finishRegistration-完成注册" class="headerlink" title="2.3.1 finishRegistration(完成注册)"></a>2.3.1 finishRegistration(完成注册)</h3><p>注册taskScheduler、Tasks</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">finishRegistration</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.scheduler != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.registrar.setScheduler(<span class="keyword">this</span>.scheduler);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory <span class="keyword">instanceof</span> ListableBeanFactory) &#123;</span><br><span class="line">            Map&lt;String, SchedulingConfigurer&gt; beans = ((ListableBeanFactory)<span class="keyword">this</span>.beanFactory).getBeansOfType(SchedulingConfigurer<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">            List&lt;SchedulingConfigurer&gt; configurers = <span class="keyword">new</span> ArrayList(beans.values());</span><br><span class="line">            AnnotationAwareOrderComparator.sort(configurers);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 使用用户自定义的SchedulingConfigurer，例如传入一个线程池</span></span><br><span class="line">            <span class="keyword">for</span>(SchedulingConfigurer configurer : configurers) &#123;</span><br><span class="line">                configurer.configureTasks(<span class="keyword">this</span>.registrar);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 用户没有自定义的SchedulingConfigurer，就去取 springboot 初始化自动配置的</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.registrar.hasTasks() &amp;&amp; <span class="keyword">this</span>.registrar.getScheduler() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            Assert.state(<span class="keyword">this</span>.beanFactory != <span class="keyword">null</span>, <span class="string">"BeanFactory must be set to find scheduler by type"</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 寻找默认的线程池</span></span><br><span class="line">                <span class="keyword">this</span>.registrar.setTaskScheduler((TaskScheduler) <span class="keyword">this</span>.resolveSchedulerBean(<span class="keyword">this</span>.beanFactory, TaskScheduler<span class="class">.<span class="keyword">class</span>, <span class="title">false</span>))</span></span><br><span class="line"><span class="class">            &#125; <span class="title">catch</span> (<span class="title">Exception</span> <span class="title">e</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.registrar.afterPropertiesSet();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="resolveSchedulerBean"><a href="#resolveSchedulerBean" class="headerlink" title="resolveSchedulerBean"></a>resolveSchedulerBean</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 寻找默认的线程池</span></span><br><span class="line"><span class="keyword">private</span> &lt;T&gt; <span class="function">T <span class="title">resolveSchedulerBean</span><span class="params">(BeanFactory beanFactory, Class&lt;T&gt; schedulerType, <span class="keyword">boolean</span> byName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (byName) &#123;</span><br><span class="line">            T scheduler = (T)beanFactory.getBean(<span class="string">"taskScheduler"</span>, schedulerType);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.beanName != <span class="keyword">null</span> &amp;&amp; <span class="keyword">this</span>.beanFactory <span class="keyword">instanceof</span> ConfigurableBeanFactory) &#123;</span><br><span class="line">                ((ConfigurableBeanFactory)<span class="keyword">this</span>.beanFactory).registerDependentBean(<span class="string">"taskScheduler"</span>, <span class="keyword">this</span>.beanName);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> scheduler;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (beanFactory <span class="keyword">instanceof</span> AutowireCapableBeanFactory) &#123;</span><br><span class="line">            NamedBeanHolder&lt;T&gt; holder = ((AutowireCapableBeanFactory)beanFactory).resolveNamedBean(schedulerType);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.beanName != <span class="keyword">null</span> &amp;&amp; beanFactory <span class="keyword">instanceof</span> ConfigurableBeanFactory) &#123;</span><br><span class="line">                ((ConfigurableBeanFactory)beanFactory).registerDependentBean(holder.getBeanName(), <span class="keyword">this</span>.beanName);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> (T)holder.getBeanInstance();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> (T)beanFactory.getBean(schedulerType);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="三：任务扫描与注册"><a href="#三：任务扫描与注册" class="headerlink" title="三：任务扫描与注册"></a>三：任务扫描与注册</h1><h2 id="3-1-扫描-Scheduled-方法"><a href="#3-1-扫描-Scheduled-方法" class="headerlink" title="3.1 扫描 @Scheduled 方法"></a>3.1 扫描 @Scheduled 方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ScheduledAnnotationBeanPostProcessor 核心方法</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> AopInfrastructureBean || </span><br><span class="line">        bean <span class="keyword">instanceof</span> TaskScheduler || </span><br><span class="line">        bean <span class="keyword">instanceof</span> ScheduledExecutorService) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;  <span class="comment">// 忽略基础设施 Bean</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    Class&lt;?&gt; targetClass = AopProxyUtils.ultimateTargetClass(bean);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 6. 扫描目标类中的 @Scheduled 方法</span></span><br><span class="line">    Map&lt;Method, Set&lt;Scheduled&gt;&gt; annotatedMethods = </span><br><span class="line">        MethodIntrospector.selectMethods(targetClass,</span><br><span class="line">            (MethodIntrospector.MetadataLookup&lt;Set&lt;Scheduled&gt;&gt;) method -&gt; &#123;</span><br><span class="line">                Set&lt;Scheduled&gt; scheduledAnnotations = AnnotatedElementUtils</span><br><span class="line">                    .getMergedRepeatableAnnotations(method, Scheduled<span class="class">.<span class="keyword">class</span>, <span class="title">Schedules</span>.<span class="title">class</span>)</span>;</span><br><span class="line">                <span class="keyword">return</span> (!scheduledAnnotations.isEmpty() ? scheduledAnnotations : <span class="keyword">null</span>);</span><br><span class="line">            &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (annotatedMethods.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 7. 处理每个标注了 @Scheduled 的方法</span></span><br><span class="line">    annotatedMethods.forEach((method, scheduledAnnotations) -&gt;</span><br><span class="line">        scheduledAnnotations.forEach(scheduled -&gt; </span><br><span class="line">            processScheduled(scheduled, method, bean)));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-2-创建并注册任务"><a href="#3-2-创建并注册任务" class="headerlink" title="3.2 创建并注册任务"></a>3.2 创建并注册任务</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 8. 处理单个定时任务</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processScheduled</span><span class="params">(Scheduled scheduled, Method method, Object bean)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 创建可执行任务</span></span><br><span class="line">        Runnable runnable = createRunnable(bean, method);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 收集所有需要调度的任务</span></span><br><span class="line">        Set&lt;ScheduledTask&gt; tasks = <span class="keyword">new</span> LinkedHashSet&lt;&gt;(<span class="number">4</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 9. 解析 cron 表达式</span></span><br><span class="line">        String cron = scheduled.cron();</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.hasText(cron)) &#123;</span><br><span class="line">            String zone = scheduled.zone();</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.hasText(zone)) &#123;</span><br><span class="line">                tasks.add(<span class="keyword">this</span>.registrar.scheduleCronTask(</span><br><span class="line">                    <span class="keyword">new</span> CronTask(runnable, <span class="keyword">new</span> CronTrigger(cron, timeZone))));</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                tasks.add(<span class="keyword">this</span>.registrar.scheduleCronTask(</span><br><span class="line">                    <span class="keyword">new</span> CronTask(runnable, cron)));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 10. 处理 fixedDelay（单位：毫秒）</span></span><br><span class="line">        <span class="keyword">long</span> fixedDelay = scheduled.fixedDelay();</span><br><span class="line">        <span class="keyword">if</span> (fixedDelay &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            tasks.add(<span class="keyword">this</span>.registrar.scheduleFixedDelayTask(</span><br><span class="line">                <span class="keyword">new</span> FixedDelayTask(runnable, fixedDelay, initialDelay)));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 11. 处理 fixedRate（单位：毫秒）</span></span><br><span class="line">        <span class="keyword">long</span> fixedRate = scheduled.fixedRate();</span><br><span class="line">        <span class="keyword">if</span> (fixedRate &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            tasks.add(<span class="keyword">this</span>.registrar.scheduleFixedRateTask(</span><br><span class="line">                <span class="keyword">new</span> FixedRateTask(runnable, fixedRate, initialDelay)));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 保存任务引用</span></span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.scheduledTasks) &#123;</span><br><span class="line">            <span class="keyword">this</span>.scheduledTasks.put(processedBean, tasks);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalArgumentException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Encountered invalid @Scheduled method"</span>, ex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 12. 创建可执行任务</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> Runnable <span class="title">createRunnable</span><span class="params">(Object target, Method method)</span> </span>&#123;</span><br><span class="line">    Assert.isTrue(method.getParameterCount() == <span class="number">0</span>, </span><br><span class="line">        <span class="string">"Only no-arg methods may be annotated with @Scheduled"</span>);</span><br><span class="line">    </span><br><span class="line">    Method invocableMethod = AopUtils.selectInvocableMethod(method, target.getClass());</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ScheduledMethodRunnable(target, invocableMethod);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="四：任务调度执行"><a href="#四：任务调度执行" class="headerlink" title="四：任务调度执行"></a>四：任务调度执行</h1><h2 id="4-1-调度器配置-ScheduledTaskRegistrar"><a href="#4-1-调度器配置-ScheduledTaskRegistrar" class="headerlink" title="4.1 调度器配置 ScheduledTaskRegistrar"></a>4.1 调度器配置 ScheduledTaskRegistrar</h2><p>afterPropertiesSet.scheduleTasks</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduledTaskRegistrar</span> <span class="keyword">implements</span> <span class="title">InitializingBean</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> TaskScheduler taskScheduler;</span><br><span class="line">    <span class="keyword">private</span> ScheduledExecutorService localExecutor;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        scheduleTasks();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 14. 初始化调度器</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">scheduleTasks</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.taskScheduler == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 使用默认的线程池调度器</span></span><br><span class="line">            <span class="keyword">this</span>.localExecutor = Executors.newSingleThreadScheduledExecutor();</span><br><span class="line">            <span class="keyword">this</span>.taskScheduler = <span class="keyword">new</span> ConcurrentTaskScheduler(<span class="keyword">this</span>.localExecutor);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.triggerTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.triggerTasks.forEach(<span class="keyword">this</span>::scheduleCronTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.cronTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.cronTasks.forEach(<span class="keyword">this</span>::scheduleCronTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.fixedRateTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.fixedRateTasks.forEach(<span class="keyword">this</span>::scheduleFixedRateTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.fixedDelayTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.fixedDelayTasks.forEach(<span class="keyword">this</span>::scheduleFixedDelayTask);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-2-任务调度实现"><a href="#4-2-任务调度实现" class="headerlink" title="4.2 任务调度实现"></a>4.2 任务调度实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调度 Cron 任务</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ScheduledTask <span class="title">scheduleCronTask</span><span class="params">(CronTask task)</span> </span>&#123;</span><br><span class="line">    ScheduledTask scheduledTask = <span class="keyword">this</span>.unresolvedTasks.remove(task);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (scheduledTask == <span class="keyword">null</span>) &#123;</span><br><span class="line">        scheduledTask = <span class="keyword">new</span> ScheduledTask();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 16. 使用 TaskScheduler 调度任务</span></span><br><span class="line">    scheduledTask.future = <span class="keyword">this</span>.taskScheduler.schedule(</span><br><span class="line">        task.getRunnable(), task.getTrigger());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> scheduledTask;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ThreadPoolTaskScheduler 实际调度</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolTaskScheduler</span> <span class="keyword">extends</span> <span class="title">ExecutorConfigurationSupport</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">TaskScheduler</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule(Runnable task, Trigger trigger) &#123;</span><br><span class="line">        ScheduledExecutorService executor = getScheduledExecutor();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 包装错误处理</span></span><br><span class="line">            ErrorHandler errorHandler = <span class="keyword">this</span>.errorHandler;</span><br><span class="line">            <span class="keyword">if</span> (errorHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">                task = <span class="keyword">new</span> DelegatingErrorHandlingRunnable(task, errorHandler);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 18. 使用 ReschedulingRunnable 实现重新调度</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ReschedulingRunnable(task, trigger, executor).schedule();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RejectedExecutionException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> TaskRejectedException(<span class="string">"Executor did not accept task"</span>, ex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-3-ReschedulingRunnable-核心实现"><a href="#4-3-ReschedulingRunnable-核心实现" class="headerlink" title="4.3 ReschedulingRunnable 核心实现"></a>4.3 ReschedulingRunnable 核心实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 19. 可重新调度的任务包装器</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReschedulingRunnable</span> <span class="keyword">extends</span> <span class="title">DelegatingErrorHandlingRunnable</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">ScheduledFuture</span>&lt;<span class="title">Object</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Trigger trigger;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ScheduledExecutorService executor;</span><br><span class="line">    <span class="keyword">private</span> ScheduledFuture&lt;?&gt; currentFuture;</span><br><span class="line">    <span class="keyword">private</span> Date scheduledExecutionTime;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule() &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.triggerContextMonitor) &#123;</span><br><span class="line">            <span class="comment">// 20. 计算下次执行时间</span></span><br><span class="line">            <span class="keyword">this</span>.scheduledExecutionTime = <span class="keyword">this</span>.trigger.nextExecutionTime(</span><br><span class="line">                <span class="keyword">this</span>.triggerContext);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.scheduledExecutionTime == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;  <span class="comment">// 没有下次执行时间，任务结束</span></span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 21. 计算延迟时间</span></span><br><span class="line">            <span class="keyword">long</span> initialDelay = <span class="keyword">this</span>.scheduledExecutionTime.getTime() - </span><br><span class="line">                System.currentTimeMillis();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 22. 提交任务到线程池</span></span><br><span class="line">            <span class="keyword">this</span>.currentFuture = <span class="keyword">this</span>.executor.schedule(<span class="keyword">this</span>, initialDelay, </span><br><span class="line">                TimeUnit.MILLISECONDS);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Date actualExecutionTime = <span class="keyword">new</span> Date();</span><br><span class="line">        <span class="comment">// 23. 执行实际任务</span></span><br><span class="line">        <span class="keyword">super</span>.run();</span><br><span class="line">        </span><br><span class="line">        Date completionTime = <span class="keyword">new</span> Date();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.triggerContextMonitor) &#123;</span><br><span class="line">            <span class="comment">// 24. 更新触发上下文</span></span><br><span class="line">            <span class="keyword">this</span>.triggerContext.update(<span class="keyword">this</span>.scheduledExecutionTime, </span><br><span class="line">                actualExecutionTime, completionTime);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 25. 重新调度（关键：实现循环执行）</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.currentFuture.isCancelled()) &#123;</span><br><span class="line">            schedule();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/06/06/spring/AOP/Aop%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2356,6 +2157,205 @@
 <li>自定义实例化逻辑：当需要特殊处理 Bean 的实例化过程时</li>
 </ul>
 <h3 id="执行流程-postProcessBeforeInstantiation"><a href="#执行流程-postProcessBeforeInstantiation" class="headerlink" title="执行流程 postProcessBeforeInstantiation"></a>执行流程 postProcessBeforeInstantiation</h3><h1 id="2-postProcessBeforeInstantiation-类的初始化之前或者之后执行"><a href="#2-postProcessBeforeInstantiation-类的初始化之前或者之后执行" class="headerlink" title="2.postProcessBeforeInstantiation(类的初始化之前或者之后执行)"></a>2.postProcessBeforeInstantiation(类的初始化之前或者之后执行)</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2025/06/06/spring/Scheduler/Spring%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/06/06/spring/Scheduler/Spring%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%8E%9F%E7%90%86/" itemprop="url">Spring AOP模块</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-06-06T00:00:00+00:00">
+                2025-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.2k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><h1 id="一：初始化自动配置-TaskSchedulingAutoConfiguration"><a href="#一：初始化自动配置-TaskSchedulingAutoConfiguration" class="headerlink" title="一：初始化自动配置(TaskSchedulingAutoConfiguration)"></a>一：初始化自动配置(TaskSchedulingAutoConfiguration)</h1><p><img src="/.io//img.png" alt="img.png"></p>
+<h2 id="若没有自定义配置，则初始化ThreadPoolTaskScheduler-initializeExecutor默认线程池"><a href="#若没有自定义配置，则初始化ThreadPoolTaskScheduler-initializeExecutor默认线程池" class="headerlink" title="若没有自定义配置，则初始化ThreadPoolTaskScheduler.initializeExecutor默认线程池"></a>若没有自定义配置，则初始化ThreadPoolTaskScheduler.initializeExecutor默认线程池</h2><h1 id="二：初始化流程"><a href="#二：初始化流程" class="headerlink" title="二：初始化流程"></a>二：初始化流程</h1><h2 id="2-1-EnableScheduling"><a href="#2-1-EnableScheduling" class="headerlink" title="2.1 @EnableScheduling"></a>2.1 @EnableScheduling</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="comment">// 导入配置类</span></span><br><span class="line"><span class="meta">@Import</span>(&#123;SchedulingConfiguration<span class="class">.<span class="keyword">class</span>&#125;)</span></span><br><span class="line"><span class="class">@<span class="title">Documented</span></span></span><br><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">EnableScheduling</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-注册核心处理器-ScheduledAnnotationBeanPostProcessor"><a href="#2-2-注册核心处理器-ScheduledAnnotationBeanPostProcessor" class="headerlink" title="2.2 注册核心处理器 ScheduledAnnotationBeanPostProcessor"></a>2.2 注册核心处理器 ScheduledAnnotationBeanPostProcessor</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SchedulingConfiguration</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span>(</span><br><span class="line">        name = &#123;<span class="string">"org.springframework.context.annotation.internalScheduledAnnotationProcessor"</span>&#125;</span><br><span class="line">    )</span><br><span class="line">    <span class="meta">@Role</span>(<span class="number">2</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ScheduledAnnotationBeanPostProcessor <span class="title">scheduledAnnotationProcessor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ScheduledAnnotationBeanPostProcessor();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-BeanPostProcessor初始化-注册器：ScheduledTaskRegistrar"><a href="#2-3-BeanPostProcessor初始化-注册器：ScheduledTaskRegistrar" class="headerlink" title="2.3 BeanPostProcessor初始化 注册器：ScheduledTaskRegistrar"></a>2.3 BeanPostProcessor初始化 注册器：ScheduledTaskRegistrar</h2><h3 id="2-3-1-finishRegistration-完成注册"><a href="#2-3-1-finishRegistration-完成注册" class="headerlink" title="2.3.1 finishRegistration(完成注册)"></a>2.3.1 finishRegistration(完成注册)</h3><p>注册taskScheduler、Tasks</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">finishRegistration</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.scheduler != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.registrar.setScheduler(<span class="keyword">this</span>.scheduler);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory <span class="keyword">instanceof</span> ListableBeanFactory) &#123;</span><br><span class="line">            Map&lt;String, SchedulingConfigurer&gt; beans = ((ListableBeanFactory)<span class="keyword">this</span>.beanFactory).getBeansOfType(SchedulingConfigurer<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">            List&lt;SchedulingConfigurer&gt; configurers = <span class="keyword">new</span> ArrayList(beans.values());</span><br><span class="line">            AnnotationAwareOrderComparator.sort(configurers);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 使用用户自定义的SchedulingConfigurer，例如传入一个线程池</span></span><br><span class="line">            <span class="keyword">for</span>(SchedulingConfigurer configurer : configurers) &#123;</span><br><span class="line">                configurer.configureTasks(<span class="keyword">this</span>.registrar);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 用户没有自定义的SchedulingConfigurer，就去取 springboot 初始化自动配置的</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.registrar.hasTasks() &amp;&amp; <span class="keyword">this</span>.registrar.getScheduler() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            Assert.state(<span class="keyword">this</span>.beanFactory != <span class="keyword">null</span>, <span class="string">"BeanFactory must be set to find scheduler by type"</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 寻找默认的线程池</span></span><br><span class="line">                <span class="keyword">this</span>.registrar.setTaskScheduler((TaskScheduler) <span class="keyword">this</span>.resolveSchedulerBean(<span class="keyword">this</span>.beanFactory, TaskScheduler<span class="class">.<span class="keyword">class</span>, <span class="title">false</span>))</span></span><br><span class="line"><span class="class">            &#125; <span class="title">catch</span> (<span class="title">Exception</span> <span class="title">e</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.registrar.afterPropertiesSet();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="resolveSchedulerBean"><a href="#resolveSchedulerBean" class="headerlink" title="resolveSchedulerBean"></a>resolveSchedulerBean</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 寻找默认的线程池</span></span><br><span class="line"><span class="keyword">private</span> &lt;T&gt; <span class="function">T <span class="title">resolveSchedulerBean</span><span class="params">(BeanFactory beanFactory, Class&lt;T&gt; schedulerType, <span class="keyword">boolean</span> byName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (byName) &#123;</span><br><span class="line">            T scheduler = (T)beanFactory.getBean(<span class="string">"taskScheduler"</span>, schedulerType);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.beanName != <span class="keyword">null</span> &amp;&amp; <span class="keyword">this</span>.beanFactory <span class="keyword">instanceof</span> ConfigurableBeanFactory) &#123;</span><br><span class="line">                ((ConfigurableBeanFactory)<span class="keyword">this</span>.beanFactory).registerDependentBean(<span class="string">"taskScheduler"</span>, <span class="keyword">this</span>.beanName);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> scheduler;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (beanFactory <span class="keyword">instanceof</span> AutowireCapableBeanFactory) &#123;</span><br><span class="line">            NamedBeanHolder&lt;T&gt; holder = ((AutowireCapableBeanFactory)beanFactory).resolveNamedBean(schedulerType);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.beanName != <span class="keyword">null</span> &amp;&amp; beanFactory <span class="keyword">instanceof</span> ConfigurableBeanFactory) &#123;</span><br><span class="line">                ((ConfigurableBeanFactory)beanFactory).registerDependentBean(holder.getBeanName(), <span class="keyword">this</span>.beanName);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> (T)holder.getBeanInstance();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> (T)beanFactory.getBean(schedulerType);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三：任务扫描与注册"><a href="#三：任务扫描与注册" class="headerlink" title="三：任务扫描与注册"></a>三：任务扫描与注册</h1><h2 id="3-1-扫描-Scheduled-方法"><a href="#3-1-扫描-Scheduled-方法" class="headerlink" title="3.1 扫描 @Scheduled 方法"></a>3.1 扫描 @Scheduled 方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ScheduledAnnotationBeanPostProcessor 核心方法</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> AopInfrastructureBean || </span><br><span class="line">        bean <span class="keyword">instanceof</span> TaskScheduler || </span><br><span class="line">        bean <span class="keyword">instanceof</span> ScheduledExecutorService) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;  <span class="comment">// 忽略基础设施 Bean</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    Class&lt;?&gt; targetClass = AopProxyUtils.ultimateTargetClass(bean);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 6. 扫描目标类中的 @Scheduled 方法</span></span><br><span class="line">    Map&lt;Method, Set&lt;Scheduled&gt;&gt; annotatedMethods = </span><br><span class="line">        MethodIntrospector.selectMethods(targetClass,</span><br><span class="line">            (MethodIntrospector.MetadataLookup&lt;Set&lt;Scheduled&gt;&gt;) method -&gt; &#123;</span><br><span class="line">                Set&lt;Scheduled&gt; scheduledAnnotations = AnnotatedElementUtils</span><br><span class="line">                    .getMergedRepeatableAnnotations(method, Scheduled<span class="class">.<span class="keyword">class</span>, <span class="title">Schedules</span>.<span class="title">class</span>)</span>;</span><br><span class="line">                <span class="keyword">return</span> (!scheduledAnnotations.isEmpty() ? scheduledAnnotations : <span class="keyword">null</span>);</span><br><span class="line">            &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (annotatedMethods.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 7. 处理每个标注了 @Scheduled 的方法</span></span><br><span class="line">    annotatedMethods.forEach((method, scheduledAnnotations) -&gt;</span><br><span class="line">        scheduledAnnotations.forEach(scheduled -&gt; </span><br><span class="line">            processScheduled(scheduled, method, bean)));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-创建并注册任务"><a href="#3-2-创建并注册任务" class="headerlink" title="3.2 创建并注册任务"></a>3.2 创建并注册任务</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 8. 处理单个定时任务</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processScheduled</span><span class="params">(Scheduled scheduled, Method method, Object bean)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 创建可执行任务</span></span><br><span class="line">        Runnable runnable = createRunnable(bean, method);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 收集所有需要调度的任务</span></span><br><span class="line">        Set&lt;ScheduledTask&gt; tasks = <span class="keyword">new</span> LinkedHashSet&lt;&gt;(<span class="number">4</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 9. 解析 cron 表达式</span></span><br><span class="line">        String cron = scheduled.cron();</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.hasText(cron)) &#123;</span><br><span class="line">            String zone = scheduled.zone();</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.hasText(zone)) &#123;</span><br><span class="line">                tasks.add(<span class="keyword">this</span>.registrar.scheduleCronTask(</span><br><span class="line">                    <span class="keyword">new</span> CronTask(runnable, <span class="keyword">new</span> CronTrigger(cron, timeZone))));</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                tasks.add(<span class="keyword">this</span>.registrar.scheduleCronTask(</span><br><span class="line">                    <span class="keyword">new</span> CronTask(runnable, cron)));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 10. 处理 fixedDelay（单位：毫秒）</span></span><br><span class="line">        <span class="keyword">long</span> fixedDelay = scheduled.fixedDelay();</span><br><span class="line">        <span class="keyword">if</span> (fixedDelay &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            tasks.add(<span class="keyword">this</span>.registrar.scheduleFixedDelayTask(</span><br><span class="line">                <span class="keyword">new</span> FixedDelayTask(runnable, fixedDelay, initialDelay)));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 11. 处理 fixedRate（单位：毫秒）</span></span><br><span class="line">        <span class="keyword">long</span> fixedRate = scheduled.fixedRate();</span><br><span class="line">        <span class="keyword">if</span> (fixedRate &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            tasks.add(<span class="keyword">this</span>.registrar.scheduleFixedRateTask(</span><br><span class="line">                <span class="keyword">new</span> FixedRateTask(runnable, fixedRate, initialDelay)));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 保存任务引用</span></span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.scheduledTasks) &#123;</span><br><span class="line">            <span class="keyword">this</span>.scheduledTasks.put(processedBean, tasks);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalArgumentException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Encountered invalid @Scheduled method"</span>, ex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 12. 创建可执行任务</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> Runnable <span class="title">createRunnable</span><span class="params">(Object target, Method method)</span> </span>&#123;</span><br><span class="line">    Assert.isTrue(method.getParameterCount() == <span class="number">0</span>, </span><br><span class="line">        <span class="string">"Only no-arg methods may be annotated with @Scheduled"</span>);</span><br><span class="line">    </span><br><span class="line">    Method invocableMethod = AopUtils.selectInvocableMethod(method, target.getClass());</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ScheduledMethodRunnable(target, invocableMethod);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="四：任务调度执行"><a href="#四：任务调度执行" class="headerlink" title="四：任务调度执行"></a>四：任务调度执行</h1><h2 id="4-1-调度器配置-ScheduledTaskRegistrar"><a href="#4-1-调度器配置-ScheduledTaskRegistrar" class="headerlink" title="4.1 调度器配置 ScheduledTaskRegistrar"></a>4.1 调度器配置 ScheduledTaskRegistrar</h2><p>afterPropertiesSet.scheduleTasks</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduledTaskRegistrar</span> <span class="keyword">implements</span> <span class="title">InitializingBean</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> TaskScheduler taskScheduler;</span><br><span class="line">    <span class="keyword">private</span> ScheduledExecutorService localExecutor;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        scheduleTasks();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 14. 初始化调度器</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">scheduleTasks</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.taskScheduler == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 使用默认的线程池调度器</span></span><br><span class="line">            <span class="keyword">this</span>.localExecutor = Executors.newSingleThreadScheduledExecutor();</span><br><span class="line">            <span class="keyword">this</span>.taskScheduler = <span class="keyword">new</span> ConcurrentTaskScheduler(<span class="keyword">this</span>.localExecutor);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.triggerTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.triggerTasks.forEach(<span class="keyword">this</span>::scheduleCronTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.cronTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.cronTasks.forEach(<span class="keyword">this</span>::scheduleCronTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.fixedRateTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.fixedRateTasks.forEach(<span class="keyword">this</span>::scheduleFixedRateTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.fixedDelayTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.fixedDelayTasks.forEach(<span class="keyword">this</span>::scheduleFixedDelayTask);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-2-任务调度实现"><a href="#4-2-任务调度实现" class="headerlink" title="4.2 任务调度实现"></a>4.2 任务调度实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调度 Cron 任务</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ScheduledTask <span class="title">scheduleCronTask</span><span class="params">(CronTask task)</span> </span>&#123;</span><br><span class="line">    ScheduledTask scheduledTask = <span class="keyword">this</span>.unresolvedTasks.remove(task);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (scheduledTask == <span class="keyword">null</span>) &#123;</span><br><span class="line">        scheduledTask = <span class="keyword">new</span> ScheduledTask();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 16. 使用 TaskScheduler 调度任务</span></span><br><span class="line">    scheduledTask.future = <span class="keyword">this</span>.taskScheduler.schedule(</span><br><span class="line">        task.getRunnable(), task.getTrigger());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> scheduledTask;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ThreadPoolTaskScheduler 实际调度</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolTaskScheduler</span> <span class="keyword">extends</span> <span class="title">ExecutorConfigurationSupport</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">TaskScheduler</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule(Runnable task, Trigger trigger) &#123;</span><br><span class="line">        ScheduledExecutorService executor = getScheduledExecutor();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 包装错误处理</span></span><br><span class="line">            ErrorHandler errorHandler = <span class="keyword">this</span>.errorHandler;</span><br><span class="line">            <span class="keyword">if</span> (errorHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">                task = <span class="keyword">new</span> DelegatingErrorHandlingRunnable(task, errorHandler);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 18. 使用 ReschedulingRunnable 实现重新调度</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ReschedulingRunnable(task, trigger, executor).schedule();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RejectedExecutionException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> TaskRejectedException(<span class="string">"Executor did not accept task"</span>, ex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-3-ReschedulingRunnable-核心实现"><a href="#4-3-ReschedulingRunnable-核心实现" class="headerlink" title="4.3 ReschedulingRunnable 核心实现"></a>4.3 ReschedulingRunnable 核心实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 19. 可重新调度的任务包装器</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReschedulingRunnable</span> <span class="keyword">extends</span> <span class="title">DelegatingErrorHandlingRunnable</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">ScheduledFuture</span>&lt;<span class="title">Object</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Trigger trigger;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ScheduledExecutorService executor;</span><br><span class="line">    <span class="keyword">private</span> ScheduledFuture&lt;?&gt; currentFuture;</span><br><span class="line">    <span class="keyword">private</span> Date scheduledExecutionTime;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule() &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.triggerContextMonitor) &#123;</span><br><span class="line">            <span class="comment">// 20. 计算下次执行时间</span></span><br><span class="line">            <span class="keyword">this</span>.scheduledExecutionTime = <span class="keyword">this</span>.trigger.nextExecutionTime(</span><br><span class="line">                <span class="keyword">this</span>.triggerContext);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.scheduledExecutionTime == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;  <span class="comment">// 没有下次执行时间，任务结束</span></span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 21. 计算延迟时间</span></span><br><span class="line">            <span class="keyword">long</span> initialDelay = <span class="keyword">this</span>.scheduledExecutionTime.getTime() - </span><br><span class="line">                System.currentTimeMillis();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 22. 提交任务到线程池</span></span><br><span class="line">            <span class="keyword">this</span>.currentFuture = <span class="keyword">this</span>.executor.schedule(<span class="keyword">this</span>, initialDelay, </span><br><span class="line">                TimeUnit.MILLISECONDS);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Date actualExecutionTime = <span class="keyword">new</span> Date();</span><br><span class="line">        <span class="comment">// 23. 执行实际任务</span></span><br><span class="line">        <span class="keyword">super</span>.run();</span><br><span class="line">        </span><br><span class="line">        Date completionTime = <span class="keyword">new</span> Date();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.triggerContextMonitor) &#123;</span><br><span class="line">            <span class="comment">// 24. 更新触发上下文</span></span><br><span class="line">            <span class="keyword">this</span>.triggerContext.update(<span class="keyword">this</span>.scheduledExecutionTime, </span><br><span class="line">                actualExecutionTime, completionTime);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 25. 重新调度（关键：实现循环执行）</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.currentFuture.isCancelled()) &#123;</span><br><span class="line">            schedule();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           
         
       
@@ -2710,7 +2710,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>

@@ -2333,7 +2333,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/31/java/coucurrent/3.CountDownLatch&Semaphore/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2021/10/31/java/jvm/jvm%E8%B0%83%E4%BC%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -2352,7 +2352,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/10/31/java/coucurrent/3.CountDownLatch&Semaphore/" itemprop="url">CountDownLatch&Semaphore-共享锁</a></h1>
+                <a class="post-title-link" href="/2021/10/31/java/jvm/jvm%E8%B0%83%E4%BC%98/" itemprop="url">JVM调优</a></h1>
         
 
         <div class="post-meta">
@@ -2387,8 +2387,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">并发编程</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -2418,7 +2418,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  35 字
+                  1.3k 字
                 </span>
               
 
@@ -2434,7 +2434,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1 分钟
+                  4 分钟
                 </span>
               
             </div>
@@ -2457,7 +2457,45 @@
       
         
           
-            <h1 id="1-Semaphore-是什么？"><a href="#1-Semaphore-是什么？" class="headerlink" title="1. Semaphore 是什么？"></a>1. Semaphore 是什么？</h1><p>Semaphore 字面意思是信号量的意思，它的作用是控制访问特定资源的线程数目。</p>
+            <blockquote>
+<p><a href="https://www.cnblogs.com/likehua/p/3369823.html" target="_blank" rel="noopener">https://www.cnblogs.com/likehua/p/3369823.html</a></p>
+</blockquote>
+<blockquote>
+<p>实战<a href="https://juejin.cn/post/7025410482341150751?utm_source=gold_browser_extension#heading-8" target="_blank" rel="noopener">https://juejin.cn/post/7025410482341150751?utm_source=gold_browser_extension#heading-8</a><br><a href="https://blog.csdn.net/weixin_42081445/article/details/144562955" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42081445/article/details/144562955</a></p>
+</blockquote>
+<h1 id="1-堆大小设置"><a href="#1-堆大小设置" class="headerlink" title="1.堆大小设置"></a>1.堆大小设置</h1><p>典型设置</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k</p>
+<ul>
+<li><p>-Xmx3550m:设置JVM最大可用内存为3550M</p>
+</li>
+<li><p>-Xms3550m:设置JVM初始内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存</p>
+</li>
+<li><p>-Xmn2g:设置年轻代大小为2G。整个JVM内存大小=年轻代大小 + 年老代大小 + 持久代大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。<br>此值对系统性能影响较大，Sun官方推荐配置为整个堆的3/8</p>
+</li>
+<li><p>-Xss128k：设置每个线程的堆栈大小。JDK5.0以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。更具应用的线程所需内存大小进行调整。<br>在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。</p>
+</li>
+</ul>
+<p>java -Xmx3550m -Xms3550m -Xss128k -XX:NewRatio=4 -XX:SurvivorRatio=4 -XX:MaxPermSize=16m -XX:MaxTenuringThreshold=0</p>
+<ul>
+<li><p>-XX:NewRatio=4:设置年轻代（包括Eden和两个Survivor区）与年老代的比值（除去持久代）。设置为4，则年轻代与年老代所占比值为1：4，年轻代占整个堆栈的1/5</p>
+</li>
+<li><p>-XX:SurvivorRatio=4：设置年轻代中Eden区与Survivor区的大小比值。设置为4，则两个Survivor区与一个Eden区的比值为2:4，一个Survivor区占整个年轻代的1/6</p>
+</li>
+<li><p>-XX:MaxPermSize=16m:设置持久代大小为16m。</p>
+</li>
+<li><p>-XX:MaxTenuringThreshold=0：设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代。<br>对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间，<br>增加在年轻代即被回收的概论。</p>
+</li>
+</ul>
+<h1 id="2-回收器选择"><a href="#2-回收器选择" class="headerlink" title="2.回收器选择"></a>2.回收器选择</h1><p>JVM给了三种选择：<strong>串行收集器、并行收集器、并发收集器</strong>，但是串行收集器只适用于小数据量的情况，所以这里的选择主要针对并行收集器和并发收集器。<br>默认情况下，JDK5.0以前都是使用串行收集器，如果想使用其他收集器需要在启动时加入相应参数。JDK5.0以后，JVM会根据当前系统配置进行判断。</p>
+<h2 id="2-1-吞吐量优先的并行收集器"><a href="#2-1-吞吐量优先的并行收集器" class="headerlink" title="2.1 吞吐量优先的并行收集器"></a>2.1 吞吐量优先的并行收集器</h2><p>如上文所述，并行收集器主要以到达一定的吞吐量为目标，适用于科学技术和后台处理等。</p>
+<p>典型配置：<br>java -Xmx3800m -Xms3800m -Xmn2g -Xss128k <strong>-XX:+UseParallelGC -XX:ParallelGCThreads=20</strong></p>
+<p>-XX:+UseParallelGC：选择垃圾收集器为并行收集器。此配置仅对年轻代有效。即上述配置下，年轻代使用并发收集，而年老代仍旧使用串行收集。<br>-XX:ParallelGCThreads=20：配置并行收集器的线程数，即：同时多少个线程一起进行垃圾回收。此值最好配置与处理器数目相等。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20 <strong>-XX:+UseParallelOldGC</strong><br>-XX:+UseParallelOldGC：配置年老代垃圾收集方式为并行收集。JDK6.0支持对年老代并行收集。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k <strong>-XX:+UseParallelGC  -XX:MaxGCPauseMillis=100</strong><br>-XX:MaxGCPauseMillis=100:设置每次年轻代垃圾回收的最长时间，如果无法满足此时间，JVM会自动调整年轻代大小，以满足此值。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC  -XX:MaxGCPauseMillis=100 <strong>-XX:+UseAdaptiveSizePolicy</strong><br>-XX:+UseAdaptiveSizePolicy：设置此选项后，并行收集器会自动选择年轻代区大小和相应的Survivor区比例，以达到目标系统规定的最低相应时间或者收集频率等，此值建议使用并行收集器时，一直打开。</p>
+<h2 id="2-2-响应时间优先的并发收集器"><a href="#2-2-响应时间优先的并发收集器" class="headerlink" title="2.2 响应时间优先的并发收集器"></a>2.2 响应时间优先的并发收集器</h2><p>如上文所述，并发收集器主要是保证系统的响应时间，减少垃圾收集时的停顿时间。适用于应用服务器、电信领域等。</p>
+<p>典型配置：<br>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:ParallelGCThreads=20 <strong>-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</strong><br>-XX:+UseConcMarkSweepGC：设置年老代为并发收集。测试中配置这个以后，-XX:NewRatio=4的配置失效了，原因不明。所以，此时年轻代大小最好用-Xmn设置。<br>-XX:+UseParNewGC:设置年轻代为并行收集。可与CMS收集同时使用。JDK5.0以上，JVM会根据系统配置自行设置，所以无需再设置此值。</p>
+<p>java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseConcMarkSweepGC <strong>-XX:CMSFullGCsBeforeCompaction=5 -XX:+UseCMSCompactAtFullCollection</strong><br>-XX:CMSFullGCsBeforeCompaction：由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此值设置运行多少次GC以后对内存空间进行压缩、整理。<br>-XX:+UseCMSCompactAtFullCollection：打开对年老代的压缩。可能会影响性能，但是可以消除碎片</p>
 
           
         
@@ -2566,7 +2604,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
