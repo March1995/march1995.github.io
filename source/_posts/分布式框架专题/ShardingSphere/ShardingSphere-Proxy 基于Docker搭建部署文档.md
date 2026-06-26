@@ -1,3 +1,11 @@
+---
+title: ShardingSphere-Proxy 基于Docker搭建部署文档
+date: 2023-11-27 
+desc:
+keywords: ShardingSphere 
+categories: [分布式]
+---
+
 # ShardingSphere-Proxy 基于Docker搭建部署文档
 
 ## 文档说明
