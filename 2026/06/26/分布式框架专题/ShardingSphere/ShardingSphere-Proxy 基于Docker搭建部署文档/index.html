@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/function%20small()%20%7B%20%5Bnative%20code%5D%20%7D?v=5.1.4">
+
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Marcher" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="ShardingSphere-Proxy 基于Docker搭建部署文档文档说明本文档详细记录基于Docker搭建ShardingSphere-Proxy的完整步骤、前置数据准备、分片规则配置流程，并整理实操过程中遇到的问题及解决方案，适用于分库分表场景的快速部署落地。文档中已隐藏私密IP、账号等敏感信息，可直接作为标准化部署参考，使用时需根据实际环境替换占位符内容。 一、环境准备 宿主机已安装Do">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式框架专题&#x2F;ShardingSphere&#x2F;ShardingSphere-Proxy 基于Docker搭建部署文档">
+<meta property="og:url" content="https://march1995.github.io/2026/06/26/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/ShardingSphere/ShardingSphere-Proxy%20%E5%9F%BA%E4%BA%8EDocker%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="Marcher">
+<meta property="og:description" content="ShardingSphere-Proxy 基于Docker搭建部署文档文档说明本文档详细记录基于Docker搭建ShardingSphere-Proxy的完整步骤、前置数据准备、分片规则配置流程，并整理实操过程中遇到的问题及解决方案，适用于分库分表场景的快速部署落地。文档中已隐藏私密IP、账号等敏感信息，可直接作为标准化部署参考，使用时需根据实际环境替换占位符内容。 一、环境准备 宿主机已安装Do">
+<meta property="article:published_time" content="2026-06-26T03:57:10.328Z">
+<meta property="article:modified_time" content="2026-06-26T03:57:10.328Z">
+<meta property="article:author" content="Marcher">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://march1995.github.io/2026/06/26/分布式框架专题/ShardingSphere/ShardingSphere-Proxy 基于Docker搭建部署文档/"/>
+
+
+
+
+
+  <title>分布式框架专题/ShardingSphere/ShardingSphere-Proxy 基于Docker搭建部署文档 | Marcher</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+
+<a href="https://github.com/march1995" target="_blank" rel="noopener" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px)
+{.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Marcher</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2026/06/26/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/ShardingSphere/ShardingSphere-Proxy%20%E5%9F%BA%E4%BA%8EDocker%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">分布式框架专题/ShardingSphere/ShardingSphere-Proxy 基于Docker搭建部署文档</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2026-06-26T03:57:10+00:00">
+                2026-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.9k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  18 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="ShardingSphere-Proxy-基于Docker搭建部署文档"><a href="#ShardingSphere-Proxy-基于Docker搭建部署文档" class="headerlink" title="ShardingSphere-Proxy 基于Docker搭建部署文档"></a>ShardingSphere-Proxy 基于Docker搭建部署文档</h1><h2 id="文档说明"><a href="#文档说明" class="headerlink" title="文档说明"></a>文档说明</h2><p>本文档详细记录基于Docker搭建ShardingSphere-Proxy的完整步骤、前置数据准备、分片规则配置流程，并整理实操过程中遇到的问题及解决方案，适用于分库分表场景的快速部署落地。文档中已隐藏私密IP、账号等敏感信息，可直接作为标准化部署参考，使用时需根据实际环境替换占位符内容。</p>
+<h2 id="一、环境准备"><a href="#一、环境准备" class="headerlink" title="一、环境准备"></a>一、环境准备</h2><ul>
+<li><p>宿主机已安装Docker环境（推荐Docker Engine 20.10及以上版本，确保容器正常启动和挂载功能可用）；</p>
+</li>
+<li><p>已搭建MySQL数据库集群（作为分片物理库，数量根据业务分库需求准备，确保各物理库网络互通）；</p>
+</li>
+<li><p>宿主机具备目录挂载权限，用于映射容器内配置文件（conf）和扩展库（ext-lib）目录，避免容器重启后配置丢失；</p>
+</li>
+<li><p>网络互通：宿主机可正常访问MySQL集群，应用服务可访问ShardingSphere-Proxy映射的宿主机端口。</p>
+</li>
+</ul>
+<h2 id="二、ShardingSphere-Proxy-容器部署"><a href="#二、ShardingSphere-Proxy-容器部署" class="headerlink" title="二、ShardingSphere-Proxy 容器部署"></a>二、ShardingSphere-Proxy 容器部署</h2><h3 id="2-1-拉取官方Docker镜像"><a href="#2-1-拉取官方Docker镜像" class="headerlink" title="2.1 拉取官方Docker镜像"></a>2.1 拉取官方Docker镜像</h3><p>推荐从DockerHub拉取Apache官方镜像，确保镜像版本稳定，执行命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull apache/shardingsphere-proxy</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-拷贝容器内配置文件模板到宿主机"><a href="#2-2-拷贝容器内配置文件模板到宿主机" class="headerlink" title="2.2 拷贝容器内配置文件模板到宿主机"></a>2.2 拷贝容器内配置文件模板到宿主机</h3><p>容器内置默认配置文件模板，需先拷贝到宿主机自定义目录，方便后续修改配置（如数据源、端口等），执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 临时启动容器用于拷贝配置文件</span></span><br><span class="line">docker run -d --name tmp --entrypoint=bash apache/shardingsphere-proxy</span><br><span class="line"><span class="comment"># 将容器内conf目录拷贝到宿主机自定义路径（替换/host/path/to/conf为实际宿主机路径，如/root/shardingsphere/conf）</span></span><br><span class="line">docker cp tmp:/opt/shardingsphere-proxy/conf /host/path/to/conf</span><br><span class="line"><span class="comment"># 删除临时容器（拷贝完成后无需保留）</span></span><br><span class="line">docker rm tmp</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-启动ShardingSphere-Proxy容器"><a href="#2-3-启动ShardingSphere-Proxy容器" class="headerlink" title="2.3 启动ShardingSphere-Proxy容器"></a>2.3 启动ShardingSphere-Proxy容器</h3><p>将宿主机的conf配置目录和ext-lib扩展库目录挂载到容器，指定容器内端口、宿主机映射端口及JVM内存参数，启动命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">    -v /host/path/to/conf:/opt/shardingsphere-proxy/conf \</span><br><span class="line">    -v /host/path/to/ext-lib:/opt/shardingsphere-proxy/ext-lib \</span><br><span class="line">    -e PORT=3308 -p13308:3308 \</span><br><span class="line">    -e <span class="string">"CGROUP_MEM_OPTS=-XX:InitialRAMPercentage=5.0 -XX:MaxRAMPercentage=5.0 -XX:MinRAMPercentage=5.0"</span> \</span><br><span class="line">    apache/shardingsphere-proxy:latest</span><br></pre></td></tr></table></figure>
+
+<h4 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h4><ul>
+<li><p>-v /host/path/to/conf:/opt/shardingsphere-proxy/conf：宿主机配置目录与容器配置目录映射，后续修改配置直接操作宿主机目录即可；</p>
+</li>
+<li><p>-v /host/path/to/ext-lib:/opt/shardingsphere-proxy/ext-lib：宿主机扩展库目录与容器扩展库目录映射，用于放置MySQL JDBC驱动包等扩展文件；</p>
+</li>
+<li><p>PORT=3308：容器内ShardingSphere-Proxy的监听端口，可根据容器内端口占用情况调整；</p>
+</li>
+<li><p>p13308:3308：宿主机端口与容器端口映射，应用服务通过宿主机13308端口访问Proxy（宿主机端口可自定义，避免端口冲突）；</p>
+</li>
+<li><p>CGROUP_MEM_OPTS：JVM内存占比配置，可根据宿主机资源情况按需调整（如宿主机内存较大，可提高MaxRAMPercentage）。</p>
+</li>
+</ul>
+<h2 id="三、MySQL物理库前置数据准备"><a href="#三、MySQL物理库前置数据准备" class="headerlink" title="三、MySQL物理库前置数据准备"></a>三、MySQL物理库前置数据准备</h2><p>在配置ShardingSphere-Proxy分片规则前，需先对MySQL物理库做前置准备，确保各物理库表结构一致、分片字段齐全，避免后续数据路由异常。</p>
+<h3 id="3-1-创建分片物理库"><a href="#3-1-创建分片物理库" class="headerlink" title="3.1 创建分片物理库"></a>3.1 创建分片物理库</h3><p>根据业务分库需求，在MySQL集群中创建对应的物理数据库，示例命名：pilotroster_caac_0、pilotroster_caac_1、pilotroster_caac_2（可按业务规范自定义命名，确保名称统一，便于后续配置分片规则）。</p>
+<h3 id="3-2-为所有表统一添加分片字段"><a href="#3-2-为所有表统一添加分片字段" class="headerlink" title="3.2 为所有表统一添加分片字段"></a>3.2 为所有表统一添加分片字段</h3><p>为所有物理库中的基础表添加分片键字段SIMULATION_INSTANCE_ID（仿真实例ID，可按业务需求自定义分片键名），先执行查询语句生成新增字段的SQL，再执行生成的SQL完成字段添加，避免重复添加：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(<span class="string">'ALTER TABLE `'</span>, t.table_name, <span class="string">'` ADD COLUMN SIMULATION_INSTANCE_ID int null comment \'</span>仿真实例<span class="keyword">ID</span>\<span class="string">';'</span>) <span class="keyword">AS</span> sql_statement</span><br><span class="line"><span class="keyword">FROM</span> information_schema.tables t</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> information_schema.columns c</span><br><span class="line">  <span class="keyword">ON</span> t.table_name = c.table_name</span><br><span class="line">  <span class="keyword">AND</span> c.table_schema = t.table_schema</span><br><span class="line">  <span class="keyword">AND</span> c.column_name = <span class="string">'SIMULATION_INSTANCE_ID'</span>  <span class="comment">-- 替换为实际分片键字段名</span></span><br><span class="line"><span class="keyword">WHERE</span> t.table_schema = <span class="string">'目标物理库名'</span>  <span class="comment">-- 替换为实际MySQL物理库名（如pilotroster_caac_0）</span></span><br><span class="line">  <span class="keyword">AND</span> t.table_type = <span class="string">'BASE TABLE'</span>     <span class="comment">-- 仅处理基础表，不处理视图</span></span><br><span class="line">  <span class="keyword">AND</span> c.column_name <span class="keyword">IS</span> <span class="literal">NULL</span>;          <span class="comment">-- 仅对无该分片字段的表生成SQL</span></span><br></pre></td></tr></table></figure>
+
+<p>说明：需为所有分片物理库逐一执行上述操作，确保各物理库的同一张表结构完全一致，避免分片路由时出现表结构不匹配错误。</p>
+<h3 id="3-3-初始化分片字段值"><a href="#3-3-初始化分片字段值" class="headerlink" title="3.3 初始化分片字段值"></a>3.3 初始化分片字段值</h3><p>为已有数据的表统一初始化分片字段值，先执行查询语句生成更新SQL，再执行生成的SQL（避免手动逐表更新，提高效率）：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(<span class="string">'UPDATE `'</span>, t.table_name, <span class="string">'` SET `SIMULATION_INSTANCE_ID` = 1 where 1=1;'</span>) <span class="keyword">AS</span> sql_statement</span><br><span class="line"><span class="keyword">FROM</span> information_schema.tables t</span><br><span class="line"><span class="keyword">JOIN</span> information_schema.columns c</span><br><span class="line">  <span class="keyword">ON</span> t.table_name = c.table_name</span><br><span class="line">  <span class="keyword">AND</span> t.table_schema = c.table_schema</span><br><span class="line"><span class="keyword">WHERE</span> t.table_schema = <span class="string">'目标物理库名'</span>       <span class="comment">-- 替换为实际MySQL物理库名</span></span><br><span class="line">  <span class="keyword">AND</span> t.table_type = <span class="string">'BASE TABLE'</span>                 <span class="comment">-- 仅处理基础表</span></span><br><span class="line">  <span class="keyword">AND</span> c.column_name = <span class="string">'SIMULATION_INSTANCE_ID'</span>;   <span class="comment">-- 替换为实际分片键字段名</span></span><br></pre></td></tr></table></figure>
+
+<p>说明：示例中分片字段值设为1，可根据业务实际数据规则调整赋值（如按业务ID范围分配分片值），确保数据能按预期路由到对应物理库。</p>
+<h2 id="四、ShardingSphere-Proxy-分片规则配置"><a href="#四、ShardingSphere-Proxy-分片规则配置" class="headerlink" title="四、ShardingSphere-Proxy 分片规则配置"></a>四、ShardingSphere-Proxy 分片规则配置</h2><p>通过DistSQL语句连接ShardingSphere-Proxy进行配置，核心步骤为：创建逻辑数据库→注册物理数据源→创建表分片规则→验证路由规则，所有操作需在Proxy连接会话中执行，确保上下文正确。</p>
+<h3 id="4-1-连接ShardingSphere-Proxy"><a href="#4-1-连接ShardingSphere-Proxy" class="headerlink" title="4.1 连接ShardingSphere-Proxy"></a>4.1 连接ShardingSphere-Proxy</h3><p>使用MySQL客户端（如Navicat、DBeaver、命令行）连接Proxy，连接信息如下：</p>
+<ul>
+<li><p>地址：宿主机IP（无需填写容器IP，通过宿主机映射端口访问）；</p>
+</li>
+<li><p>端口：宿主机映射端口（本文示例为13308，与容器启动时配置一致）；</p>
+</li>
+<li><p>账号/密码：默认root/root（可在容器conf目录的server.yaml配置文件中修改，提高安全性）。</p>
+</li>
+</ul>
+<h3 id="4-2-执行DistSQL配置分片规则"><a href="#4-2-执行DistSQL配置分片规则" class="headerlink" title="4.2 执行DistSQL配置分片规则"></a>4.2 执行DistSQL配置分片规则</h3><p>连接Proxy后，执行以下DistSQL语句，完成逻辑库创建、数据源注册和分片规则配置（按实际环境替换占位符内容）：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 1. 创建逻辑数据库（首次配置必做，自定义逻辑库名，如pilotroster）</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> pilotroster;</span><br><span class="line"><span class="keyword">USE</span> pilotroster;  <span class="comment">-- 切换到创建的逻辑库，后续操作均在该上下文下执行</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 注册物理数据源（按实际物理库数量逐一注册，替换为实际配置）</span></span><br><span class="line">REGISTER STORAGE UNIT 物理库名1 (</span><br><span class="line">    URL="jdbc:mysql://MySQL地址:MySQL端口/物理库名1?serverTimezone=GMT%2B8&amp;useSSL=false",</span><br><span class="line">    USER="MySQL账号",</span><br><span class="line">    PASSWORD="MySQL密码",</span><br><span class="line">    PROPERTIES("maximumPoolSize"=10,"idleTimeout"=30000)</span><br><span class="line">);</span><br><span class="line">REGISTER STORAGE UNIT 物理库名2 (</span><br><span class="line">    URL="jdbc:mysql://MySQL地址:MySQL端口/物理库名2?serverTimezone=GMT%2B8&amp;useSSL=false",</span><br><span class="line">    USER="MySQL账号",</span><br><span class="line">    PASSWORD="MySQL密码",</span><br><span class="line">    PROPERTIES("maximumPoolSize"=10,"idleTimeout"=30000)</span><br><span class="line">);</span><br><span class="line">REGISTER STORAGE UNIT 物理库名3 (</span><br><span class="line">    URL="jdbc:mysql://MySQL地址:MySQL端口/物理库名3?serverTimezone=GMT%2B8&amp;useSSL=false",</span><br><span class="line">    USER="MySQL账号",</span><br><span class="line">    PASSWORD="MySQL密码",</span><br><span class="line">    PROPERTIES("maximumPoolSize"=10,"idleTimeout"=30000)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 创建表分片规则（以opt_filiale表为例，仅分库不分表，适配业务需求）</span></span><br><span class="line"><span class="keyword">CREATE</span> SHARDING <span class="keyword">TABLE</span> RULE opt_filiale (</span><br><span class="line">    DATANODES(<span class="string">"物理库名$&#123;0..2&#125;.opt_filiale"</span>),  <span class="comment">-- 匹配已注册的物理库名，表名与物理库表名一致</span></span><br><span class="line">    DATABASE_STRATEGY(</span><br><span class="line">        <span class="keyword">TYPE</span>=<span class="string">"standard"</span>,</span><br><span class="line">        SHARDING_COLUMN=SIMULATION_INSTANCE_ID,  <span class="comment">-- 分片键字段名，与物理库表中字段一致</span></span><br><span class="line">        SHARDING_ALGORITHM(</span><br><span class="line">            <span class="keyword">TYPE</span>(<span class="keyword">NAME</span>=<span class="string">"inline"</span>,PROPERTIES(<span class="string">"algorithm-expression"</span>=<span class="string">"物理库名$&#123;SIMULATION_INSTANCE_ID.intdiv(1000)&#125;"</span>))</span><br><span class="line">        )</span><br><span class="line">    ),</span><br><span class="line">    <span class="comment">-- 审计策略：禁止无分片条件的操作，避免全库扫描导致性能下降（按需配置）</span></span><br><span class="line">    AUDIT_STRATEGY (<span class="keyword">TYPE</span>(<span class="keyword">NAME</span>=<span class="string">"DML_SHARDING_CONDITIONS"</span>),ALLOW_HINT_DISABLE=<span class="literal">true</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 4. 验证路由规则（插入测试数据，按需修改字段和值，确保字段与物理表结构一致）</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> opt_filiale (code, SIMULATION_INSTANCE_ID) <span class="keyword">values</span> (<span class="string">'MF'</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置说明"><a href="#配置说明" class="headerlink" title="配置说明"></a>配置说明</h4><ul>
+<li><p>逻辑数据库：ShardingSphere-Proxy的虚拟库，仅用于管理物理数据源和分片规则，不实际存储数据，所有数据最终存储在注册的物理库中；</p>
+</li>
+<li><p>物理数据源注册：maximumPoolSize（连接池最大连接数）、idleTimeout（连接空闲超时时间）可按业务性能需求调整，避免连接池耗尽或空闲连接过多；</p>
+</li>
+<li><p>分片算法：本文使用inline行内算法，通过SIMULATION_INSTANCE_ID.intdiv(1000)实现按分片键整数除法分库（每1000个ID分一个库），可按业务需求替换为hash_mod、range等算法；</p>
+</li>
+<li><p>审计策略：DML_SHARDING_CONDITIONS用于拦截无分片条件的DML/查询操作，防止全库扫描导致Proxy性能暴跌，属于推荐配置。</p>
+</li>
+</ul>
+<h3 id="4-3-规则验证方法"><a href="#4-3-规则验证方法" class="headerlink" title="4.3 规则验证方法"></a>4.3 规则验证方法</h3><p>配置完成后，通过以下方法验证分片规则是否生效，确保数据路由正常：</p>
+<ol>
+<li>查看分片规则：验证规则是否成功创建，确认配置与预期一致<pre><code>`-- 查看当前逻辑库下所有分片表规则</code></pre>SHOW SHARDING TABLE RULES;</li>
+</ol>
+<p>– 查看指定表的详细分片规则（如opt_filiale）<br><code></code>DESCRIBE SHARDING TABLE RULE opt_filiale;`</p>
+<ol start="2">
+<li><p>验证路由逻辑：通过EXPLAIN查看SQL路由到的物理库，确认分库规则生效</p>
+<pre><code>`EXPLAIN SELECT * FROM opt_filiale WHERE SIMULATION_INSTANCE_ID=2;`预期结果：输出中会显示SQL路由到的具体物理库（如物理库名2.opt_filiale），无分表后缀，说明仅分库规则生效。</code></pre></li>
+<li><p>数据操作验证：插入/查询数据，确认数据能正确路由到对应物理库（注：无分片条件的全局查询会被审计策略拦截，无法执行）<br>`– 插入不同分片键的数据<br>insert into opt_filiale (code, SIMULATION_INSTANCE_ID) values (‘MF1’, 999), (‘MF2’, 1000), (‘MF3’, 2001);</p>
+</li>
+</ol>
+<p>– 指定分片键查询（精准路由到对应物理库，可正常执行）<br>SELECT * FROM opt_filiale WHERE SIMULATION_INSTANCE_ID=999;<br>– 注意：无分片条件的全局查询（如下）会被审计策略拦截，执行失败<br><code></code>– SELECT * FROM opt_filiale;`</p>
+<h2 id="五、实操常见问题及解决方案"><a href="#五、实操常见问题及解决方案" class="headerlink" title="五、实操常见问题及解决方案"></a>五、实操常见问题及解决方案</h2><p>结合实操过程中遇到的各类问题，整理以下高频问题及解决方案，帮助快速避坑、定位问题，提高部署效率。</p>
+<h3 id="问题1：注册物理数据源时报错，无法连接MySQL数据库"><a href="#问题1：注册物理数据源时报错，无法连接MySQL数据库" class="headerlink" title="问题1：注册物理数据源时报错，无法连接MySQL数据库"></a>问题1：注册物理数据源时报错，无法连接MySQL数据库</h3><h4 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h4><p>在ShardingSphere-Proxy中执行DistSQL注册物理数据源（即添加物理库）时，直接报错提示“无法连接数据源”，无法完成物理库注册。排查过程中发现，此前部署容器时虽挂载了ext-lib扩展目录，但未将MySQL JDBC驱动jar包拷贝到该目录，倒回去将驱动包补充到宿主机挂载的ext-lib目录并重启容器后，重新注册物理数据源，报错解决。</p>
+<h4 id="根因"><a href="#根因" class="headerlink" title="根因"></a>根因</h4><p>ShardingSphere-Proxy官方Docker镜像默认未内置MySQL JDBC驱动包，仅内置PostgreSQL等其他数据库驱动；且部署时虽配置了ext-lib目录挂载（用于放置扩展驱动），但未及时补充MySQL驱动包，导致Proxy无法加载MySQL驱动，进而无法连接物理库，注册数据源时触发报错。</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li><p>下载与MySQL版本匹配的MySQL Connector/J驱动包（推荐8.0+版本，兼容性更好），下载地址：<a href="https://dev.mysql.com/downloads/connector/j/；" target="_blank" rel="noopener">https://dev.mysql.com/downloads/connector/j/；</a></p>
+</li>
+<li><p>将下载的mysql-connector-java-8.0.xx.jar驱动包，拷贝到宿主机挂载的ext-lib目录（即/host/path/to/ext-lib）；</p>
+</li>
+<li><p>重启ShardingSphere-Proxy容器，使驱动包生效：docker restart &lt;容器ID&gt;。</p>
+</li>
+</ol>
+<p>注意：1. 驱动版本需与MySQL服务版本兼容，8.0版本驱动可兼容5.7版本MySQL，但5.1版本驱动不兼容8.0版本MySQL，避免版本不匹配导致连接失败；2. 建议在容器启动前，提前将驱动包拷贝到ext-lib目录，避免后续注册物理数据源时出现报错，节省排查时间。</p>
+<h3 id="问题2：DistSQL语法错误提示不友好，无法定位错误原因"><a href="#问题2：DistSQL语法错误提示不友好，无法定位错误原因" class="headerlink" title="问题2：DistSQL语法错误提示不友好，无法定位错误原因"></a>问题2：DistSQL语法错误提示不友好，无法定位错误原因</h3><h4 id="现象-1"><a href="#现象-1" class="headerlink" title="现象"></a>现象</h4><p>编写分片规则DistSQL后执行失败，仅返回模糊提示，无具体错误位置和真实原因，难以定位问题，甚至会误导排查方向。例如实操中曾遇到报错：[2026-02-27 14:15:44] [42000][1064] You have an error in your SQL syntax: no viable alternative at input ‘CREATESHARDING’ near ‘[@2,47:54=’SHARDING’,&lt;882&gt;,1:47]’ at line 1，实际编写的SQL是“CREATE SHARDING”（中间有空格），并非提示中显示的“CREATESHARDING”（无空格），但由于整体SQL存在其他语法问题，报错却误导性地指向“CREATESHARDING”拼写错误，导致在错误方向浪费大量排查时间，最终通过参考他人可正常运行的DistSQL语句修改后，才成功解决问题，避免了继续在错误方向内消耗精力。</p>
+<h4 id="根因-1"><a href="#根因-1" class="headerlink" title="根因"></a>根因</h4><p>ShardingSphere-Proxy对DistSQL语法校验的错误提示未做精细化处理，不仅无具体错误位置，还可能出现误导性提示——即使SQL中某部分书写正确（如“CREATE SHARDING”中间有空格），若整体存在其他语法问题，报错也可能指向该正确部分，误导排查方向；同时，无论是括号缺失、引号错误、参数写错、关键词空格缺失等小错误，均会返回通用提示，大幅增加排查难度。</p>
+<h4 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li><p>逐段拆分DistSQL执行：先创建逻辑库，再注册数据源，最后创建分片规则，逐步缩小错误范围，定位到具体出错的语句段；</p>
+</li>
+<li><p>严格检查语法细节：括号、逗号需成对且位置正确，分片键、物理库、表名需与实际一致（区分大小写，MySQL表名默认小写），算法表达式语法正确（如整数除法用intdiv而非/）；</p>
+</li>
+<li><p>对照官方文档：根据当前ShardingSphere-Proxy版本，参考官方DistSQL语法规范编写语句，避免语法错误；</p>
+</li>
+<li><p>避免手动输入：可复制官方示例语句或他人可正常运行的DistSQL语句，替换占位符内容，减少手动输入导致的空格、符号错误，同时也能规避因整体语法错误引发的误导性提示。</p>
+</li>
+</ol>
+<h3 id="问题3：DistSQL语法向下兼容性差，旧版本语法无法在新版本执行"><a href="#问题3：DistSQL语法向下兼容性差，旧版本语法无法在新版本执行" class="headerlink" title="问题3：DistSQL语法向下兼容性差，旧版本语法无法在新版本执行"></a>问题3：DistSQL语法向下兼容性差，旧版本语法无法在新版本执行</h3><h4 id="现象-2"><a href="#现象-2" class="headerlink" title="现象"></a>现象</h4><p>参考ShardingSphere-Proxy旧版本（如5.0）的DistSQL示例编写语句，在高版本（如5.4+）中执行直接失败，无“语法过时”“版本不兼容”等提示，仅返回语法错误。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><ul>
+<li><p>5.0版本分片算法写法（5.4+版本不兼容）：SHARDING_ALGORITHM(TYPE=”inline”,PROPERTIES(“algorithm-expression”=”库名${字段/1000}”))；</p>
+</li>
+<li><p>5.4+版本正确写法：SHARDING_ALGORITHM(TYPE(NAME=”inline”,PROPERTIES(“algorithm-expression”=”库名${字段.intdiv(1000)}”)))。</p>
+</li>
+</ul>
+<h4 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li><p>确认当前ShardingSphere-Proxy版本：执行docker exec &lt;容器ID&gt; cat /opt/shardingsphere-proxy/VERSION，获取准确版本号；</p>
+</li>
+<li><p>严格参考对应版本的官方文档，避免混用不同版本语法，优先使用当前版本的示例语句；</p>
+</li>
+<li><p>若从旧版本升级，参考官方提供的语法迁移指南，对旧版本DistSQL语句进行调整后再执行。</p>
+</li>
+</ol>
+<h3 id="问题4：删除分片规则后重建失败，提示物理数据节点已被占用"><a href="#问题4：删除分片规则后重建失败，提示物理数据节点已被占用" class="headerlink" title="问题4：删除分片规则后重建失败，提示物理数据节点已被占用"></a>问题4：删除分片规则后重建失败，提示物理数据节点已被占用</h3><h4 id="现象-3"><a href="#现象-3" class="headerlink" title="现象"></a>现象</h4><p>执行DROP SHARDING TABLE RULE 表名（如DROP SHARDING TABLE RULE opt_filiale）删除规则后，重新创建同名表的分片规则，提示“Same actual data node cannot be configured in multiple logic tables”，即使执行SHOW SHARDING TABLE RULES显示无规则，重启容器也无法解决。</p>
+<h4 id="根因-2"><a href="#根因-2" class="headerlink" title="根因"></a>根因</h4><p>ShardingSphere-Proxy元数据管理存在残留问题，删除表规则后，逻辑库的元数据未完全清理，物理数据节点（物理库.物理表）仍被标记为“已占用”，导致重建时触发唯一性校验。</p>
+<h4 id="解决方案-3"><a href="#解决方案-3" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li><p>备份分片规则配置：先将当前逻辑库的DistSQL配置（创建逻辑库、注册数据源、分片规则）备份，避免删除后需重新编写；</p>
+</li>
+<li><p>彻底删除逻辑库：执行DROP DATABASE 逻辑库名（如DROP DATABASE pilotroster），清理所有关联的元数据残留；</p>
+</li>
+<li><p>重新执行完整的DistSQL配置：从头创建逻辑库→注册物理数据源→创建分片规则，此时无元数据残留，可正常创建。</p>
+</li>
+</ol>
+<p>注意：生产环境修改分片规则前，务必先备份当前DistSQL配置，避免删除后需重新编写，影响业务正常运行。</p>
+<h3 id="问题5：执行无分片条件的查询，提示Not-allow-DML-operation-without-sharding-conditions"><a href="#问题5：执行无分片条件的查询，提示Not-allow-DML-operation-without-sharding-conditions" class="headerlink" title="问题5：执行无分片条件的查询，提示Not allow DML operation without sharding conditions"></a>问题5：执行无分片条件的查询，提示Not allow DML operation without sharding conditions</h3><h4 id="现象-4"><a href="#现象-4" class="headerlink" title="现象"></a>现象</h4><p>执行SELECT * FROM 表名 WHERE 1=1等无分片键条件的查询时，被拦截并返回该提示，无法执行查询。</p>
+<h4 id="根因-3"><a href="#根因-3" class="headerlink" title="根因"></a>根因</h4><p>创建分片规则时配置了DML_SHARDING_CONDITIONS审计策略，该策略的作用是禁止无分片条件的DML/查询操作，避免全库扫描导致Proxy性能下降，属于正常的策略生效行为，并非报错。</p>
+<h4 id="解决方案-4"><a href="#解决方案-4" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li><p>正常业务查询（推荐）：必须携带分片键条件（如WHERE SIMULATION_INSTANCE_ID=999），使SQL能精准路由到对应物理库，避免全库扫描；</p>
+</li>
+<li><p>临时测试查询（仅测试用）：通过提示绕过审计规则，执行语句如下（生产环境禁止使用，避免影响性能）：</p>
+<pre><code>`/*+SHARDINGSPHERE:ALLOW_HINT_DISABLE_AUDIT()*/ SELECT * FROM opt_filiale WHERE 1=1;`</code></pre></li>
+<li><p>永久关闭审计（不推荐）：若业务确有频繁执行无分片条件查询的需求，可删除分片规则后重新创建，去掉AUDIT_STRATEGY相关配置。</p>
+</li>
+</ol>
+<h2 id="六、总结与注意事项"><a href="#六、总结与注意事项" class="headerlink" title="六、总结与注意事项"></a>六、总结与注意事项</h2><h3 id="部署总结"><a href="#部署总结" class="headerlink" title="部署总结"></a>部署总结</h3><p>基于Docker搭建ShardingSphere-Proxy的核心流程为：镜像拉取→配置文件拷贝→容器启动→MySQL物理库准备→DistSQL规则配置，其中补充MySQL JDBC驱动包（避免注册物理数据源时报错）和保证物理库表结构一致性是部署成功的关键前提；同时，DistSQL语法版本依赖性极强，配置时需严格匹配当前Proxy版本，且其语法错误提示不友好，建议优先参考官方示例或他人可正常运行的语句，避免因语法问题及误导性提示导致部署失败、浪费排查时间；此外，开启审计策略后，无分片条件的全局查询会被拦截，需注意查询时必须携带分片键条件。</p>
+<h3 id="核心注意事项"><a href="#核心注意事项" class="headerlink" title="核心注意事项"></a>核心注意事项</h3><ul>
+<li><p>配置文件与驱动包：宿主机需持久化挂载conf和ext-lib目录，避免容器重启后配置和驱动丢失，驱动包版本需与MySQL版本兼容；</p>
+</li>
+<li><p>语法兼容性：DistSQL语法版本依赖性强，不同版本语法差异较大，需严格对照当前Proxy版本的官方文档编写语句，避免混用旧版本语法；</p>
+</li>
+<li><p>元数据管理：修改/删除分片规则后若出现元数据残留，会导致规则重建失败，可通过删除并重建逻辑库解决，操作前务必备份配置，避免数据或配置丢失；</p>
+</li>
+<li><p>性能优化：开启审计策略防止无分片条件的全库扫描，根据业务需求调整数据源连接池参数（如maximumPoolSize），避免性能瓶颈；</p>
+</li>
+<li><p>表结构一致性：所有分片物理库的同一张表，表结构（字段、类型、分片键）必须完全一致，否则会导致数据插入、查询异常；</p>
+</li>
+<li><p>私密信息保护：部署文档中需隐藏IP、账号、密码等敏感信息，实际使用时替换占位符内容，避免信息泄露；</p>
+</li>
+<li><p>上下文一致性：执行DistSQL配置时，需先切换到目标逻辑库（USE 逻辑库名），避免因上下文错误导致规则配置失败。</p>
+<blockquote>
+<p>（注：文档部分内容可能由 AI 生成）</p>
+</blockquote>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+<div>
+      
+        
+
+      
+</div>
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat.jpg" alt="Marcher wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎扫描二维码关注公众号一起成长~</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.jpg" alt="Marcher 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.jpg" alt="Marcher 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2026/06/26/tool/IDEA/%E9%92%88%E5%AF%B9%E4%BA%8E%E6%96%B0%E7%89%88IDEA%E4%B8%8D%E6%8F%90%E4%BE%9B%E5%86%85%E7%BD%AEdocker%20CLI%E7%9A%84%E5%A4%84%E7%90%86/" rel="next" title="tool/IDEA/针对于新版IDEA不提供内置docker CLI的处理">
+                <i class="fa fa-chevron-left"></i> tool/IDEA/针对于新版IDEA不提供内置docker CLI的处理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2026/06/26/%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6%E4%B8%93%E9%A2%98/ShardingSphere/attachments/ShardingSphere-Proxy%20%E5%9F%BA%E4%BA%8EDocker%E6%90%AD%E5%BB%BA%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/" rel="prev" title="分布式框架专题/ShardingSphere/attachments/ShardingSphere-Proxy 基于Docker搭建部署文档">
+                分布式框架专题/ShardingSphere/attachments/ShardingSphere-Proxy 基于Docker搭建部署文档 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="Marcher" />
+            
+              <p class="site-author-name" itemprop="name">Marcher</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/march1995" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1501987783@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/324b61a4193e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/march1995/spring-example" title="spring-example" target="_blank">spring-example</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://march1995.github.io/2018/10/31/java/jvm/jvm/" title="jvm" target="_blank">jvm</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ShardingSphere-Proxy-基于Docker搭建部署文档"><span class="nav-text">ShardingSphere-Proxy 基于Docker搭建部署文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文档说明"><span class="nav-text">文档说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、环境准备"><span class="nav-text">一、环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、ShardingSphere-Proxy-容器部署"><span class="nav-text">二、ShardingSphere-Proxy 容器部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-拉取官方Docker镜像"><span class="nav-text">2.1 拉取官方Docker镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-拷贝容器内配置文件模板到宿主机"><span class="nav-text">2.2 拷贝容器内配置文件模板到宿主机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-启动ShardingSphere-Proxy容器"><span class="nav-text">2.3 启动ShardingSphere-Proxy容器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参数说明"><span class="nav-text">参数说明</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、MySQL物理库前置数据准备"><span class="nav-text">三、MySQL物理库前置数据准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-创建分片物理库"><span class="nav-text">3.1 创建分片物理库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-为所有表统一添加分片字段"><span class="nav-text">3.2 为所有表统一添加分片字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-初始化分片字段值"><span class="nav-text">3.3 初始化分片字段值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、ShardingSphere-Proxy-分片规则配置"><span class="nav-text">四、ShardingSphere-Proxy 分片规则配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-连接ShardingSphere-Proxy"><span class="nav-text">4.1 连接ShardingSphere-Proxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-执行DistSQL配置分片规则"><span class="nav-text">4.2 执行DistSQL配置分片规则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置说明"><span class="nav-text">配置说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-规则验证方法"><span class="nav-text">4.3 规则验证方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、实操常见问题及解决方案"><span class="nav-text">五、实操常见问题及解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题1：注册物理数据源时报错，无法连接MySQL数据库"><span class="nav-text">问题1：注册物理数据源时报错，无法连接MySQL数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#现象"><span class="nav-text">现象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根因"><span class="nav-text">根因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决方案"><span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题2：DistSQL语法错误提示不友好，无法定位错误原因"><span class="nav-text">问题2：DistSQL语法错误提示不友好，无法定位错误原因</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#现象-1"><span class="nav-text">现象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根因-1"><span class="nav-text">根因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决方案-1"><span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题3：DistSQL语法向下兼容性差，旧版本语法无法在新版本执行"><span class="nav-text">问题3：DistSQL语法向下兼容性差，旧版本语法无法在新版本执行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#现象-2"><span class="nav-text">现象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#示例"><span class="nav-text">示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决方案-2"><span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题4：删除分片规则后重建失败，提示物理数据节点已被占用"><span class="nav-text">问题4：删除分片规则后重建失败，提示物理数据节点已被占用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#现象-3"><span class="nav-text">现象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根因-2"><span class="nav-text">根因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决方案-3"><span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题5：执行无分片条件的查询，提示Not-allow-DML-operation-without-sharding-conditions"><span class="nav-text">问题5：执行无分片条件的查询，提示Not allow DML operation without sharding conditions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#现象-4"><span class="nav-text">现象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根因-3"><span class="nav-text">根因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决方案-4"><span class="nav-text">解决方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、总结与注意事项"><span class="nav-text">六、总结与注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#部署总结"><span class="nav-text">部署总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心注意事项"><span class="nav-text">核心注意事项</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Marcher</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">105.4k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<!-- 
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共105.4k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

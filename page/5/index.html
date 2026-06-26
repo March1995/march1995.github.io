@@ -299,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/behavioral/observer/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/12/20/active/miaosha/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -318,7 +318,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/observer/" itemprop="url">Java设计模式：观察者模式</a></h1>
+                <a class="post-title-link" href="/2019/12/20/active/miaosha/" itemprop="url">秒杀场景</a></h1>
         
 
         <div class="post-meta">
@@ -330,8 +330,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-20T00:00:00+00:00">
+                2019-12-20
               </time>
             
 
@@ -353,8 +353,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
+                  <a href="/categories/active/" itemprop="url" rel="index">
+                    <span itemprop="name">active</span>
                   </a>
                 </span>
 
@@ -384,7 +384,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  564 字
+                  703 字
                 </span>
               
 
@@ -423,101 +423,46 @@
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义对象之间的一对多依赖，当一个对象状态改变时，它的所有依赖都会收到通知并且自动更新状态。</p>
-<p>主题（Subject）是被观察的对象，而其所有依赖者（Observer）称为观察者。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>主题依赖了观察者的一个集合，观察者依赖了一个主题，生成一个观察者需要在主题进行注册，主题更新后对每个观察者进行推送</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义主题接口，拥有对观察者的操作方法</p>
-<pre><code>public interface Subject {
-
-    // 注册观察者
-    public void registerObserver(Observer observer);
-
-    // 移除观察者
-    public void removeObserver(Observer observer);
-
-    // 提醒观察者
-    public void notifyObserver();
-}</code></pre><p>   定义一个观察者接口，提供一个操作接口，方便主题更新时对观察者进行操作</p>
-<pre><code>public interface Observer {
-
-    void update(float temp, float humidity, float pressure);
-}</code></pre><p>   定义主题接口实现类，依赖了一个观察者集合，当对主题进行更新时，循环通知各个观察者</p>
-<pre><code>public class WeatherSubject implements Subject {
-
-    private List&lt;Observer&gt; observers;
-    private float temperature;
-    private float humidity;
-    private float pressure;
-
-    public WeatherSubject() {
-        observers = new ArrayList&lt;&gt;();
-    }
-
-    public void setMeasurements(float temperature, float humidity, float pressure) {
-        this.temperature = temperature;
-        this.humidity = humidity;
-        this.pressure = pressure;
-        notifyObserver();
-    }
-
-    @Override
-    public void registerObserver(Observer observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(Observer observer) {
-        int i = observers.indexOf(observer);
-        if (i &gt;= 0) {
-            observers.remove(i);
-        }
-    }
-
-    @Override
-    public void notifyObserver() {
-        for (Observer o : observers) {
-            o.update(temperature, humidity, pressure);
-        }
-    }
-}</code></pre><p>   定义观察者实现类，每个观察者通过构造方法传入它所订阅的主题，并在主题中注册该观察者</p>
-<pre><code>public class StatisticsDisplay implements Observer {
-
-    public StatisticsDisplay(Subject weatherData) {
-        weatherData.registerObserver(this);
-    }
-
-    @Override
-    public void update(float temp, float humidity, float pressure) {
-        System.out.println(&quot;StatisticsDisplay.update: &quot; + temp + &quot; &quot; + humidity + &quot; &quot; + pressure);
-    }
-}</code></pre><p>   定义另一个观察者实现类</p>
-<pre><code>public class CurrentConditionsDisplay implements Observer {
-
-    public CurrentConditionsDisplay(Subject weatherData) {
-        weatherData.registerObserver(this);
-    }
-
-    @Override
-    public void update(float temp, float humidity, float pressure) {
-        System.out.println(&quot;CurrentConditionsDisplay.update: &quot; + temp + &quot; &quot; + humidity + &quot; &quot; + pressure);
-    }
-
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        WeatherSubject subject = new WeatherSubject();
-        Observer statis = new StatisticsDisplay(subject);
-        Observer current = new CurrentConditionsDisplay(subject);
-        subject.setMeasurements(22f, 29f, 100f);
-    }
-}</code></pre><p>   输出：</p>
-<pre><code>StatisticsDisplay.update: 22.0 29.0 100.0
-CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><p>第一眼看到这个模式就感觉这不就是java的监听器嘛，其实监听器就是通过这种模式实现的。</p>
-<ul>
-<li>java.util.Observer</li>
-<li>java.util.EventListener</li>
-<li>javax.servlet.http.HttpSessionBindingListener</li>
+            <h1 id="秒杀场景可能遇到的问题（用户流程角度）"><a href="#秒杀场景可能遇到的问题（用户流程角度）" class="headerlink" title="秒杀场景可能遇到的问题（用户流程角度）"></a>秒杀场景可能遇到的问题（用户流程角度）</h1><ul>
+<li><p>问题一.即将到秒杀时间，同时请求网页过多，打开网页速度慢</p>
+</li>
+<li><p>问题二.进入页面后，未到秒杀时间，用户一直点击购买按钮，一直发起请求</p>
+</li>
+<li><p>问题三.用户拿到接口地址，恶意请求（用脚本）</p>
+</li>
+<li><p>问题四.超卖现象</p>
+</li>
+<li><p>问题五.数据库请求过多，数据库奔溃</p>
+</li>
+</ul>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h2><ul>
+<li><p>针对于动态页面（jsp，ftl）可以把整个页面存储在redis中，避免页面渲染。</p>
+</li>
+<li><p>前后端分离项目，页面单独部署，使用cdn加速，资源静态</p>
+</li>
+<li><p>打开网页速度慢，除了页面的原因外，后台请求返回慢也有很大的关系，简单说就是后台高并发能力不足，一遇到此类场景，cpu，内存飚升，程序响应慢。单台tomcat并发量不足，可以集群部署然后使用nginx做负载均衡，恶意请求也可以在此拦截。</p>
+</li>
+<li><p>后台对请求限流</p>
+</li>
+</ul>
+<h2 id="问题二"><a href="#问题二" class="headerlink" title="问题二"></a>问题二</h2><ul>
+<li>页面按钮控制，未到时间按钮不能点击，需要页面定时请求后台获取最新的北京时间，不能以页面本地时间为准</li>
+<li>在用户点击过后，再把按钮设置无效，防止无效重复点击</li>
+</ul>
+<h2 id="问题三"><a href="#问题三" class="headerlink" title="问题三"></a>问题三</h2><p>接口地址动态化，通过MD5之类的加密算法加密随机的字符串去做url，然后通过前端代码获取url后台校验才能通过</p>
+<h2 id="问题四"><a href="#问题四" class="headerlink" title="问题四"></a>问题四</h2><h3 id="处理流程："><a href="#处理流程：" class="headerlink" title="处理流程："></a>处理流程：</h3><p>典型的读多先少场景，使用mysql等nosql，把库存存入redis中，进行库存预热。通过三级缓冲保证数据库压力，本地内存标记，库存修改在redis中进行预存，接着通过mq进行异步下单，处理数据库。若下单成功，页面轮询接口返回订单处理状态。</p>
+<h3 id="解决超卖方案"><a href="#解决超卖方案" class="headerlink" title="解决超卖方案"></a>解决超卖方案</h3><ul>
+<li>防止数据库内存为0，在修改时进行库存判断，大于0才更新。</li>
+<li>用户id与商品id建立唯一所以，防止同一用户重复购买同一件商品。</li>
+<li>实现乐观锁，商品信息中年增加version字段。每次更新时version+1，更新时候带上版本号，当提交前版本号等于更新前版本号，说明此时没有被其他线程影响到，正常更新，如果冲突了则不会进行提交更新。当库存是足够的情况下发生乐观锁冲突就进行一定次数的重试。</li>
+</ul>
+<p>一整套解决方案</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/11/16/16e72d24415cb009?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="秒杀"></p>
+<h2 id="产生更多的问题"><a href="#产生更多的问题" class="headerlink" title="产生更多的问题"></a>产生更多的问题</h2><ul>
+<li>redis集群，数据同步,分布式锁等</li>
+<li>mq高可用</li>
+<li>限流&amp;降级&amp;熔断&amp;隔离</li>
+<li>分布式服务，事务处理。</li>
 </ul>
 
           
@@ -575,7 +520,7 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/behavioral/chainOfResponsibility/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/12/06/spring/springLoadXml/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -594,7 +539,7 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/chainOfResponsibility/" itemprop="url">Java设计模式：责任链模式</a></h1>
+                <a class="post-title-link" href="/2019/12/06/spring/springLoadXml/" itemprop="url">Spring 加载XML文件的六种方式</a></h1>
         
 
         <div class="post-meta">
@@ -606,8 +551,8 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-06T00:00:00+00:00">
+                2019-12-06
               </time>
             
 
@@ -629,8 +574,8 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
                   </a>
                 </span>
 
@@ -660,7 +605,389 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  566 字
+                  559 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一-XmlBeanFactory-引用资源"><a href="#一-XmlBeanFactory-引用资源" class="headerlink" title="一: XmlBeanFactory 引用资源"></a>一: XmlBeanFactory 引用资源</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Resource resource &#x3D; new ClassPathResource(&quot;appcontext.xml&quot;);</span><br><span class="line">BeanFactory factory &#x3D; new XmlBeanFactory(resource);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) factory.getBean(&quot;baseEntity1&quot;);</span><br><span class="line">System.out.println(&quot;XmlBeanFactory 获取 bean ：&quot; + entity.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="二-ClassPathXmlApplicationContext-编译路径"><a href="#二-ClassPathXmlApplicationContext-编译路径" class="headerlink" title="二: ClassPathXmlApplicationContext  编译路径"></a>二: ClassPathXmlApplicationContext  编译路径</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 单个文件</span><br><span class="line">ApplicationContext applicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 多个文件</span><br><span class="line">ApplicationContext multiApplicationContext &#x3D; new ClassPathXmlApplicationContext(&quot;classpath:appcontext.xml&quot;, &quot;classpath:appcontext2.xml&quot;);</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) applicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) multiApplicationContext.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean2 ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="三-用文件系统的路径"><a href="#三-用文件系统的路径" class="headerlink" title="三: 用文件系统的路径"></a>三: 用文件系统的路径</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; classPath</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext &#x3D; new FileSystemXmlApplicationContext(&quot;classpath:appcontext.xml&quot;);</span><br><span class="line">&#x2F;&#x2F; 文件系统</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext2 &#x3D; new FileSystemXmlApplicationContext(&quot;spring-example-test&#x2F;src&#x2F;main&#x2F;resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext3 &#x3D; new FileSystemXmlApplicationContext(&quot;file:E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line">ApplicationContext fileSystemXmlApplicationContext4 &#x3D; new FileSystemXmlApplicationContext(&quot;E:\\marcher\\spring-example\\spring-example-test\\src\\main\\resources&#x2F;appcontext.xml&quot;);</span><br><span class="line"></span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) fileSystemXmlApplicationContext.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) fileSystemXmlApplicationContext2.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity3 &#x3D; (BaseEntity) fileSystemXmlApplicationContext3.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br><span class="line"></span><br><span class="line">BaseEntity entity4 &#x3D; (BaseEntity) fileSystemXmlApplicationContext4.getBean(&quot;baseEntity&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="四-XmlWebApplicationContext是专为Web工程定制的。"><a href="#四-XmlWebApplicationContext是专为Web工程定制的。" class="headerlink" title="四: XmlWebApplicationContext是专为Web工程定制的。"></a>四: XmlWebApplicationContext是专为Web工程定制的。</h1><p>ServletContext servletContext = request.getSession().getServletContext();<br>ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(servletContext ); </p>
+<h1 id="五-使用BeanFactory"><a href="#五-使用BeanFactory" class="headerlink" title="五: 使用BeanFactory"></a>五: 使用BeanFactory</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">BeanDefinitionRegistry reg &#x3D; new DefaultListableBeanFactory();</span><br><span class="line">XmlBeanDefinitionReader reader &#x3D; new XmlBeanDefinitionReader(reg);</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext.xml&quot;));</span><br><span class="line">reader.loadBeanDefinitions(new ClassPathResource(&quot;appcontext2.xml&quot;));</span><br><span class="line">BeanFactory bf &#x3D; (BeanFactory) reg;</span><br><span class="line">BaseEntity entity &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity&quot;);</span><br><span class="line">BaseEntity entity2 &#x3D; (BaseEntity) bf.getBean(&quot;baseEntity2&quot;);</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity.getId());</span><br><span class="line">System.out.println(&quot;ClassPathXmlApplicationContext 获取 bean ：&quot; + entity2.getId());</span><br></pre></td></tr></table></figure>
+
+<h1 id="六：Web-应用启动时加载多个配置文件"><a href="#六：Web-应用启动时加载多个配置文件" class="headerlink" title="六：Web 应用启动时加载多个配置文件"></a>六：Web 应用启动时加载多个配置文件</h1><p>通过ContextLoaderListener 也可加载多个配置文件，在web.xml文件中利用<br><context-pararn>元素来指定多个配置文件位置，其配置如下: </context-pararn></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;context-param&gt;  </span><br><span class="line">    &lt;!-- Context Configuration locations for Spring XML files --&gt;  </span><br><span class="line">       &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;  </span><br><span class="line">       &lt;param-value&gt;  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;Appserver-resources.xml,  </span><br><span class="line">       classpath:config&#x2F;aer&#x2F;aerContext.xml,  </span><br><span class="line">       classpath:org&#x2F;codehaus&#x2F;xfire&#x2F;spring&#x2F;xfire.xml,  </span><br><span class="line">       .&#x2F;WEB-INF&#x2F;**&#x2F;*.spring.xml  </span><br><span class="line">       &lt;&#x2F;param-value&gt;  </span><br><span class="line">   &lt;&#x2F;context-param&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法加载配置文件的前提是已经知道配置文件在哪里，虽然可以利用“*”通配符，但灵活度有限。 </p>
+<h1 id="获取配套代码"><a href="#获取配套代码" class="headerlink" title="获取配套代码"></a><a href="https://github.com/march1995/spring-example/tree/master/spring-example-test/src/main/java/com/wyb/test/spring/loadXml" target="_blank" rel="noopener">获取配套代码</a></h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/12/06/spring/beanLifeCycle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/12/06/spring/beanLifeCycle/" itemprop="url">Spring Bean 生命周期</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-06T00:00:00+00:00">
+                2019-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  264 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p><img src="/uploads/spring/springBeanLifeCycle.png" alt="生命周期"></p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p><img src="https://march1995.github.io/uploads/spring/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="单例模式生命周期"></p>
+<h1 id="多例模式"><a href="#多例模式" class="headerlink" title="多例模式"></a>多例模式</h1><p>需求主动调用才会创建对象，原因见下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LifeCycle lifeCycle &#x3D; (LifeCycle) applicationContext.getBean(&quot;lifeCycle&quot;);</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://march1995.github.io/uploads/spring/%E5%A4%9A%E4%BE%8B%E6%A8%A1%E5%BC%8Fspringbean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="多例模式生命周期"></p>
+<h1 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h1><h2 id="单例模式-1"><a href="#单例模式-1" class="headerlink" title="单例模式"></a>单例模式</h2><p>bean在单例模式下，spring容器启动时解析xml文件发现该bean标签后，直接创建该bean对象存入内部map中保存，<br>此后无论调用多少次getBean()获取该bean都是从map中获取该对象返回，一直是一个对象。<br>此对象一直被spring容器持有，直到容器推出时，随着容器的退出对象被销毁。</p>
+<h2 id="多例模式-1"><a href="#多例模式-1" class="headerlink" title="多例模式"></a>多例模式</h2><p>bean在多例模式下，spring容器启动时解析xml发下该bean标签后，只是将该bean进行管理，并不会创建对象，<br>此后每层使用getBean()获取该bean时，spring都会重新创建该对象返回，每层都是一个新的对象。<br>这个对象spring容器并不会持有，什么时候销毁却决于该对象的用户自己什么时候销毁该对象。</p>
+<h1 id="相应测试源码"><a href="#相应测试源码" class="headerlink" title="相应测试源码"></a><a href="https://github.com/March1995/spring-example/blob/main/spring-example-test/src/main/java/com/wyb/test/spring/beanLifeCycle/LifeCycle.java" target="_blank" rel="noopener">相应测试源码</a></h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/11/27/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/springMVC&swagger/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/27/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/springMVC&swagger/" itemprop="url">springmvc整合swagger（非springboot项目）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-27T00:00:00+00:00">
+                2019-11-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index">
+                    <span itemprop="name">日常问题记录</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  711 字
                 </span>
               
 
@@ -699,125 +1026,27 @@ CurrentConditionsDisplay.update: 22.0 29.0 100.0</code></pre><h2 id="JDK实现">
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些对象连成一条链，并沿着这条链发送该请求，直到有一个对象处理它为止。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义个抽象类，依赖一个本身对象，每个继承类，即可传入其它的继承类实现对象链。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义处理器抽象类 依赖一个本身对象，通过构造器传入，拥有一个处理请求的抽象方法 </p>
-<pre><code>protected Handler successor;
+            <h1 id="项目需求"><a href="#项目需求" class="headerlink" title="项目需求"></a>项目需求</h1><p>公司原来的项目是struts2，然后想要改成前后端分离项目，又不想完全抛去原来的一些东西，选择了单独的springmvc，没有使用springboot，这就开启了我的难受之旅。</p>
+<h1 id="需要依赖"><a href="#需要依赖" class="headerlink" title="需要依赖"></a>需要依赖</h1><p>万万没想到啊，还不是maven项目，jar包需要自己去探索到底需要哪些jar包，然后还得避免jar包冲突，我太南了…<br>过程中guava库需要升级 jackson库必须存在</p>
+<p>最后根据maven项目的所引入的依赖分析，然后自己测试，需要jar包如下：</p>
+<p><img src="/uploads/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/swagger%E6%89%80%E9%9C%80jar.jpg" alt="swagger所需jar"></p>
+<p><a href="/uploads/日常问题记录/swagger.rar">下载</a></p>
+<h1 id="过程遇到的问题"><a href="#过程遇到的问题" class="headerlink" title="过程遇到的问题"></a>过程遇到的问题</h1><p>上述过程完成后，好不容易项目启动不报错了，但是访问swagger-ui.html，会出现弹框提示错误，这个错误网上随便一搜就会知道是swagger-ui的页面没有映射出来，需要加个静态资源映射。<br>但是并没有那么简单。</p>
+<p>网上搜索大部分搜索出来的都是在xml文件中添加swagger文件的映射，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;mvc:resources mapping&#x3D;&quot;swagger-ui.html&quot; location&#x3D;&quot;classpath*:&#x2F;META-INF&#x2F;resources&#x2F;&quot;&#x2F;&gt;</span><br><span class="line">&lt;mvc:resources mapping&#x3D;&quot;webjars&#x2F;**&quot; location&#x3D;&quot;classpath*:&#x2F;META-INF&#x2F;resources&#x2F;webjars&#x2F;&quot;&#x2F;&gt;</span><br></pre></td></tr></table></figure>
 
-    public Handler(Handler successor) {
-        this.successor = successor;
-    }
+<p>但是在我的工程中没有效果，我也不知道为什么。</p>
+<p>解决办法一：</p>
+<p>由于项目还是采用web.xml格式配置，dispatcherServlet需拦截所有请求，如果加*.htm这种类型，生成的文档接口也必须手动修改访问路径，因为swagger是根据mapping去生成请求路径的。</p>
+<p>这样配置之后静态资源也会访问springMVC的servlet，这是我们不需要的，所以我们需要在springmvc.xml添加<a href="mvc:default-servlet-handler/">mvc:default-servlet-handler/</a>,添加一个默认servlet，会自动过滤静态资源请求。</p>
+<p>解决办法二：</p>
+<p>去swagger的网站下载zip包，把dist文件目录copy至自己的页面下，修改index.htm文件中的url地址, /v2/api-docs即为swagger访问数据的地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">window.onload &#x3D; function() &#123;</span><br><span class="line">  &#x2F;&#x2F; Begin Swagger UI call region</span><br><span class="line">  const ui &#x3D; SwaggerUIBundle(&#123;</span><br><span class="line">    &#x2F;&#x2F; url: &quot;https:&#x2F;&#x2F;petstore.swagger.io&#x2F;v2&#x2F;swagger.json&quot;,</span><br><span class="line">    url: &quot;http:&#x2F;&#x2F;xx.xx.xx&#x2F;v2&#x2F;api-docs&quot;,</span><br><span class="line">    dom_id: &#39;#swagger-ui&#39;,</span><br><span class="line">    deepLinking: true,</span><br><span class="line">    presets: [</span><br><span class="line">      SwaggerUIBundle.presets.apis,</span><br><span class="line">      SwaggerUIStandalonePreset</span><br><span class="line">    ],</span><br><span class="line">    plugins: [</span><br><span class="line">      SwaggerUIBundle.plugins.DownloadUrl</span><br><span class="line">    ],</span><br><span class="line">    layout: &quot;StandaloneLayout&quot;</span><br><span class="line">  &#125;)</span><br><span class="line">  &#x2F;&#x2F; End Swagger UI call region</span><br><span class="line"></span><br><span class="line">  window.ui &#x3D; ui</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-    protected abstract void handleRequest(Request request);</code></pre><p>   请求参数类</p>
-<pre><code>public class Request {
-
-    private RequestType type;
-    private String name;
-
-
-    public Request(RequestType type, String name) {
-        this.type = type;
-        this.name = name;
-    }
+<p>这样添加之后，我们需要去直接访问自己的页面地址，而不是访问swagger-ui.html，例如/swagger/index.html。<br>如果采用<em>.htm或者</em>.do这种方式，可能会出现页面访问得到的，提示/v2/api-docs接口无法请求。解决方案是配置把swagger或者数据的接口置入dispatcherServlet中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet-mapping&gt;</span><br><span class="line">    &lt;servlet-name&gt;SpringmvcDispatcherServlet&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;url-pattern&gt;&#x2F;v2&#x2F;api-docs&lt;&#x2F;url-pattern&gt;</span><br><span class="line">&lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
 
 
-    public RequestType getType() {
-        return type;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-}</code></pre><p>   请求类型枚举类 不同的请求类型 调用不同的处理器</p>
-<pre><code>public enum RequestType {
-    TYPE1, TYPE2, TYPE3
-} </code></pre><p>   定义处理器类1继承抽象类处理类型为TYPE1的请求</p>
-<pre><code>public class ConcreteHandler1 extends Handler {
-
-   public ConcreteHandler1(Handler successor) {
-       super(successor);
-   }
-
-   @Override
-   protected void handleRequest(Request request) {
-       if (RequestType.TYPE1 == request.getType()) {
-           System.out.println(request.getName() + &quot; is handle by ConcreteHandler1&quot;);
-           return;
-       }
-       if (successor != null) {
-           successor.handleRequest(request);
-       }
-   }
-}</code></pre><p>   定义处理器类2继承抽象类处理类型为TYPE2的请求</p>
-<pre><code>public class ConcreteHandler2 extends Handler {
-   public ConcreteHandler2(Handler successor) {
-       super(successor);
-   }
-
-   @Override
-   protected void handleRequest(Request request) {
-       if (request.getType() == RequestType.TYPE2) {
-           System.out.println(request.getName() + &quot; is handle by ConcreteHandler2&quot;);
-           return;
-       }
-       if (successor != null) {
-           successor.handleRequest(request);
-       }
-   }
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-
-       Handler handler1 = new ConcreteHandler1(null);
-       Handler handler2 = new ConcreteHandler2(handler1);
-
-       Request request1 = new Request(RequestType.TYPE1, &quot;request1&quot;);
-       handler2.handleRequest(request1);
-       Request request2 = new Request(RequestType.TYPE2, &quot;request2&quot;);
-       handler2.handleRequest(request2);
-
-       Handler handler3 = new ConcreteHandler3(handler2);
-       Request request3 = new Request(RequestType.TYPE3, &quot;request3&quot;);
-       handler3.handleRequest(request1);
-   }
-}</code></pre><p>   输出：</p>
-<pre><code>request1 is handle by ConcreteHandler1
-request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义处理器类3继承抽象类处理类型为TYPE3的请求</p>
-<pre><code>public class ConcreteHandler3 extends Handler {
-
-   public ConcreteHandler3(Handler successor) {
-       super(successor);
-   }
-
-   @Override
-   protected void handleRequest(Request request) {
-       if (RequestType.TYPE3 == request.getType()) {
-           System.out.println(request.getName() + &quot; is handle by ConcreteHandler3&quot;);
-           return;
-       }
-       if (successor != null) {
-           successor.handleRequest(request);
-       }
-   }
-}</code></pre><p>   测试：使用handler3处理request1请求</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-
-        Handler handler1 = new ConcreteHandler1(null);
-        Handler handler2 = new ConcreteHandler2(handler1);
-
-        Request request1 = new Request(RequestType.TYPE1, &quot;request1&quot;);
-        Handler handler3 = new ConcreteHandler3(handler2);
-        Request request3 = new Request(RequestType.TYPE3, &quot;request3&quot;);
-        handler3.handleRequest(request1);
-    }
-}</code></pre><p>   输出：最外层的Handler即调用所有类型的处理请求</p>
-<pre><code>request1 is handle by ConcreteHandler1</code></pre>
           
         
       
@@ -873,7 +1102,7 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/structure/flyweight/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/10/25/cache/index/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -892,7 +1121,7 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/flyweight/" itemprop="url">Java设计模式：享元模式</a></h1>
+                <a class="post-title-link" href="/2019/10/25/cache/index/" itemprop="url">缓存概要</a></h1>
         
 
         <div class="post-meta">
@@ -904,8 +1133,8 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-25T00:00:00+00:00">
+                2019-10-25
               </time>
             
 
@@ -927,8 +1156,8 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
+                  <a href="/categories/cache/" itemprop="url" rel="index">
+                    <span itemprop="name">cache</span>
                   </a>
                 </span>
 
@@ -958,7 +1187,7 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  415 字
+                  1.9k 字
                 </span>
               
 
@@ -974,7 +1203,7 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1 分钟
+                  6 分钟
                 </span>
               
             </div>
@@ -997,1051 +1226,72 @@ request2 is handle by ConcreteHandler2</code></pre><p>   再定义一个定义�
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>利用共享的方式来支持大量细粒度的对象，这些对象一部分内部状态是相同的。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>在享元接口中 定义一个方法，即为对象的外部状态，每个对象的外部状态都不同<br>在接口的实现类中添加一个成员变量作为识别标志，在创建工厂类中添加一个Map以识别标志为key，即以对象内部相同状态为key，<br>调用方法即可改变其它状态</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组享元接口 拥有改变外部对象的方法</p>
-<pre><code>public interface Flyweight {
-
-    /**
-     * 外部状态，每个享元对象的外部状态不同
-     *
-     * @param extrinsicState
-     */
-    public void extrinsicState(String extrinsicState);
-}</code></pre><p>   定义一个享元接口实现类，内部状态为成员变量，提供外部状态实现</p>
-<pre><code>public class ConcreteFlyweight implements Flyweight {
-
-    private String intrinsicState;
-
-    public ConcreteFlyweight(String intrinsicState) {
-        this.intrinsicState = intrinsicState;
-    }
-
-    @Override
-    public void extrinsicState(String extrinsicState) {
-        System.out.println(&quot;Object address: &quot; + System.identityHashCode(this));
-        System.out.println(&quot;IntrinsicState: &quot; + intrinsicState);
-        System.out.println(&quot;ExtrinsicState: &quot; + extrinsicState);
-    }
-}</code></pre><p>   定义享元对象工厂类，定义一个全局变量map存储享元对象。</p>
-<pre><code>public class FlyweightFactory {
-
-    private HashMap&lt;String, Flyweight&gt; flyweights = new HashMap&lt;&gt;();
-
-    public Flyweight getFlyweight(String intrinsicState) {
-        if (!flyweights.containsKey(intrinsicState)) {
-            Flyweight flyweight = new ConcreteFlyweight(intrinsicState);
-            flyweights.put(intrinsicState, flyweight);
-        }
-        return flyweights.get(intrinsicState);
-    }
-}  </code></pre><p>   测试</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        FlyweightFactory factory = new FlyweightFactory();
-        Flyweight flyweight1 = factory.getFlyweight(&quot;aa&quot;);
-        Flyweight flyweight2 = factory.getFlyweight(&quot;aa&quot;);
-        flyweight1.extrinsicState(&quot;x&quot;);
-        flyweight2.extrinsicState(&quot;y&quot;);
-    }
-}</code></pre><p>   结果</p>
-<pre><code>Object address: 985934102
-IntrinsicState: aa
-ExtrinsicState: x
-Object address: 985934102
-IntrinsicState: aa
-ExtrinsicState: y</code></pre><h3 id="JDK使用："><a href="#JDK使用：" class="headerlink" title="JDK使用："></a>JDK使用：</h3><p>Java 利用缓存来加速大量小对象的访问时间。</p>
+            <h1 id="一、缓存特征"><a href="#一、缓存特征" class="headerlink" title="一、缓存特征"></a>一、缓存特征</h1><h2 id="命中率"><a href="#命中率" class="headerlink" title="命中率"></a>命中率</h2><p>当某个请求能够通过访问缓存而得到响应时，称为缓存命中。</p>
+<p>缓存命中率越高，缓存的利用率也就越高。</p>
+<h2 id="最大空间"><a href="#最大空间" class="headerlink" title="最大空间"></a>最大空间</h2><p>缓存通常位于内存中，内存的空间通常比磁盘空间小的多，因此缓存的最大空间不可能非常大。</p>
+<p>当缓存存放的数据量超过最大空间时，就需要淘汰部分数据来存放新到达的数据。</p>
+<h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><ul>
+<li><p>FIFO（First In First Out）：先进先出策略，在实时性的场景下，需要经常访问最新的数据，那么就可以使用 FIFO，使得最先进入的数据（最晚的数据）被淘汰。</p>
+</li>
+<li><p>LRU（Least Recently Used）：最近最久未使用策略，优先淘汰最久未使用的数据，也就是上次被访问时间距离现在最久的数据。该策略可以保证内存中的数据都是热点数据，也就是经常被访问的数据，从而保证缓存命中率。</p>
+</li>
+<li><p>LFU（Least Frequently Used）：最不经常使用策略，优先淘汰一段时间内使用次数最少的数据。</p>
+</li>
+</ul>
+<h1 id="二、LRU"><a href="#二、LRU" class="headerlink" title="二、LRU"></a>二、LRU</h1><p>以下是基于 双向链表 + HashMap 的 LRU 算法实现，对算法的解释如下：</p>
+<p>访问某个节点时，将其从原来的位置删除，并重新插入到链表头部。这样就能保证链表尾部存储的就是最近最久未使用的节点，当节点数量大于缓存最大空间时就淘汰链表尾部的节点。<br>为了使删除操作时间复杂度为 O(1)，就不能采用遍历的方式找到某个节点。HashMap 存储着 Key 到节点的映射，通过 Key 就能以 O(1) 的时间得到节点，然后再以 O(1) 的时间将其从双向队列中删除。</p>
+<p><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/algorithms/cache/LRU.java" target="_blank" rel="noopener">LRU实现</a></p>
+<h1 id="三、CDN"><a href="#三、CDN" class="headerlink" title="三、CDN"></a>三、CDN</h1><p>内容分发网络（Content distribution network，CDN）是一种互连的网络系统，它利用更靠近用户的服务器从而更快更可靠地将 HTML、CSS、JavaScript、音乐、图片、视频等静态资源分发给用户。</p>
+<p>CDN 主要有以下优点：</p>
 <ul>
-<li>java.lang.Integer#valueOf(int)</li>
-<li>java.lang.Boolean#valueOf(boolean)</li>
-<li>java.lang.Byte#valueOf(byte)</li>
-<li>java.lang.Character#valueOf(char)</li>
+<li>更快地将数据分发给用户；</li>
+<li>通过部署多台服务器，从而提高系统整体的带宽性能；</li>
+<li>多台服务器可以看成是一种冗余机制，从而具有高可用性。</li>
 </ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/structure/facade/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/24/java/java-design/structure/facade/" itemprop="url">Java设计模式：外观模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  244 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>提供了一个统一的接口，用来访问子系统中的一群接口，从而让子系统更容易使用。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>定义一个外观对象，在内部进行功能的封装，功能具体是在都在外观类的内部，其它方法要使用该功能<br>调用外观对象的方法即可。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个电影播放系统，方法代表需要功能所需步骤</p>
-<pre><code>public class SubSystem {
-
-    public void turnOnTV() {
-        System.out.println(&quot;turnOnTV()&quot;);
-    }
-
-    public void setCD(String cd) {
-        System.out.println(&quot;setCD( &quot; + cd + &quot; )&quot;);
-    }
-
-    public void starWatching() {
-        System.out.println(&quot;starWatching()&quot;);
-    }
-
-}</code></pre><p>   定义一个外观类，封装了看电影的三步骤，客户端只需调用外观类的方法即可实现功能</p>
-<pre><code>public class Facade {
-
-    private SubSystem subSystem = new SubSystem();
-
-    public void watchMovie(String name) {
-        subSystem.turnOnTV();
-        subSystem.setCD(name);
-        subSystem.starWatching();
-    }
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        Facade facade = new Facade();
-        facade.watchMovie(&quot;家有喜事&quot;);
-    }
-}</code></pre><p>   测试：</p>
-<pre><code>turnOnTV()
-setCD( 家有喜事 )
-starWatching()</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/24/java/java-design/behavioral/strategy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/24/java/java-design/behavioral/strategy/" itemprop="url">Java设计模式：策略模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T00:00:00+00:00">
-                2019-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  263 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>定义一系列算法，封装每个算法，并使它们可以互换。策略模式可以让算法独立于使用它的客户端。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>把对象的功能实现定义成一个接口，对象中依赖一个功能接口，通过改变接口的实现，来达到不同的功能。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义功能接口</p>
-<pre><code>public interface CallBehavior {
-
-   // 叫，不同动物叫声不同
-   void call();
-}</code></pre><p>   功能接口实现</p>
-<pre><code>public class Quack implements CallBehavior {
-
-    @Override
-    public void call() {
-        System.out.println(&quot;鸭子叫!&quot;);
-    }
-}
-
-public class Squeak implements CallBehavior {
-
-   @Override
-   public void call() {
-       System.out.println(&quot;鸡叫k!&quot;);
-   }
-}</code></pre><p>   定义对象类，并依赖功能接口，通过改变接口的具体实现达到不同的功能</p>
-<pre><code>public class Duck {
-
-    private CallBehavior behavior;
-
-    public void performQuack() {
-        if (behavior != null) {
-            behavior.call();
-        }
-    }
-    public void setQuackBehavior(CallBehavior behavior) {
-        this.behavior = behavior;
-    }
-}</code></pre><p>   测试：</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        Duck duck = new Duck();
-        CallBehavior quack = new Quack();
-        duck.setQuackBehavior(quack);
-        duck.performQuack();
-        CallBehavior squeak = new Squeak();
-        duck.setQuackBehavior(squeak);
-        duck.performQuack();
-    }
-}</code></pre><p>   输出：</p>
-<pre><code>鸭子叫!
-鸡叫k!</code></pre><h2 id="JDK实现"><a href="#JDK实现" class="headerlink" title="JDK实现"></a>JDK实现</h2><ul>
-<li>java.util.Comparator#compare()</li>
-<li>javax.servlet.http.HttpServlet</li>
-<li>javax.servlet.Filter#doFilter()</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/javase/hashMap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/08/java/javase/hashMap/" itemprop="url">JDK1.8 HashMap源码分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaSE</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  3.3k 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  14 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://blog.csdn.net/qq_36520235/article/details/82417949" target="_blank" rel="noopener">Hashmap的结构，1.7和1.8有哪些区别，史上最深入的分析</a><br><a href="https://www.cnblogs.com/Hangtutu/p/9251999.html" target="_blank" rel="noopener">jdk1.7死环</a><br><a href="https://juejin.im/post/5a66a08d5188253dc3321da0" target="_blank" rel="noopener">jdk1.7线程不安全</a><br><a href="https://blog.csdn.net/u013494765/article/details/77837338" target="_blank" rel="noopener">jdk1.8扩容核心-链表复制处理</a><br><a href="https://mp.weixin.qq.com/s/NvmqdPOyWQdeHG2s-xSbHg" target="_blank" rel="noopener">HashMap1.8面试连问</a><br><a href="https://blog.csdn.net/weixin_42340670/article/details/80503517?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3" target="_blank" rel="noopener">HashMap1.8源码解析：resize方法（有问题）</a></p>
-<h1 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h1><p><img src="/uploads/java/javase/hashMap.png" alt="hashMap继承关系"></p>
-<h1 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h1><pre><code>// Hash表结构
-transient Node&lt;K,V&gt;[] table;
-
-// 保证 fail-fast机制
-transient int modCount;
-
-// 下一次扩容时的阈值 (capacity * load factor).
-int threshold;
-
-// 负载因子，决定hash表的数据填充程度，此值越大说明hash表填充的越满，空间利用率高，但是增加了查询开销，此值若太小，hash表空间利用率不高且rehash更加频繁
-final float loadFactor;    
-
-// 默认初始容量,必须是2的次方
-static final int DEFAULT_INITIAL_CAPACITY = 1 &lt;&lt; 4; // aka 16
-
-// 最大容量，2的30次方，因为int类型32位，去掉一位符号位，只能左移30位
-static final int MAXIMUM_CAPACITY = 1 &lt;&lt; 30;
-
-// 默认负载因子
-static final float DEFAULT_LOAD_FACTOR = 0.75f;
-
-// jdk1.8增加 链表转红黑树的阈值
-static final int TREEIFY_THRESHOLD = 8;
-
-// jdk1.8增加 红黑树转链表的阈值
-static final int UNTREEIFY_THRESHOLD = 6;</code></pre><h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><p>HashMap一共有4个构造方法，主要的工作就是完成容量和加载因子的赋值。Hash表都是采用的<strong>懒加载</strong>方式，当第一次插入数据时才会创建。</p>
-<pre><code>// 指定默认容量和负载因子   
-public HashMap(int initialCapacity, float loadFactor) {
-        if (initialCapacity &lt; 0)
-            throw new IllegalArgumentException(&quot;Illegal initial capacity: &quot; +
-                                               initialCapacity);
-        if (initialCapacity &gt; MAXIMUM_CAPACITY)
-            initialCapacity = MAXIMUM_CAPACITY;
-        if (loadFactor &lt;= 0 || Float.isNaN(loadFactor))
-            throw new IllegalArgumentException(&quot;Illegal load factor: &quot; +
-                                               loadFactor);
-        this.loadFactor = loadFactor;
-        // 找到大于等于initialCapacity的最小的2的幂  若传入6 threshold=8
-        this.threshold = tableSizeFor(initialCapacity);
-}
-
-// 使用默认负载因子
-public HashMap(int initialCapacity) {
-        this(initialCapacity, DEFAULT_LOAD_FACTOR);
-}
-
-// 参数全部都是默认值
-public HashMap() {
-       this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
-}
-
-// 构造一个新的 HashMap与指定的相同的映射 Map 。 
-public HashMap(Map&lt;? extends K, ? extends V&gt; m) {
-        this.loadFactor = DEFAULT_LOAD_FACTOR;
-        putMapEntries(m, false);
-}</code></pre><h1 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h1><h2 id="添加一个元素put-K-k-V-v"><a href="#添加一个元素put-K-k-V-v" class="headerlink" title="添加一个元素put(K k,V v)"></a>添加一个元素put(K k,V v)</h2><p>HashMap允许K和V都为null，添加一个键值对时使用put方法，如果之前已经存在K的键值，那么旧值将会被新值替换。</p>
-<pre><code>// return 前一个值与key相关联 ，或null如果没有key的映射。 （A null返回也可以指示以前关联的地图null与key。 
-public V put(K key, V value) {
-        return putVal(hash(key), key, value, false, true);
-}
-
-//先来看看hash方法，采用了Object的hash算法返回的是对象的内存地址,每个对象在内存中地址不一样，所以他们的hash值也不一样，不同的算法hashCode不同。
-// 这里使用右移操作是为了让高位也参与运算提高散射率。低16位与高16位异或作为key的最终hash值。
-// （h &gt;&gt;&gt; 16，表示无符号右移16位，高位补0，任何数跟0异或都是其本身，因此key的hash值高16位不变。） 
-// 为什么要这么干呢？ 这个与HashMap中table下标的计算有关。n = table.length; index = （n-1） &amp; hash;因为，table的长度都是2的幂，因此index仅与hash值的低n位有关，hash值的高位都被与操作置为0了。 
-// key为null 默认为0即数组第一个
-static final int hash(Object key) {
-        int h;
-        return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
-}
-
-/**
- * @param hash key的Hash值 经过高位与地位的异或运算
- * @param key 
- * @param value 
- * @param onlyIfAbsent 如果是，则不要更改现有值
- * @param evict 如果为false，则表处于创建模式。
- * @return 返回旧值或者null值。
- */        
-final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
-                   boolean evict) {
-        Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
-        // 如果哈希表的长度为空 调用resize()扩容方法 n为表长度
-        if ((tab = table) == null || (n = tab.length) == 0)
-            n = (tab = resize()).length;
-        // 如果当前数组下标为null值， (i = (n - 1) &amp; hash]即计算数组下标)，数组当前下标新建一个节点，即为头结点
-        if ((p = tab[i = (n - 1) &amp; hash]) == null)
-            tab[i] = newNode(hash, key, value, null);
-        // 数组上该位置有值,桶处有节点，发生hash冲突
-        else {
-            Node&lt;K,V&gt; e; K k;
-            // 如果头结点的值与添加的值一致，hash冲突后，key的值也一致，进行替换。将e指向p
-            if (p.hash == hash &amp;&amp;
-                ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
-                e = p;
-            // 如果与头节点不同，并且该桶目前已经是红黑树状态，调用putTreeVal()方法 
-            else if (p instanceof TreeNode)
-                e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
-            // 如果与头节点不同,桶中仍是链表阶段
-            else {
-                // 循环遍历链表
-                for (int binCount = 0; ; ++binCount) {
-                // 讲e指向下一个节点，如果是null，说明该桶中只有头节点，直接添加到链表尾部即可
-                    if ((e = p.next) == null) {
-                        p.next = newNode(hash, key, value, null);
-                        // 如果此时链表个数达到了8，那么需要将该桶处链表转换成红黑树，treeifyBin()方法将hash处的桶转成红黑树
-                        if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st
-                            treeifyBin(tab, hash);
-                        break;
-                    }
-                    //如果与已有节点相同，跳出循环
-                    if (e.hash == hash &amp;&amp;
-                        ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
-                        break;
-                    p = e;
-                }
-            }
-            // 存在重复key进行覆盖
-            if (e != null) { // existing mapping for key
-                V oldValue = e.value;
-                if (!onlyIfAbsent || oldValue == null)
-                    e.value = value;
-                // 子类实现 linkHashMap 
-                afterNodeAccess(e);
-                return oldValue;
-            }
-        }
-        //是一个全新节点，那么size需要+1
-        ++modCount;
-        // 如果大小朝阳了阈值，需要扩容
-        if (++size &gt; threshold)
-            resize();
-        //子类实现    
-        afterNodeInsertion(evict);
-        return null;
-}</code></pre><p>putVal()方法的流程：</p>
+<h1 id="四、缓存问题"><a href="#四、缓存问题" class="headerlink" title="四、缓存问题"></a>四、缓存问题</h1><h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>指对某一个一定不存在的数据进行请求，该请求会将穿透缓存到达数据库。</p>
+<p>解决方案：</p>
 <ul>
-<li>1.若hash表为空，调用resize方法创建。</li>
-<li>2.若桶的头结点为空，创建新结点放在数组中作为链表的头结点。</li>
-<li>3.若头节点不为空，即发生hash冲突，取出头结点与当前值判断，若重复直接覆盖；</li>
-<li>4.若不重复且当前处于红黑树状态，调用putTreeVal()方法；若不重复且当前处于链表阶段，遍历链表直到找到重复节点或者链表尾部，把该节点插入尾部；存在重复key就跳出循环。</li>
-<li>5.存在重复key，进行value替换。</li>
-<li>6.扩容验证。</li>
+<li>对这些不存在的数据缓存一个空数据</li>
+<li>对这类请求进行过滤</li>
 </ul>
-<h2 id="resize-方法"><a href="#resize-方法" class="headerlink" title="resize()方法"></a>resize()方法</h2><p>resize()在哈希表为null时将会初始化，但是在已经初始化后就会进行容量扩展</p>
-<pre><code>final Node&lt;K,V&gt;[] resize() {
-        Node&lt;K,V&gt;[] oldTab = table;
-        int oldCap = (oldTab == null) ? 0 : oldTab.length;// 旧表容量
-        int oldThr = threshold;// 旧表的扩容阈值
-        int newCap, newThr = 0;
-        // 旧表存在
-        if (oldCap &gt; 0) {
-            // 容量已达上限 
-            if (oldCap &gt;= MAXIMUM_CAPACITY) {
-                threshold = Integer.MAX_VALUE;
-                return oldTab;
-            }
-            // 否则新容量与新阈值都扩大2倍
-            else if ((newCap = oldCap &lt;&lt; 1) &lt; MAXIMUM_CAPACITY &amp;&amp;
-                     oldCap &gt;= DEFAULT_INITIAL_CAPACITY)
-                newThr = oldThr &lt;&lt; 1; // double threshold
-        }
-        / /如果就阈值&gt;0，说明构造方法中指定了容量
-        else if (oldThr &gt; 0) // initial capacity was placed in threshold
-            newCap = oldThr;
-        // 初始化时没有指定阈值和容量，使用默认的容量16和阈值16*0.75=12    
-        else {               // zero initial threshold signifies using defaults
-            newCap = DEFAULT_INITIAL_CAPACITY;
-            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
-        }
-        //如果新的阈值为 0 ，就得用 新容量*加载因子 重计算一次
-        if (newThr == 0) {
-            float ft = (float)newCap * loadFactor;
-            newThr = (newCap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; (float)MAXIMUM_CAPACITY ?
-                      (int)ft : Integer.MAX_VALUE);
-        }
-        threshold = newThr;
-        //常见扩容后的hash表
-        @SuppressWarnings({&quot;rawtypes&quot;,&quot;unchecked&quot;})
-            Node&lt;K,V&gt;[] newTab = (Node&lt;K,V&gt;[])new Node[newCap];
-        table = newTab;
-        // 属于扩容
-        if (oldTab != null) {
-            //遍历旧表 
-            for (int j = 0; j &lt; oldCap; ++j) {
-                Node&lt;K,V&gt; e;
-                // 当前位置有值
-                if ((e = oldTab[j]) != null) {
-                    oldTab[j] = null;
-                    //如果只有一个节点，直接在新表中赋值
-                    if (e.next == null)
-                        newTab[e.hash &amp; (newCap - 1)] = e;
-                    else if (e instanceof TreeNode)
-                        //如果旧哈希表中这个位置的桶是树形结构，就要把新哈希表里当前桶也变成树形结构
-                        ((TreeNode&lt;K,V&gt;)e).split(this, newTab, j, oldCap);
-                    else { // preserve order 保留旧哈希表桶中链表的顺序
-                        // 通过e.hash &amp; oldCap将链表分为两队，参考知乎上的一段解释 
-                        /** 
-                        * 把链表上的键值对按hash值分成lo和hi两串，lo串的新索引位置与原先相同[原先位j]，hi串的新索引位置为[原先位置j+oldCap]； 
-                        * 链表的键值对加入lo还是hi串取决于 判断条件if ((e.hash &amp; oldCap) == 0)，因为* capacity是2的幂，所以oldCap为10...0的二进制形式，若判断条件为真，意味着 
-                        * oldCap为1的那位对应的hash位为0，对新索引的计算没有影响（新索引 
-                        * =hash&amp;(newCap-*1)，newCap=oldCap&lt;&lt;2）；若判断条件为假，则 oldCap为1的那位* 对应的hash位为1， 
-                        * 即新索引=hash&amp;( newCap-1 )= hash&amp;( (oldCap&lt;&lt;2) - 1)，相当于多了10...0， 
-                        * 即 oldCap 
-                        * 例子： 
-                        * 旧容量=16，二进制10000；新容量=32，二进制100000 
-                        * 旧索引的计算： 
-                        * hash = xxxx xxxx xxxy xxxx 
-                        * 旧容量-1 1111 
-                        * &amp;运算 xxxx 
-                        * 新索引的计算： 
-                        * hash = xxxx xxxx xxxy xxxx 
-                        * 新容量-1 1 1111 
-                        * &amp;运算 y xxxx 
-                        * 新索引 = 旧索引 + y0000，若判断条件为真，则y=0(lo串索引不变)，否则y=1(hi串 
-                        * 索引=旧索引+旧容量10000) 
-                           */  
-                        Node&lt;K,V&gt; loHead = null, loTail = null;
-                        Node&lt;K,V&gt; hiHead = null, hiTail = null;
-                        Node&lt;K,V&gt; next;
-                        do {
-                            next = e.next;
-                            // 双链表 尾插法 
-                            if ((e.hash &amp; oldCap) == 0) {
-                                if (loTail == null)
-                                    loHead = e;
-                                else
-                                    loTail.next = e;
-                                loTail = e;
-                            }
-                            else {
-                                if (hiTail == null)
-                                    hiHead = e;
-                                else
-                                    hiTail.next = e;
-                                hiTail = e;
-                            }
-                        } while ((e = next) != null);
-                        if (loTail != null) {
-                            loTail.next = null;
-                            newTab[j] = loHead;
-                        }
-                        if (hiTail != null) {
-                            hiTail.next = null;
-                            newTab[j + oldCap] = hiHead;
-                        }
-                    }
-                }
-            }
-        }
-        return newTab;
-}</code></pre><p>resize()首先获取新容量以及新阈值，然后根据新容量创建新表。如果是扩容操作，则需要进行rehash操作，通过e.hash&amp;oldCap将链表分为两列，更好地均匀分布在新表中。     </p>
-<h2 id="get-K-k-操作"><a href="#get-K-k-操作" class="headerlink" title="get(K k)操作"></a>get(K k)操作</h2><p>get(K k)根据键得到值，如果值不存在，那么返回null</p>
-<pre><code>public V get(Object key) {
-        Node&lt;K,V&gt; e;
-        return (e = getNode(hash(key), key)) == null ? null : e.value;
-    }
-
-final Node&lt;K,V&gt; getNode(int hash, Object key) {
-    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; first, e; int n; K k;
-    // hash表不为空且第一个节点存在
-    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;
-        (first = tab[(n - 1) &amp; hash]) != null) {
-        // 第一个节点即为要查询的节点
-        if (first.hash == hash &amp;&amp; // always check first node
-            ((k = first.key) == key || (key != null &amp;&amp; key.equals(k))))
-            return first;
-        // 链表不止一个头节点    
-        if ((e = first.next) != null) {
-            // 首节点是红黑树节点，调用getTreeNode方法
-            if (first instanceof TreeNode)
-                return ((TreeNode&lt;K,V&gt;)first).getTreeNode(hash, key);
-            // 首节点是链表,循环遍历链表
-            do {
-                // 匹配就返回
-                if (e.hash == hash &amp;&amp;
-                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
-                    return e;
-            } while ((e = e.next) != null);
-        }
-    }
-    return null;
-}  </code></pre><p>getNode()过程：</p>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>指的是由于数据没有被加载到缓存中，或者缓存数据在同一时间大面积失效（过期），又或者缓存服务器宕机，导致大量的请求都到达数据库。</p>
+<p>在有缓存的系统中，系统非常依赖于缓存，缓存分担了很大一部分的数据请求。当发生缓存雪崩时，数据库无法处理这么大的请求，导致数据库崩溃。</p>
+<p>解决方案：</p>
 <ul>
-<li>1.如果hash表为空或者长度为0或找不到hash值对应的数组位置，返回null</li>
-<li>2.如果头节点匹配，返回头结点。</li>
-<li>3.如果头结点不匹配且没有后续节点，返回null</li>
-<li>4.如果头结点不匹配且头结点是红黑树类型，调用getTreeNode方法寻找节点</li>
-<li>5.如果头结点不匹配且头结点是链表结构，从前往后遍历，找到相应的节点就返回</li>
+<li>为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；</li>
+<li>为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存，分布式缓存中每一个节点只缓存部分的数据，当某个节点宕机时可以保证其它节点的缓存仍然可用。</li>
+<li>也可以进行缓存预热，避免在系统刚启动不久由于还未将大量数据进行缓存而导致缓存雪崩。</li>
 </ul>
-<h2 id="remove-操作"><a href="#remove-操作" class="headerlink" title="remove()操作"></a>remove()操作</h2><p>remove(K k)用于根据键值删除键值对，如果哈希表中存在该键，那么返回键对应的值，否则返回null。  </p>
-<pre><code>public V remove(Object key) {
-    Node&lt;K,V&gt; e;
-    return (e = removeNode(hash(key), key, null, false, true)) == null ?
-        null : e.value;
-}
-
-final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
-                           boolean matchValue, boolean movable) {
-    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, index;
-    // 当前hash表存在且长度大于0且数组中存在头结点
-    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;
-        (p = tab[index = (n - 1) &amp; hash]) != null) {
-        Node&lt;K,V&gt; node = null, e; K k; V v;
-        // 头节点即为key所对应的节点，node即为头节点
-        if (p.hash == hash &amp;&amp;
-            ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
-            node = p;
-        // 头结点有下一个节点    
-        else if ((e = p.next) != null) {
-            // 首节点是红黑树节点，调用getTreeNode方法
-            if (p instanceof TreeNode)
-                node = ((TreeNode&lt;K,V&gt;)p).getTreeNode(hash, key);
-            else {
-                // 首节点是链表,遍历链表
-                do {
-                    if (e.hash == hash &amp;&amp;
-                        ((k = e.key) == key ||
-                         (key != null &amp;&amp; key.equals(k)))) {
-                        node = e;
-                        break;
-                    }
-                    p = e;
-                } while ((e = e.next) != null);
-            }
-        }
-        //如果存在待删除节点节点
-        if (node != null &amp;&amp; (!matchValue || (v = node.value) == value ||
-                             (value != null &amp;&amp; value.equals(v)))) {
-            //如果节点是TreeNode，使用红黑树的方法                 
-            if (node instanceof TreeNode)
-                ((TreeNode&lt;K,V&gt;)node).removeTreeNode(this, tab, movable);
-            //如果待删除节点是头节点，更改桶中的头节点即可    
-            else if (node == p)
-                tab[index] = node.next;
-            //在链表遍历过程中，p代表node节点的前驱节点    
-            else
-                p.next = node.next;
-            ++modCount;
-            --size;
-            afterNodeRemoval(node);
-            return node;
-        }
-    }
-    return null;
-}   </code></pre><p>总体来说，removeNode（）先查出待删除的节点，查找过程与查询过程类型，只不过多了在遍历链表时还需要保存前驱节点，因为后面删除时要用到（单链表结构）。存在待删除节点，接下来再执行删除操作.</p>
+<h2 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h2><p>缓存一致性要求数据更新的同时缓存数据也能够实时更新。</p>
+<p>解决方案：</p>
 <ul>
-<li>1.如果待删除节点是TreeNode，那么调用removeTreeNode()方法 </li>
-<li>2.如果待删除节点是Node，并且待删除节点就是头节点，那么将头节点更改为原有节点的下一个节点就可以了 </li>
-<li>3.如果待删除节点是Node且待删除节点不是头节点，那么将遍历过程中保存的前驱节点p的后继节点设为node的后继节点就可以了</li>
+<li>在数据更新的同时立即去更新缓存；</li>
+<li>在读缓存之前先判断缓存是否是最新的，如果不是最新的先进行更新。</li>
 </ul>
+<h2 id="缓存-“无底洞”-现象"><a href="#缓存-“无底洞”-现象" class="headerlink" title="缓存 “无底洞” 现象"></a>缓存 “无底洞” 现象</h2><p>指的是为了满足业务要求添加了大量缓存节点，但是性能不但没有好转反而下降了的现象。</p>
+<p>产生原因：缓存系统通常采用 hash 函数将 key 映射到对应的缓存节点，随着缓存节点数目的增加，键值分布到更多的节点上，导致客户端一次批量操作会涉及多次网络操作，这意味着批量操作的耗时会随着节点数目的增加而不断增大。此外，网络连接数变多，对节点的性能也有一定影响。</p>
+<p>解决方案：</p>
+<ul>
+<li>优化批量数据操作命令；</li>
+<li>减少网络通信次数；</li>
+<li>降低接入成本，使用长连接 / 连接池，NIO 等。</li>
+</ul>
+<h1 id="五、数据分布"><a href="#五、数据分布" class="headerlink" title="五、数据分布"></a>五、数据分布</h1><h2 id="哈希分布"><a href="#哈希分布" class="headerlink" title="哈希分布"></a>哈希分布</h2><p>哈希分布就是将数据计算哈希值之后，按照哈希值分配到不同的节点上。例如有 N 个节点，数据的主键为 key，则将该数据分配的节点序号为：hash(key)%N。</p>
+<p>传统的哈希分布算法存在一个问题：当节点数量变化时，也就是 N 值变化，那么几乎所有的数据都需要重新分布，将导致大量的数据迁移。</p>
+<h2 id="顺序分布"><a href="#顺序分布" class="headerlink" title="顺序分布"></a>顺序分布</h2><p>将数据划分为多个连续的部分，按数据的 ID 或者时间分布到不同节点上。例如 User 表的 ID 范围为 1 ~ 7000，使用顺序分布可以将其划分成多个子表，对应的主键范围为 1 ~ 1000，1001 ~ 2000，…，6001 ~ 7000。</p>
+<p>顺序分布相比于哈希分布的主要优点如下：</p>
+<ul>
+<li>能保持数据原有的顺序；</li>
+<li>并且能够准确控制每台服务器存储的数据量，从而使得存储空间的利用率最大。</li>
+</ul>
+<h1 id="六、一致性哈希"><a href="#六、一致性哈希" class="headerlink" title="六、一致性哈希"></a>六、一致性哈希</h1><p>Distributed Hash Table（DHT） 是一种哈希分布方式，其目的是为了克服传统哈希分布在服务器节点数量变化时大量数据迁移的问题。</p>
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>将哈希空间 [0, 2n-1] 看成一个哈希环，每个服务器节点都配置到哈希环上。每个数据对象通过哈希取模得到哈希值之后，存放到哈希环中顺时针方向第一个大于等于该哈希值的节点上。</p>
+<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="一致性hash原理图"></p>
+<p>一致性哈希在增加或者删除节点时只会影响到哈希环中相邻的节点，例如下图中新增节点 X，只需要将它前一个节点 C 上的数据重新进行分布即可，对于节点 A、B、D 都没有影响。</p>
+<p><img src="/uploads/cache/%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="一致性hash增加节点示意图"></p>
+<h2 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h2><p>上面描述的一致性哈希存在数据分布不均匀的问题，节点存储的数据量有可能会存在很大的不同。</p>
+<p>数据不均匀主要是因为节点在哈希环上分布的不均匀，这种情况在节点数量很少的情况下尤其明显。</p>
+<p>解决方式是通过增加虚拟节点，然后将虚拟节点映射到真实节点上。虚拟节点的数量比真实节点来得多，那么虚拟节点在哈希环上分布的均匀性就会比原来的真实节点好，从而使得数据分布也更加均匀。</p>
 
           
         
@@ -2098,7 +1348,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/java-design/structure/decorator/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/10/25/cache/redis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -2117,7 +1367,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/decorator/" itemprop="url">Java设计模式：装饰者</a></h1>
+                <a class="post-title-link" href="/2019/10/25/cache/redis/" itemprop="url">redis</a></h1>
         
 
         <div class="post-meta">
@@ -2129,8 +1379,8 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-25T00:00:00+00:00">
+                2019-10-25
               </time>
             
 
@@ -2152,8 +1402,8 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
+                  <a href="/categories/cache/" itemprop="url" rel="index">
+                    <span itemprop="name">cache</span>
                   </a>
                 </span>
 
@@ -2183,7 +1433,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  578 字
+                  2.2k 字
                 </span>
               
 
@@ -2199,7 +1449,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2 分钟
+                  7 分钟
                 </span>
               
             </div>
@@ -2222,62 +1472,151 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>为对象动态添加功能。组合模式是部分和整理的关系，而装饰器模式只是额外增加某些功能。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>装饰者（Decorator）和具体组件（ConcreteComponent）都继承自组件（Component）,<strong>装饰者组合了一个组件</strong>，这样它可以装饰其它装饰者或者具体组件。</p>
-<p>就是把这个装饰者套在被装饰者之上，从而动态扩展被装饰者的功能。</p>
-<p>装饰者的方法有一部分是自己的，这属于它的功能，然后调用被装饰者的方法实现，从而也保留了被装饰者的功能。可以看到，具体组件应当是装饰层次的最低层，因为只有具体组件的方法实现不需要依赖于其它对象。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>设计不同种类的饮料，饮料可以添加配料，比如可以添加牛奶，并且支持动态添加新配料。每增加一种配料，该饮料的价格就会增加，要求计算一种饮料的价格。</p>
-<p>下面实现在 DarkRoast 饮料上新增新添加 Mocha 配料，之后又添加了 Milk 配料。DarkRoast 被 Mocha 包裹，Mocha 又被 Milk 包裹。它们都继承自相同父类，都有 cost() 方法，外层类的 cost() 方法调用了内层类的 cost() 方法。</p>
-<p>   定义一个组件（Component）接口,这里为饮料。装饰者和具体组件都要实现它。</p>
-<pre><code>public interface Beverage {
-
-    public double cost();
-}</code></pre><p>   具体组件实现DarkRoast饮料</p>
-<pre><code>public class DarkRoast implements Beverage {
-
-   @Override
-   public double cost() {
-       return 1;
-   }
-}</code></pre><p>   定义一个装饰者抽象类，实现了饮料接口，拥有饮料的方法，并关联了饮料接口对象。</p>
-<pre><code>public abstract class CondimentDecorator implements Beverage {
-
-    protected Beverage beverage;
-
-    public CondimentDecorator(Beverage beverage) {
-        this.beverage = beverage;
-    }
-}</code></pre><p>   装饰者实现类Milk，继承了装饰者类</p>
-<pre><code>public class Milk extends CondimentDecorator {
-
-    public Milk(Beverage beverage) {
-        super(beverage);
-    }
-
-    @Override
-    public double cost() {
-        return 1 + beverage.cost();
-    }
-}</code></pre><p>   装饰者实现类Mocha，继承了装饰者类</p>
-<pre><code>public class Mocha extends CondimentDecorator {
-
-    public Mocha(Beverage beverage) {
-        super(beverage);
-    }
-
-    @Override
-    public double cost() {
-        return 1 + beverage.cost();
-    }
-}</code></pre><p>   测试：当执行cost()方法时会一层一层从内往外调用。</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-       Beverage beverage = new DarkRoast();// 一杯饮料
-       beverage = new Mocha(beverage);// 饮料里加mocha
-       beverage = new Milk(beverage);// 饮料里加牛奶
-       System.out.println(beverage.cost());//总价
-   }</code></pre><p>   }</p>
+            <h1 id="一、概述（什么是redis）"><a href="#一、概述（什么是redis）" class="headerlink" title="一、概述（什么是redis）"></a>一、概述（什么是redis）</h1><p>redis是开源免费的key-value内存数据库。</p>
+<p>redis可以存储5种数据类型。键只支持string，值支持string，list，map，set，zset五种。</p>
+<p>redis支持数据持久化，使用复制来扩展读性能，使用分片来扩展写性能。</p>
+<h1 id="二、数据类型"><a href="#二、数据类型" class="headerlink" title="二、数据类型"></a>二、数据类型</h1><table>
+<thead>
+<tr>
+<th align="center">数据类型</th>
+<th align="center">可以存储的值</th>
+<th align="center">操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">STRING</td>
+<td align="center">字符串、整数或者浮点数</td>
+<td align="center">对整个字符串或者字符串的其中一部分执行操作<br> 对整数和浮点数执行自增或者自减操作</td>
+</tr>
+<tr>
+<td align="center">LIST</td>
+<td align="center">列表</td>
+<td align="center">从两端压入或者弹出元素 <br> 对单个或者多个元素进行修剪，<br> 只保留一个范围内的元素</td>
+</tr>
+<tr>
+<td align="center">SET</td>
+<td align="center">无序集合</td>
+<td align="center">添加、获取、移除单个元素<br> 检查一个元素是否存在于集合中<br> 计算交集、并集、差集<br> 从集合里面随机获取元素</td>
+</tr>
+<tr>
+<td align="center">HASH</td>
+<td align="center">包含键值对的无序散列表</td>
+<td align="center">添加、获取、移除单个键值对<br> 获取所有键值对<br> 检查某个键是否存在</td>
+</tr>
+<tr>
+<td align="center">ZSET</td>
+<td align="center">有序集合</td>
+<td align="center">添加、获取、删除元素<br> 根据分值范围或者成员来获取元素<br> 计算一个键的排名</td>
+</tr>
+</tbody></table>
+<h1 id="三、数据结构"><a href="#三、数据结构" class="headerlink" title="三、数据结构"></a>三、数据结构</h1><h1 id="四、redis应用场景"><a href="#四、redis应用场景" class="headerlink" title="四、redis应用场景"></a>四、redis应用场景</h1><h2 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h2><p>利用string类型可以存储整数和浮点数，进行自增自减操作。</p>
+<h2 id="缓存（用的最多的场景）"><a href="#缓存（用的最多的场景）" class="headerlink" title="缓存（用的最多的场景）"></a>缓存（用的最多的场景）</h2><p>将热点数据放到内存中，设置内存的最大使用量以及淘汰策略来保证缓存的命中率。</p>
+<p>将不经常改变的数据存入缓存，访问频繁访问数据库。</p>
+<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>List 是一个双向链表，可以通过 lpush 和 rpop 写入和读取消息</p>
+<p>不过最好使用 Kafka、RabbitMQ 等消息中间件。</p>
+<p><a href="https://github.com/march1995/spring-example/blob/master/spring-example-cache/src/test/java/com/wyb/cache/RedisMqTests.java" target="_blank" rel="noopener">redis 实现 点对点  发布/订阅 消息队列 </a></p>
+<h2 id="会话缓存"><a href="#会话缓存" class="headerlink" title="会话缓存"></a>会话缓存</h2><p>可以使用 Redis 来统一存储多台应用服务器的会话信息。</p>
+<p>当应用服务器不再存储用户的会话信息，也就不再具有状态，一个用户可以请求任意一个应用服务器，从而更容易实现高可用性以及可伸缩性。</p>
+<h2 id="分布式锁实现"><a href="#分布式锁实现" class="headerlink" title="分布式锁实现"></a>分布式锁实现</h2><p>在分布式场景下，无法使用单机环境下的锁来对多个节点上的进程进行同步。</p>
+<p>可以使用 Redis 自带的 SETNX 命令实现分布式锁，除此之外，还可以使用官方提供的 RedLock 分布式锁实现。</p>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p>Set 可以实现交集、并集等操作，从而实现共同好友等功能。</p>
+<p>ZSet 可以实现有序性操作，从而实现排行榜等功能。</p>
+<h1 id="五、数据淘汰策略"><a href="#五、数据淘汰策略" class="headerlink" title="五、数据淘汰策略"></a>五、数据淘汰策略</h1><p>可以设置内存最大使用量，当内存使用量超出时，会施行数据淘汰策略。</p>
+<p>Redis 具体有 6 种淘汰策略：</p>
+<table>
+<thead>
+<tr>
+<th align="center">策略</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">volatile-lru</td>
+<td align="center">从已设置过期时间的数据集中挑选最近最少使用的数据淘汰</td>
+</tr>
+<tr>
+<td align="center">volatile-ttl</td>
+<td align="center">从已设置过期时间的数据集中挑选将要过期的数据淘汰</td>
+</tr>
+<tr>
+<td align="center">volatile-random</td>
+<td align="center">从已设置过期时间的数据集中任意选择数据淘汰</td>
+</tr>
+<tr>
+<td align="center">allkeys-lru</td>
+<td align="center">从所有数据集中挑选最近最少使用的数据淘汰</td>
+</tr>
+<tr>
+<td align="center">allkeys-random</td>
+<td align="center">从所有数据集中任意选择数据进行淘汰</td>
+</tr>
+<tr>
+<td align="center">noeviction</td>
+<td align="center">禁止驱逐数据</td>
+</tr>
+</tbody></table>
+<p>作为内存数据库，出于对性能和内存消耗的考虑，Redis 的淘汰算法实际实现上并非针对所有 key，而是抽样一小部分并且从中选出被淘汰的 key。</p>
+<p>使用 Redis 缓存数据时，为了提高缓存命中率，需要保证缓存数据都是热点数据。可以将内存最大使用量设置为热点数据占用的内存量，然后启用 allkeys-lru 淘汰策略，将最近最少使用的数据淘汰。</p>
+<p>Redis 4.0 引入了 volatile-lfu 和 allkeys-lfu 淘汰策略，LFU 策略通过统计访问频率，将访问频率最少的键值对淘汰。</p>
+<h1 id="六、持久化"><a href="#六、持久化" class="headerlink" title="六、持久化"></a>六、持久化</h1><h2 id="RDB-持久化"><a href="#RDB-持久化" class="headerlink" title="RDB 持久化"></a>RDB 持久化</h2><p>将某个时间点的所有数据都存放到硬盘上。</p>
+<p>可以将快照复制到其它服务器从而创建具有相同数据的服务器副本。</p>
+<p>如果系统发生故障，将会丢失最后一次创建快照之后的数据。</p>
+<p>如果数据量很大，保存快照的时间会很长。</p>
+<h2 id="AOF-持久化"><a href="#AOF-持久化" class="headerlink" title="AOF 持久化"></a>AOF 持久化</h2><p>将写命令添加到 AOF 文件（Append Only File）的末尾。</p>
+<p>使用 AOF 持久化需要设置同步选项，从而确保写命令同步到磁盘文件上的时机。这是因为对文件进行写入并不会马上将内容同步到磁盘上，而是先存储到缓冲区，然后由操作系统决定什么时候同步到磁盘。有以下同步选项：</p>
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">同步频率</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">always</td>
+<td align="center">每个写命令都同步</td>
+</tr>
+<tr>
+<td align="center">everysec</td>
+<td align="center">每秒同步一次</td>
+</tr>
+<tr>
+<td align="center">no</td>
+<td align="center">让操作系统来决定何时同步</td>
+</tr>
+</tbody></table>
+<ul>
+<li>always 选项会严重减低服务器的性能；</li>
+<li>everysec 选项比较合适，可以保证系统崩溃时只会丢失一秒左右的数据，并且 Redis 每秒执行一次同步对服务器性能几乎没有任何影响；</li>
+<li>no 选项并不能给服务器性能带来多大的提升，而且也会增加系统崩溃时数据丢失的数量。</li>
+</ul>
+<p>随着服务器写请求的增多，AOF 文件会越来越大。Redis 提供了一种将 AOF 重写的特性，能够去除 AOF 文件中的冗余写命令。</p>
+<h1 id="七、事务"><a href="#七、事务" class="headerlink" title="七、事务"></a>七、事务</h1><p>一个事务包含了多个命令，服务器在执行事务期间，不会改去执行其它客户端的命令请求。</p>
+<p>事务中的多个命令被一次性发送给服务器，而不是一条一条发送，这种方式被称为流水线，它可以减少客户端与服务器之间的网络通信次数从而提升性能。</p>
+<p>Redis 最简单的事务实现方式是使用 MULTI 和 EXEC 命令将事务操作包围起来。</p>
+<p>通过使用 slaveof host port 命令来让一个服务器成为另一个服务器的从服务器。</p>
+<p>一个从服务器只能有一个主服务器，并且不支持主主复制。</p>
+<h1 id="八、复制"><a href="#八、复制" class="headerlink" title="八、复制"></a>八、复制</h1><h2 id="连接过程"><a href="#连接过程" class="headerlink" title="连接过程"></a>连接过程</h2><ol>
+<li><p>主服务器创建快照文件，发送给从服务器，并在发送期间使用缓冲区记录执行的写命令。快照文件发送完毕之后，开始向从服务器发送存储在缓冲区中的写命令；</p>
+</li>
+<li><p>从服务器丢弃所有旧数据，载入主服务器发来的快照文件，之后从服务器开始接受主服务器发来的写命令；</p>
+</li>
+<li><p>主服务器每执行一次写命令，就向从服务器发送相同的写命令。</p>
+</li>
+</ol>
+<h2 id="主从链"><a href="#主从链" class="headerlink" title="主从链"></a>主从链</h2><p>随着负载不断上升，主服务器可能无法很快地更新所有从服务器，或者重新连接和重新同步从服务器将导致系统超载。为了解决这个问题，可以创建一个中间层来分担主服务器的复制工作。中间层的服务器是最上层服务器的从服务器，又是最下层服务器的主服务器。</p>
+<h1 id="九、Sentinel"><a href="#九、Sentinel" class="headerlink" title="九、Sentinel"></a>九、Sentinel</h1><p>Sentinel（哨兵）可以监听集群中的服务器，并在主服务器进入下线状态时，自动从从服务器中选举出新的主服务器。</p>
+<h1 id="十、分片"><a href="#十、分片" class="headerlink" title="十、分片"></a>十、分片</h1><p>分片是将数据划分为多个部分的方法，可以将数据存储到多台机器里面，这种方法在解决某些问题时可以获得线性级别的性能提升。</p>
+<p>假设有 4 个 Redis 实例 R0，R1，R2，R3，还有很多表示用户的键 user:1，user:2，… ，有不同的方式来选择一个指定的键存储在哪个实例中。</p>
+<ul>
+<li>最简单的方式是范围分片，例如用户 id 从 0~1000 的存储到实例 R0 中，用户 id 从 1001~2000 的存储到实例 R1 中，等等。但是这样需要维护一张映射范围表，维护操作代价很高。</li>
+<li>还有一种方式是哈希分片，使用 CRC32 哈希函数将键转换为一个数字，再对实例数量求模就能知道应该存储的实例。</li>
+</ul>
+<p>根据执行分片的位置，可以分为三种分片方式：</p>
+<ul>
+<li>客户端分片：客户端使用一致性哈希等算法决定键应当分布到哪个节点。</li>
+<li>代理分片：将客户端请求发送到代理上，由代理转发请求到正确的节点上。</li>
+<li>服务器分片：Redis Cluster。</li>
+</ul>
 
           
         
@@ -2334,7 +1673,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/java-design/structure/adapter/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/10/17/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/webXml%E5%92%8Cspring%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -2353,7 +1692,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/adapter/" itemprop="url">Java设计模式：适配器</a></h1>
+                <a class="post-title-link" href="/2019/10/17/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/webXml%E5%92%8Cspring%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98/" itemprop="url">webXml和spring初始化顺序问题</a></h1>
         
 
         <div class="post-meta">
@@ -2365,8 +1704,8 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-17T00:00:00+00:00">
+                2019-10-17
               </time>
             
 
@@ -2388,8 +1727,8 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
+                  <a href="/categories/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index">
+                    <span itemprop="name">日常问题记录</span>
                   </a>
                 </span>
 
@@ -2419,7 +1758,465 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  362 字
+                  1.2k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="问题产生"><a href="#问题产生" class="headerlink" title="问题产生"></a>问题产生</h1><p>同事想要在项目初始化完成后，开启线程池执行业务逻辑的代码，其中需要注入spring的bean，他想到使用servlet的listener，但是无法在listener中无法直接通过@Resource注解获取实例。</p>
+<h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><p>在tomcat容器中，listener，filter，servlet等都不是交给spring容器管理，两者环境不一致当然就获取不到了。</p>
+<h1 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h1><p>如果需要在tomcat等web容器环境中获取spring实例需要获取ServletContext，通过webContext去获取springIOC容器从而获取spring实例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;ServletContext,是一个全局的储存信息的空间，服务器开始，其就存在，服务器关闭，其才释放。request，一个用户可有多个；session，一个用户一个；而servletContext，所有用户共用一个。</span><br><span class="line">&#x2F;&#x2F;所以，为了节省空间，提高效率，ServletContext中，要放必须的、重要的、所有用户需要共享的线程又是安全的一些信息。</span><br><span class="line">    @Override</span><br><span class="line">    public void contextInitialized(ServletContextEvent servletContextEvent) &#123;</span><br><span class="line">        WebApplicationContext springContext &#x3D; WebApplicationContextUtils.getWebApplicationContext(servletContextEvent.getServletContext());</span><br><span class="line">        Init init &#x3D; (Init) springContext.getBean(&quot;Init&quot;);</span><br><span class="line"></span><br><span class="line">        System.out.println(init);</span><br><span class="line">        System.out.println(&quot;listener init&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="问题延伸"><a href="#问题延伸" class="headerlink" title="问题延伸"></a>问题延伸</h1><h2 id="web-xml文件中各个节点参数的启动顺序"><a href="#web-xml文件中各个节点参数的启动顺序" class="headerlink" title="web.xml文件中各个节点参数的启动顺序"></a>web.xml文件中各个节点参数的启动顺序</h2><p>可以明确的是初始化顺序context-param -&gt; listener-&gt; filter -&gt; servlet。</p>
+<p>在代码中分别自定义listener，filter，spring bean（Init）。启动项目可以看出先打印 listener init,再打印filter init。</p>
+<p>那么spring容器的bean呢，在什么时候会进行初始化。新建Init类实现InitializingBean，然后在xml中配置该bean，这样spring容器初始化是会去执行afterPropertiesSet方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">    public void afterPropertiesSet() throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;InitializingBean&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建完java文件后，咱们先来看看 web.xml。</p>
+<p>一般springIOC容器在context-param进行初始化，<strong>此时spring就已经在初始化xml文件中的实例了</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--在web.xml中通过contextConfigLocation配置spring，contextConfigLocation--&gt;</span><br><span class="line">    &lt;context-param&gt;</span><br><span class="line">        &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">        &lt;param-value&gt;</span><br><span class="line">            classpath:spring-context.xml</span><br><span class="line">        &lt;&#x2F;param-value&gt;</span><br><span class="line">    &lt;&#x2F;context-param&gt;</span><br></pre></td></tr></table></figure>
+
+<p>spring的xml其实也可以放在其它地方进行加载，比如说listener，servlet中，例如springMVC的xml文件，会配置在servlet中，进行路由转发。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 请求转发器 --&gt;</span><br><span class="line">  &lt;servlet&gt;</span><br><span class="line">    &lt;servlet-name&gt;dispatcher&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;&#x2F;servlet-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">      &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">      &lt;param-value&gt;classpath:spring-mvc.xml&lt;&#x2F;param-value&gt;</span><br><span class="line">    &lt;&#x2F;init-param&gt;</span><br><span class="line">    &lt;load-on-startup&gt;1&lt;&#x2F;load-on-startup&gt;</span><br><span class="line">  &lt;&#x2F;servlet&gt;</span><br><span class="line">  &lt;servlet-mapping&gt;</span><br><span class="line">  &lt;servlet-name&gt;dispatcher&lt;&#x2F;servlet-name&gt;</span><br><span class="line">  &lt;url-pattern&gt;&#x2F;&lt;&#x2F;url-pattern&gt;</span><br><span class="line">  &lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如若此时在contextConfigLocation下增加classpath:spring-context.xml，spring同样也会去初始化配置文件。所以可以得出结论，springIOC环境的<br>初始化与web context的初始化顺序无直接关联。</p>
+<p>那么问题来了，在listener，filter中获取WebApplicationContext可以获得spring bean吗？</p>
+<p>我们先把spring-context.xml放在context-param中，让它在lister之前进行spring初始化，看看效果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">   修改xml文件</span><br><span class="line">   &lt;context-param&gt;</span><br><span class="line">       &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">       &lt;param-value&gt;</span><br><span class="line">           classpath:spring-context.xml</span><br><span class="line">       &lt;&#x2F;param-value&gt;</span><br><span class="line">   &lt;&#x2F;context-param&gt;</span><br><span class="line">   </span><br><span class="line">修改自定义CustomListener   </span><br><span class="line">@Override</span><br><span class="line">   public void contextInitialized(ServletContextEvent servletContextEvent) &#123;</span><br><span class="line">       WebApplicationContext springContext &#x3D; WebApplicationContextUtils.getWebApplicationContext(servletContextEvent.getServletContext());</span><br><span class="line">       Init init &#x3D; (Init) springContext.getBean(&quot;init&quot;);</span><br><span class="line"></span><br><span class="line">       System.out.println(init);</span><br><span class="line">       System.out.println(&quot;listener init&quot;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时InitializingBean最先打印出来，说明其在listener，filter之前执行了。<br>控制台输出 com.wyb.web.config.Init@e082c17，说明在listen之前，spring的Context已经初始化，可以获取到bean，那么我们把spring-context.xml<br>放在servlet中去初始化，即在listener之后初始化会怎么样呢？</p>
+<p>修改web.xml代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet&gt;</span><br><span class="line">    &lt;servlet-name&gt;dispatcher&lt;&#x2F;servlet-name&gt;</span><br><span class="line">    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;&#x2F;servlet-class&gt;</span><br><span class="line">    &lt;init-param&gt;</span><br><span class="line">      &lt;param-name&gt;contextConfigLocation&lt;&#x2F;param-name&gt;</span><br><span class="line">      &lt;param-value&gt;classpath:spring-mvc.xml,classpath:spring-context.xml&lt;&#x2F;param-value&gt;</span><br><span class="line">    &lt;&#x2F;init-param&gt;</span><br><span class="line">    &lt;load-on-startup&gt;1&lt;&#x2F;load-on-startup&gt;</span><br><span class="line">  &lt;&#x2F;servlet&gt;</span><br><span class="line">  &lt;servlet-mapping&gt;</span><br><span class="line">  &lt;servlet-name&gt;dispatcher&lt;&#x2F;servlet-name&gt;</span><br><span class="line">  &lt;url-pattern&gt;&#x2F;&lt;&#x2F;url-pattern&gt;</span><br><span class="line">  &lt;&#x2F;servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
+
+<p>此时InitializingBean最后打印，说明其在listener，filter之后执行了。<br>CustomListener抛出NoSuchBeanDefinitionException异常，即无法获得该实例，由此得出结论，spring bean的初始化顺序由配置文件在web.xml中什么时候加载有关，与listener，filter无直接关系。<br><strong>若listener想获得spring bean，该bean需要在listener之前<br>进行初始化</strong>。</p>
+<p>两个spring bean之间进行相互注入依赖，则要看xml文件在web.xml进行加载的顺序。绝对了spring bean初始化的顺序。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/08/27/tool/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/27/tool/git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" itemprop="url">git常用指令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-27T00:00:00+00:00">
+                2019-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tool/" itemprop="url" rel="index">
+                    <span itemprop="name">tool</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  976 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="工作区与暂存区"><a href="#工作区与暂存区" class="headerlink" title="工作区与暂存区"></a>工作区与暂存区</h1><ul>
+<li>版本回退：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git log (git log --pretty&#x3D;oneline) 查看提交日志</span><br><span class="line">git log --graph --pretty&#x3D;oneline --abbrev-commit 简化查看日志</span><br><span class="line">git reset --hard commitid(HEAD^ HEAD表示当前版本 ^表示上个版本 以此类推,也可以使用~num,num表示几个^) (windows命令行下需要git reset --hard &quot;HEAD^&quot; ) </span><br><span class="line">git reflog 查看命令历史</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>管理修改：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git add xx 把文件添加到版本库</span><br><span class="line">git status 查看当前版本库状态</span><br><span class="line">git commit -m &quot;msg&quot; 提交修改 -m表示提交注释 ps:若使用命令行提交，每次commit都需add</span><br><span class="line">git diff </span><br><span class="line">git diff HEAD -- xx.file 查看工作区和版本库里面最新版本的区别 (HEAD^ 与版本回退同理)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>撤销修改：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- xx 把文件在工作区的修改全部撤销。第一种情况修改后未被放入暂存区，撤销修改与版本库一致，第二种已经添加到了暂存区，又作了修改，撤销修改回到add时的状态。让这个文件回到最近一次git commit或git add时的状态</span><br><span class="line"></span><br><span class="line">git reset HEAD &lt;file&gt; 把暂存区的修改回退到工作区,适用于add未commit</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除文件：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm 用于删除一个文件</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>取消文件跟踪：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached xx.txt 删除readme1.txt的跟踪，并保留在本地。之后git commit </span><br><span class="line"></span><br><span class="line">git rm --f xx.txt 删除readme1.txt的跟踪，并且删除本地文件。之后git commit</span><br></pre></td></tr></table></figure>
+
+<h1 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h1><ul>
+<li>添加远程库：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin xx.git 添加远程仓库地址</span><br><span class="line">git push -u origin master 由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令</span><br><span class="line">git push origin master推送最新修改</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>从远程库克隆：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone xx.git</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>多人协作：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git remote -v 查看远程库信息</span><br><span class="line">git fetch origin &lt;branch-name&gt; 从远程拉去分支代码</span><br><span class="line">git merge 合并代码</span><br><span class="line">git pull &#x3D; git fetch + git merge</span><br><span class="line">git push origin &lt;branch-name&gt; 推送修改</span><br><span class="line">git checkout -b &lt;branch-name&gt; origin&#x2F;&lt;branch-name&gt; 本地创建和远程分支对应的分支,名称最好一致</span><br><span class="line">git branch --set-upstream &lt;branch-name&gt; origin&#x2F;&lt;branch-name&gt; 建立本地分支和远程分支的关联</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>git放弃本地修改，强制更新：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch --all 下载远程仓库最新内容，不做合并</span><br><span class="line">git reset --hard origin&#x2F;master 把HEAD指向master最新版本</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
+
+<h1 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h1><ul>
+<li>创建与合并分支：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git branch dev 创建dev分支</span><br><span class="line">git checkout dev 切换至dev分支</span><br><span class="line">git checkout -b dev 创建并切换至dev分支</span><br><span class="line">git branch 查看当前分支</span><br><span class="line">git merge dev 合并dev分支代码至当前分支</span><br><span class="line">git branch -d dev 删除dev分支</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>解决冲突：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --graph 命令可以看到分支合并图</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Bug分支：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git stash 暂存当前工作区代码</span><br><span class="line">git stash list 查看暂存代码记录</span><br><span class="line">git stash apply 恢复代码至工作区，但不删除暂存内容</span><br><span class="line">git stash drop 删除暂存内容</span><br><span class="line">git stash pop &#x3D; git stash apply + git stash drop 恢复代码至工作区并删除暂存内容</span><br><span class="line">git cherry-pick &lt;commitid&gt; 复制某一次提交代码至当前分支</span><br></pre></td></tr></table></figure>
+
+<h1 id="标签管理"><a href="#标签管理" class="headerlink" title="标签管理"></a>标签管理</h1><ul>
+<li>创建标签：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git tag &lt;tagname&gt; 用于新建一个标签，默认为HEAD，也可以指定一个commit id</span><br><span class="line">git tag -a &lt;tagname&gt; -m &quot;msg&quot; 可以指定标签信息</span><br><span class="line">git tag 查看所有标签</span><br><span class="line">git show &lt;tagname&gt; 查看说明</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>操作标签：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git tag -d &lt;tagname&gt; 删除一个本地标签</span><br><span class="line">git push origin :refs&#x2F;tags&#x2F;&lt;tagname&gt; 删除一个远程标签</span><br><span class="line">git push origin &lt;tagname&gt; 推送标签至远程</span><br><span class="line">git push origin --tags 一次性推送全部尚未推送到远程的本地标签</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/08/27/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/springboot%E4%B8%8Eknife4j%E5%85%BC%E5%AE%B9%E6%80%A7%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/27/%E6%97%A5%E5%B8%B8%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/springboot%E4%B8%8Eknife4j%E5%85%BC%E5%AE%B9%E6%80%A7%E9%97%AE%E9%A2%98/" itemprop="url">git常用指令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-27T00:00:00+00:00">
+                2019-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tool/" itemprop="url" rel="index">
+                    <span itemprop="name">tool</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  212 字
                 </span>
               
 
@@ -2458,54 +2255,8 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>适配器就是一种适配中间件，它存在于不匹配的二者之间，用于连接二者，将不匹配变得匹配，简单点理解就是平常所见的转接头，转换器之类的存在。</p>
-<p>把一个类接口转换成另一个用户需要的接口。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
-<li>通过组合的方式。</li>
-<li>通过继承来实现适配器功能。</li>
-</ul>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个鸭接口 方法为鸭子叫</p>
-<pre><code>public interface Duck {
-
-    void quack();</code></pre><p>   定义一个火鸡接口 方法为鸡叫</p>
-<pre><code>public interface Turkey {
-
-   void gobble();    </code></pre><p>   鸭子实现类</p>
-<pre><code>public class WildDuck implements Duck {
-
-    @Override
-    public void quack() {
-        System.out.println(&quot;鸭子叫&quot;);
-    }
-}    </code></pre><p>   火鸡实现类</p>
-<pre><code>public class WildTurkey implements Turkey {
-
-    @Override
-    public void gobble() {
-        System.out.println(&quot;火鸡叫&quot;);
-    }
-} </code></pre><p>   现在鸭子只能发出鸭子叫，鸡只能发出鸡叫，我们想要鸭子发出鸡的叫声。添加鸭子适配器。</p>
-<pre><code>public class DuckAdapter implements Turkey {
-
-   Duck duck;
-
-   public DuckAdapter(Duck duck) {
-       this.duck = duck;
-   }
-
-   @Override
-   public void gobble() {
-       duck.quack();
-   }
-}</code></pre><p>   组合方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
-<pre><code>public class DuckAdapter extends Turkey WildTurkey implements Turkey {
-
-      @Override
-      public void gobble() {
-          gobble.quack();
-      }
-   }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
-
+            <p><a href="https://gitee.com/xiaoym/knife4j/issues/I4JT89" target="_blank" rel="noopener">gitee issue地址 </a></p>
+<h3 id="加入一个类"><a href="#加入一个类" class="headerlink" title="加入一个类"></a>加入一个类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">@Configuration  </span><br><span class="line">public class ConflictHandlingCfg &#123;  </span><br><span class="line">    &#x2F;**  </span><br><span class="line">     * 解决springboot升到2.6.x之后，knife4j报错  </span><br><span class="line">     * 原文链接：https:&#x2F;&#x2F;gitee.com&#x2F;xiaoym&#x2F;knife4j&#x2F;issues&#x2F;I4JT89  </span><br><span class="line">     *     * @param wes the web endpoints supplier  </span><br><span class="line">     * @param ses the servlet endpoints supplier  </span><br><span class="line">     * @param ces the controller endpoints supplier  </span><br><span class="line">     * @param emt the endpoint media types  </span><br><span class="line">     * @param cep the cors properties  </span><br><span class="line">     * @param wep the web endpoints properties  </span><br><span class="line">     * @param env the environment  </span><br><span class="line">     * @return the web mvc endpoint handler mapping  </span><br><span class="line">     *&#x2F;    @Bean  </span><br><span class="line">    public WebMvcEndpointHandlerMapping webMvcEndpointHandlerMapping(WebEndpointsSupplier wes  </span><br><span class="line">            , ServletEndpointsSupplier ses, ControllerEndpointsSupplier ces, EndpointMediaTypes emt            , CorsEndpointProperties cep, WebEndpointProperties wep, Environment env) &#123;  </span><br><span class="line">        List&lt;ExposableEndpoint&lt;?&gt;&gt; allEndpoints &#x3D; new ArrayList&lt;&gt;();  </span><br><span class="line">        Collection&lt;ExposableWebEndpoint&gt; webEndpoints &#x3D; wes.getEndpoints();  </span><br><span class="line">        allEndpoints.addAll(webEndpoints);  </span><br><span class="line">        allEndpoints.addAll(ses.getEndpoints());  </span><br><span class="line">        allEndpoints.addAll(ces.getEndpoints());  </span><br><span class="line">        String basePath &#x3D; wep.getBasePath();  </span><br><span class="line">        EndpointMapping endpointMapping &#x3D; new EndpointMapping(basePath);  </span><br><span class="line">        boolean shouldRegisterLinksMapping &#x3D; shouldRegisterLinksMapping(wep, env, basePath);  </span><br><span class="line">        return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, emt  </span><br><span class="line">                , cep.toCorsConfiguration(), new EndpointLinksResolver(  </span><br><span class="line">                allEndpoints, basePath), shouldRegisterLinksMapping, null);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    &#x2F;**  </span><br><span class="line">     * shouldRegisterLinksMapping     *     * @param wep  </span><br><span class="line">     * @param env  </span><br><span class="line">     * @param basePath  </span><br><span class="line">     * @return  </span><br><span class="line">     *&#x2F;  </span><br><span class="line">    private boolean shouldRegisterLinksMapping(WebEndpointProperties wep, Environment env, String basePath) &#123;  </span><br><span class="line">        return wep.getDiscovery().isEnabled() &amp;&amp; (StringUtils.hasText(basePath) || ManagementPortType.get(env).equals(ManagementPortType.DIFFERENT));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           
         
       
@@ -2561,7 +2312,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/java-design/structure/composite/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/05/30/tool/maven-dependence/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -2580,7 +2331,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/composite/" itemprop="url">Java设计模式：组合模式</a></h1>
+                <a class="post-title-link" href="/2019/05/30/tool/maven-dependence/" itemprop="url">maven-dependence</a></h1>
         
 
         <div class="post-meta">
@@ -2592,8 +2343,8 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-30T00:00:00+00:00">
+                2019-05-30
               </time>
             
 
@@ -2615,8 +2366,8 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
+                  <a href="/categories/tool/" itemprop="url" rel="index">
+                    <span itemprop="name">tool</span>
                   </a>
                 </span>
 
@@ -2646,7 +2397,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  496 字
+                  1.2k 字
                 </span>
               
 
@@ -2662,7 +2413,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2 分钟
+                  4 分钟
                 </span>
               
             </div>
@@ -2685,359 +2436,111 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
       
         
           
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将对象组合成树形结构来表示“整体/部分”层次关系，允许用户以相同的方式处理单独对象和组合对象。</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>组件（Component）类是组合类（Composite）和叶子类（Leaf）的父类，可以把组合类看成是树的中间节点。<br>组合对象拥有一个或多个组件对象，因此组合对象的操作可以委托给组件对象去处理，而组件对象可以是另一个组合对象或者叶子对象。</p>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义组件抽象类</p>
-<pre><code>public abstract class Component {
+            <h1 id="scope参数在dependence中表示依赖的范围。"><a href="#scope参数在dependence中表示依赖的范围。" class="headerlink" title="scope参数在dependence中表示依赖的范围。"></a>scope参数在dependence中表示依赖的范围。</h1><p>首先需要知道，maven在编译项目主代码的时候需要使用一套classpath。例如在编译项目主代码的时候需要用到spring-core，该文件以依赖的方式被引入到classpath中。<br>其次，maven在编译和执行测试的时候会使用另一套classpath，Junit就是一个很好的例子，该文件也以依赖的方式引入到测试使用的classpath中，不同的是这里的依赖<br>范围是test。最后，实际运行maven项目的时候，又会使用一套classpath。</p>
+<p>依赖范围就是用来控制依赖与这三种classpath（编辑classpath、测试classpath、运行classpath）的关系，maven有以下几种依赖范围：</p>
+<p><strong>Compile</strong>：编译依赖范围。如果没有指定，就会默认使用该依赖范围。使用此依赖范围的maven依赖，对于<strong>编译、测试、运行</strong>三种classpath都有效。<br>典型的例子是spring-core，在编译、测试和运行的时候都需要使用该依赖。</p>
+<p><strong>Test</strong>：测试依赖范围。使用此依赖范围的maven依赖，只对于<strong>测试</strong>的classpath有效，在编译主代码或者运行项目的使用时将无法使用此类依赖。典型的例子是Junit，<br>它只有在编辑测试代码及运行测试的时候才需要。</p>
+<p><strong>Provided</strong>：已提供依赖范围。使用此依赖范围的maven依赖，对于<strong>编译</strong>和<strong>测试</strong>classpath有效，但在运行时无效。典型的例子是servlet-api，<br>编译和测试项目的时候需要该依赖，但在运行项目的时候，由于容器已经提供，就不需要maven重复的引入一遍。</p>
+<p><strong>Runtime</strong>：运行时依赖范围。使用该依赖范围的maven依赖，对于测试和运行classpath有效，但在编译主代码时无效。典型的例子是JDBC驱动实现，项目主代码的编译<br>只需要JDK提供的JDBC接口，只有在执行测试或者运行项目的时候才需要实现上述的具体JDBC驱动。</p>
+<p><strong>System</strong>：系统依赖范围。该依赖与三种classpath的关系，<strong>和Provided依赖范围完全一致</strong>。但是，使用System范围的依赖是必须通过systemPath元素显示地指定<br>依赖文件的路径。由于此类依赖不是通过maven仓库解析的，而且往往与本机的系统绑定，可能造成构建的不可移植，因此应该谨慎使用。systemPath元素可以引用环境<br>变量，如：</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;java.sql&lt;/groupId&gt;
+    &lt;artifactId&gt;jdbc-stdext&lt;/artifactId&gt;
+    &lt;version&gt;2.0&lt;/version&gt;
+    &lt;scope&gt;system&lt;/scope&gt;
+    &lt;systemPath&gt;${java.home}/lib/rt.jar&lt;/systemPath&gt;
+&lt;/dependency&gt;</code></pre><p><strong>Import(maven2.0.9及以上)</strong>：导入依赖范围。该依赖范围不会对3中classpath产生实际影响。    </p>
+<p>上述出import依赖的各种依赖范围3中classpath的关系如下表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">依赖范围(scope)</th>
+<th align="left">编译classpath有效</th>
+<th align="left">测试classpath有效</th>
+<th align="left">运行classpath有效</th>
+<th align="left">例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">compile</td>
+<td align="left">Y</td>
+<td align="left">Y</td>
+<td align="left">Y</td>
+<td align="left">spring-core</td>
+</tr>
+<tr>
+<td align="center">test</td>
+<td align="left">-</td>
+<td align="left">Y</td>
+<td align="left">-</td>
+<td align="left">junit</td>
+</tr>
+<tr>
+<td align="center">provided</td>
+<td align="left">Y</td>
+<td align="left">Y</td>
+<td align="left">-</td>
+<td align="left">servlet-api</td>
+</tr>
+<tr>
+<td align="center">runtime</td>
+<td align="left">-</td>
+<td align="left">Y</td>
+<td align="left">Y</td>
+<td align="left">JDBC驱动</td>
+</tr>
+<tr>
+<td align="center">system</td>
+<td align="left">Y</td>
+<td align="left">Y</td>
+<td align="left">-</td>
+<td align="left">本地的，maven仓库之外的类库文件</td>
+</tr>
+</tbody></table>
+<h1 id="maven传递性依赖"><a href="#maven传递性依赖" class="headerlink" title="maven传递性依赖"></a>maven传递性依赖</h1><p>传递性依赖和依赖范围：</p>
+<p>依赖范围不仅可以控制依赖与三种classpath的关系，还对传递性依赖产生影响。例，account-email对于spring-core的依赖范围是compile，spring-core对于commons-logging<br>的依赖范围的是compile，那么account-email对于commons-logging这一传递依赖的范围也及时compile。假设A依赖与B，B依赖与C，我们说A对于B的依赖是第一直接依赖，<br>B对于C的依赖为第二直接依赖，A对于C是传递性依赖。第一直接依赖的范围是和第二直接依赖的范围决定了传递性依赖的范围，如下表所示，最左边一行表示第一直接依赖范围，<br>最上面一行便是第二直接依赖范围，中间的交叉单元格则便是传递性依赖范围:</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="left">compile</th>
+<th align="left">test</th>
+<th align="left">provided</th>
+<th align="left">runtime</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">compile</td>
+<td align="left">compile</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">runtime</td>
+</tr>
+<tr>
+<td align="center">test</td>
+<td align="left">test</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">test</td>
+</tr>
+<tr>
+<td align="center">provided</td>
+<td align="left">provided</td>
+<td align="left">-</td>
+<td align="left">provided</td>
+<td align="left">provided</td>
+</tr>
+<tr>
+<td align="center">runtime</td>
+<td align="left">runtime</td>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">runtime</td>
+</tr>
+</tbody></table>
+<p>仔细观察表格，可以发现规律：当第二直接依赖为compile的时候，传递性依赖的范围与第一直接依赖范围一致；当第二直接依赖范围是test的时候，依赖不会得以传递，<br>当第二直接依赖的范围是provided的时候，只传递第一直接依赖范围也为provided的依赖，且传递性依赖的范围同样为provided；当第二传递依赖是runtime的时候，<br>传递性依赖的范围与第一直接依赖的范围一致，丹compile例外，此时传递性依赖的范围为runtime。</p>
+<h2 id="maven可选依赖"><a href="#maven可选依赖" class="headerlink" title="maven可选依赖"></a>maven可选依赖</h2><p>使用<optional>元素表示依赖为可选依赖，只会对当前项目产生影响，当其他项目依赖当前项目时，该依赖不会被传递</optional></p>
 
-    protected String name;
-
-    public Component(String name) {
-        this.name = name;
-    }
-
-    public void print() {
-        print(0);
-    }
-    public abstract void print(int level);
-
-    public abstract void add(Component component);
-
-    public abstract void remove(Component component);
-}</code></pre><p>   定义一个组合类，继承组件类，并依赖了组件类，依赖的组件类可以是另一个组合对象或者叶子对象</p>
-<pre><code>public class Composite extends Component {
-
-    private List&lt;Component&gt; child;
-
-    public Composite(String name) {
-        super(name);
-        child = new ArrayList&lt;&gt;();
-    }
-
-    @Override
-    public void print(int level) {
-        for (int i = 0; i &lt; level; i++) {
-            System.out.print(&quot;--&quot;);
-        }
-        System.out.println(&quot;Composite:&quot; + name);
-        for (Component component : child) {
-            component.print(level + 1);
-        }
-    }
-
-    @Override
-    public void add(Component component) {
-        child.add(component);
-    }
-
-    @Override
-    public void remove(Component component) {
-        child.remove(component);
-    }
-}</code></pre><p>   定义一个叶子类，继承组件类。</p>
-<pre><code>public class Leaf extends Component{
-
-    public Leaf(String name) {
-        super(name);
-    }
-
-    @Override
-    public void print(int level) {
-        for (int i = 0; i &lt; level; i++) {
-            System.out.print(&quot;--&quot;);
-        }
-        System.out.println(&quot;left:&quot; + name);
-    }
-
-    @Override
-    public void add(Component component) {
-        throw new UnsupportedOperationException(); // 牺牲透明性换取单一职责原则，这样就不用考虑是叶子节点还是组合节点
-    }
-
-    @Override
-    public void remove(Component component) {
-        throw new UnsupportedOperationException();
-    }  </code></pre><p>   测试</p>
-<pre><code>public class Client {
-
-    public static void main(String[] args) {
-        Composite root = new Composite(&quot;root&quot;);
-        Component node1 = new Leaf(&quot;1&quot;);
-        Component node2 = new Composite(&quot;2&quot;);
-        Component node3 = new Leaf(&quot;3&quot;);
-        root.add(node1);
-        root.add(node2);
-        root.add(node3);
-        Component node21 = new Leaf(&quot;21&quot;);
-        Component node22 = new Composite(&quot;22&quot;);
-        node2.add(node21);
-        node2.add(node22);
-        Component node221 = new Leaf(&quot;221&quot;);
-        node22.add(node221);
-        root.print();
-    }
-}</code></pre><p>   结果</p>
-<pre><code>Composite:root
---left:1
---Composite:2
-----left:21
-----Composite:22
-------left:221
---left:3</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/java-design/structure/bridge/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/bridge/" itemprop="url">Java设计模式：桥接器</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
-                2019-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
-                    <span itemprop="name">java-design-patterns</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  427 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将抽象与实现分离开来，使它们可以独立变化。</p>
-<p>抽象与实现解耦，例如一个生产线的机器，将参数设定与具体生产的过程实现分离开，使整个生产线更加灵活，用一套参数也可以使用不同的工作模式。</p>
-<p>其中参数设定与生产过程属于两种不同的维度，桥接模式所做的事情就是将不同的维度联结在一起！</p>
-<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
-<li>在一个类中通过组合另一个对象，调用时只需在当前类调用对象方法即可，实现解耦。</li>
-</ul>
-<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义电视机抽象类,拥有3个方法。</p>
-<pre><code>public abstract class Tv {
-
-    public abstract void on();
-
-    public abstract void off();
-
-    public abstract void tuneTunnel();</code></pre><p>   定义一个电视机的实现类，Sony电视机。</p>
-<pre><code>public class SonyTv extends Tv {
-
-    @Override
-    public void on() {
-        System.out.println(&quot;SonyTv,on&quot;);
-    }
-
-    @Override
-    public void off() {
-        System.out.println(&quot;SonyTv,off&quot;);
-    }
-
-    @Override
-    public void tuneTunnel() {
-        System.out.println(&quot;SonyTv,tuneTunnel&quot;);
-    }</code></pre><p>   定义一个遥控器抽象类。组合了一个电视机对象。</p>
-<pre><code>protected Tv tv;
-
-    public RemoteControl(Tv tv) {
-        this.tv = tv;
-    }
-
-    public abstract void on();
-
-    public abstract void off();
-
-    public abstract void tuneTunnel();   </code></pre><p>   定义一个遥控器的实现类，Sony电视机遥控器。</p>
-<pre><code>public class SonyRemoteControl extends RemoteControl {
-
-    public SonyRemoteControl(Tv tv) {
-        super(tv);
-    }
-
-    @Override
-    public void on() {
-        System.out.println(&quot;sonyRemoteControl,on&quot;);
-        tv.on();
-    }
-
-    @Override
-    public void off() {
-        System.out.println(&quot;sonyRemoteControl,off&quot;);
-        tv.off();
-    }
-
-    @Override
-    public void tuneTunnel() {
-        System.out.println(&quot;sonyRemoteControl,tuneTunnel&quot;);
-        tv.off();
-    }
-} </code></pre><p>   在生成sony电视机遥控器时，传入一个sony电视机对象，即可使用该遥控器实现该电视机的状态变换。</p>
-<pre><code>public class Client {
-
-   public static void main(String[] args) {
-       Tv sonyTv = new SonyTv();
-       SonyRemoteControl sonyRemoteControl = new SonyRemoteControl(sonyTv);
-       sonyRemoteControl.on();
-       sonyRemoteControl.off();
-       sonyRemoteControl.tuneTunnel();
-   }
-}</code></pre>
           
         
       
@@ -3084,7 +2587,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/4/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/6/">&gt;</a>
   </nav>
 
 
@@ -3134,7 +2637,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">68</span>
+                  <span class="site-state-item-count">82</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3145,7 +2648,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -3255,7 +2758,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">81.1k</span>
+    <span title="Site words total count">105.4k</span>
   
 </div>
 
@@ -3282,7 +2785,7 @@ final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共81.1k字</span>
+  <span class="post-count">博客全站共105.4k字</span>
 </div>
 
         

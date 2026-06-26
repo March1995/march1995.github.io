@@ -299,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/08/08/java/javase/exception/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/java-design/structure/adapter/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -318,7 +318,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/08/java/javase/exception/" itemprop="url">java异常体系结构</a></h1>
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/adapter/" itemprop="url">Java设计模式：适配器</a></h1>
         
 
         <div class="post-meta">
@@ -330,8 +330,235 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-08T00:00:00+00:00">
-                2018-08-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
+                2019-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  362 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>适配器就是一种适配中间件，它存在于不匹配的二者之间，用于连接二者，将不匹配变得匹配，简单点理解就是平常所见的转接头，转换器之类的存在。</p>
+<p>把一个类接口转换成另一个用户需要的接口。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
+<li>通过组合的方式。</li>
+<li>通过继承来实现适配器功能。</li>
+</ul>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义一个鸭接口 方法为鸭子叫</p>
+<pre><code>public interface Duck {
+
+    void quack();</code></pre><p>   定义一个火鸡接口 方法为鸡叫</p>
+<pre><code>public interface Turkey {
+
+   void gobble();    </code></pre><p>   鸭子实现类</p>
+<pre><code>public class WildDuck implements Duck {
+
+    @Override
+    public void quack() {
+        System.out.println(&quot;鸭子叫&quot;);
+    }
+}    </code></pre><p>   火鸡实现类</p>
+<pre><code>public class WildTurkey implements Turkey {
+
+    @Override
+    public void gobble() {
+        System.out.println(&quot;火鸡叫&quot;);
+    }
+} </code></pre><p>   现在鸭子只能发出鸭子叫，鸡只能发出鸡叫，我们想要鸭子发出鸡的叫声。添加鸭子适配器。</p>
+<pre><code>public class DuckAdapter implements Turkey {
+
+   Duck duck;
+
+   public DuckAdapter(Duck duck) {
+       this.duck = duck;
+   }
+
+   @Override
+   public void gobble() {
+       duck.quack();
+   }
+}</code></pre><p>   组合方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
+<pre><code>public class DuckAdapter extends Turkey WildTurkey implements Turkey {
+
+      @Override
+      public void gobble() {
+          gobble.quack();
+      }
+   }</code></pre><p>   继承方式，适配器构造器需要一个鸭子对象，适配器实现了火鸡的接口，通过调用鸭子对象的方法，实现了鸭子发生了鸡叫。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/javase/hashMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/08/java/javase/hashMap/" itemprop="url">JDK1.8 HashMap源码分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
+                2019-01-08
               </time>
             
 
@@ -384,7 +611,540 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  509 字
+                  3.3k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  14 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://blog.csdn.net/qq_36520235/article/details/82417949" target="_blank" rel="noopener">Hashmap的结构，1.7和1.8有哪些区别，史上最深入的分析</a><br><a href="https://www.cnblogs.com/Hangtutu/p/9251999.html" target="_blank" rel="noopener">jdk1.7死环</a><br><a href="https://juejin.im/post/5a66a08d5188253dc3321da0" target="_blank" rel="noopener">jdk1.7线程不安全</a><br><a href="https://blog.csdn.net/u013494765/article/details/77837338" target="_blank" rel="noopener">jdk1.8扩容核心-链表复制处理</a><br><a href="https://mp.weixin.qq.com/s/NvmqdPOyWQdeHG2s-xSbHg" target="_blank" rel="noopener">HashMap1.8面试连问</a><br><a href="https://blog.csdn.net/weixin_42340670/article/details/80503517?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3" target="_blank" rel="noopener">HashMap1.8源码解析：resize方法（有问题）</a></p>
+<h1 id="继承关系"><a href="#继承关系" class="headerlink" title="继承关系"></a>继承关系</h1><p><img src="/uploads/java/javase/hashMap.png" alt="hashMap继承关系"></p>
+<h1 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h1><pre><code>// Hash表结构
+transient Node&lt;K,V&gt;[] table;
+
+// 保证 fail-fast机制
+transient int modCount;
+
+// 下一次扩容时的阈值 (capacity * load factor).
+int threshold;
+
+// 负载因子，决定hash表的数据填充程度，此值越大说明hash表填充的越满，空间利用率高，但是增加了查询开销，此值若太小，hash表空间利用率不高且rehash更加频繁
+final float loadFactor;    
+
+// 默认初始容量,必须是2的次方
+static final int DEFAULT_INITIAL_CAPACITY = 1 &lt;&lt; 4; // aka 16
+
+// 最大容量，2的30次方，因为int类型32位，去掉一位符号位，只能左移30位
+static final int MAXIMUM_CAPACITY = 1 &lt;&lt; 30;
+
+// 默认负载因子
+static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
+// jdk1.8增加 链表转红黑树的阈值
+static final int TREEIFY_THRESHOLD = 8;
+
+// jdk1.8增加 红黑树转链表的阈值
+static final int UNTREEIFY_THRESHOLD = 6;</code></pre><h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><p>HashMap一共有4个构造方法，主要的工作就是完成容量和加载因子的赋值。Hash表都是采用的<strong>懒加载</strong>方式，当第一次插入数据时才会创建。</p>
+<pre><code>// 指定默认容量和负载因子   
+public HashMap(int initialCapacity, float loadFactor) {
+        if (initialCapacity &lt; 0)
+            throw new IllegalArgumentException(&quot;Illegal initial capacity: &quot; +
+                                               initialCapacity);
+        if (initialCapacity &gt; MAXIMUM_CAPACITY)
+            initialCapacity = MAXIMUM_CAPACITY;
+        if (loadFactor &lt;= 0 || Float.isNaN(loadFactor))
+            throw new IllegalArgumentException(&quot;Illegal load factor: &quot; +
+                                               loadFactor);
+        this.loadFactor = loadFactor;
+        // 找到大于等于initialCapacity的最小的2的幂  若传入6 threshold=8
+        this.threshold = tableSizeFor(initialCapacity);
+}
+
+// 使用默认负载因子
+public HashMap(int initialCapacity) {
+        this(initialCapacity, DEFAULT_LOAD_FACTOR);
+}
+
+// 参数全部都是默认值
+public HashMap() {
+       this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
+}
+
+// 构造一个新的 HashMap与指定的相同的映射 Map 。 
+public HashMap(Map&lt;? extends K, ? extends V&gt; m) {
+        this.loadFactor = DEFAULT_LOAD_FACTOR;
+        putMapEntries(m, false);
+}</code></pre><h1 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h1><h2 id="添加一个元素put-K-k-V-v"><a href="#添加一个元素put-K-k-V-v" class="headerlink" title="添加一个元素put(K k,V v)"></a>添加一个元素put(K k,V v)</h2><p>HashMap允许K和V都为null，添加一个键值对时使用put方法，如果之前已经存在K的键值，那么旧值将会被新值替换。</p>
+<pre><code>// return 前一个值与key相关联 ，或null如果没有key的映射。 （A null返回也可以指示以前关联的地图null与key。 
+public V put(K key, V value) {
+        return putVal(hash(key), key, value, false, true);
+}
+
+//先来看看hash方法，采用了Object的hash算法返回的是对象的内存地址,每个对象在内存中地址不一样，所以他们的hash值也不一样，不同的算法hashCode不同。
+// 这里使用右移操作是为了让高位也参与运算提高散射率。低16位与高16位异或作为key的最终hash值。
+// （h &gt;&gt;&gt; 16，表示无符号右移16位，高位补0，任何数跟0异或都是其本身，因此key的hash值高16位不变。） 
+// 为什么要这么干呢？ 这个与HashMap中table下标的计算有关。n = table.length; index = （n-1） &amp; hash;因为，table的长度都是2的幂，因此index仅与hash值的低n位有关，hash值的高位都被与操作置为0了。 
+// key为null 默认为0即数组第一个
+static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
+}
+
+/**
+ * @param hash key的Hash值 经过高位与地位的异或运算
+ * @param key 
+ * @param value 
+ * @param onlyIfAbsent 如果是，则不要更改现有值
+ * @param evict 如果为false，则表处于创建模式。
+ * @return 返回旧值或者null值。
+ */        
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                   boolean evict) {
+        Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
+        // 如果哈希表的长度为空 调用resize()扩容方法 n为表长度
+        if ((tab = table) == null || (n = tab.length) == 0)
+            n = (tab = resize()).length;
+        // 如果当前数组下标为null值， (i = (n - 1) &amp; hash]即计算数组下标)，数组当前下标新建一个节点，即为头结点
+        if ((p = tab[i = (n - 1) &amp; hash]) == null)
+            tab[i] = newNode(hash, key, value, null);
+        // 数组上该位置有值,桶处有节点，发生hash冲突
+        else {
+            Node&lt;K,V&gt; e; K k;
+            // 如果头结点的值与添加的值一致，hash冲突后，key的值也一致，进行替换。将e指向p
+            if (p.hash == hash &amp;&amp;
+                ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
+                e = p;
+            // 如果与头节点不同，并且该桶目前已经是红黑树状态，调用putTreeVal()方法 
+            else if (p instanceof TreeNode)
+                e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
+            // 如果与头节点不同,桶中仍是链表阶段
+            else {
+                // 循环遍历链表
+                for (int binCount = 0; ; ++binCount) {
+                // 讲e指向下一个节点，如果是null，说明该桶中只有头节点，直接添加到链表尾部即可
+                    if ((e = p.next) == null) {
+                        p.next = newNode(hash, key, value, null);
+                        // 如果此时链表个数达到了8，那么需要将该桶处链表转换成红黑树，treeifyBin()方法将hash处的桶转成红黑树
+                        if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                            treeifyBin(tab, hash);
+                        break;
+                    }
+                    //如果与已有节点相同，跳出循环
+                    if (e.hash == hash &amp;&amp;
+                        ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
+                        break;
+                    p = e;
+                }
+            }
+            // 存在重复key进行覆盖
+            if (e != null) { // existing mapping for key
+                V oldValue = e.value;
+                if (!onlyIfAbsent || oldValue == null)
+                    e.value = value;
+                // 子类实现 linkHashMap 
+                afterNodeAccess(e);
+                return oldValue;
+            }
+        }
+        //是一个全新节点，那么size需要+1
+        ++modCount;
+        // 如果大小朝阳了阈值，需要扩容
+        if (++size &gt; threshold)
+            resize();
+        //子类实现    
+        afterNodeInsertion(evict);
+        return null;
+}</code></pre><p>putVal()方法的流程：</p>
+<ul>
+<li>1.若hash表为空，调用resize方法创建。</li>
+<li>2.若桶的头结点为空，创建新结点放在数组中作为链表的头结点。</li>
+<li>3.若头节点不为空，即发生hash冲突，取出头结点与当前值判断，若重复直接覆盖；</li>
+<li>4.若不重复且当前处于红黑树状态，调用putTreeVal()方法；若不重复且当前处于链表阶段，遍历链表直到找到重复节点或者链表尾部，把该节点插入尾部；存在重复key就跳出循环。</li>
+<li>5.存在重复key，进行value替换。</li>
+<li>6.扩容验证。</li>
+</ul>
+<h2 id="resize-方法"><a href="#resize-方法" class="headerlink" title="resize()方法"></a>resize()方法</h2><p>resize()在哈希表为null时将会初始化，但是在已经初始化后就会进行容量扩展</p>
+<pre><code>final Node&lt;K,V&gt;[] resize() {
+        Node&lt;K,V&gt;[] oldTab = table;
+        int oldCap = (oldTab == null) ? 0 : oldTab.length;// 旧表容量
+        int oldThr = threshold;// 旧表的扩容阈值
+        int newCap, newThr = 0;
+        // 旧表存在
+        if (oldCap &gt; 0) {
+            // 容量已达上限 
+            if (oldCap &gt;= MAXIMUM_CAPACITY) {
+                threshold = Integer.MAX_VALUE;
+                return oldTab;
+            }
+            // 否则新容量与新阈值都扩大2倍
+            else if ((newCap = oldCap &lt;&lt; 1) &lt; MAXIMUM_CAPACITY &amp;&amp;
+                     oldCap &gt;= DEFAULT_INITIAL_CAPACITY)
+                newThr = oldThr &lt;&lt; 1; // double threshold
+        }
+        / /如果就阈值&gt;0，说明构造方法中指定了容量
+        else if (oldThr &gt; 0) // initial capacity was placed in threshold
+            newCap = oldThr;
+        // 初始化时没有指定阈值和容量，使用默认的容量16和阈值16*0.75=12    
+        else {               // zero initial threshold signifies using defaults
+            newCap = DEFAULT_INITIAL_CAPACITY;
+            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+        }
+        //如果新的阈值为 0 ，就得用 新容量*加载因子 重计算一次
+        if (newThr == 0) {
+            float ft = (float)newCap * loadFactor;
+            newThr = (newCap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; (float)MAXIMUM_CAPACITY ?
+                      (int)ft : Integer.MAX_VALUE);
+        }
+        threshold = newThr;
+        //常见扩容后的hash表
+        @SuppressWarnings({&quot;rawtypes&quot;,&quot;unchecked&quot;})
+            Node&lt;K,V&gt;[] newTab = (Node&lt;K,V&gt;[])new Node[newCap];
+        table = newTab;
+        // 属于扩容
+        if (oldTab != null) {
+            //遍历旧表 
+            for (int j = 0; j &lt; oldCap; ++j) {
+                Node&lt;K,V&gt; e;
+                // 当前位置有值
+                if ((e = oldTab[j]) != null) {
+                    oldTab[j] = null;
+                    //如果只有一个节点，直接在新表中赋值
+                    if (e.next == null)
+                        newTab[e.hash &amp; (newCap - 1)] = e;
+                    else if (e instanceof TreeNode)
+                        //如果旧哈希表中这个位置的桶是树形结构，就要把新哈希表里当前桶也变成树形结构
+                        ((TreeNode&lt;K,V&gt;)e).split(this, newTab, j, oldCap);
+                    else { // preserve order 保留旧哈希表桶中链表的顺序
+                        // 通过e.hash &amp; oldCap将链表分为两队，参考知乎上的一段解释 
+                        /** 
+                        * 把链表上的键值对按hash值分成lo和hi两串，lo串的新索引位置与原先相同[原先位j]，hi串的新索引位置为[原先位置j+oldCap]； 
+                        * 链表的键值对加入lo还是hi串取决于 判断条件if ((e.hash &amp; oldCap) == 0)，因为* capacity是2的幂，所以oldCap为10...0的二进制形式，若判断条件为真，意味着 
+                        * oldCap为1的那位对应的hash位为0，对新索引的计算没有影响（新索引 
+                        * =hash&amp;(newCap-*1)，newCap=oldCap&lt;&lt;2）；若判断条件为假，则 oldCap为1的那位* 对应的hash位为1， 
+                        * 即新索引=hash&amp;( newCap-1 )= hash&amp;( (oldCap&lt;&lt;2) - 1)，相当于多了10...0， 
+                        * 即 oldCap 
+                        * 例子： 
+                        * 旧容量=16，二进制10000；新容量=32，二进制100000 
+                        * 旧索引的计算： 
+                        * hash = xxxx xxxx xxxy xxxx 
+                        * 旧容量-1 1111 
+                        * &amp;运算 xxxx 
+                        * 新索引的计算： 
+                        * hash = xxxx xxxx xxxy xxxx 
+                        * 新容量-1 1 1111 
+                        * &amp;运算 y xxxx 
+                        * 新索引 = 旧索引 + y0000，若判断条件为真，则y=0(lo串索引不变)，否则y=1(hi串 
+                        * 索引=旧索引+旧容量10000) 
+                           */  
+                        Node&lt;K,V&gt; loHead = null, loTail = null;
+                        Node&lt;K,V&gt; hiHead = null, hiTail = null;
+                        Node&lt;K,V&gt; next;
+                        do {
+                            next = e.next;
+                            // 双链表 尾插法 
+                            if ((e.hash &amp; oldCap) == 0) {
+                                if (loTail == null)
+                                    loHead = e;
+                                else
+                                    loTail.next = e;
+                                loTail = e;
+                            }
+                            else {
+                                if (hiTail == null)
+                                    hiHead = e;
+                                else
+                                    hiTail.next = e;
+                                hiTail = e;
+                            }
+                        } while ((e = next) != null);
+                        if (loTail != null) {
+                            loTail.next = null;
+                            newTab[j] = loHead;
+                        }
+                        if (hiTail != null) {
+                            hiTail.next = null;
+                            newTab[j + oldCap] = hiHead;
+                        }
+                    }
+                }
+            }
+        }
+        return newTab;
+}</code></pre><p>resize()首先获取新容量以及新阈值，然后根据新容量创建新表。如果是扩容操作，则需要进行rehash操作，通过e.hash&amp;oldCap将链表分为两列，更好地均匀分布在新表中。     </p>
+<h2 id="get-K-k-操作"><a href="#get-K-k-操作" class="headerlink" title="get(K k)操作"></a>get(K k)操作</h2><p>get(K k)根据键得到值，如果值不存在，那么返回null</p>
+<pre><code>public V get(Object key) {
+        Node&lt;K,V&gt; e;
+        return (e = getNode(hash(key), key)) == null ? null : e.value;
+    }
+
+final Node&lt;K,V&gt; getNode(int hash, Object key) {
+    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; first, e; int n; K k;
+    // hash表不为空且第一个节点存在
+    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;
+        (first = tab[(n - 1) &amp; hash]) != null) {
+        // 第一个节点即为要查询的节点
+        if (first.hash == hash &amp;&amp; // always check first node
+            ((k = first.key) == key || (key != null &amp;&amp; key.equals(k))))
+            return first;
+        // 链表不止一个头节点    
+        if ((e = first.next) != null) {
+            // 首节点是红黑树节点，调用getTreeNode方法
+            if (first instanceof TreeNode)
+                return ((TreeNode&lt;K,V&gt;)first).getTreeNode(hash, key);
+            // 首节点是链表,循环遍历链表
+            do {
+                // 匹配就返回
+                if (e.hash == hash &amp;&amp;
+                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
+                    return e;
+            } while ((e = e.next) != null);
+        }
+    }
+    return null;
+}  </code></pre><p>getNode()过程：</p>
+<ul>
+<li>1.如果hash表为空或者长度为0或找不到hash值对应的数组位置，返回null</li>
+<li>2.如果头节点匹配，返回头结点。</li>
+<li>3.如果头结点不匹配且没有后续节点，返回null</li>
+<li>4.如果头结点不匹配且头结点是红黑树类型，调用getTreeNode方法寻找节点</li>
+<li>5.如果头结点不匹配且头结点是链表结构，从前往后遍历，找到相应的节点就返回</li>
+</ul>
+<h2 id="remove-操作"><a href="#remove-操作" class="headerlink" title="remove()操作"></a>remove()操作</h2><p>remove(K k)用于根据键值删除键值对，如果哈希表中存在该键，那么返回键对应的值，否则返回null。  </p>
+<pre><code>public V remove(Object key) {
+    Node&lt;K,V&gt; e;
+    return (e = removeNode(hash(key), key, null, false, true)) == null ?
+        null : e.value;
+}
+
+final Node&lt;K,V&gt; removeNode(int hash, Object key, Object value,
+                           boolean matchValue, boolean movable) {
+    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, index;
+    // 当前hash表存在且长度大于0且数组中存在头结点
+    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;
+        (p = tab[index = (n - 1) &amp; hash]) != null) {
+        Node&lt;K,V&gt; node = null, e; K k; V v;
+        // 头节点即为key所对应的节点，node即为头节点
+        if (p.hash == hash &amp;&amp;
+            ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
+            node = p;
+        // 头结点有下一个节点    
+        else if ((e = p.next) != null) {
+            // 首节点是红黑树节点，调用getTreeNode方法
+            if (p instanceof TreeNode)
+                node = ((TreeNode&lt;K,V&gt;)p).getTreeNode(hash, key);
+            else {
+                // 首节点是链表,遍历链表
+                do {
+                    if (e.hash == hash &amp;&amp;
+                        ((k = e.key) == key ||
+                         (key != null &amp;&amp; key.equals(k)))) {
+                        node = e;
+                        break;
+                    }
+                    p = e;
+                } while ((e = e.next) != null);
+            }
+        }
+        //如果存在待删除节点节点
+        if (node != null &amp;&amp; (!matchValue || (v = node.value) == value ||
+                             (value != null &amp;&amp; value.equals(v)))) {
+            //如果节点是TreeNode，使用红黑树的方法                 
+            if (node instanceof TreeNode)
+                ((TreeNode&lt;K,V&gt;)node).removeTreeNode(this, tab, movable);
+            //如果待删除节点是头节点，更改桶中的头节点即可    
+            else if (node == p)
+                tab[index] = node.next;
+            //在链表遍历过程中，p代表node节点的前驱节点    
+            else
+                p.next = node.next;
+            ++modCount;
+            --size;
+            afterNodeRemoval(node);
+            return node;
+        }
+    }
+    return null;
+}   </code></pre><p>总体来说，removeNode（）先查出待删除的节点，查找过程与查询过程类型，只不过多了在遍历链表时还需要保存前驱节点，因为后面删除时要用到（单链表结构）。存在待删除节点，接下来再执行删除操作.</p>
+<ul>
+<li>1.如果待删除节点是TreeNode，那么调用removeTreeNode()方法 </li>
+<li>2.如果待删除节点是Node，并且待删除节点就是头节点，那么将头节点更改为原有节点的下一个节点就可以了 </li>
+<li>3.如果待删除节点是Node且待删除节点不是头节点，那么将遍历过程中保存的前驱节点p的后继节点设为node的后继节点就可以了</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/java-design/structure/bridge/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/bridge/" itemprop="url">Java设计模式：桥接器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
+                2019-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  427 字
                 </span>
               
 
@@ -423,32 +1183,81 @@
       
         
           
-            <h1 id="java异常体系结构图"><a href="#java异常体系结构图" class="headerlink" title="java异常体系结构图"></a>java异常体系结构图</h1><p><img src="/uploads/java/javase/%E5%BC%82%E5%B8%B8%E7%BB%93%E6%9E%84%E4%BD%93%E7%B3%BB.png" alt="java异常体系结构"></p>
-<p>从图中可以发现（列出要点，简要说明）：</p>
-<ul>
-<li>所以异常类的父类为Throwable类（表示可抛出），直接继承为Error和Exception两个子类，Error也是异常的一种。</li>
-<li>Error是程序无法处理的错误，它是由JVM产生和抛出的，比如OutOfMemoryError、ThreadDeath等。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。Exception是程序本身可以处理的异常，这种异常分两大类运行时异常和非运行时异常。程序中应当尽可能去处理这些异常。</li>
-<li>RuntimeException（也称不检查异常）：即可以编译通过，一般由程序的逻辑错误引起，开发过程中应尽量避免。例如：NullPointerException，IndexOutOfBoundsException等。<strong>自定义异常一般继承此类</strong>。</li>
-<li>RuntimeException以外的异常（IOException）：编译器在编译阶段进行处理，程序必须处理此类异常否则无法通过编译。</li>
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>将抽象与实现分离开来，使它们可以独立变化。</p>
+<p>抽象与实现解耦，例如一个生产线的机器，将参数设定与具体生产的过程实现分离开，使整个生产线更加灵活，用一套参数也可以使用不同的工作模式。</p>
+<p>其中参数设定与生产过程属于两种不同的维度，桥接模式所做的事情就是将不同的维度联结在一起！</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><ul>
+<li>在一个类中通过组合另一个对象，调用时只需在当前类调用对象方法即可，实现解耦。</li>
 </ul>
-<h1 id="try-catch-finally-return"><a href="#try-catch-finally-return" class="headerlink" title="try-catch-finally-return"></a>try-catch-finally-return</h1><p>具体例子见(个人demo):</p>
-<blockquote>
-<p><a href="https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java" target="_blank" rel="noopener">https://github.com/march1995/spring-example/blob/master/spring-example-test/src/main/java/com/wyb/test/java/exception/ReturnFinallyTest.java</a></p>
-</blockquote>
-<h1 id="自定义全局异常处理（配套源码）"><a href="#自定义全局异常处理（配套源码）" class="headerlink" title="自定义全局异常处理（配套源码）"></a>自定义全局异常处理（配套源码）</h1><blockquote>
-<p><a href="https://github.com/march1995/spring-example/tree/master/spring-example-exception" target="_blank" rel="noopener">https://github.com/march1995/spring-example/tree/master/spring-example-exception</a></p>
-</blockquote>
-<h1 id="常见的异常打印信息"><a href="#常见的异常打印信息" class="headerlink" title="常见的异常打印信息"></a>常见的异常打印信息</h1><ul>
-<li>getMessage(): 返回此throwable的详细消息字符串，只会获得具体的异常名称，比如说NullPoint 空指针,就告诉你说是空指针。</li>
-<li>printStackTrace():提供对打印的堆栈跟踪信息的编程访问,会打出详细异常,异常名称,出错位置,便于调试用。</li>
-<li>toString():返回此throwable的简短描述。</li>
-</ul>
-<h2 id="注意要点："><a href="#注意要点：" class="headerlink" title="注意要点："></a>注意要点：</h2><ul>
-<li>多个catch模块，子类在先，为了保证所有的catch都有存在的意义</li>
-<li>finally模块在try-catch的return或者异常处理之前执行</li>
-<li>在以下4种特殊情况下，finally块不会被执行：<br>1）在finally语句块中抛出了异常且未处理。<br>2）在前面的代码中用了System.exit()退出程序。<br>3）程序所在的线程死亡。<br>4）CPU出现异常被关闭。</li>
-</ul>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>   定义电视机抽象类,拥有3个方法。</p>
+<pre><code>public abstract class Tv {
 
+    public abstract void on();
+
+    public abstract void off();
+
+    public abstract void tuneTunnel();</code></pre><p>   定义一个电视机的实现类，Sony电视机。</p>
+<pre><code>public class SonyTv extends Tv {
+
+    @Override
+    public void on() {
+        System.out.println(&quot;SonyTv,on&quot;);
+    }
+
+    @Override
+    public void off() {
+        System.out.println(&quot;SonyTv,off&quot;);
+    }
+
+    @Override
+    public void tuneTunnel() {
+        System.out.println(&quot;SonyTv,tuneTunnel&quot;);
+    }</code></pre><p>   定义一个遥控器抽象类。组合了一个电视机对象。</p>
+<pre><code>protected Tv tv;
+
+    public RemoteControl(Tv tv) {
+        this.tv = tv;
+    }
+
+    public abstract void on();
+
+    public abstract void off();
+
+    public abstract void tuneTunnel();   </code></pre><p>   定义一个遥控器的实现类，Sony电视机遥控器。</p>
+<pre><code>public class SonyRemoteControl extends RemoteControl {
+
+    public SonyRemoteControl(Tv tv) {
+        super(tv);
+    }
+
+    @Override
+    public void on() {
+        System.out.println(&quot;sonyRemoteControl,on&quot;);
+        tv.on();
+    }
+
+    @Override
+    public void off() {
+        System.out.println(&quot;sonyRemoteControl,off&quot;);
+        tv.off();
+    }
+
+    @Override
+    public void tuneTunnel() {
+        System.out.println(&quot;sonyRemoteControl,tuneTunnel&quot;);
+        tv.off();
+    }
+} </code></pre><p>   在生成sony电视机遥控器时，传入一个sony电视机对象，即可使用该遥控器实现该电视机的状态变换。</p>
+<pre><code>public class Client {
+
+   public static void main(String[] args) {
+       Tv sonyTv = new SonyTv();
+       SonyRemoteControl sonyRemoteControl = new SonyRemoteControl(sonyTv);
+       sonyRemoteControl.on();
+       sonyRemoteControl.off();
+       sonyRemoteControl.tuneTunnel();
+   }
+}</code></pre>
           
         
       
@@ -504,7 +1313,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/05/17/java/javase/dataType/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/08/java/java-design/structure/decorator/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -523,7 +1332,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/17/java/javase/dataType/" itemprop="url">java数据类型</a></h1>
+                <a class="post-title-link" href="/2019/01/08/java/java-design/structure/decorator/" itemprop="url">Java设计模式：装饰者</a></h1>
         
 
         <div class="post-meta">
@@ -535,8 +1344,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-17T00:00:00+00:00">
-                2018-05-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-08T00:00:00+00:00">
+                2019-01-08
               </time>
             
 
@@ -558,8 +1367,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaSE</span>
+                  <a href="/categories/java-design-patterns/" itemprop="url" rel="index">
+                    <span itemprop="name">java-design-patterns</span>
                   </a>
                 </span>
 
@@ -589,7 +1398,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.7k 字
+                  578 字
                 </span>
               
 
@@ -605,7 +1414,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  6 分钟
+                  2 分钟
                 </span>
               
             </div>
@@ -628,80 +1437,63 @@
       
         
           
-            <h1 id="1-Java-八大基本数据类型及其封装器类（位数为二进制位）"><a href="#1-Java-八大基本数据类型及其封装器类（位数为二进制位）" class="headerlink" title="1.Java 八大基本数据类型及其封装器类（位数为二进制位）"></a>1.Java 八大基本数据类型及其封装器类（位数为二进制位）</h1><h2 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h2><p>char：默认值：\u0000，16位，数据范围：\u0000 - u\ffff，存储Unicode码，用单引号赋值。封装类：Character</p>
-<h2 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h2><p>boolean：默认值：false，1位，只有true和false两个取值。封装类：Boolean</p>
-<h2 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h2><p>整数类型：(最大存储容量为2的n次方减一，范围为负数2的n减一次方至2的n减一次方减一，n为位数，原理见计算机组成原理无符号数与有符号数)</p>
-<p>byte：默认值：0，8位，字节，最大存储数据量是255，存放的数据范围是-128~127之间。封装类：Byte</p>
-<p>short：默认值：0，16位，最大数据存储量是65536，数据范围是-32768~32767之间。封装类：Short</p>
-<p>int：默认值：0，32位，最大数据存储容量是2的32次方减1，数据范围是负的2的31次方到正的2的31次方减1。封装类：Integer</p>
-<p>long：默认值：0，64位，最大数据存储容量是2的64次方减1，数据范围为负的2的63次方到正的2的63次方减1。封装类：Long</p>
-<p>浮点数类型：</p>
-<p>float：默认值：0.0f，32位，数据范围在3.4e-45~1.4e38，直接赋值时必须在数字后加上f或F。封装类：Float</p>
-<p>double：默认值：0.0d，64位，数据范围在4.9e-324~1.8e308，赋值时可以加d或D也可以不加。封装类：Double</p>
-<p>对于数值类型的基本类型的取值范围，我们无需强制去记忆，因为它们的值都已经以常量的形式定义在对应的包装类中了。如：</p>
-<p>基本类型byte 二进制位数：Byte.SIZE最小值：Byte.MIN_VALUE最大值：Byte.MAX_VALUE</p>
-<p>基本类型short二进制位数：Short.SIZE最小值：Short.MIN_VALUE最大值：Short.MAX_VALUE</p>
-<p>基本类型char二进制位数：Character.SIZE最小值：Character.MIN_VALUE最大值：Character.MAX_VALUE</p>
-<p>基本类型double 二进制位数：Double.SIZE最小值：Double.MIN_VALUE最大值：Double.MAX_VALUE</p>
-<blockquote>
-<p>注意：float、double两种类型的最小值与Float.MIN_VALUE、 Double.MIN_VALUE的值并不相同，实际上Float.MIN_VALUE和Double.MIN_VALUE分别指的是 float和double类型所能表示的最小正数。也就是说存在这样一种情况，0到±Float.MIN_VALUE之间的值float类型无法表示，0 到±Double.MIN_VALUE之间的值double类型无法表示。这并没有什么好奇怪的，因为这些范围内的数值超出了它们的精度范围。</p>
-</blockquote>
-<h1 id="2-数据类型之间的转换："><a href="#2-数据类型之间的转换：" class="headerlink" title="2.数据类型之间的转换："></a>2.数据类型之间的转换：</h1><h2 id="简单类型数据间的转换"><a href="#简单类型数据间的转换" class="headerlink" title="简单类型数据间的转换"></a>简单类型数据间的转换</h2><p>自动转换：运算或者方法调用时，低精度自动转化为高精度，从低到高顺序：(byte，short，char)–int–long–float—double；<br>        特例：int到float，long到float，long到double 是不会自动转换的，不然将会丢失精度。</p>
-<p>强制转换：高精度转为低精度，可以使用强制转换；即你必须采用下面这种语句格式： int n=(int)3.14159/2;可以想象，这种转换肯定可能会导致溢出或精度的下降。</p>
-<h2 id="表达式的数据类型自动提升"><a href="#表达式的数据类型自动提升" class="headerlink" title="表达式的数据类型自动提升"></a>表达式的数据类型自动提升</h2><p>注意一下规则：</p>
-<pre><code>①所有的byte,short,char型的值将被提升为int型；
-②如果有一个操作数是long型，计算结果是long型；
-③如果有一个操作数是float型，计算结果是float型；
-④如果有一个操作数是double型，计算结果是double型；
-例， byte b; b=3; b=(byte)(b*3);//必须声明byte。 </code></pre><h2 id="包装类过渡类型转换"><a href="#包装类过渡类型转换" class="headerlink" title="包装类过渡类型转换"></a>包装类过渡类型转换</h2><ul>
-<li>简单类型的变量转换为相应的包装类，可以利用包装类的构造函数。即：Boolean(boolean value)、Character(char value)、Integer(int value)、Long(long value)、Float(float value)、Double(double value)</li>
-<li>在各个包装类中，总有形为××Value()的方法，来得到其对应的简单类型数据。利用这种方法，也可以实现不同数值型变量间的转换，例如，对于一个双精度实型类，intValue()可以得到其对应的整型变量，而doubleValue()可以得到其对应的双精度实型变量</li>
-</ul>
-<h2 id="字符串与其它类型间的转换"><a href="#字符串与其它类型间的转换" class="headerlink" title="字符串与其它类型间的转换"></a>字符串与其它类型间的转换</h2><p>其它类型向字符串的转换：</p>
-<pre><code>①调用类的串转换方法:X.toString();
-②自动转换:X+&quot;&quot;;
-③使用String的方法:String.valueOf(X);</code></pre><p>字符串作为值,向其它类型的转换：</p>
-<pre><code>①先转换成相应的封装器实例,再调用对应的方法转换成其它类型。例：new Float(&quot;11&quot;).doubleValue()
-②静态parseXXX方法。
-    String s = &quot;1&quot;;
-    byte b = Byte.parseByte( s );
-    short t = Short.parseShort( s );
-    int i = Integer.parseInt( s );
-    long l = Long.parseLong( s );
-    Float f = Float.parseFloat( s );
-    Double d = Double.parseDouble( s );
-③Character的getNumericValue(char ch)方法</code></pre><h2 id="自动拆箱与自动装箱"><a href="#自动拆箱与自动装箱" class="headerlink" title="自动拆箱与自动装箱"></a><strong>自动拆箱与自动装箱</strong></h2><p>自动装箱：把基本类型用它们对应的包装类包装起来，使它们具有对象的特质，可以调用所对应的包装类所定义的方法，比如toString()等。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Integer i0 &#x3D; new Integer(0);&#x2F;&#x2F;基本的创建封装类对象</span><br><span class="line">Integer i1 &#x3D; 2;&#x2F;&#x2F;自动装箱</span><br><span class="line">Integer i1_ &#x3D; Integer.valueOf(2);&#x2F;&#x2F;自动装箱的本质，调用XX.valueof()方法</span><br><span class="line">&#96;&#96;&#96;    </span><br><span class="line"></span><br><span class="line">自动拆箱：跟自动装箱的方向相反，将Integer及Double这样的包装类的对象重新简化为基本类型的数据(自动拆箱时，一定要确保包装类的引用不为空)</span><br></pre></td></tr></table></figure>
-<p>System.out.println(i1+2);<br>//i1是我们上面通过自动装箱得到的一个integer对象，而这个对象是不能直接进行四则运算的，但是我们却给它+2，<br>这样就必须将integer对象转变为基本数据类型（int），这个过程就是自动拆箱的过程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">jdk装箱池（方法区中的常量池）：java的八种基本类型（Byte Short、Integer、Long、Character、Boolean、Float、Double），除Float及Double意外，其它六种都实现了常量池，但是他们只在大于等于-128且小于等于127时才能使用常量池，如果不在此范围内，则会new一个出来，保存在堆内存中。</span><br><span class="line"></span><br><span class="line">例子：</span><br></pre></td></tr></table></figure>
-<pre><code>Integer a = 1;
-Integer b = 1;
-Integer c = 144;
-Integer d = 144;
-Integer a1 = new Integer(1);
-Integer b1 = new Integer(1);
-System.out.println(a == b);         //true
-System.out.println(a.equals(b));    //true
-System.out.println(a1 == b1);       //false
-System.out.println(a1.equals(b1));  //true
-System.out.println(c == d);         //false
-System.out.println(c.equals(d));    //true</code></pre><pre><code>
-在进行==比较的时候，在自动装箱池范围内的数据的引用是相同的，范围外的是不同的。 
+            <h1 id="定义-目的"><a href="#定义-目的" class="headerlink" title="定义(目的)"></a>定义(目的)</h1><p>为对象动态添加功能。组合模式是部分和整理的关系，而装饰器模式只是额外增加某些功能。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>装饰者（Decorator）和具体组件（ConcreteComponent）都继承自组件（Component）,<strong>装饰者组合了一个组件</strong>，这样它可以装饰其它装饰者或者具体组件。</p>
+<p>就是把这个装饰者套在被装饰者之上，从而动态扩展被装饰者的功能。</p>
+<p>装饰者的方法有一部分是自己的，这属于它的功能，然后调用被装饰者的方法实现，从而也保留了被装饰者的功能。可以看到，具体组件应当是装饰层次的最低层，因为只有具体组件的方法实现不需要依赖于其它对象。</p>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><p>设计不同种类的饮料，饮料可以添加配料，比如可以添加牛奶，并且支持动态添加新配料。每增加一种配料，该饮料的价格就会增加，要求计算一种饮料的价格。</p>
+<p>下面实现在 DarkRoast 饮料上新增新添加 Mocha 配料，之后又添加了 Milk 配料。DarkRoast 被 Mocha 包裹，Mocha 又被 Milk 包裹。它们都继承自相同父类，都有 cost() 方法，外层类的 cost() 方法调用了内层类的 cost() 方法。</p>
+<p>   定义一个组件（Component）接口,这里为饮料。装饰者和具体组件都要实现它。</p>
+<pre><code>public interface Beverage {
 
-# 3.Java引用类型
-Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
-引申：Java中的堆内存、栈内存、静态存储区
-&gt; http://www.cnblogs.com/mingziday/p/4899212.html
+    public double cost();
+}</code></pre><p>   具体组件实现DarkRoast饮料</p>
+<pre><code>public class DarkRoast implements Beverage {
 
-栈（stack）存放基础数据类型以及对象的对象的引用
+   @Override
+   public double cost() {
+       return 1;
+   }
+}</code></pre><p>   定义一个装饰者抽象类，实现了饮料接口，拥有饮料的方法，并关联了饮料接口对象。</p>
+<pre><code>public abstract class CondimentDecorator implements Beverage {
 
-堆（heap）存放由new创建的对象和数组，即堆主要是用来存储对象的
+    protected Beverage beverage;
 
-方法区中的静态存储区存储static声明的静态变量
+    public CondimentDecorator(Beverage beverage) {
+        this.beverage = beverage;
+    }
+}</code></pre><p>   装饰者实现类Milk，继承了装饰者类</p>
+<pre><code>public class Milk extends CondimentDecorator {
 
-# 4.java字符编码
-&gt; http://kxjhlele.iteye.com/blog/333211
-</code></pre>
+    public Milk(Beverage beverage) {
+        super(beverage);
+    }
+
+    @Override
+    public double cost() {
+        return 1 + beverage.cost();
+    }
+}</code></pre><p>   装饰者实现类Mocha，继承了装饰者类</p>
+<pre><code>public class Mocha extends CondimentDecorator {
+
+    public Mocha(Beverage beverage) {
+        super(beverage);
+    }
+
+    @Override
+    public double cost() {
+        return 1 + beverage.cost();
+    }
+}</code></pre><p>   测试：当执行cost()方法时会一层一层从内往外调用。</p>
+<pre><code>public class Client {
+
+   public static void main(String[] args) {
+       Beverage beverage = new DarkRoast();// 一杯饮料
+       beverage = new Mocha(beverage);// 饮料里加mocha
+       beverage = new Milk(beverage);// 饮料里加牛奶
+       System.out.println(beverage.cost());//总价
+   }</code></pre><p>   }</p>
+
           
         
       
@@ -757,7 +1549,7 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/05/16/java/javase/javaKeyWord/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2019/01/04/datastructure/index/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -776,7 +1568,7 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/16/java/javase/javaKeyWord/" itemprop="url">java标识符与关键字</a></h1>
+                <a class="post-title-link" href="/2019/01/04/datastructure/index/" itemprop="url">数据结构概念</a></h1>
         
 
         <div class="post-meta">
@@ -788,8 +1580,8 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-16T00:00:00+00:00">
-                2018-05-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-04T00:00:00+00:00">
+                2019-01-04
               </time>
             
 
@@ -811,8 +1603,8 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaSE</span>
+                  <a href="/categories/datastructure/" itemprop="url" rel="index">
+                    <span itemprop="name">datastructure</span>
                   </a>
                 </span>
 
@@ -842,7 +1634,7 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  414 字
+                  1.4k 字
                 </span>
               
 
@@ -858,7 +1650,7 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1 分钟
+                  5 分钟
                 </span>
               
             </div>
@@ -881,261 +1673,51 @@ Java有 5种引用类型（对象类型）：类 接口 数组 枚举 标注
       
         
           
-            <h1 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h1><ul>
-<li><p>概念：就是用于给程序中的变量、类、方法命名的符号;</p>
-</li>
-<li><p>标识符规则：标识符可以有字母、数字、下划线_、和美元符号$组成，并且数字不能打头<br>   标识符不能使java关键字和保留字，但可以包含关键字和保留字<br>   标识符不能包含空格 标识符只能包含美元符号$，不能包含@、#等其他特殊字符</p>
-</li>
-<li><p>分隔符：分号; 花括号{} 方括号[] 括号() 空格 圆点.;</p>
-</li>
-</ul>
-<h1 id="Java关键字"><a href="#Java关键字" class="headerlink" title="Java关键字"></a>Java关键字</h1><p>java中包含50个关键，所有关键字都是小写的</p>
-<pre><code>关键字列表：
- abstract抽象的            assert 
- boolean                   break 
- byte                      case
- catch                     char
- const(保留字)             continue
-default                    do
- double                    else
- enum                      extends
- final                     finally
- float                     for
- if                        goto(保留字)
- implements                import
- int                       interface
- long                      native
- new                       package
- private                   protected
- public                    return 
- short                     static 
- strictfp                  super
- switch                    synchronized
- this                      throw
- throws                    transient
- try                       void 
- volatile                  while
-
- 三个特殊的直接量（iteral）;true false null 都不是关键字
-
-
- final、finally、finalize的区别:
- final:
- final修饰变量，则等同于常量,变量不能修改
- final修饰方法中的参数，称为最终参数，参数不能修改。
- final修饰类，则类不能被继承
- final修饰方法，则方法不能被重写。
- finally:
- try-catch模块中使用finally，表示finally块则是无论异常是否发生，都会执行finally块的内容
- finalize:
- 使用finalize在垃圾收集器确定这个对象未被引用时调用，表示在垃圾收集器将对象从内存中清除出去之前做一些清理工作。
- 子类可以覆盖该方法以实现资源清理工作，GC在回收对象之前调用该方法</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-<div>
-  
-</div>
-
-<div>
-      
-</div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2017/07/05/spring/springXMLSchema/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Marcher">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Marcher">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/05/spring/springXMLSchema/" itemprop="url">springXMLSchema</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-05T00:00:00+00:00">
-                2017-07-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  426 字
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1 分钟
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>出处 <a href="http://www.jianshu.com/p/1e35c15d0cb8" target="_blank" rel="noopener">http://www.jianshu.com/p/1e35c15d0cb8</a></p>
-</blockquote>
-<blockquote>
-<p>参考资料 <a href="http://www.w3school.com.cn/schema/index.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/schema/index.asp</a></p>
-</blockquote>
-<h1 id="自己理解整理："><a href="#自己理解整理：" class="headerlink" title="自己理解整理："></a>自己理解整理：</h1><ul>
-<li>基本概念：</li>
-</ul>
-<p>XML Schema也被称为XML Schema定义（XML Schema Definition，XSD）。和DTD一样，Schema也是XML的约束，同样用于定义合法的XML文档构建模块。与DTD不同的是，XML Schema是用一套预先定义好的XML元素和属性创建的，这些元素和属性规定了XML文档的结构和内容模式，且XML Schema规定XML文档实例的结构和每一个元素或属性的数据类型。另外，Schema相对于DTD有一个明显的好处就是，Schema是基于XML编写的，自己本身也是一个XML文档（文件后缀名为.xsd），而不是像DTD有自成一套的语法，这也是Schema能比DTD更被广泛应用的原因。</p>
+            <h1 id="数据结构算法学习（一）：数据结构与算法概念解析"><a href="#数据结构算法学习（一）：数据结构与算法概念解析" class="headerlink" title="数据结构算法学习（一）：数据结构与算法概念解析"></a>数据结构算法学习（一）：数据结构与算法概念解析</h1><h2 id="什么是数据结构"><a href="#什么是数据结构" class="headerlink" title="什么是数据结构"></a>什么是数据结构</h2><p>数据（data）：符号集合，处理对象。</p>
+<p>数据元素（data element），由数据项（data item） 组成。</p>
+<p>关键字（key）识别元素，主关键字（primary key） 唯一识别元素。</p>
+<p>数据结构（data structure）指数据元素之间存在的关系。包含以下三方面：</p>
 <ul>
-<li>名称空间：</li>
+<li>数据的逻辑结构</li>
+<li>数据的存储结构</li>
+<li>数据操作</li>
 </ul>
-<p>在编写了一个XML Schema约束文档后，通常需要把这个文档定义的元素和属性绑定到一个URI地址上，这个地址就叫做名称空间。接着XML文档通过这个名称空间告诉解析引擎，文档中的元素和属性来自哪里。名称空间有什么用呢？就是用来唯一标识元素和属性来自哪个Schema。简单来说，当一个XML实例文档引用了多个Schema的时候，倘若这些Schema定义了同名的元素或属性，名称空间就可以将它们区分开来。</p>
-<p>引用其他Schema</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-bd466d293a47249c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="引用其他Schema"></p>
-<p>自定义schema 给自己的文件命名方便其他文件调用</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-575c97f367170ff5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-09a4197ec412e170.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>xmlns后的属性即表示该文件中的context属性来源于这个ns</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-09a4197ec412e170.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-000dac2e6124f4d4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<ul>
-<li>修改XML实例文档:</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-e87ee2b5f0532d77.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-20e2d37ed4275474.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h3 id="数据的逻辑结构"><a href="#数据的逻辑结构" class="headerlink" title="数据的逻辑结构"></a>数据的逻辑结构</h3><p>线性结构：数据元素只有一个前驱数据元素和一个后继数据元素。结构中的数据元素之间存在<strong>一对一</strong>的关系。</p>
+<p>非线性结构：</p>
+<p>1.树结构：每个数据元素只有一个前驱数据元素，可有零个或若干个后继数据元素。结构中的数据元素之间存在<strong>一对多</strong>的关系。</p>
+<p>2.图结构：每个数据元素可有零个或若干个前驱数据元素，零个或若干个后继数据元素。结构中的数据元素之间存在<strong>多对多</strong>的关系。</p>
+<h3 id="数据的存储结构"><a href="#数据的存储结构" class="headerlink" title="数据的存储结构"></a>数据的存储结构</h3><p>顺序存储结构:用数据元素在存储器中的<strong>相对位置</strong>来表示数据元素之间的逻辑关系。 </p>
+<p>链式存储结构：在每一个数据元素中增加一个存放地址的<strong>指针</strong>，用此指针来表示数据元素之间的逻辑关系。 </p>
+<h3 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h3><p>1.初始化。<br>2.判断是否空状态。<br>3.存取，指获得、设置指定元素值。<br>4.统计数据元素个数。<br>5.遍历（traverse），指按照某种次序访问一个数据结构中的所有元素，并且每个数据元素只被访问一次。遍历一种数据结构，将得到一个所有数据元素的线性序列。<br>6.插入（insert）、删除（remove）指定元素。<br>7.查找（search），指在数据结构中寻找满足给定条件的数据元素。<br>8.排序（sort），指对数据元素按照指定关键字值的大小递增（或递减）次序重新排列。</p>
+<h2 id="什么是算法"><a href="#什么是算法" class="headerlink" title="什么是算法"></a>什么是算法</h2><p>一个算法（Algorithm）是一个有穷规则的集合，其规则确定一个解决某一特定类型问题的操作序列。 </p>
+<p>算法定义：有穷性，确定性，输入，输出，可行性</p>
+<p>算法设计目标：正确性，可读性，健壮性，高时间效率，高空间效率</p>
+<h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><p>算法的时间效率指算法的执行时间随问题规模的增长而增长的趋势，通常采用时间复杂度来度量算法的时间效率。T(n)=O(f(n)) </p>
+<p>一个算法花费的时间与算法中语句的执行次数成正比例，哪个算法中语句执行次数多，它花费时间就多。一个算法中的语句执行次数称为语句频度或时间频度。记为T(n)</p>
+<p>一般情况下，算法中基本操作重复执行的次数是问题规模n的某个函数，用T(n)表示，若有某个辅助函数f(n),使得当n趋近于无穷大时，T(n)/f(n)的极限值为不等于零的常数，则称f(n)是T(n)的同数量级函数。记作T(n)=O(f(n)),称O(f(n)) 为算法的渐进时间复杂度，简称时间复杂度。</p>
+<p>常见的算法的时间 复杂度之间的关系为：</p>
+<p>O(1)&lt;O(logn)&lt;O(n)&lt;O(nlog n)&lt;O(n2)&lt;O(2n)&lt;O(n!)&lt;O(n的n次幂) </p>
+<pre><code>1.一条简单语句的时间复杂度是O(1)。
+int count=0; 
+2.一个循环的时间复杂度是O(n)。
+int n=8, count=0;
+for (int i=1; i&lt;=n; i++)
+    count++;                              //循环体执行n次
+3.以下循环语句的时间复杂度是O(log2 n)。
+for (int i=1; i&lt;=n; i*=2)        //i按2的幂（1,2,4,8）递增
+    count++;                           //循环体执行1+               次
+4.以下二重循环的时间复杂度为O(n2)。
+for (int i=1; i&lt;=n; i++) 
+    for (int j=1; j&lt;=n; j++)
+5.以下二重循环的时间复杂度是O(n×log2n)。
+for (int i=1; i&lt;=n; i*=2)        //循环log2n次
+    for (int j=1; j&lt;=n; j++)     //循环n次
+6.以下二重循环的时间复杂度是O(n)。
+for (int i=1; i&lt;=n; i*=2)        //循环log2n次
+    for (int j=1; j&lt;=i; j++)      //循环i次
+    //循环次数 </code></pre><h3 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h3><p>算法所需存储空间的度量，记作： S(n)=O( f(n) ) 其中 n 为问题的规模。</p>
+<p>一个算法在计算机存储器上所占用的存储空间，包括存储算法本身所占用的存储空间，算法的输入输出数据所占用的存储空间和算法在运行过程中临时占用的存储空间这三个方面。如果额外空间相对于输入数据量来说是个常数，则称此算法是原地工作。</p>
+<p>算法的输入输出数据所占用的存储空间是由要解决的问题决定的，是通过参数表由调用函数传递而来的，它不随本算法的不同而改变。存储算法本身所占用的存储空间与算法书写的长短成正比，要压缩这方面的存储空间，就必须编写出较短的算法。</p>
 
           
         
@@ -1192,7 +1774,7 @@ default                    do
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2017/07/05/linux-command/ls/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/12/04/linux-command/which&whereis&locate/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -1211,7 +1793,7 @@ default                    do
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/07/05/linux-command/ls/" itemprop="url">ls指令学习</a></h1>
+                <a class="post-title-link" href="/2018/12/04/linux-command/which&whereis&locate/" itemprop="url">文件查找之which&whereis&locate</a></h1>
         
 
         <div class="post-meta">
@@ -1223,8 +1805,8 @@ default                    do
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-05T00:00:00+00:00">
-                2017-07-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-04T00:00:00+00:00">
+                2018-12-04
               </time>
             
 
@@ -1277,7 +1859,7 @@ default                    do
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  744 字
+                  1.3k 字
                 </span>
               
 
@@ -1293,7 +1875,7 @@ default                    do
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2 分钟
+                  4 分钟
                 </span>
               
             </div>
@@ -1316,88 +1898,55 @@ default                    do
       
         
           
-            <h1 id="命令格式："><a href="#命令格式：" class="headerlink" title="命令格式："></a>命令格式：</h1><p>ls [选项] [目录名]</p>
-<h1 id="命令功能："><a href="#命令功能：" class="headerlink" title="命令功能："></a>命令功能：</h1><p>列出目标目录中所有的子目录和文件。</p>
-<h1 id="常用参数："><a href="#常用参数：" class="headerlink" title="常用参数："></a>常用参数：</h1><ul>
-<li><p>-a, –all 列出目录下的所有文件，包括以 . 开头的隐含文件</p>
-</li>
-<li><p>-A 同-a，但不列出“.”(表示当前目录)和“..”(表示当前目录的父目录)。  </p>
-</li>
-<li><p>-c  配合 -lt：根据 ctime 排序及显示 ctime (文件状态最后更改的时间)配合 -l：显示 ctime 但根据名称排序否则：根据 ctime 排序</p>
-</li>
-<li><p>-C 每栏由上至下列出项目</p>
-</li>
-<li><p>–color[=WHEN] 控制是否使用色彩分辨文件。WHEN 可以是’never’、’always’或’auto’其中之一</p>
-</li>
-<li><p>-d, –directory 将目录象文件一样显示，而不是显示其下的文件。</p>
-</li>
-<li><p>-D, –dired 产生适合 Emacs 的 dired 模式使用的结果</p>
-</li>
-<li><p>-f 对输出的文件不进行排序，-aU 选项生效，-lst 选项失效</p>
-</li>
-<li><p>-g 类似 -l,但不列出所有者   </p>
-</li>
-<li><p>-G, –no-group 不列出任何有关组的信息</p>
-</li>
-<li><p>-h, –human-readable 以容易理解的格式列出文件大小 (例如 1K 234M 2G)</p>
-</li>
-<li><p>–si 类似 -h,但文件大小取 1000 的次方而不是 1024</p>
-</li>
-<li><p>-H, –dereference-command-line 使用命令列中的符号链接指示的真正目的地</p>
-</li>
-<li><p>–indicator-style=方式 指定在每个项目名称后加上指示符号&lt;方式&gt;：none (默认)，classify (-F)，file-type (-p)</p>
-</li>
-<li><p>-i, –inode 印出每个文件的 inode 号</p>
-</li>
-<li><p>-I, –ignore=样式 不印出任何符合 shell 万用字符&lt;样式&gt;的项目</p>
-</li>
-<li><p>-k 即 –block-size=1K,以 k 字节的形式表示文件的大小。</p>
-</li>
-<li><p>-l 除了文件名之外，还将文件的权限、所有者、文件大小等信息详细列出来。</p>
-</li>
-<li><p>-L, –dereference 当显示符号链接的文件信息时，显示符号链接所指示的对象而并非符号链接本身的信息</p>
-</li>
-<li><p>-m 所有项目以逗号分隔，并填满整行行宽</p>
-</li>
-<li><p>-o 类似 -l,显示文件的除组信息外的详细信息。   </p>
-</li>
-<li><p>-r, –reverse 依相反次序排列</p>
-</li>
-<li><p>-R, –recursive 同时列出所有子目录层</p>
-</li>
-<li><p>-s, –size 以块大小为单位列出所有文件的大小</p>
-</li>
-<li><p>-S 根据文件大小排序</p>
-</li>
-<li><p>–sort=WORD 以下是可选用的 WORD 和它们代表的相应选项：</p>
-<p>  extension -X status -c</p>
-<p>  none -U time -t</p>
-<p>  size -S atime -u</p>
-<p>  time -t access -u</p>
-<p>  version -v use -u</p>
-</li>
-<li><p>-t 以文件修改时间排序</p>
-</li>
-<li><p>-u 配合 -lt:显示访问时间而且依访问时间排序 配合 -l:显示访问时间但根据名称排序否则：根据访问时间排序</p>
-</li>
-<li><p>-U 不进行排序;依文件系统原有的次序列出项目</p>
-</li>
-<li><p>-v 根据版本进行排序</p>
-</li>
-<li><p>-w, –width=COLS 自行指定屏幕宽度而不使用目前的数值</p>
-</li>
-<li><p>-x 逐行列出项目而不是逐栏列出</p>
-</li>
-<li><p>-X 根据扩展名排序</p>
-</li>
-<li><p>-1 每行只列出一个文件</p>
-</li>
-<li><p>–help 显示此帮助信息并离开</p>
-</li>
-<li><p>–version 显示版本信息并离开</p>
-</li>
-</ul>
+            <h1 id="which"><a href="#which" class="headerlink" title="which"></a>which</h1><h2 id="which命令格式："><a href="#which命令格式：" class="headerlink" title="which命令格式："></a>which命令格式：</h2><p>which 可执行文件名称 </p>
+<h2 id="命令功能："><a href="#命令功能：" class="headerlink" title="命令功能："></a>命令功能：</h2><p>在<strong>PATH变量指定的路径</strong>中，搜索某个系统命令的位置，并且返回第一个搜索结果。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。 </p>
+<h3 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h3><pre><code>-n 　指定文件名长度，指定的长度必须大于或等于所有文件中最长的文件名。
 
+-p 　与-n参数相同，但此处的包括了文件的路径。
+
+-w 　指定输出时栏位的宽度。
+
+-V 　显示版本信息</code></pre><h1 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h1><p>whereis命令只能用于程序名的搜索，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。</p>
+<p>和find相比，whereis查找的速度非常快，这是因为linux系统会将 系统内的所有文件都记录在一个数据库文件中，当使用whereis和下面即将介绍的locate时，会从数据库中查找数据，而不是像find命令那样，通 过遍历硬盘来查找，效率自然会很高。 </p>
+<p>但是该数据库文件并不是实时更新，默认情况下时一星期更新一次，因此，我们在用whereis和locate 查找文件时，有时会找到已经被删除的数据，或者刚刚建立文件，却无法查找到，原因就是因为数据库文件没有被更新。 </p>
+<h2 id="whereis命令格式："><a href="#whereis命令格式：" class="headerlink" title="whereis命令格式："></a>whereis命令格式：</h2><p>whereis [-bmsu] [BMS 目录名 -f ] 文件名</p>
+<h2 id="命令功能：-1"><a href="#命令功能：-1" class="headerlink" title="命令功能："></a>命令功能：</h2><p>whereis命令是定位<strong>可执行文件</strong>、<strong>源代码文件</strong>、<strong>帮助文件在文件系统中的位置</strong>。这些文件的属性应属于原始代码，二进制文件，或是帮助文件。whereis 程序还具有搜索源代码、指定备用搜索路径和搜索不寻常项的能力</p>
+<h2 id="命令参数-1"><a href="#命令参数-1" class="headerlink" title="命令参数"></a>命令参数</h2><pre><code>-b   定位可执行文件。
+
+-m   定位帮助文件。
+
+-s   定位源代码文件。
+
+-u   搜索默认路径下除可执行文件、源代码文件、帮助文件以外的其它文件。
+
+-B   指定搜索可执行文件的路径。
+
+-M   指定搜索帮助文件的路径。
+
+-S   指定搜索源代码文件的路径。</code></pre><h1 id="locate"><a href="#locate" class="headerlink" title="locate"></a>locate</h1><p>locate 让使用者可以很快速的搜寻档案系统内是否有指定的档案。其方法是先建立一个包括系统内所有档案名称及路径的数据库，之后当寻找时就只需查询这个数据库，而不必实际深入档案系统之中了。在一般的 distribution 之中，数据库的建立都被放在 crontab 中自动执行。</p>
+<h2 id="locate命令格式："><a href="#locate命令格式：" class="headerlink" title="locate命令格式："></a>locate命令格式：</h2><p>whereis [-bmsu] [BMS 目录名 -f ] 文件名</p>
+<h2 id="命令功能：-2"><a href="#命令功能：-2" class="headerlink" title="命令功能："></a>命令功能：</h2><p>locate命令可以在搜寻数据库时快速找到档案，数据库由updatedb程序来更新，updatedb是由cron daemon周期性建立的，locate命令在搜寻数据库时比由整个由硬盘资料来搜寻资料来得快，但较差劲的是locate所找到的档案若是最近才建立或 刚更名的，可能会找不到，在内定值中，updatedb每天会跑一次，可以由修改crontab来更新设定值。(etc/crontab)</p>
+<p>locate指定用在搜寻符合条件的档案，它会去储存档案与目录名称的数据库内，寻找合乎范本样式条件的档案或目录录，可以使用特殊字元（如”<em>” 或”?”等）来指定范本样式，如指定范本为kcpa</em>ner, locate会找出所有起始字串为kcpa且结尾为ner的档案或目录，如名称为kcpartner若目录录名称为kcpa_ner则会列出该目录下包括 子目录在内的所有档案。</p>
+<p>locate指令和find找寻档案的功能类似，但locate是透过update程序将硬盘中的所有档案和目录资料先建立一个索引数据库，在 执行loacte时直接找该索引，查询速度会较快，索引数据库一般是由操作系统管理，但也可以直接下达update强迫系统立即修改索引数据库。</p>
+<h2 id="命令参数-2"><a href="#命令参数-2" class="headerlink" title="命令参数"></a>命令参数</h2><pre><code>-e   将排除在寻找的范围之外。
+
+-1  如果 是 1．则启动安全模式。在安全模式下，使用者不会看到权限无法看到    的档案。这会始速度减慢，因为 locate 必须至实际的档案系统中取得档案的    权限资料。
+
+-f   将特定的档案系统排除在外，例如我们没有到理要把 proc 档案系统中的档案    放在资料库中。
+
+-q  安静模式，不会显示任何错误讯息。
+
+-n 至多显示 n个输出。
+
+-r 使用正规运算式 做寻找的条件。
+
+-o 指定资料库存的名称。
+
+-d 指定资料库的路径
+
+-h 显示辅助讯息
+
+-V 显示程式的版本讯息  </code></pre>
           
         
       
@@ -1453,7 +2002,7 @@ default                    do
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2017/07/05/spring/springMVC/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/12/03/nginx/nginxBase/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -1472,7 +2021,7 @@ default                    do
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/07/05/spring/springMVC/" itemprop="url">Spring MVC入门</a></h1>
+                <a class="post-title-link" href="/2018/12/03/nginx/nginxBase/" itemprop="url">nginx基础配置</a></h1>
         
 
         <div class="post-meta">
@@ -1484,8 +2033,8 @@ default                    do
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-05T00:00:00+00:00">
-                2017-07-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-03T00:00:00+00:00">
+                2018-12-03
               </time>
             
 
@@ -1507,8 +2056,8 @@ default                    do
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring</span>
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
                   </a>
                 </span>
 
@@ -1538,7 +2087,337 @@ default                    do
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  181 字
+                  1.1k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <pre><code>#全局块 start
+#配置影响nginx全局的指令。一般有运行nginx服务器的用户组，nginx进程pid存放路径，日志存放路径，配置文件引入，允许生成worker process数等。
+########### 每个指令必须有分号结束。#################
+
+#user  nobody; #配置用户或者组，默认为nobody nobody。
+worker_processes  1;#允许生成的进程数，默认为1
+
+#制定日志路径，级别。这个设置可以放入全局块，http块，server块，级别以此为：debug|info|notice|warn|error|crit|alert|emerg
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;#指定nginx进程运行文件存放地址
+
+#全局块 end
+
+#events块 start
+#配置影响nginx服务器或与用户的网络连接。有每个进程的最大连接数，选取哪种事件驱动模型处理连接请求，是否允许同时接受多个网路连接，开启多个网络连接序列化等
+
+events {
+    accept_mutex on;   #设置网路连接序列化，防止惊群现象发生，默认为on
+    multi_accept on;  #设置一个进程是否同时接受多个网络连接，默认为off
+    #use epoll;      #事件驱动模型，select|poll|kqueue|epoll|resig|/dev/poll|eventport
+    worker_connections  1024;    #最大连接数，默认为1024
+}
+
+#events块 end
+
+#http块 start
+#可以嵌套多个server，配置代理，缓存，日志定义等绝大多数功能和第三方模块的配置。如文件引入，mime-type定义，日志自定义，是否使用sendfile传输文件，连接超时时间，单连接请求数等。
+http {
+    include       mime.types;#文件扩展名与文件类型映射表 
+    default_type  application/octet-stream;#默认文件类型
+    #access_log off; #取消服务日志   
+
+    #log_format  main  &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos; #自定义格式
+    #                  &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;
+    #                  &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;
+
+    #access_log  logs/access.log  main;  #combined为日志格式的默认值
+
+    sendfile        on; #允许sendfile方式传输文件，默认为off，可以在http块，server块，location块。
+    #sendfile_max_chunk 100k;  #每个进程每次调用传输数量不能大于设定的值，默认为0，即不设上限。
+
+    #tcp_nopush     on; 
+    #开启或者关闭nginx在FreeBSD上使用TCP_NOPUSH套接字选项， 在Linux上使用TCP_CORK套接字选项。 选项仅在使用sendfile的时候才开启。 #开启此选项允许在Linux和FreeBSD4.*上将响应头和正文的开始部分一起发送；一次性发送整个文件
+
+    #keepalive_timeout  0; #连接超时时间，默认为65s，可以在http，server，location块。
+    keepalive_timeout  65;
+
+    #gzip  on;是否开启Gzip 压缩
+    #gzip_min_length 1k; 不压缩临界值，大于1K的才压缩，一般不用改
+    #gzip_buffers 4 16k;
+    #gzip_http_version 1.0; 用了反向代理的话，末端通信是HTTP/1.0，默认是HTTP/1.1
+    #gzip_comp_level 2; 压缩级别，1-10，数字越大压缩的越好，时间也越长
+    #gzip_types text/plain application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png; #进行压缩的文件类型，缺啥补啥就行了，JavaScript有两种写法，最好都写上吧，总有人抱怨js文件没有压缩，其实多写一种格式就行了
+    #gzip_vary off; 跟Squid等缓存服务有关，on的话会在Header里增加&quot;Vary: Accept-Encoding&quot;
+    #gzip_disable &quot;MSIE [1-6]\.&quot;; IE6对Gzip不怎么友好，不给它Gzip了
+
+    #server块 start
+    #配置虚拟主机的相关参数，一个http中可以有多个server。
+
+    server {
+        listen       8080; #监听端口
+        server_name  localhost; #监听地址 
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        #location块 start 
+        #配置请求的路由，以及各种页面的处理情况。
+
+        location / {
+            root   html; #根目录
+            index  index.html index.htm; #设置默认页
+        }
+        #location块 end 
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+
+        # deny access to .htaccess files, if Apache&apos;s document root
+        # concurs with nginx&apos;s one
+        #
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
+    }
+
+    #server块 end
+
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    # HTTPS server
+    #
+    #server {
+    #    listen       443 ssl;
+    #    server_name  localhost;
+
+    #    ssl_certificate      cert.pem;
+    #    ssl_certificate_key  cert.key;
+
+    #    ssl_session_cache    shared:SSL:1m;
+    #    ssl_session_timeout  5m;
+
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers  on;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+}
+#http块 end</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+</div>
+
+<div>
+      
+</div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/11/29/linux-command/chmod/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/29/linux-command/chmod/" itemprop="url">chmod指令学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-29T00:00:00+00:00">
+                2018-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux-command/" itemprop="url" rel="index">
+                    <span itemprop="name">linux-command</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  497 字
                 </span>
               
 
@@ -1577,25 +2456,29 @@ default                    do
       
         
           
-            <h1 id="1-架构"><a href="#1-架构" class="headerlink" title="1.架构"></a>1.架构</h1><ul>
-<li><p>1.1架构图<br><img src="http://images2015.cnblogs.com/blog/932062/201609/932062-20160909153624488-530274633.png" alt="架构天"></p>
-</li>
-<li><p>1.2架构流程</p>
-</li>
+            <h1 id="命令格式："><a href="#命令格式：" class="headerlink" title="命令格式："></a>命令格式：</h1><p>chmod [-cfvR] [–help] [–version] mode file   </p>
+<h1 id="命令功能："><a href="#命令功能：" class="headerlink" title="命令功能："></a>命令功能：</h1><p>用于改变文件或目录的访问权限，用它控制文件或目录的访问权限。</p>
+<h1 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h1><h2 id="必要参数："><a href="#必要参数：" class="headerlink" title="必要参数："></a>必要参数：</h2><pre><code>-c 当发生改变时，报告处理信息
+-f 错误信息不输出
+-R 处理指定目录以及其子目录下的所有文件
+-v 运行时显示详细处理信息</code></pre><h2 id="选择参数："><a href="#选择参数：" class="headerlink" title="选择参数："></a>选择参数：</h2><pre><code>--reference=&lt;目录或者文件&gt; 设置成具有指定目录或者文件具有相同的权限
+--version 显示版本信息
+&lt;权限范围&gt;+&lt;权限设置&gt; 使权限范围内的目录或者文件具有指定的权限
+&lt;权限范围&gt;-&lt;权限设置&gt; 删除权限范围的目录或者文件的指定权限
+&lt;权限范围&gt;=&lt;权限设置&gt; 设置权限范围内的目录或者文件的权限为指定的值    </code></pre><h3 id="权限范围："><a href="#权限范围：" class="headerlink" title="权限范围："></a>权限范围：</h3><pre><code>u ：目录或者文件的当前的用户
+g ：目录或者文件的当前的群组
+o ：除了目录或者文件的当前用户或群组之外的用户或者群组
+a ：所有的用户及群组</code></pre><h3 id="权限代号："><a href="#权限代号：" class="headerlink" title="权限代号："></a>权限代号：</h3><pre><code>r ：读权限，用数字4表示
+w ：写权限，用数字2表示
+x ：执行权限，用数字1表示
+- ：删除权限，用数字0表示
+s ：特殊权限 </code></pre><h3 id="文字设定法"><a href="#文字设定法" class="headerlink" title="文字设定法:"></a>文字设定法:</h3><pre><code>chmod ［who］ ［+ | - | =］ ［mode］ 文件名
+例子：
+chmod u+r 给拥有者添加可读权限   </code></pre><h3 id="数字设定法"><a href="#数字设定法" class="headerlink" title="数字设定法:"></a>数字设定法:</h3><ul>
+<li>0表示没有权限，1表示可执行权限，2表示可写权限，4表示可读权限，然后将其相加。所以数字属性的格式应为3个从0到7的八进制数，其顺序是（u）（g）（o）</li>
 </ul>
-<p>1.用户发送请求至前端控制器DispatcherServlet</p>
-<p>2.DispatcherServlet收到请求调用HandlerMapping处理器映射器。</p>
-<p>3.处理器映射器根据请求url找到具体的处理器，生成处理器对象及处理器拦截器(如果有则生成)一并返回给DispatcherServlet。</p>
-<p>4.DispatcherServlet通过HandlerAdapter处理器适配器调用处理器</p>
-<p>5.执行处理器(Controller，也叫后端控制器)。</p>
-<p>6.Controller执行完成返回ModelAndView</p>
-<p>7.HandlerAdapter将controller执行结果ModelAndView返回</p>
-<p>8.DispatcherServlet</p>
-<p>DispatcherServlet将ModelAndView传给ViewReslover视图解析器</p>
-<p>9.ViewReslover解析后返回具体View</p>
-<p>10.DispatcherServlet对View进行渲染视图（即将模型数据填充至视图中）。</p>
-<p>11.DispatcherServlet响应用户</p>
-
+<pre><code>chmod ［mode］ 文件名
+chmod 751 file 给file的属主分配读、写、执行(7)的权限，给file的所在组分配读、执行(5)的权限，给其他用户分配执行(1)的权限         </code></pre>
           
         
       
@@ -1651,7 +2534,7 @@ default                    do
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2017/03/16/java/javase/collection/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/11/29/linux-command/chown/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -1670,7 +2553,7 @@ default                    do
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/03/16/java/javase/collection/" itemprop="url">java集合框架</a></h1>
+                <a class="post-title-link" href="/2018/11/29/linux-command/chown/" itemprop="url">chown指令学习</a></h1>
         
 
         <div class="post-meta">
@@ -1682,8 +2565,8 @@ default                    do
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-16T00:00:00+00:00">
-                2017-03-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-29T00:00:00+00:00">
+                2018-11-29
               </time>
             
 
@@ -1705,8 +2588,8 @@ default                    do
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaSE/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaSE</span>
+                  <a href="/categories/linux-command/" itemprop="url" rel="index">
+                    <span itemprop="name">linux-command</span>
                   </a>
                 </span>
 
@@ -1736,7 +2619,7 @@ default                    do
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.9k 字
+                  276 字
                 </span>
               
 
@@ -1752,7 +2635,7 @@ default                    do
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  6 分钟
+                  1 分钟
                 </span>
               
             </div>
@@ -1775,132 +2658,17 @@ default                    do
       
         
           
-            <h1 id="Collection"><a href="#Collection" class="headerlink" title="Collection"></a>Collection</h1><p><img src="http://upload-images.jianshu.io/upload_images/4942449-cc7c288a15f6c092?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="集合框架体系图"></p>
-<h2 id="Set-extends-Collection"><a href="#Set-extends-Collection" class="headerlink" title="Set (extends Collection)"></a>Set (extends Collection)</h2><p>Set是最简单的一种集合。集合中的对象不按特定的方式排序，并且没有重复对象。 Set接口主要实现了两个实现类：</p>
-<ul>
-<li>HashSet： HashSet类按照哈希算法来存取集合中的对象，存取速度比较快</li>
-<li>TreeSet ：TreeSet类实现了SortedSet接口，能够对集合中的对象进行排序。</li>
-<li>LinkedHashSet：具有HashSet的查询速度，且内部使用链表维护元素的顺序(插入的次序)。于是在使用迭代器遍历Set时，结果会按元素插入的次序显示。</li>
-</ul>
-<h2 id="List-extends-Collection"><a href="#List-extends-Collection" class="headerlink" title="List (extends Collection)"></a>List (extends Collection)</h2><p>实际上有两种List: 一种是基本的ArrayList,其优点在于随机访问元素，另一种是更强大的LinkedList,它并不是为快速随机访问设计的，而是具有一套更通用的方法。</p>
-<p>List : 次序是List最重要的特点：它保证维护元素特定的顺序。List为Collection添加了许多方法，使得能够向List中间插入与移除元素(这只推荐LinkedList使用。)一个List可以生成ListIterator,使用它可以从两个方向遍历List,也可以从List中间插入和移除元素。</p>
-<ul>
-<li>ArrayList : 由数组实现的List。允许对元素进行快速随机访问，但是向List中间插入与移除元素的速度很慢。ListIterator只应该用来由后向前遍历ArrayList,而不是用来插入和移除元素。因为那比LinkedList开销要大很多。</li>
-<li>LinkedList : 对顺序访问进行了优化，向List中间插入与删除的开销并不大。随机访问则相对较慢。(使用ArrayList代替。)还具有下列方法：addFirst(), addLast(), getFirst(), getLast(), removeFirst() 和 removeLast(), 这些方法 (没有在任何接口或基类中定义过)使得LinkedList可以当作堆栈、队列和双向队列使用。</li>
-</ul>
-<h2 id="Queen-extends-Collection"><a href="#Queen-extends-Collection" class="headerlink" title="Queen (extends Collection)"></a>Queen (extends Collection)</h2><h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><p>方法put(Object key, Object value)添加一个“值”(想要得东西)和与“值”相关联的“键”(key)(使用它来查找)。方法get(Object key)返回与给定“键”相关联的“值”。可以用containsKey()和containsValue()测试Map中是否包含某个“键”或“值”。标准的Java类库中包含了几种不同的Map：HashMap, TreeMap, LinkedHashMap, WeakHashMap, IdentityHashMap。它们都有同样的基本接口Map，但是行为、效率、排序策略、保存对象的生命周期和判定“键”等价的策略等各不相同。</p>
-<p>执行效率是Map的一个大问题。看看get()要做哪些事，就会明白为什么在ArrayList中搜索“键”是相当慢的。而这正是HashMap提高速度的地方。HashMap使用了特殊的值，称为“散列码”(hash code)，来取代对键的缓慢搜索。“散列码”是“相对唯一”用以代表对象的int值，它是通过将该对象的某些信息进行转换而生成的。所有Java对象都能产生散列码，因为hashCode()是定义在基类Object中的方法。</p>
-<p>HashMap就是使用对象的hashCode()进行快速查询的。此方法能够显着提高性能</p>
-<p>Map : 维护“键值对”的关联性，使你可以通过“键”查找“值”</p>
-<ul>
-<li>HashMap : Map基于散列表的实现。插入和查询“键值对”的开销是固定的。可以通过构造器设置容量capacity和负载因子load factor，以调整容器的性能。</li>
-<li>LinkedHashMap : 类似于HashMap，但是迭代遍历它时，取得“键值对”的顺序是其插入次序，或者是最近最少使用(LRU)的次序。只比HashMap慢一点。而在迭代访问时发而更快，因为它使用链表维护内部次序。</li>
-<li>TreeMap : 基于红黑树数据结构的实现。查看“键”或“键值对”时，它们会被排序(次序由Comparabel或Comparator决定)。TreeMap的特点在于，你得到的结果是经过排序的。TreeMap是唯一的带有subMap()方法的Map，它可以返回一个子树。</li>
-<li>WeakHashMao : 弱键(weak key)Map，Map中使用的对象也被允许释放: 这是为解决特殊问题设计的。如果没有map之外的引用指向某个“键”，则此“键”可以被垃圾收集器回收。</li>
-<li>IdentifyHashMap : 使用==代替equals()对“键”作比较的hash map。专为解决特殊问题而设计</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-9e051ab63d770a2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<h2 id="总结如下："><a href="#总结如下：" class="headerlink" title="总结如下："></a>总结如下：</h2><p><img src="http://upload-images.jianshu.io/upload_images/4942449-51c43e347a13527d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<ul>
-<li>他们之间的区别：<br><img src="http://upload-images.jianshu.io/upload_images/4942449-6c1ae30630a5a608.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></li>
-</ul>
-<h1 id="集合框架初始化容量和扩容比较："><a href="#集合框架初始化容量和扩容比较：" class="headerlink" title="集合框架初始化容量和扩容比较："></a>集合框架初始化容量和扩容比较：</h1><table>
-<thead>
-<tr>
-<th align="left"></th>
-<th align="left">ArrayList</th>
-<th align="left">LinkList</th>
-<th align="left">HashMap</th>
-<th align="left">HashTable</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">jdk1.7</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">初始容量</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">扩容条件</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">扩容大小</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">最大容量</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">jdk1.8</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left">初始容量</td>
-<td align="left">10</td>
-<td align="left"></td>
-<td align="left">1 &lt;&lt; 4(16)</td>
-<td align="left">11</td>
-</tr>
-<tr>
-<td align="left">扩容条件</td>
-<td align="left">在第一次add时扩容检测</td>
-<td align="left"></td>
-<td align="left">扩容加载因子为(0.75)，第一个临界点在当HashMap中元素的数量大于table数组长度<em>加载因子（16</em>0.75=12）</td>
-<td align="left">扩容加载因子(0.75)，当超出默认长度（int）（11*0.75）=8时</td>
-</tr>
-<tr>
-<td align="left">扩容大小</td>
-<td align="left">oldCapacity + (oldCapacity &gt;&gt; 1)，即大约原集合长度的1.5倍</td>
-<td align="left"></td>
-<td align="left">oldThr &lt;&lt; 1(原长度*2)</td>
-<td align="left">old*2+1(代码int newCapacity = (oldCapacity &lt;&lt; 1) + 1)</td>
-</tr>
-<tr>
-<td align="left">最大容量</td>
-<td align="left">Integer.MAX_VALUE - 8</td>
-<td align="left"></td>
-<td align="left">1 &lt;&lt; 30</td>
-<td align="left">Integer.MAX_VALUE - 8</td>
-</tr>
-</tbody></table>
-<p>对于java中的各种集合类，根据底层的具体实现，小结了一下大致有3种扩容的方式：</p>
-<p>1、对于以散列表为底层数据结构实现的，（譬如hashset，hashmap，hashtable等），扩容方式为当链表数组的非空元素除以数组大小超过加载因子时，链表数组长度变大（乘以2+1），然后进行重新散列。</p>
-<p>2、对于以数组为底层数据结构实现的，譬如ArrayList，当数组满了之后，数组长度变大 oldCapacity + (oldCapacity &gt;&gt; 1)，然后将原数组中的数据复制到新数组中。</p>
-<p>3、对于以链表结构实现的，譬如TreeSet，TreeMap，则是动态增加元素~~即每次加１即可。</p>
-<h2 id="注意点："><a href="#注意点：" class="headerlink" title="注意点："></a>注意点：</h2><p><strong>为啥arrayList最大值是Integer.MAX_VALUE - 8</strong>：<br>数组作为一个对象，需要一定的内存存储对象头信息，对象头信息最大占用内存不可超过8字节。</p>
-<h2 id="部分源码实现过程："><a href="#部分源码实现过程：" class="headerlink" title="部分源码实现过程："></a>部分源码实现过程：</h2><h3 id="hashMap-put过程"><a href="#hashMap-put过程" class="headerlink" title="hashMap put过程"></a>hashMap put过程</h3><p>1.判断hash表是否为空，为空resize()方法创建表</p>
-<p>2.根据hash值获得hash表中桶的头结点，若头结点为空直接调用newNode()添加结点</p>
-<p>3.如果发生了hash冲突，先得到头结点进行比较，如果相同，替换节点值</p>
-<p>4.如果头结点头结点不相同，且此时已处于红黑树状态，调用putTreeVal()添加入树中</p>
-<p>5.如果还是处于链表状态，从头开始遍历链表，一旦找到相同的结点，就跳出循环，若到链表末尾，则添加一个结点</p>
-<p>6.若添加后达到红黑树的阈值，则转换为红黑树(从treeifyBin方法可以看到，当容量小于64时，不会进行红黑树转换，只会扩容)</p>
-<p>7.如果是添加一个数据，size将加一，如果达到阈值，则resize()扩容</p>
-<h3 id="hashMap-resize"><a href="#hashMap-resize" class="headerlink" title="hashMap resize"></a>hashMap resize</h3><p>首先获取新容量以及新阈值，然后根据新容量创建新表。如果是扩容操作，则需要进行rehash操作，通过e.hash&amp;oldCap将链表分为两列，更好地均匀分布在新表中。 </p>
-<h3 id="linkList-中间插入过程"><a href="#linkList-中间插入过程" class="headerlink" title="linkList 中间插入过程"></a>linkList 中间插入过程</h3><p>例：在A，B两个连续结点中插入C结点,形成ACB</p>
-<p>1.创建一个新结点，将新节点的后继指针指向B，前继指针指向A<br>2.将B的前指针指向C<br>3.根据A是否为空判断，A为空该节点为头结点，重置first结点；不为空A的后指针指向C</p>
-
+            <h1 id="命令格式："><a href="#命令格式：" class="headerlink" title="命令格式："></a>命令格式：</h1><p>chown [选项]… [所有者][:[组]] 文件…</p>
+<h1 id="命令功能："><a href="#命令功能：" class="headerlink" title="命令功能："></a>命令功能：</h1><p>通过chown改变文件的拥有者和群组。在更改文件的所有者或所属群组时，可以使用用户名称和用户识别码设置。普通用户不能将自己的文件改变成其他的拥有者。其操作权限一般为管理员。</p>
+<h1 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h1><h2 id="必要参数："><a href="#必要参数：" class="headerlink" title="必要参数："></a>必要参数：</h2><pre><code>-c 显示更改的部分的信息
+-f 忽略错误信息
+-h 修复符号链接
+-R 处理指定目录以及其子目录下的所有文件
+-v 显示详细的处理信息
+-deference 作用于符号链接的指向，而不是链接文件本身</code></pre><h2 id="选择参数："><a href="#选择参数：" class="headerlink" title="选择参数："></a>选择参数：</h2><pre><code>--reference=&lt;目录或文件&gt; 把指定的目录/文件作为参考，把操作的文件/目录设置成参考文件/目录相同拥有者和群组
+--from=&lt;当前用户：当前群组&gt; 只有当前用户和群组跟指定的用户和群组相同时才进行改变
+--help 显示帮助信息
+--version 显示版本信息</code></pre>
           
         
       
@@ -1956,7 +2724,7 @@ default                    do
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2017/02/28/servlet/filter/">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2018/11/01/java/jvm/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Marcher">
@@ -1975,7 +2743,7 @@ default                    do
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/02/28/servlet/filter/" itemprop="url">Filter详解</a></h1>
+                <a class="post-title-link" href="/2018/11/01/java/jvm/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" itemprop="url">JVM类加载机制</a></h1>
         
 
         <div class="post-meta">
@@ -1987,8 +2755,8 @@ default                    do
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-28T00:00:00+00:00">
-                2017-02-28
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-01T00:00:00+00:00">
+                2018-11-01
               </time>
             
 
@@ -2010,8 +2778,8 @@ default                    do
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/servlet/" itemprop="url" rel="index">
-                    <span itemprop="name">servlet</span>
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
                   </a>
                 </span>
 
@@ -2041,7 +2809,7 @@ default                    do
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  725 字
+                  4.4k 字
                 </span>
               
 
@@ -2057,7 +2825,7 @@ default                    do
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2 分钟
+                  16 分钟
                 </span>
               
             </div>
@@ -2080,56 +2848,135 @@ default                    do
       
         
           
-            <h1 id="web-xml中元素执行的顺序listener-gt-filter-gt-struts拦截器-gt-servlet。"><a href="#web-xml中元素执行的顺序listener-gt-filter-gt-struts拦截器-gt-servlet。" class="headerlink" title="web.xml中元素执行的顺序listener-&gt;filter-&gt;struts拦截器-&gt;servlet。"></a>web.xml中元素执行的顺序listener-&gt;filter-&gt;struts拦截器-&gt;servlet。</h1><ul>
-<li>1.过滤器的概念</li>
-</ul>
-<p>Java中的Filter 并不是一个标准的Servlet ，它不能处理用户请求，也不能对客户端生成响应。 主要用于对HttpServletRequest 进行预处理，也可以对HttpServletResponse 进行后处理，是个典型的处理链。</p>
-<p>优点：过滤链的好处是，执行过程中任何时候都可以打断，只要不执行chain.doFilter()就不会再执行后面的过滤器和请求的内容。而在实际使用时，就要特别注意过滤链的执行顺序问题</p>
+            <h1 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h1><p>类是在运行期间第一次使用时动态加载的，而不是编译时期一次性加载。因为如果在编译时期一次性加载，那么会占用很多的内存。</p>
+<h2 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h2><p><img src="/uploads/java/jvm/%E7%B1%BB%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="类生命周期"></p>
+<h2 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h2><h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><p>查找并加载类的二进制数据加载时类加载过程的第一个阶段，在加载阶段，虚拟机需要完成以下三件事情：</p>
 <ul>
-<li>2.过滤器的作用描述</li>
+<li>通过一个类的全限定名来获取其定义的二进制字节流。</li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
+<li>在Java堆中生成一个代表这个类的 java.lang.Class对象，作为对方法区中这些数据的访问入口。</li>
 </ul>
-<p>在HttpServletRequest 到达Servlet 之前，拦截客户的HttpServletRequest 。根据需要检查HttpServletRequest ，也可以修改HttpServletRequest 头和数据。在HttpServletResponse 到达客户端之前，拦截HttpServletResponse 。根据需要检查HttpServletResponse ，可以修改HttpServletResponse 头和数据。</p>
+<p>相对于类加载的其他阶段而言，加载阶段（准确地说，是加载阶段获取类的二进制字节流的动作）是可控性最强的阶段，因为开发人员既可以使用系统提供的类加载器来完成加载，也可以自定义自己的类加载器来完成加载。</p>
+<p>加载阶段完成后，虚拟机外部的二进制字节流就按照虚拟机所需的格式存储在方法区之中，而且在Java堆中也创建一个<br>java.lang.Class类的对象，这样便可以通过该对象访问方法区中的这些数据。</p>
+<h3 id="验证：确保被加载的类的正确性"><a href="#验证：确保被加载的类的正确性" class="headerlink" title="验证：确保被加载的类的正确性"></a>验证：确保被加载的类的正确性</h3><p>验证是连接阶段的第一步，目的是保证加载的类符合当前虚拟机的要求。验证阶段大致分四步：</p>
 <ul>
-<li>3.过滤器的执行流程</li>
+<li>文件格式验证：验证字节流是否符合Class文件格式的规范；例如：是否以 0xCAFEBABE开头、主次版本号是否在当前虚拟机的处理范围之内、常量池中的常量是否有不被支持的类型。</li>
+<li>元数据验证：对字节码描述的信息进行语义分析（注意：对比javac编译阶段的语义分析），以保证其描述的信息符合Java语言规范的要求；例如：这个类是否有父类，除了<br>java.lang.Object之外。</li>
+<li>字节码验证：通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。</li>
+<li>符号引用验证：确保解析动作能正确执行。</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-1824dc9cb75ad1b0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>验证阶段是非常重要的，但不是必须的，它对程序运行期没有影响，如果所引用的类经过反复验证，那么可以考虑采用<br>-Xverifynone参数来关闭大部分的类验证措施，以缩短虚拟机类加载的时间。</p>
+<h3 id="准备：为类的静态变量分配内存，初始化默认值-类型默认值-不是程序赋值"><a href="#准备：为类的静态变量分配内存，初始化默认值-类型默认值-不是程序赋值" class="headerlink" title="准备：为类的静态变量分配内存，初始化默认值 类型默认值 不是程序赋值"></a>准备：为<strong>类的静态变量</strong>分配内存，初始化默认值 类型默认值 不是程序赋值</h3><p>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些内存都将在方法区中分配。对于该阶段有以下几点需要注意：</p>
 <ul>
-<li>4.Filter接口</li>
+<li>这时候进行内存分配的仅包括类变量（static），而不包括实例变量，实例变量会在对象实例化时随着对象一块分配在Java堆中。</li>
+<li>这里所设置的初始值通常情况下是数据类型默认的零值（如0、0L、null、false等），而不是被在Java代码中被显式地赋予的值。</li>
+<li>如果类字段的字段属性表中存在 ConstantValue属性，即同时被final和static修饰，那么在准备阶段变量value就会被初始化为ConstValue属性所指定的值。</li>
 </ul>
-<p>4.1 如何驱动</p>
-<p>在 web 应用程序启动时，web 服务器将根据 web.xml 文件中的配置信息来创建每个注册的 Filter 实例对象，并将其保存在服务器的内存中</p>
-<p>4.2 方法介绍</p>
-<p>init()  Init 方法在 Filter 生命周期中仅执行一次，web 容器在调用 init 方法时   tomcat启动时出调用</p>
-<p>doFilter()  Filter 链的执行  过滤方法在请求发出后立即调用，过滤特定的URL</p>
-<p>destory()  在Web容器卸载 Filter 对象之前被调用。该方法在Filter的生命周期中仅执行一次。在这个方法中，可以释放过滤器使用的资源。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/4942449-cdddc0cc56b94c13.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h3 id="解析：把类中的符号引用转换为直接引用"><a href="#解析：把类中的符号引用转换为直接引用" class="headerlink" title="解析：把类中的符号引用转换为直接引用"></a>解析：把类中的符号引用转换为直接引用</h3><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程，解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符7类符号引用进行。</p>
+<p>符号引用就是一组符号来描述目标，可以是任何字面量。</p>
+<p>直接引用就是直接指向目标的指针、相对偏移量或一个间接定位到目标的句柄。</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化 "></a>初始化 <clinit></clinit></h3><p>初始化，为类的静态变量赋予正确的初始值，JVM负责对类进行初始化，主要对类变量进行初始化。在Java中对类变量进行初始值设定有两种方式：</p>
 <ul>
-<li>5.FilterChain接口</li>
+<li>声明类变量是指定初始值</li>
+<li>使用静态代码块为类变量指定初始值</li>
 </ul>
-<p>5.1 如何实例化    代表当前 Filter 链的对象。由容器实现，容器将其实例作为参数传入过滤器对象的doFilter()方法中</p>
-<p>5.2 作用   调用过滤器链中的下一个过滤器</p>
+<p>初始化步骤：</p>
 <ul>
-<li>filter实例：</li>
+<li>假如这个类还没有被加载和连接，则程序先加载并连接该类</li>
+<li>假如该类的直接父类还没有被初始化，则先初始化其直接父类</li>
+<li>假如类中有初始化语句，则系统依次执行这些初始化语句</li>
 </ul>
-<p>web.xml配置:<br><img src="http://upload-images.jianshu.io/upload_images/4942449-d4cbf63d54949495.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>编码拦截器：<br><img src="http://upload-images.jianshu.io/upload_images/4942449-8e160d51f7cc6291.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>日志拦截器：<br><img src="http://upload-images.jianshu.io/upload_images/4942449-37a534181fd5c6ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>HelloServlet类：<br><img src="http://upload-images.jianshu.io/upload_images/4942449-19a6c30a4c2d5be0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p>结果：<br><img src="http://upload-images.jianshu.io/upload_images/4942449-38eda2225f71a42c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>类初始化时机（主动，被动）</p>
+<p>只有当对类的主动使用的时候才会导致类的初始化，类的主动使用包括以下六种：</p>
 <ul>
-<li>总结：</li>
+<li>创建类的实例，也就是new的方式</li>
+<li>反射（如 Class.forName(“com.Test”)</li>
+<li>访问某个类或接口的静态变量，或者对该静态变量赋值</li>
+<li>调用类的静态方法</li>
+<li>初始化某个类的子类，则其父类也会被初始化</li>
+<li>Java虚拟机启动时被标明为启动类的类（ JavaTest），直接使用 java.exe命令来运行某个主类</li>
 </ul>
-<p>1.过滤器执行流程</p>
-<p>2.常用过滤器</p>
-<h1 id="FilterConfig接口"><a href="#FilterConfig接口" class="headerlink" title="FilterConfig接口"></a>FilterConfig接口</h1><p>1、与普通的Servlet程序一样，Filter程序也很可能需要访问Servlet容器。Servlet规范将代表ServletContext对象和Filter的配置参数信息都封装到一个称为FilterConfig的对象中。</p>
-<p>2、FilterConfig接口则用于定义FilterConfig对象应该对外提供的方法，以便在Filter程序中可以调用这些方法来获取ServletContext对象，以及获取在web.xml文件中为Filter设置的友好名称和初始化参数。</p>
-<p>3、FilterConfig接口定义的各个方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public interfaceFilterConfig &#123;</span><br><span class="line"></span><br><span class="line">    String getFilterName();</span><br><span class="line"></span><br><span class="line">    ServletContext getServletContext();</span><br><span class="line"></span><br><span class="line">    String getInitParameter(String var1);</span><br><span class="line"></span><br><span class="line">    Enumeration getInitParameterNames();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>getFilterName方法，返回元素的设置值。</p>
-<p>getServletContext方法，返回FilterConfig对象中所包装的ServletContext对象的引用。</p>
-<p>getInitParameter方法，用于返回在web.xml文件中为Filter所设置的某个名称的初始化的参数值。</p>
-<p>getInitParameterNames方法，返回一个Enumeration集合对象。</p>
+<p>被动引用的常见例子包括：</p>
+<ul>
+<li>通过子类引用父类的静态字段，不会导致子类初始化。</li>
+</ul>
+<blockquote>
+<p>System.out.println(SubClass.value); // value 字段在 SuperClass 中定义</p>
+</blockquote>
+<ul>
+<li>通过数组定义来引用类，不会触发此类的初始化。该过程会对数组类进行初始化，数组类是一个由虚拟机自动生成的、直接继承自 Object<br>的子类，其中包含了数组的属性和方法。</li>
+</ul>
+<blockquote>
+<p>SuperClass[] sca = new SuperClass[10];</p>
+</blockquote>
+<ul>
+<li>常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化。</li>
+</ul>
+<blockquote>
+<p>System.out.println(ConstClass.HELLOWORLD);</p>
+</blockquote>
+<h3 id="结束生命周期"><a href="#结束生命周期" class="headerlink" title="结束生命周期"></a>结束生命周期</h3><ul>
+<li>执行了System.exit()方法</li>
+<li>程序正常执行结束</li>
+<li>程序在执行过程中遇到了异常或错误而异常终止</li>
+<li>由于操作系统出现错误而导致Java虚拟机进程终止</li>
+</ul>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>站在Java虚拟机的角度来讲，只存在两种不同的类加载器：启动类加载器：它使用C++实现（这里仅限于Hotspot，也就是JDK1.5之后默认的虚拟机，有很多其他的虚拟机是用Java语言实现的），是虚拟机自身的一部分；<br>所有其它的类加载器：这些类加载器都由Java语言实现，独立于虚拟机之外，并且全部继承自抽象类 java.lang.ClassLoader，这些类加载器需要由启动类加载器加载到内存中之后才能去加载其他的类。</p>
+<p>站在Java开发人员的角度来看，类加载器可以大致划分为以下三类：</p>
+<ul>
+<li>启动类加载器：负责加载支撑JVM运行的位于JRE的lib目录下的核心类库，比如 rt.jar、charsets.jar等 </li>
+<li>扩展类加载器：负责加载支撑JVM运行的位于JRE的lib目录下的ext扩展目录中的JAR类包</li>
+<li>应用程序类加载器：负责加载ClassPath路径下的类包，主要就是加载你自己写的那些类</li>
+<li>自定义加载器：负责加载用户自定义路径下的类包</li>
+</ul>
+<h2 id="类加载机制-1"><a href="#类加载机制-1" class="headerlink" title="类加载机制"></a>类加载机制</h2><ul>
+<li>全盘负责，当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入</li>
+<li>父类委托，先让父类加载器试图加载该类，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类</li>
+<li>缓存机制，缓存机制将会保证所有加载过的Class都会被缓存，当程序中需要使用某个Class时，类加载器先从缓存区寻找该Class，<br>只有缓存区不存在，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存入缓存区。这就是为什么修改了Class后，必须重启JVM，程序的修改才会生效</li>
+</ul>
+<h3 id="双亲委派"><a href="#双亲委派" class="headerlink" title="双亲委派"></a>双亲委派</h3><p><img src="/uploads/java/jvm/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6.jpg" alt="双亲委派机制"></p>
+<p>双亲委派模型的工作流程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把请求委托给父加载器去完成，依次向上，因此，所有的类加载请求最终都应该被传递到顶层的启动类加载器中，<br>只有当父加载器在它的搜索范围中没有找到所需的类时，即无法完成该加载，子加载器才会尝试自己去加载该类。</p>
+<h4 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制:"></a>双亲委派机制:</h4><ul>
+<li>1、当 AppClassLoader加载一个class时，它首先不会自己去尝试加载这个类，而是把类加载请求委派给父类加载器ExtClassLoader去完成。</li>
+<li>2、当 ExtClassLoader加载一个class时，它首先也不会自己去尝试加载这个类，而是把类加载请求委派给BootStrapClassLoader```去完成。</li>
+<li>3、如果 BootStrapClassLoader加载失败（例如在 $JAVA_HOME/jre/lib里未查找到该class），会使用 ExtClassLoader来尝试加载；</li>
+<li>4、若ExtClassLoader也加载失败，则会使用 AppClassLoader来加载，如果 AppClassLoader也加载失败，则会报出异常 ClassNotFoundException</li>
+</ul>
+<h4 id="ClassLoader源码分析："><a href="#ClassLoader源码分析：" class="headerlink" title="ClassLoader源码分析："></a>ClassLoader源码分析：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">return</span> loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">    <span class="comment">// 首先判断该类型是否已经被加载</span></span><br><span class="line">    Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果没有被加载，就委托给父类加载或者委派给启动类加载器加载</span></span><br><span class="line">        <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//如果存在父类加载器，就委派给父类加载器加载</span></span><br><span class="line">                c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//如果不存在父类加载器，就检查是否是由启动类加载器加载的类，通过调用本地方法native Class findBootstrapClass(String name)</span></span><br><span class="line">                c = findBootstrapClassOrNull(name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">            <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果父类加载器和启动类加载器都不能完成加载任务，才调用自身的加载功能</span></span><br><span class="line">            <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">            c = findClass(name);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">            PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">            PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">            PerfCounter.getFindClasses().increment();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">        resolveClass(c);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h4 id="双亲委派模型意义："><a href="#双亲委派模型意义：" class="headerlink" title="双亲委派模型意义："></a>双亲委派模型意义：</h4><ul>
+<li>系统类防止内存中出现多份同样的字节码</li>
+<li>保证Java程序安全稳定运行</li>
+</ul>
+<h2 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h2><p>通常情况下，我们都是直接使用系统类加载器。但是，有的时候，我们也需要自定义类加载器。比如应用是通过网络来传输 Java类的字节码，为保证安全性，<br>这些字节码经过了加密处理，这时系统类加载器就无法对其进行加载，这样则需要自定义类加载器来实现。自定义类加载器一般都是继承自 ClassLoader类，<br>从上面对 loadClass方法来分析来看，我们只需要重写 findClass 方法即可。下面我们通过一个示例来演示自定义类加载器的流程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wyb.test.java.reflect;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WybClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String root;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">        <span class="keyword">byte</span>[] classData = loadClassData(name);</span><br><span class="line">        <span class="keyword">if</span> (classData == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> defineClass(name, classData, <span class="number">0</span>, classData.length);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] loadClassData(String className) &#123;</span><br><span class="line"></span><br><span class="line">        String fileName = root + File.separatorChar + className.replace(<span class="string">'.'</span>, File.separatorChar) + <span class="string">".class"</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            InputStream ins = <span class="keyword">new</span> FileInputStream(fileName);</span><br><span class="line">            ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            <span class="keyword">int</span> bufferSize = <span class="number">1024</span>;</span><br><span class="line">            <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[bufferSize];</span><br><span class="line">            <span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> ((length = ins.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                baos.write(buffer, <span class="number">0</span>, length);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> baos.toByteArray();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getRoot</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setRoot</span><span class="params">(String root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.root = root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        WybClassLoader wybClassLoader = <span class="keyword">new</span> WybClassLoader();</span><br><span class="line">        <span class="comment">// class 需要用javac编译  class不能放在类路径下</span></span><br><span class="line"></span><br><span class="line">        wybClassLoader.setRoot(<span class="string">"E:\\marcher\\spring-example\\spring-example-test\\temp"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class clazz = wybClassLoader.loadClass(<span class="string">"WybClass"</span>);</span><br><span class="line">            Object obj = clazz.newInstance();</span><br><span class="line">            System.out.println(obj.getClass().getClassLoader());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException | InstantiationException | IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自定义类加载器的核心在于对字节码文件的获取，如果是加密的字节码则需要在该类中对文件进行解密。由于这里只是演示，我并未对class文件进行加密，因此没有解密的过程。这里有几点需要注意：</p>
+<p>1、这里传递的文件名需要是类的全限定性名称，即 com.wyb.test.java.reflect.WybClass，因为 defineClass 方法是按这种格式进行处理的。</p>
+<p>2、最好不要重写loadClass方法，因为这样容易破坏双亲委托模式。</p>
+<p>3、这类Test 类本身可以被 AppClassLoader类加载，因此我们不能把 E://marcher//spring-example/temp.class放在类路径下。否则，由于双亲委托机制的存在，会直接导致该类由 AppClassLoader加载，而不会通过我们自定义类加载器来加载。</p>
+<h3 id="Tomcat打破双亲委派机制"><a href="#Tomcat打破双亲委派机制" class="headerlink" title="Tomcat打破双亲委派机制"></a>Tomcat打破双亲委派机制</h3><p>以Tomcat类加载为例，Tomcat 如果使用默认的双亲委派类加载机制行不行？<br>我们思考一下：Tomcat是个web容器， 那么它要解决什么问题： </p>
+<ol>
+<li>一个web容器可能需要部署两个应用程序，不同的应用程序可能会依赖同一个第三方类库的不同版本，不能要求同一个类库在同一个服务器只有一份，因此要保证每个应用程序的类库都是独立的，保证相互隔离。 </li>
+<li>部署在同一个web容器中相同的类库相同的版本可以共享。否则，如果服务器有10个应用程序，那么要有10份相同的类库加载进虚拟机。 </li>
+<li>web容器也有自己依赖的类库，不能与应用程序的类库混淆。基于安全考虑，应该让容器的类库和程序的类库隔离开来。 </li>
+<li>web容器要支持jsp的修改，我们知道，jsp 文件最终也是要编译成class文件才能在虚拟机中运行，但程序运行后修改jsp已经是司空见惯的事情， web容器需要支持 jsp 修改后不用重启。</li>
+</ol>
+<p>再看看我们的问题：Tomcat 如果使用默认的双亲委派类加载机制行不行？<br>答案是不行的。为什么？<br>第一个问题，如果使用默认的类加载器机制，那么是无法加载两个相同类库的不同版本的，默认的类加器是不管你是什么版本的，只在乎你的全限定类名，并且只有一份。<br>第二个问题，默认的类加载器是能够实现的，因为他的职责就是保证唯一性。<br>第三个问题和第一个问题一样。<br>我们再看第四个问题，我们想我们要怎么实现jsp文件的热加载，jsp 文件其实也就是class文件，那么如果修改了，但类名还是一样，类加载器会直接取方法区中已经存在的，修改后的jsp是不会重新加载的。那么怎么办呢？我们可以直接卸载掉这jsp文件的类加载器，所以你应该想到了，每个jsp文件对应一个唯一的类加载器，当一个jsp文件修改了，就直接卸载这个jsp类加载器。重新创建类加载器，重新加载jsp文件。</p>
+<h4 id="Tomcat自定义加载器详解"><a href="#Tomcat自定义加载器详解" class="headerlink" title="Tomcat自定义加载器详解"></a>Tomcat自定义加载器详解</h4><p><img src="/uploads/java/jvm/Tomcat%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E8%BD%BD%E5%99%A8.png" alt="Tomcat自定义加载器"></p>
+<p>tomcat的几个主要类加载器：</p>
+<ul>
+<li>commonLoader：Tomcat最基本的类加载器，加载路径中的class可以被Tomcat容器本身以及各个Webapp访问；</li>
+<li>catalinaLoader：Tomcat容器私有的类加载器，加载路径中的class对于Webapp不可见；</li>
+<li>sharedLoader：各个Webapp共享的类加载器，加载路径中的class对于所有Webapp可见，但是对于Tomcat容器不可见；</li>
+<li>WebappClassLoader：各个Webapp私有的类加载器，加载路径中的class只对当前Webapp可见，比如加载war包里相关的类，每个war包应用都有自己的WebappClassLoader，实现相互隔离，比如不同war包应用引入了不同的spring版本，这样实现就能加载各自的spring版本；</li>
+</ul>
+<p>从图中的委派关系中可以看出：<br>CommonClassLoader能加载的类都可以被CatalinaClassLoader和SharedClassLoader使用，从而实现了公有类库的共用，而CatalinaClassLoader和SharedClassLoader自己能加载的类则与对方相互隔离。</p>
+<p>WebAppClassLoader可以使用SharedClassLoader加载到的类，但各个WebAppClassLoader实例之间相互隔离。</p>
+<p>而JasperLoader的加载范围仅仅是这个JSP文件所编译出来的那一个.Class文件，它出现的目的就是为了被丢弃：当Web容器检测到JSP文件被修改时，会替换掉目前的JasperLoader的实例，并通过再建立一个新的Jsp类加载器来实现JSP文件的热加载功能。</p>
+<p>tomcat 这种类加载机制违背了java 推荐的双亲委派模型了吗？答案是：违背了。 </p>
+<p>很显然，tomcat 不是这样实现，tomcat 为了实现隔离性，没有遵守这个约定，每个webappClassLoader加载自己的目录下的class文件，不会传递给父类加载器，打破了双亲委派机制。</p>
+<h4 id="模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离"><a href="#模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离" class="headerlink" title="模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离"></a>模拟实现Tomcat的webappClassLoader加载自己war包应用内不同版本类实现相互共存与隔离</h4>
           
         
       
@@ -2176,7 +3023,7 @@ default                    do
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span>
+    <a class="extend prev" rel="prev" href="/page/6/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/8/">&gt;</a>
   </nav>
 
 
@@ -2226,7 +3073,7 @@ default                    do
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">68</span>
+                  <span class="site-state-item-count">82</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2237,7 +3084,7 @@ default                    do
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2347,7 +3194,7 @@ default                    do
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">81.1k</span>
+    <span title="Site words total count">105.4k</span>
   
 </div>
 
@@ -2374,7 +3221,7 @@ default                    do
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共81.1k字</span>
+  <span class="post-count">博客全站共105.4k字</span>
 </div>
 
         

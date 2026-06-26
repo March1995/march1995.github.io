@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/function%20small()%20%7B%20%5Bnative%20code%5D%20%7D?v=5.1.4">
+
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Marcher" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Spring Boot 定时任务实现原理完整解析目录 核心组件概览 完整执行流程图 初始化流程详解 任务扫描与注册 调度器自动配置 任务调度执行 FixedDelay 与 FixedRate 的区别 配置示例与最佳实践 总结   核心组件概览Spring Boot 定时任务主要涉及以下核心组件：    组件 作用    @EnableScheduling 启用定时任务功能   Scheduling">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring&#x2F;Scheduler&#x2F;Spring Boot 定时任务实现原理完整解析">
+<meta property="og:url" content="https://march1995.github.io/2026/06/26/spring/Scheduler/Spring%20Boot%20%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%AE%8C%E6%95%B4%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="Marcher">
+<meta property="og:description" content="Spring Boot 定时任务实现原理完整解析目录 核心组件概览 完整执行流程图 初始化流程详解 任务扫描与注册 调度器自动配置 任务调度执行 FixedDelay 与 FixedRate 的区别 配置示例与最佳实践 总结   核心组件概览Spring Boot 定时任务主要涉及以下核心组件：    组件 作用    @EnableScheduling 启用定时任务功能   Scheduling">
+<meta property="article:published_time" content="2026-06-26T03:57:10.308Z">
+<meta property="article:modified_time" content="2026-06-26T03:57:10.308Z">
+<meta property="article:author" content="Marcher">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://march1995.github.io/2026/06/26/spring/Scheduler/Spring Boot 定时任务实现原理完整解析/"/>
+
+
+
+
+
+  <title>spring/Scheduler/Spring Boot 定时任务实现原理完整解析 | Marcher</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+
+<a href="https://github.com/march1995" target="_blank" rel="noopener" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px)
+{.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Marcher</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://march1995.github.io/2026/06/26/spring/Scheduler/Spring%20Boot%20%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%AE%8C%E6%95%B4%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Marcher">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Marcher">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">spring/Scheduler/Spring Boot 定时任务实现原理完整解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2026-06-26T03:57:10+00:00">
+                2026-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5.1k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  25 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Spring-Boot-定时任务实现原理完整解析"><a href="#Spring-Boot-定时任务实现原理完整解析" class="headerlink" title="Spring Boot 定时任务实现原理完整解析"></a>Spring Boot 定时任务实现原理完整解析</h1><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li><a href="#核心组件概览">核心组件概览</a></li>
+<li><a href="#完整执行流程图">完整执行流程图</a></li>
+<li><a href="#初始化流程详解">初始化流程详解</a></li>
+<li><a href="#任务扫描与注册">任务扫描与注册</a></li>
+<li><a href="#调度器自动配置">调度器自动配置</a></li>
+<li><a href="#任务调度执行">任务调度执行</a></li>
+<li><a href="#fixeddelay-与-fixedrate-的区别">FixedDelay 与 FixedRate 的区别</a></li>
+<li><a href="#配置示例与最佳实践">配置示例与最佳实践</a></li>
+<li><a href="#总结">总结</a></li>
+</ol>
+<hr>
+<h2 id="核心组件概览"><a href="#核心组件概览" class="headerlink" title="核心组件概览"></a>核心组件概览</h2><p>Spring Boot 定时任务主要涉及以下核心组件：</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@EnableScheduling</code></td>
+<td>启用定时任务功能</td>
+</tr>
+<tr>
+<td><code>SchedulingConfiguration</code></td>
+<td>注册核心处理器</td>
+</tr>
+<tr>
+<td><code>ScheduledAnnotationBeanPostProcessor</code></td>
+<td>核心后置处理器，扫描 @Scheduled 方法</td>
+</tr>
+<tr>
+<td><code>TaskSchedulingAutoConfiguration</code></td>
+<td>Spring Boot 自动配置调度器</td>
+</tr>
+<tr>
+<td><code>TaskSchedulingProperties</code></td>
+<td>调度器配置属性</td>
+</tr>
+<tr>
+<td><code>TaskSchedulerBuilder</code></td>
+<td>调度器构建器</td>
+</tr>
+<tr>
+<td><code>TaskScheduler</code></td>
+<td>任务调度器接口</td>
+</tr>
+<tr>
+<td><code>ThreadPoolTaskScheduler</code></td>
+<td>默认调度器实现</td>
+</tr>
+<tr>
+<td><code>ScheduledTaskRegistrar</code></td>
+<td>任务注册器</td>
+</tr>
+<tr>
+<td><code>ScheduledMethodRunnable</code></td>
+<td>定时任务执行体</td>
+</tr>
+<tr>
+<td><code>ReschedulingRunnable</code></td>
+<td>可重新调度的任务包装器</td>
+</tr>
+<tr>
+<td><code>ScheduledExecutorService</code></td>
+<td>底层线程池</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="完整执行流程图"><a href="#完整执行流程图" class="headerlink" title="完整执行流程图"></a>完整执行流程图</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">    Start([Spring Boot 启动]) --&gt; AutoConfig[Spring Boot 自动配置阶段]</span><br><span class="line">    </span><br><span class="line">    AutoConfig --&gt; A[&quot;TaskSchedulingAutoConfiguration&lt;br&#x2F;&gt;（定时任务自动配置类）&quot;]</span><br><span class="line">    </span><br><span class="line">    A --&gt; B&#123;&quot;@ConditionalOnBean&lt;br&#x2F;&gt;@EnableScheduling?&quot;&#125;</span><br><span class="line">    B --&gt;|未启用| Skip[跳过定时任务配置]</span><br><span class="line">    B --&gt;|已启用| C[加载 TaskSchedulingAutoConfiguration]</span><br><span class="line">    </span><br><span class="line">    C --&gt; D&#123;&quot;检查配置属性&lt;br&#x2F;&gt;spring.task.scheduling.*&quot;&#125;</span><br><span class="line">    D --&gt; E&#123;配置类型判断&#125;</span><br><span class="line">    </span><br><span class="line">    E --&gt;|有自定义配置| F[&quot;TaskSchedulingProperties&lt;br&#x2F;&gt;读取配置属性&quot;]</span><br><span class="line">    E --&gt;|无配置| G[使用默认配置]</span><br><span class="line">    </span><br><span class="line">    F --&gt; H[&quot;解析线程池配置&lt;br&#x2F;&gt;pool.core-size&lt;br&#x2F;&gt;thread-name-prefix&lt;br&#x2F;&gt;shutdown 等&quot;]</span><br><span class="line">    G --&gt; I[&quot;默认线程池配置&lt;br&#x2F;&gt;core-size&#x3D;1&lt;br&#x2F;&gt;thread-name-prefix&#x3D;scheduling-&quot;]</span><br><span class="line">    </span><br><span class="line">    H --&gt; J[创建 TaskSchedulerBuilder]</span><br><span class="line">    I --&gt; J</span><br><span class="line">    </span><br><span class="line">    J --&gt; K[&quot;TaskSchedulerBuilder.build&lt;br&#x2F;&gt;构建调度器&quot;]</span><br><span class="line">    </span><br><span class="line">    K --&gt; L[&quot;创建 ThreadPoolTaskScheduler&quot;]</span><br><span class="line">    L --&gt; M[&quot;initializeExecutor&lt;br&#x2F;&gt;初始化线程池&quot;]</span><br><span class="line">    M --&gt; N[&quot;创建 ScheduledThreadPoolExecutor&quot;]</span><br><span class="line">    </span><br><span class="line">    N --&gt; O[&quot;注册 TaskScheduler Bean&lt;br&#x2F;&gt;到 Spring 容器&quot;]</span><br><span class="line">    </span><br><span class="line">    O --&gt; P[&quot;SchedulingConfiguration&lt;br&#x2F;&gt;注册 ScheduledAnnotationBeanPostProcessor&quot;]</span><br><span class="line">    </span><br><span class="line">    P --&gt; Q[Bean 初始化阶段]</span><br><span class="line">    Q --&gt; R[&quot;postProcessAfterInitialization&lt;br&#x2F;&gt;（Bean后置处理）&quot;]</span><br><span class="line">    </span><br><span class="line">    R --&gt; S&#123;&quot;扫描 Bean 中&lt;br&#x2F;&gt;@Scheduled 方法&quot;&#125;</span><br><span class="line">    S --&gt; T[&quot;MethodIntrospector.selectMethods&lt;br&#x2F;&gt;（查找注解方法）&quot;]</span><br><span class="line">    T --&gt; U[解析 @Scheduled 注解属性]</span><br><span class="line">    U --&gt; V[&quot;createRunnable&lt;br&#x2F;&gt;创建 ScheduledMethodRunnable&quot;]</span><br><span class="line">    </span><br><span class="line">    V --&gt; W&#123;判断调度类型&#125;</span><br><span class="line">    W --&gt;|Cron| X[&quot;解析 CronExpression&lt;br&#x2F;&gt;创建 CronTrigger&quot;]</span><br><span class="line">    W --&gt;|fixedDelay| Y[&quot;创建 FixedDelayTask&quot;]</span><br><span class="line">    W --&gt;|fixedRate| Z[&quot;创建 FixedRateTask&quot;]</span><br><span class="line">    </span><br><span class="line">    X --&gt; AA[创建 CronTask]</span><br><span class="line">    </span><br><span class="line">    AA --&gt; AB[&quot;ScheduledTaskRegistrar&lt;br&#x2F;&gt;任务注册器&quot;]</span><br><span class="line">    Y --&gt; AB</span><br><span class="line">    Z --&gt; AB</span><br><span class="line">    </span><br><span class="line">    AB --&gt; AC&#123;&quot;TaskScheduler&lt;br&#x2F;&gt;获取优先级&quot;&#125;</span><br><span class="line">    AC --&gt; AD[&quot;1. 查找名称&#x3D;&#39;taskScheduler&#39;的Bean&quot;]</span><br><span class="line">    AD --&gt; AE&#123;&quot;是否找到?&quot;&#125;</span><br><span class="line">    AE --&gt;|是| AF[&quot;使用找到的&lt;br&#x2F;&gt;TaskScheduler Bean&quot;]</span><br><span class="line">    AE --&gt;|否| AG[&quot;2. 查找类型为&lt;br&#x2F;&gt;TaskScheduler 的 Bean&quot;]</span><br><span class="line">    AG --&gt; AH&#123;&quot;是否找到?&quot;&#125;</span><br><span class="line">    AH --&gt;|是| AF</span><br><span class="line">    AH --&gt;|否| AI[&quot;3. 查找 ScheduledExecutorService&quot;]</span><br><span class="line">    AI --&gt; AJ&#123;&quot;是否找到?&quot;&#125;</span><br><span class="line">    AJ --&gt;|是| AK[&quot;包装为&lt;br&#x2F;&gt;ConcurrentTaskScheduler&quot;]</span><br><span class="line">    AJ --&gt;|否| AL[&quot;创建默认&lt;br&#x2F;&gt;单线程调度器&quot;]</span><br><span class="line">    </span><br><span class="line">    AF --&gt; AM[&quot;ScheduledTaskRegistrar&lt;br&#x2F;&gt;设置 TaskScheduler&quot;]</span><br><span class="line">    AK --&gt; AM</span><br><span class="line">    AL --&gt; AM</span><br><span class="line">    </span><br><span class="line">    AM --&gt; AN&#123;&quot;任务类型判断&quot;&#125;</span><br><span class="line">    </span><br><span class="line">    AN --&gt;|CronTask| AO[&quot;创建 ReschedulingRunnable&lt;br&#x2F;&gt;（可重新调度包装器）&quot;]</span><br><span class="line">    AN --&gt;|FixedDelayTask| AP[&quot;executor.scheduleWithFixedDelay&lt;br&#x2F;&gt;（固定延迟调度）&quot;]</span><br><span class="line">    AN --&gt;|FixedRateTask| AQ[&quot;executor.scheduleAtFixedRate&lt;br&#x2F;&gt;（固定频率调度）&quot;]</span><br><span class="line">    </span><br><span class="line">    AO --&gt; AR[&quot;ReschedulingRunnable.schedule&lt;br&#x2F;&gt;开始调度&quot;]</span><br><span class="line">    AR --&gt; AS[&quot;Trigger.nextExecutionTime&lt;br&#x2F;&gt;计算下次执行时间&quot;]</span><br><span class="line">    AS --&gt; AT&#123;&quot;下次执行时间&lt;br&#x2F;&gt;是否为 null?&quot;&#125;</span><br><span class="line">    AT --&gt;|是| AU[&quot;任务结束&lt;br&#x2F;&gt;（一次性任务）&quot;]</span><br><span class="line">    AT --&gt;|否| AV[&quot;计算 initialDelay&quot;]</span><br><span class="line">    </span><br><span class="line">    AV --&gt; AW[&quot;executor.schedule&lt;br&#x2F;&gt;提交延迟任务到线程池&quot;]</span><br><span class="line">    AP --&gt; AW</span><br><span class="line">    AQ --&gt; AW</span><br><span class="line">    </span><br><span class="line">    AW --&gt; AX[&quot;任务存入&lt;br&#x2F;&gt;DelayedWorkQueue 延迟队列&quot;]</span><br><span class="line">    </span><br><span class="line">    AX --&gt; AY[&quot;ScheduledThreadPoolExecutor&lt;br&#x2F;&gt;Worker 线程循环&quot;]</span><br><span class="line">    AY --&gt; AZ[&quot;ThreadPoolExecutor.getTask&lt;br&#x2F;&gt;从队列获取任务&quot;]</span><br><span class="line">    AZ --&gt; BA&#123;&quot;队列中&lt;br&#x2F;&gt;是否有到期任务?&quot;&#125;</span><br><span class="line">    BA --&gt;|否| BB[&quot;Worker 线程阻塞等待&lt;br&#x2F;&gt;condition.awaitNanos(delay)&quot;]</span><br><span class="line">    BB --&gt; BA</span><br><span class="line">    </span><br><span class="line">    BA --&gt;|是| BC[&quot;取出到期任务&lt;br&#x2F;&gt;Worker 线程执行&quot;]</span><br><span class="line">    </span><br><span class="line">    BC --&gt; BD[&quot;执行 ScheduledMethodRunnable.run&lt;br&#x2F;&gt;反射调用目标方法&quot;]</span><br><span class="line">    </span><br><span class="line">    BD --&gt; BE&#123;&quot;执行是否&lt;br&#x2F;&gt;抛出异常?&quot;&#125;</span><br><span class="line">    BE --&gt;|是| BF[&quot;ErrorHandler 处理&lt;br&#x2F;&gt;（默认 LoggingErrorHandler）&quot;]</span><br><span class="line">    BE --&gt;|否| BG[&quot;更新 TriggerContext&lt;br&#x2F;&gt;记录执行时间&quot;]</span><br><span class="line">    </span><br><span class="line">    BF --&gt; BG</span><br><span class="line">    BG --&gt; BH&#123;&quot;判断任务&lt;br&#x2F;&gt;是否已取消?&quot;&#125;</span><br><span class="line">    BH --&gt;|已取消| BI[&quot;任务终止&quot;]</span><br><span class="line">    BH --&gt;|未取消| BJ&#123;&quot;任务类型?&quot;&#125;</span><br><span class="line">    </span><br><span class="line">    BJ --&gt;|ReschedulingRunnable| BK[&quot;重新调用 schedule 方法&lt;br&#x2F;&gt;计算下次执行时间&quot;]</span><br><span class="line">    BJ --&gt;|FixedDelay| BL[&quot;等待 fixedDelay&lt;br&#x2F;&gt;后自动重新调度&quot;]</span><br><span class="line">    BJ --&gt;|FixedRate| BM[&quot;按固定频率&lt;br&#x2F;&gt;自动重新调度&quot;]</span><br><span class="line">    </span><br><span class="line">    BK --&gt; AS</span><br><span class="line">    BL --&gt; AW</span><br><span class="line">    BM --&gt; AW</span><br><span class="line">    </span><br><span class="line">    BI --&gt; BN[&quot;从 scheduledTasks&lt;br&#x2F;&gt;中移除任务引用&quot;]</span><br><span class="line">    </span><br><span class="line">    subgraph &quot;Spring Boot 自动配置&quot;</span><br><span class="line">        A</span><br><span class="line">        C</span><br><span class="line">        D</span><br><span class="line">        F</span><br><span class="line">        H</span><br><span class="line">        M</span><br><span class="line">        N</span><br><span class="line">        O</span><br><span class="line">    end</span><br><span class="line">    </span><br><span class="line">    subgraph &quot;任务扫描与注册&quot;</span><br><span class="line">        R</span><br><span class="line">        S</span><br><span class="line">        U</span><br><span class="line">        V</span><br><span class="line">        W</span><br><span class="line">        AB</span><br><span class="line">    end</span><br><span class="line">    </span><br><span class="line">    subgraph &quot;调度器选择&quot;</span><br><span class="line">        AC</span><br><span class="line">        AD</span><br><span class="line">        AE</span><br><span class="line">        AF</span><br><span class="line">        AL</span><br><span class="line">    end</span><br><span class="line">    </span><br><span class="line">    subgraph &quot;任务执行与重新调度&quot;</span><br><span class="line">        AW</span><br><span class="line">        AX</span><br><span class="line">        AY</span><br><span class="line">        BC</span><br><span class="line">        BD</span><br><span class="line">        BK</span><br><span class="line">    end</span><br><span class="line">    </span><br><span class="line">    style A fill:#f9f,stroke:#333,stroke-width:4px</span><br><span class="line">    style O fill:#bfb,stroke:#333,stroke-width:2px</span><br><span class="line">    style R fill:#bbf,stroke:#333,stroke-width:2px</span><br><span class="line">    style BD fill:#fbb,stroke:#333,stroke-width:2px</span><br><span class="line">    style BF fill:#faa,stroke:#333,stroke-width:2px</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="初始化流程详解"><a href="#初始化流程详解" class="headerlink" title="初始化流程详解"></a>初始化流程详解</h2><h3 id="1-启用定时任务"><a href="#1-启用定时任务" class="headerlink" title="1. 启用定时任务"></a>1. 启用定时任务</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableScheduling</span>  <span class="comment">// 1. 启用定时任务</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(Application<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. @EnableScheduling 导入配置类</span></span><br><span class="line"><span class="meta">@Import</span>(SchedulingConfiguration<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">EnableScheduling</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-注册核心处理器"><a href="#2-注册核心处理器" class="headerlink" title="2. 注册核心处理器"></a>2. 注册核心处理器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SchedulingConfiguration</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. 注册 ScheduledAnnotationBeanPostProcessor</span></span><br><span class="line">    <span class="meta">@Bean</span>(name = TaskManagementConfigUtils.SCHEDULED_ANNOTATION_PROCESSOR_BEAN_NAME)</span><br><span class="line">    <span class="meta">@Role</span>(BeanDefinition.ROLE_INFRASTRUCTURE)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ScheduledAnnotationBeanPostProcessor <span class="title">scheduledAnnotationProcessor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ScheduledAnnotationBeanPostProcessor();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-BeanPostProcessor-初始化"><a href="#3-BeanPostProcessor-初始化" class="headerlink" title="3. BeanPostProcessor 初始化"></a>3. BeanPostProcessor 初始化</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduledAnnotationBeanPostProcessor</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">ScheduledTaskHolder</span>, <span class="title">MergedBeanDefinitionPostProcessor</span>, </span></span><br><span class="line"><span class="class">               <span class="title">DestructionAwareBeanPostProcessor</span>, <span class="title">ApplicationContextAware</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 4. 初始化调度器</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.applicationContext = applicationContext;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.beanFactory = applicationContext;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 5. 关键初始化方法</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onApplicationEvent</span><span class="params">(ContextRefreshedEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (event.getApplicationContext() == <span class="keyword">this</span>.applicationContext) &#123;</span><br><span class="line">            finishRegistration();  <span class="comment">// 完成注册</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="任务扫描与注册"><a href="#任务扫描与注册" class="headerlink" title="任务扫描与注册"></a>任务扫描与注册</h2><h3 id="1-扫描-Scheduled-方法"><a href="#1-扫描-Scheduled-方法" class="headerlink" title="1. 扫描 @Scheduled 方法"></a>1. 扫描 @Scheduled 方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ScheduledAnnotationBeanPostProcessor 核心方法</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> AopInfrastructureBean || </span><br><span class="line">        bean <span class="keyword">instanceof</span> TaskScheduler || </span><br><span class="line">        bean <span class="keyword">instanceof</span> ScheduledExecutorService) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;  <span class="comment">// 忽略基础设施 Bean</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    Class&lt;?&gt; targetClass = AopProxyUtils.ultimateTargetClass(bean);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 6. 扫描目标类中的 @Scheduled 方法</span></span><br><span class="line">    Map&lt;Method, Set&lt;Scheduled&gt;&gt; annotatedMethods = </span><br><span class="line">        MethodIntrospector.selectMethods(targetClass,</span><br><span class="line">            (MethodIntrospector.MetadataLookup&lt;Set&lt;Scheduled&gt;&gt;) method -&gt; &#123;</span><br><span class="line">                Set&lt;Scheduled&gt; scheduledAnnotations = AnnotatedElementUtils</span><br><span class="line">                    .getMergedRepeatableAnnotations(method, Scheduled<span class="class">.<span class="keyword">class</span>, <span class="title">Schedules</span>.<span class="title">class</span>)</span>;</span><br><span class="line">                <span class="keyword">return</span> (!scheduledAnnotations.isEmpty() ? scheduledAnnotations : <span class="keyword">null</span>);</span><br><span class="line">            &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (annotatedMethods.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 7. 处理每个标注了 @Scheduled 的方法</span></span><br><span class="line">    annotatedMethods.forEach((method, scheduledAnnotations) -&gt;</span><br><span class="line">        scheduledAnnotations.forEach(scheduled -&gt; </span><br><span class="line">            processScheduled(scheduled, method, bean)));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-创建并注册任务"><a href="#2-创建并注册任务" class="headerlink" title="2. 创建并注册任务"></a>2. 创建并注册任务</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 8. 处理单个定时任务</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processScheduled</span><span class="params">(Scheduled scheduled, Method method, Object bean)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 创建可执行任务</span></span><br><span class="line">        Runnable runnable = createRunnable(bean, method);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 收集所有需要调度的任务</span></span><br><span class="line">        Set&lt;ScheduledTask&gt; tasks = <span class="keyword">new</span> LinkedHashSet&lt;&gt;(<span class="number">4</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 9. 解析 cron 表达式</span></span><br><span class="line">        String cron = scheduled.cron();</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.hasText(cron)) &#123;</span><br><span class="line">            String zone = scheduled.zone();</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.hasText(zone)) &#123;</span><br><span class="line">                tasks.add(<span class="keyword">this</span>.registrar.scheduleCronTask(</span><br><span class="line">                    <span class="keyword">new</span> CronTask(runnable, <span class="keyword">new</span> CronTrigger(cron, timeZone))));</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                tasks.add(<span class="keyword">this</span>.registrar.scheduleCronTask(</span><br><span class="line">                    <span class="keyword">new</span> CronTask(runnable, cron)));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 10. 处理 fixedDelay（单位：毫秒）</span></span><br><span class="line">        <span class="keyword">long</span> fixedDelay = scheduled.fixedDelay();</span><br><span class="line">        <span class="keyword">if</span> (fixedDelay &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            tasks.add(<span class="keyword">this</span>.registrar.scheduleFixedDelayTask(</span><br><span class="line">                <span class="keyword">new</span> FixedDelayTask(runnable, fixedDelay, initialDelay)));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 11. 处理 fixedRate（单位：毫秒）</span></span><br><span class="line">        <span class="keyword">long</span> fixedRate = scheduled.fixedRate();</span><br><span class="line">        <span class="keyword">if</span> (fixedRate &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            tasks.add(<span class="keyword">this</span>.registrar.scheduleFixedRateTask(</span><br><span class="line">                <span class="keyword">new</span> FixedRateTask(runnable, fixedRate, initialDelay)));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 保存任务引用</span></span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.scheduledTasks) &#123;</span><br><span class="line">            <span class="keyword">this</span>.scheduledTasks.put(processedBean, tasks);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalArgumentException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Encountered invalid @Scheduled method"</span>, ex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 12. 创建可执行任务</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> Runnable <span class="title">createRunnable</span><span class="params">(Object target, Method method)</span> </span>&#123;</span><br><span class="line">    Assert.isTrue(method.getParameterCount() == <span class="number">0</span>, </span><br><span class="line">        <span class="string">"Only no-arg methods may be annotated with @Scheduled"</span>);</span><br><span class="line">    </span><br><span class="line">    Method invocableMethod = AopUtils.selectInvocableMethod(method, target.getClass());</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ScheduledMethodRunnable(target, invocableMethod);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="调度器自动配置"><a href="#调度器自动配置" class="headerlink" title="调度器自动配置"></a>调度器自动配置</h2><h3 id="1-TaskSchedulingAutoConfiguration"><a href="#1-TaskSchedulingAutoConfiguration" class="headerlink" title="1. TaskSchedulingAutoConfiguration"></a>1. TaskSchedulingAutoConfiguration</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Spring Boot 自动配置类</span></span><br><span class="line"><span class="meta">@Configuration</span>(proxyBeanMethods = <span class="keyword">false</span>)</span><br><span class="line"><span class="meta">@ConditionalOnClass</span>(ThreadPoolTaskScheduler<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">EnableConfigurationProperties</span>(<span class="title">TaskSchedulingProperties</span>.<span class="title">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">TaskSchedulingAutoConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 当启用 @EnableScheduling 时才生效</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnBean</span>(name = TaskManagementConfigUtils.SCHEDULED_ANNOTATION_PROCESSOR_BEAN_NAME)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TaskSchedulerBuilder <span class="title">taskSchedulerBuilder</span><span class="params">(TaskSchedulingProperties properties)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TaskSchedulerBuilder(properties);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建默认的 TaskScheduler</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TaskScheduler <span class="title">taskScheduler</span><span class="params">(TaskSchedulerBuilder builder)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> builder.build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-TaskSchedulingProperties-配置属性"><a href="#2-TaskSchedulingProperties-配置属性" class="headerlink" title="2. TaskSchedulingProperties 配置属性"></a>2. TaskSchedulingProperties 配置属性</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"spring.task.scheduling"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TaskSchedulingProperties</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 线程池配置</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Pool pool = <span class="keyword">new</span> Pool();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 线程名称前缀</span></span><br><span class="line">    <span class="keyword">private</span> String threadNamePrefix = <span class="string">"scheduling-"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 关闭时等待任务完成</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Shutdown shutdown = <span class="keyword">new</span> Shutdown();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Pool</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 核心线程数（默认 1）</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> coreSize = <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 是否允许核心线程超时</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">boolean</span> allowCoreThreadTimeout = <span class="keyword">true</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 队列容量（默认无限制）</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> queueCapacity = Integer.MAX_VALUE;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// getters and setters...</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Shutdown</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 关闭时是否等待任务完成</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">boolean</span> awaitTermination = <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 等待终止的超时时间</span></span><br><span class="line">        <span class="keyword">private</span> Duration awaitTerminationPeriod = Duration.ofSeconds(<span class="number">30</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// getters and setters...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-TaskSchedulerBuilder-构建器"><a href="#3-TaskSchedulerBuilder-构建器" class="headerlink" title="3. TaskSchedulerBuilder 构建器"></a>3. TaskSchedulerBuilder 构建器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TaskSchedulerBuilder</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TaskSchedulingProperties properties;</span><br><span class="line">    <span class="keyword">private</span> ScheduledExecutorService scheduledExecutor;</span><br><span class="line">    <span class="keyword">private</span> String threadNamePrefix;</span><br><span class="line">    <span class="keyword">private</span> Integer poolSize;</span><br><span class="line">    <span class="keyword">private</span> RejectedExecutionHandler rejectedExecutionHandler;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TaskSchedulerBuilder</span><span class="params">(TaskSchedulingProperties properties)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.properties = properties;</span><br><span class="line">        <span class="keyword">this</span>.threadNamePrefix = properties.getThreadNamePrefix();</span><br><span class="line">        <span class="keyword">this</span>.poolSize = properties.getPool().getCoreSize();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 自定义 ScheduledExecutorService</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TaskSchedulerBuilder <span class="title">scheduledExecutor</span><span class="params">(ScheduledExecutorService scheduledExecutor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.scheduledExecutor = scheduledExecutor;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 构建 TaskScheduler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TaskScheduler <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 如果有自定义的 ScheduledExecutorService，直接使用</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.scheduledExecutor != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ThreadPoolTaskScheduler(<span class="keyword">this</span>.scheduledExecutor);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 否则创建新的 ThreadPoolTaskScheduler</span></span><br><span class="line">        ThreadPoolTaskScheduler scheduler = <span class="keyword">new</span> ThreadPoolTaskScheduler();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置线程池大小</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.poolSize != <span class="keyword">null</span>) &#123;</span><br><span class="line">            scheduler.setPoolSize(<span class="keyword">this</span>.poolSize);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置线程名称前缀</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.threadNamePrefix != <span class="keyword">null</span>) &#123;</span><br><span class="line">            scheduler.setThreadNamePrefix(<span class="keyword">this</span>.threadNamePrefix);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置拒绝策略</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.rejectedExecutionHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">            scheduler.setRejectedExecutionHandler(<span class="keyword">this</span>.rejectedExecutionHandler);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置是否允许核心线程超时</span></span><br><span class="line">        scheduler.setAllowCoreThreadTimeOut(</span><br><span class="line">            properties.getPool().isAllowCoreThreadTimeout());</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 设置关闭行为</span></span><br><span class="line">        scheduler.setWaitForTasksToCompleteOnShutdown(</span><br><span class="line">            properties.getShutdown().isAwaitTermination());</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (properties.getShutdown().isAwaitTermination()) &#123;</span><br><span class="line">            scheduler.setAwaitTerminationSeconds(</span><br><span class="line">                (<span class="keyword">int</span>) properties.getShutdown().getAwaitTerminationPeriod().getSeconds());</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> scheduler;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-ThreadPoolTaskScheduler-初始化流程"><a href="#4-ThreadPoolTaskScheduler-初始化流程" class="headerlink" title="4. ThreadPoolTaskScheduler 初始化流程"></a>4. ThreadPoolTaskScheduler 初始化流程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">    Start([ThreadPoolTaskScheduler 初始化]) --&gt; A[&quot;实现 InitializingBean&lt;br&#x2F;&gt;afterPropertiesSet 方法&quot;]</span><br><span class="line">    </span><br><span class="line">    A --&gt; B[&quot;initializeExecutor&lt;br&#x2F;&gt;（初始化线程池）&quot;]</span><br><span class="line">    </span><br><span class="line">    B --&gt; C&#123;&quot;poolSize 是否&lt;br&#x2F;&gt;大于 0?&quot;&#125;</span><br><span class="line">    C --&gt;|是| D[&quot;创建 ScheduledThreadPoolExecutor&lt;br&#x2F;&gt;核心线程数 &#x3D; poolSize&quot;]</span><br><span class="line">    C --&gt;|否| E[&quot;使用默认&lt;br&#x2F;&gt;Executors.newSingleThreadScheduledExecutor&quot;]</span><br><span class="line">    </span><br><span class="line">    D --&gt; F[&quot;配置线程池参数&quot;]</span><br><span class="line">    E --&gt; F</span><br><span class="line">    </span><br><span class="line">    F --&gt; G[&quot;设置 ThreadFactory&lt;br&#x2F;&gt;（线程工厂）&quot;]</span><br><span class="line">    G --&gt; H[&quot;线程名称前缀：scheduling-&lt;br&#x2F;&gt;线程组：主线程组&lt;br&#x2F;&gt;优先级：NORM_PRIORITY&lt;br&#x2F;&gt;守护线程：false&quot;]</span><br><span class="line">    </span><br><span class="line">    H --&gt; I[&quot;设置 RejectedExecutionHandler&lt;br&#x2F;&gt;（拒绝策略）&quot;]</span><br><span class="line">    I --&gt; J&#123;&quot;自定义拒绝策略?&quot;&#125;</span><br><span class="line">    J --&gt;|是| K[使用自定义策略]</span><br><span class="line">    J --&gt;|否| L[&quot;使用 AbortPolicy&lt;br&#x2F;&gt;（抛出 RejectedExecutionException）&quot;]</span><br><span class="line">    </span><br><span class="line">    K --&gt; M[&quot;设置核心线程超时策略&quot;]</span><br><span class="line">    L --&gt; M</span><br><span class="line">    </span><br><span class="line">    M --&gt; N&#123;&quot;allowCoreThreadTimeOut?&quot;&#125;</span><br><span class="line">    N --&gt;|true| O[&quot;允许核心线程超时&lt;br&#x2F;&gt;线程空闲时回收&quot;]</span><br><span class="line">    N --&gt;|false| P[&quot;核心线程永不超时&lt;br&#x2F;&gt;保持存活&quot;]</span><br><span class="line">    </span><br><span class="line">    O --&gt; Q[&quot;设置 RemoveOnCancelPolicy&quot;]</span><br><span class="line">    P --&gt; Q</span><br><span class="line">    </span><br><span class="line">    Q --&gt; R&#123;&quot;是否设置&lt;br&#x2F;&gt;removeOnCancelPolicy &#x3D; true?&quot;&#125;</span><br><span class="line">    R --&gt;|是| S[&quot;取消任务时&lt;br&#x2F;&gt;立即从队列移除&quot;]</span><br><span class="line">    R --&gt;|否| T[&quot;取消任务时&lt;br&#x2F;&gt;保留在队列中&quot;]</span><br><span class="line">    </span><br><span class="line">    S --&gt; U[&quot;初始化完成&lt;br&#x2F;&gt;ScheduledExecutorService 就绪&quot;]</span><br><span class="line">    T --&gt; U</span><br><span class="line">    </span><br><span class="line">    U --&gt; V[&quot;注册到 ScheduledTaskRegistrar&quot;]</span><br><span class="line">    </span><br><span class="line">    style A fill:#bbf,stroke:#333,stroke-width:2px</span><br><span class="line">    style U fill:#bfb,stroke:#333,stroke-width:2px</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-ScheduledTaskRegistrar-获取调度器的逻辑"><a href="#5-ScheduledTaskRegistrar-获取调度器的逻辑" class="headerlink" title="5. ScheduledTaskRegistrar 获取调度器的逻辑"></a>5. ScheduledTaskRegistrar 获取调度器的逻辑</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduledAnnotationBeanPostProcessor</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">ScheduledTaskHolder</span>, <span class="title">MergedBeanDefinitionPostProcessor</span>, </span></span><br><span class="line"><span class="class">               <span class="title">DestructionAwareBeanPostProcessor</span>, <span class="title">ApplicationContextAware</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 完成注册时获取调度器</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">finishRegistration</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.scheduler != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.registrar.setScheduler(<span class="keyword">this</span>.scheduler);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory <span class="keyword">instanceof</span> ListableBeanFactory) &#123;</span><br><span class="line">            <span class="comment">// 1. 按名称查找 TaskScheduler</span></span><br><span class="line">            Map&lt;String, TaskScheduler&gt; taskSchedulers = </span><br><span class="line">                ((ListableBeanFactory) <span class="keyword">this</span>.beanFactory)</span><br><span class="line">                    .getBeansOfType(TaskScheduler<span class="class">.<span class="keyword">class</span>, <span class="title">false</span>, <span class="title">false</span>)</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (taskSchedulers.size() == <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">this</span>.registrar.setTaskScheduler(</span><br><span class="line">                    taskSchedulers.values().iterator().next());</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (taskSchedulers.size() &gt; <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="comment">// 多个时优先使用名为 "taskScheduler" 的</span></span><br><span class="line">                <span class="keyword">if</span> (taskSchedulers.containsKey(<span class="string">"taskScheduler"</span>)) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.registrar.setTaskScheduler(</span><br><span class="line">                        taskSchedulers.get(<span class="string">"taskScheduler"</span>));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 2. 查找 ScheduledExecutorService</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.registrar.getScheduler() == <span class="keyword">null</span>) &#123;</span><br><span class="line">                Map&lt;String, ScheduledExecutorService&gt; executors = </span><br><span class="line">                    ((ListableBeanFactory) <span class="keyword">this</span>.beanFactory)</span><br><span class="line">                        .getBeansOfType(ScheduledExecutorService<span class="class">.<span class="keyword">class</span>, <span class="title">false</span>, <span class="title">false</span>)</span>;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> (executors.size() == <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.registrar.setScheduler(executors.values().iterator().next());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 3. 完成注册</span></span><br><span class="line">        <span class="keyword">this</span>.registrar.afterPropertiesSet();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="任务调度执行"><a href="#任务调度执行" class="headerlink" title="任务调度执行"></a>任务调度执行</h2><h3 id="1-调度器配置"><a href="#1-调度器配置" class="headerlink" title="1. 调度器配置"></a>1. 调度器配置</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调度器初始化逻辑</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduledTaskRegistrar</span> <span class="keyword">implements</span> <span class="title">InitializingBean</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> TaskScheduler taskScheduler;</span><br><span class="line">    <span class="keyword">private</span> ScheduledExecutorService localExecutor;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        scheduleTasks();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 初始化调度器</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">scheduleTasks</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.taskScheduler == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 使用默认的线程池调度器</span></span><br><span class="line">            <span class="keyword">this</span>.localExecutor = Executors.newSingleThreadScheduledExecutor();</span><br><span class="line">            <span class="keyword">this</span>.taskScheduler = <span class="keyword">new</span> ConcurrentTaskScheduler(<span class="keyword">this</span>.localExecutor);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.triggerTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.triggerTasks.forEach(<span class="keyword">this</span>::scheduleCronTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.cronTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.cronTasks.forEach(<span class="keyword">this</span>::scheduleCronTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.fixedRateTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.fixedRateTasks.forEach(<span class="keyword">this</span>::scheduleFixedRateTask);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.fixedDelayTasks != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.fixedDelayTasks.forEach(<span class="keyword">this</span>::scheduleFixedDelayTask);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-任务调度实现"><a href="#2-任务调度实现" class="headerlink" title="2. 任务调度实现"></a>2. 任务调度实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调度 Cron 任务</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ScheduledTask <span class="title">scheduleCronTask</span><span class="params">(CronTask task)</span> </span>&#123;</span><br><span class="line">    ScheduledTask scheduledTask = <span class="keyword">this</span>.unresolvedTasks.remove(task);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (scheduledTask == <span class="keyword">null</span>) &#123;</span><br><span class="line">        scheduledTask = <span class="keyword">new</span> ScheduledTask();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 使用 TaskScheduler 调度任务</span></span><br><span class="line">    scheduledTask.future = <span class="keyword">this</span>.taskScheduler.schedule(</span><br><span class="line">        task.getRunnable(), task.getTrigger());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> scheduledTask;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ThreadPoolTaskScheduler 实际调度</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolTaskScheduler</span> <span class="keyword">extends</span> <span class="title">ExecutorConfigurationSupport</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">TaskScheduler</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule(Runnable task, Trigger trigger) &#123;</span><br><span class="line">        ScheduledExecutorService executor = getScheduledExecutor();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 包装错误处理</span></span><br><span class="line">            ErrorHandler errorHandler = <span class="keyword">this</span>.errorHandler;</span><br><span class="line">            <span class="keyword">if</span> (errorHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">                task = <span class="keyword">new</span> DelegatingErrorHandlingRunnable(task, errorHandler);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 使用 ReschedulingRunnable 实现重新调度</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ReschedulingRunnable(task, trigger, executor).schedule();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RejectedExecutionException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> TaskRejectedException(<span class="string">"Executor did not accept task"</span>, ex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-ReschedulingRunnable-核心实现"><a href="#3-ReschedulingRunnable-核心实现" class="headerlink" title="3. ReschedulingRunnable 核心实现"></a>3. ReschedulingRunnable 核心实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 可重新调度的任务包装器</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReschedulingRunnable</span> <span class="keyword">extends</span> <span class="title">DelegatingErrorHandlingRunnable</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">ScheduledFuture</span>&lt;<span class="title">Object</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Trigger trigger;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ScheduledExecutorService executor;</span><br><span class="line">    <span class="keyword">private</span> ScheduledFuture&lt;?&gt; currentFuture;</span><br><span class="line">    <span class="keyword">private</span> Date scheduledExecutionTime;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TriggerContext triggerContext = <span class="keyword">new</span> SimpleTriggerContext();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object triggerContextMonitor = <span class="keyword">new</span> Object();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 核心调度方法</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule() &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.triggerContextMonitor) &#123;</span><br><span class="line">            <span class="comment">// 1. 计算下次执行时间</span></span><br><span class="line">            <span class="keyword">this</span>.scheduledExecutionTime = <span class="keyword">this</span>.trigger.nextExecutionTime(<span class="keyword">this</span>.triggerContext);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 2. 如果没有下次执行时间，任务结束</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.scheduledExecutionTime == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 3. 计算延迟时间（毫秒）</span></span><br><span class="line">            <span class="keyword">long</span> initialDelay = <span class="keyword">this</span>.scheduledExecutionTime.getTime() - System.currentTimeMillis();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 4. 提交到线程池延迟队列</span></span><br><span class="line">            <span class="keyword">this</span>.currentFuture = <span class="keyword">this</span>.executor.schedule(<span class="keyword">this</span>, initialDelay, TimeUnit.MILLISECONDS);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 任务执行方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Date actualExecutionTime = <span class="keyword">new</span> Date();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 1. 执行实际任务</span></span><br><span class="line">        <span class="keyword">super</span>.run();</span><br><span class="line">        </span><br><span class="line">        Date completionTime = <span class="keyword">new</span> Date();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>.triggerContextMonitor) &#123;</span><br><span class="line">            Assert.state(<span class="keyword">this</span>.scheduledExecutionTime != <span class="keyword">null</span>, <span class="string">"No scheduled execution"</span>);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 2. 更新触发器上下文（记录本次执行时间）</span></span><br><span class="line">            <span class="keyword">this</span>.triggerContext.update(<span class="keyword">this</span>.scheduledExecutionTime, actualExecutionTime, completionTime);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 3. 检查是否取消</span></span><br><span class="line">            <span class="keyword">if</span> (!<span class="keyword">this</span>.currentFuture.isCancelled()) &#123;</span><br><span class="line">                <span class="comment">// 4. 重新调度（递归调用）</span></span><br><span class="line">                schedule();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-ScheduledThreadPoolExecutor-延迟队列机制"><a href="#4-ScheduledThreadPoolExecutor-延迟队列机制" class="headerlink" title="4. ScheduledThreadPoolExecutor 延迟队列机制"></a>4. ScheduledThreadPoolExecutor 延迟队列机制</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ScheduledThreadPoolExecutor 的延迟队列实现</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduledThreadPoolExecutor</span> <span class="keyword">extends</span> <span class="title">ThreadPoolExecutor</span> </span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">ScheduledExecutorService</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 延迟队列</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> DelayedWorkQueue queue;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Worker 线程获取任务的核心方法</span></span><br><span class="line">    <span class="keyword">private</span> RunnableScheduledFuture&lt;?&gt; take() <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">        lock.lockInterruptibly();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">                <span class="comment">// 1. 获取队列头部任务</span></span><br><span class="line">                RunnableScheduledFuture&lt;?&gt; first = queue.peek();</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> (first == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="comment">// 2. 队列为空，无限等待</span></span><br><span class="line">                    available.await();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 3. 获取延迟时间</span></span><br><span class="line">                    <span class="keyword">long</span> delay = first.getDelay(NANOSECONDS);</span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">if</span> (delay &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="comment">// 4. 任务到期，返回执行</span></span><br><span class="line">                        <span class="keyword">return</span> finishPoll(first);</span><br><span class="line">                    &#125;</span><br><span class="line">                    </span><br><span class="line">                    <span class="comment">// 5. 任务未到期，阻塞等待</span></span><br><span class="line">                    first = <span class="keyword">null</span>;</span><br><span class="line">                    <span class="keyword">if</span> (leader != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        available.await();</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        Thread thisThread = Thread.currentThread();</span><br><span class="line">                        leader = thisThread;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            available.awaitNanos(delay);</span><br><span class="line">                        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                            <span class="keyword">if</span> (leader == thisThread) &#123;</span><br><span class="line">                                leader = <span class="keyword">null</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (leader == <span class="keyword">null</span> &amp;&amp; queue.peek() != <span class="keyword">null</span>) &#123;</span><br><span class="line">                available.signal();</span><br><span class="line">            &#125;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-CronTrigger-执行时间计算"><a href="#5-CronTrigger-执行时间计算" class="headerlink" title="5. CronTrigger 执行时间计算"></a>5. CronTrigger 执行时间计算</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CronTrigger</span> <span class="keyword">implements</span> <span class="title">Trigger</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> CronExpression cronExpression;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Date <span class="title">nextExecutionTime</span><span class="params">(TriggerContext triggerContext)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 1. 获取上次执行时间</span></span><br><span class="line">        Date lastExecution = triggerContext.lastScheduledExecutionTime();</span><br><span class="line">        Date lastCompletion = triggerContext.lastCompletionTime();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (lastExecution == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 2. 首次执行，从当前时间开始计算</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.cronExpression.next(<span class="keyword">new</span> Date());</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 3. 根据上次计划执行时间计算下次执行时间</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.cronExpression.next(lastExecution);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="FixedDelay-与-FixedRate-的区别"><a href="#FixedDelay-与-FixedRate-的区别" class="headerlink" title="FixedDelay 与 FixedRate 的区别"></a>FixedDelay 与 FixedRate 的区别</h2><h3 id="概念对比"><a href="#概念对比" class="headerlink" title="概念对比"></a>概念对比</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// FixedDelay：任务执行完成后，延迟指定时间再执行</span></span><br><span class="line"><span class="comment">// 实际间隔 = 任务执行时间 + fixedDelay</span></span><br><span class="line"><span class="meta">@Scheduled</span>(fixedDelay = <span class="number">5000</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fixedDelayTask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 执行逻辑</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// FixedRate：固定频率执行，不管上次任务是否完成</span></span><br><span class="line"><span class="comment">// 如果任务执行时间 &gt; fixedRate，则等上次任务完成后立即执行</span></span><br><span class="line"><span class="meta">@Scheduled</span>(fixedRate = <span class="number">5000</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fixedRateTask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 执行逻辑</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="底层实现差异"><a href="#底层实现差异" class="headerlink" title="底层实现差异"></a>底层实现差异</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FixedDelayTask</span> <span class="keyword">extends</span> <span class="title">Task</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule(ScheduledExecutorService executor) &#123;</span><br><span class="line">        <span class="keyword">return</span> executor.scheduleWithFixedDelay(</span><br><span class="line">            getRunnable(), </span><br><span class="line">            getInitialDelay(), </span><br><span class="line">            getFixedDelay(), </span><br><span class="line">            TimeUnit.MILLISECONDS);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FixedRateTask</span> <span class="keyword">extends</span> <span class="title">Task</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule(ScheduledExecutorService executor) &#123;</span><br><span class="line">        <span class="keyword">return</span> executor.scheduleAtFixedRate(</span><br><span class="line">            getRunnable(), </span><br><span class="line">            getInitialDelay(), </span><br><span class="line">            getFixedRate(), </span><br><span class="line">            TimeUnit.MILLISECONDS);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="执行时序对比"><a href="#执行时序对比" class="headerlink" title="执行时序对比"></a>执行时序对比</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">FixedDelay (fixedDelay &#x3D; 5s):</span><br><span class="line">任务执行(3s) --&gt; 等待(5s) --&gt; 任务执行(2s) --&gt; 等待(5s) --&gt; ...</span><br><span class="line">|--间隔8s--|              |--间隔7s--|</span><br><span class="line"></span><br><span class="line">FixedRate (fixedRate &#x3D; 5s):</span><br><span class="line">任务执行(3s) --&gt; 等待(2s) --&gt; 任务执行(3s) --&gt; 等待(2s) --&gt; ...</span><br><span class="line">|--间隔5s--|              |--间隔5s--|</span><br><span class="line"></span><br><span class="line">FixedRate 任务执行时间超过间隔:</span><br><span class="line">任务执行(8s) --&gt; 立即执行(6s) --&gt; 等待(4s) --&gt; 任务执行(3s) --&gt; ...</span><br><span class="line">|--间隔8s--|          |--间隔10s--|</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="配置示例与最佳实践"><a href="#配置示例与最佳实践" class="headerlink" title="配置示例与最佳实践"></a>配置示例与最佳实践</h2><h3 id="1-application-yml-配置"><a href="#1-application-yml-配置" class="headerlink" title="1. application.yml 配置"></a>1. application.yml 配置</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">task:</span></span><br><span class="line">    <span class="attr">scheduling:</span></span><br><span class="line">      <span class="comment"># 线程池配置</span></span><br><span class="line">      <span class="attr">pool:</span></span><br><span class="line">        <span class="attr">core-size:</span> <span class="number">8</span>                    <span class="comment"># 核心线程数</span></span><br><span class="line">        <span class="attr">allow-core-thread-timeout:</span> <span class="literal">true</span> <span class="comment"># 允许核心线程超时</span></span><br><span class="line">        <span class="attr">queue-capacity:</span> <span class="number">100</span>            <span class="comment"># 队列容量（ScheduledThreadPoolExecutor 无界，此配置对定时任务无效）</span></span><br><span class="line">      </span><br><span class="line">      <span class="comment"># 线程名称前缀</span></span><br><span class="line">      <span class="attr">thread-name-prefix:</span> <span class="string">my-scheduling-</span></span><br><span class="line">      </span><br><span class="line">      <span class="comment"># 关闭行为</span></span><br><span class="line">      <span class="attr">shutdown:</span></span><br><span class="line">        <span class="attr">await-termination:</span> <span class="literal">true</span>         <span class="comment"># 关闭时等待任务完成</span></span><br><span class="line">        <span class="attr">await-termination-period:</span> <span class="string">60s</span>   <span class="comment"># 等待超时时间</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-自定义-TaskScheduler"><a href="#2-自定义-TaskScheduler" class="headerlink" title="2. 自定义 TaskScheduler"></a>2. 自定义 TaskScheduler</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableScheduling</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SchedulingConfig</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 方式1：通过修改配置属性</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TaskSchedulerBuilder <span class="title">taskSchedulerBuilder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TaskSchedulerBuilder(<span class="keyword">new</span> TaskSchedulingProperties())</span><br><span class="line">            .poolSize(<span class="number">10</span>)</span><br><span class="line">            .threadNamePrefix(<span class="string">"custom-scheduling-"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 方式2：直接创建 ThreadPoolTaskScheduler</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TaskScheduler <span class="title">taskScheduler</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ThreadPoolTaskScheduler scheduler = <span class="keyword">new</span> ThreadPoolTaskScheduler();</span><br><span class="line">        scheduler.setPoolSize(<span class="number">10</span>);</span><br><span class="line">        scheduler.setThreadNamePrefix(<span class="string">"custom-scheduling-"</span>);</span><br><span class="line">        scheduler.setAwaitTerminationSeconds(<span class="number">60</span>);</span><br><span class="line">        scheduler.setWaitForTasksToCompleteOnShutdown(<span class="keyword">true</span>);</span><br><span class="line">        scheduler.setRejectedExecutionHandler(</span><br><span class="line">            <span class="keyword">new</span> ThreadPoolExecutor.CallerRunsPolicy());</span><br><span class="line">        <span class="keyword">return</span> scheduler;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 方式3：使用自定义 ScheduledExecutorService</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ScheduledExecutorService <span class="title">scheduledExecutorService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ScheduledThreadPoolExecutor(<span class="number">10</span>, </span><br><span class="line">            <span class="keyword">new</span> ThreadFactoryBuilder()</span><br><span class="line">                .setNameFormat(<span class="string">"custom-pool-%d"</span>)</span><br><span class="line">                .build());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-异步任务与定时任务的线程池隔离"><a href="#3-异步任务与定时任务的线程池隔离" class="headerlink" title="3. 异步任务与定时任务的线程池隔离"></a>3. 异步任务与定时任务的线程池隔离</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableScheduling</span></span><br><span class="line"><span class="meta">@EnableAsync</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolConfig</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 定时任务专用线程池</span></span><br><span class="line">    <span class="meta">@Bean</span>(name = <span class="string">"taskScheduler"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TaskScheduler <span class="title">taskScheduler</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ThreadPoolTaskScheduler scheduler = <span class="keyword">new</span> ThreadPoolTaskScheduler();</span><br><span class="line">        scheduler.setPoolSize(<span class="number">4</span>);</span><br><span class="line">        scheduler.setThreadNamePrefix(<span class="string">"scheduled-"</span>);</span><br><span class="line">        scheduler.setRejectedExecutionHandler(</span><br><span class="line">            <span class="keyword">new</span> ThreadPoolExecutor.AbortPolicy());</span><br><span class="line">        <span class="keyword">return</span> scheduler;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 异步任务专用线程池</span></span><br><span class="line">    <span class="meta">@Bean</span>(name = <span class="string">"taskExecutor"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Executor <span class="title">taskExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ThreadPoolTaskExecutor executor = <span class="keyword">new</span> ThreadPoolTaskExecutor();</span><br><span class="line">        executor.setCorePoolSize(<span class="number">8</span>);</span><br><span class="line">        executor.setMaxPoolSize(<span class="number">16</span>);</span><br><span class="line">        executor.setQueueCapacity(<span class="number">200</span>);</span><br><span class="line">        executor.setThreadNamePrefix(<span class="string">"async-"</span>);</span><br><span class="line">        executor.setRejectedExecutionHandler(</span><br><span class="line">            <span class="keyword">new</span> ThreadPoolExecutor.CallerRunsPolicy());</span><br><span class="line">        executor.initialize();</span><br><span class="line">        <span class="keyword">return</span> executor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-不同场景下的调度器选择"><a href="#4-不同场景下的调度器选择" class="headerlink" title="4. 不同场景下的调度器选择"></a>4. 不同场景下的调度器选择</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">    Start([应用启动]) --&gt; Scene&#123;使用场景&#125;</span><br><span class="line">    </span><br><span class="line">    Scene --&gt;|Spring Boot 默认| S1[&quot;@EnableScheduling&lt;br&#x2F;&gt;无自定义配置&quot;]</span><br><span class="line">    Scene --&gt;|配置文件配置| S2[&quot;application.yml&lt;br&#x2F;&gt;配置线程池参数&quot;]</span><br><span class="line">    Scene --&gt;|自定义 Bean| S3[&quot;自定义 TaskScheduler Bean&quot;]</span><br><span class="line">    Scene --&gt;|多线程池| S4[&quot;定时+异步线程池隔离&quot;]</span><br><span class="line">    </span><br><span class="line">    S1 --&gt; R1[&quot;结果：单线程调度器&lt;br&#x2F;&gt;scheduling-1 线程&lt;br&#x2F;&gt;所有任务串行执行&quot;]</span><br><span class="line">    </span><br><span class="line">    S2 --&gt; R2[&quot;结果：自定义线程池&lt;br&#x2F;&gt;例如 8 核心线程&lt;br&#x2F;&gt;任务并行执行&quot;]</span><br><span class="line">    </span><br><span class="line">    S3 --&gt; R3[&quot;结果：完全自定义&lt;br&#x2F;&gt;可控的线程池参数&lt;br&#x2F;&gt;拒绝策略等&quot;]</span><br><span class="line">    </span><br><span class="line">    S4 --&gt; R4[&quot;结果：线程池隔离&lt;br&#x2F;&gt;定时任务不受异步影响&lt;br&#x2F;&gt;各自独立执行&quot;]</span><br><span class="line">    </span><br><span class="line">    style R1 fill:#faa,stroke:#333,stroke-width:2px</span><br><span class="line">    style R2 fill:#bfb,stroke:#333,stroke-width:2px</span><br><span class="line">    style R3 fill:#bbf,stroke:#333,stroke-width:2px</span><br><span class="line">    style R4 fill:#fbf,stroke:#333,stroke-width:2px</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="核心流程概览"><a href="#核心流程概览" class="headerlink" title="核心流程概览"></a>核心流程概览</h3><p>整个 Spring Boot 定时任务从初始化到运行的核心流程可以概括为以下几个阶段：</p>
+<ol>
+<li><p><strong>自动配置阶段</strong></p>
+<ul>
+<li><code>@EnableScheduling</code> 触发自动配置</li>
+<li><code>TaskSchedulingAutoConfiguration</code> 根据配置创建调度器</li>
+<li><code>TaskSchedulingProperties</code> 读取配置属性</li>
+</ul>
+</li>
+<li><p><strong>任务扫描阶段</strong></p>
+<ul>
+<li><code>ScheduledAnnotationBeanPostProcessor</code> 扫描所有 Bean</li>
+<li>查找 <code>@Scheduled</code> 注解的方法</li>
+<li>创建 <code>ScheduledMethodRunnable</code> 包装目标方法</li>
+</ul>
+</li>
+<li><p><strong>任务注册阶段</strong></p>
+<ul>
+<li>根据注解属性创建不同类型的 Task</li>
+<li><code>ScheduledTaskRegistrar</code> 统一管理所有任务</li>
+<li>选择合适的 <code>TaskScheduler</code> 进行调度</li>
+</ul>
+</li>
+<li><p><strong>任务调度阶段</strong></p>
+<ul>
+<li><code>ReschedulingRunnable</code> 负责 Cron 任务的循环调度</li>
+<li><code>ScheduledExecutorService</code> 提供底层线程池支持</li>
+<li><code>DelayedWorkQueue</code> 管理任务的延迟执行</li>
+</ul>
+</li>
+<li><p><strong>任务执行阶段</strong></p>
+<ul>
+<li>Worker 线程从延迟队列获取到期任务</li>
+<li>反射调用目标方法</li>
+<li><code>ErrorHandler</code> 处理执行异常</li>
+</ul>
+</li>
+<li><p><strong>重新调度阶段</strong></p>
+<ul>
+<li>Cron 任务通过递归调用 <code>schedule()</code> 实现循环</li>
+<li>FixedDelay/FixedRate 由线程池自动重新调度</li>
+</ul>
+</li>
+</ol>
+<h3 id="关键设计模式"><a href="#关键设计模式" class="headerlink" title="关键设计模式"></a>关键设计模式</h3><table>
+<thead>
+<tr>
+<th>设计模式</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>模板方法模式</strong></td>
+<td><code>ScheduledTaskRegistrar.scheduleTasks()</code></td>
+</tr>
+<tr>
+<td><strong>策略模式</strong></td>
+<td>不同类型的 Task（CronTask、FixedDelayTask、FixedRateTask）</td>
+</tr>
+<tr>
+<td><strong>观察者模式</strong></td>
+<td><code>ApplicationListener&lt;ContextRefreshedEvent&gt;</code></td>
+</tr>
+<tr>
+<td><strong>装饰器模式</strong></td>
+<td><code>ReschedulingRunnable</code> 包装原始 Runnable</td>
+</tr>
+<tr>
+<td><strong>建造者模式</strong></td>
+<td><code>TaskSchedulerBuilder</code> 构建调度器</td>
+</tr>
+<tr>
+<td><strong>工厂模式</strong></td>
+<td><code>ThreadPoolTaskScheduler</code> 创建线程池</td>
+</tr>
+</tbody></table>
+<h3 id="最佳实践建议"><a href="#最佳实践建议" class="headerlink" title="最佳实践建议"></a>最佳实践建议</h3><ol>
+<li><p><strong>线程池配置</strong></p>
+<ul>
+<li>根据定时任务数量合理配置 <code>core-size</code></li>
+<li>避免使用默认的单线程配置（生产环境）</li>
+</ul>
+</li>
+<li><p><strong>线程隔离</strong></p>
+<ul>
+<li>定时任务和异步任务使用不同的线程池</li>
+<li>避免相互影响导致资源竞争</li>
+</ul>
+</li>
+<li><p><strong>优雅关闭</strong></p>
+<ul>
+<li>配置 <code>spring.task.scheduling.shutdown.await-termination=true</code></li>
+<li>设置合理的等待超时时间</li>
+</ul>
+</li>
+<li><p><strong>异常处理</strong></p>
+<ul>
+<li>自定义 <code>ErrorHandler</code> 处理任务异常</li>
+<li>避免异常导致后续任务无法调度</li>
+</ul>
+</li>
+<li><p><strong>监控告警</strong></p>
+<ul>
+<li>配置有意义的 <code>thread-name-prefix</code></li>
+<li>监控线程池状态和任务执行情况</li>
+</ul>
+</li>
+<li><p><strong>拒绝策略</strong></p>
+<ul>
+<li>根据业务场景选择合适的拒绝策略</li>
+<li>考虑使用 <code>CallerRunsPolicy</code> 避免任务丢失</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+<div>
+      
+        
+
+      
+</div>
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat.jpg" alt="Marcher wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎扫描二维码关注公众号一起成长~</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/uploads/wechatpay.jpg" alt="Marcher 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/uploads/alipay.jpg" alt="Marcher 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2026/06/26/spring/Async/Spring%20Boot%20%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%AE%8C%E6%95%B4%E8%A7%A3%E6%9E%90/" rel="next" title="spring/Async/Spring Boot 异步任务实现原理完整解析">
+                <i class="fa fa-chevron-left"></i> spring/Async/Spring Boot 异步任务实现原理完整解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2026/06/26/spring/spring%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84/" rel="prev" title="spring/spring初始化结构">
+                spring/spring初始化结构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="Marcher" />
+            
+              <p class="site-author-name" itemprop="name">Marcher</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/march1995" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1501987783@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/324b61a4193e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/march1995/spring-example" title="spring-example" target="_blank">spring-example</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://march1995.github.io/2018/10/31/java/jvm/jvm/" title="jvm" target="_blank">jvm</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Boot-定时任务实现原理完整解析"><span class="nav-text">Spring Boot 定时任务实现原理完整解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心组件概览"><span class="nav-text">核心组件概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完整执行流程图"><span class="nav-text">完整执行流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化流程详解"><span class="nav-text">初始化流程详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-启用定时任务"><span class="nav-text">1. 启用定时任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-注册核心处理器"><span class="nav-text">2. 注册核心处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-BeanPostProcessor-初始化"><span class="nav-text">3. BeanPostProcessor 初始化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#任务扫描与注册"><span class="nav-text">任务扫描与注册</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-扫描-Scheduled-方法"><span class="nav-text">1. 扫描 @Scheduled 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-创建并注册任务"><span class="nav-text">2. 创建并注册任务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调度器自动配置"><span class="nav-text">调度器自动配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-TaskSchedulingAutoConfiguration"><span class="nav-text">1. TaskSchedulingAutoConfiguration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-TaskSchedulingProperties-配置属性"><span class="nav-text">2. TaskSchedulingProperties 配置属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-TaskSchedulerBuilder-构建器"><span class="nav-text">3. TaskSchedulerBuilder 构建器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-ThreadPoolTaskScheduler-初始化流程"><span class="nav-text">4. ThreadPoolTaskScheduler 初始化流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-ScheduledTaskRegistrar-获取调度器的逻辑"><span class="nav-text">5. ScheduledTaskRegistrar 获取调度器的逻辑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#任务调度执行"><span class="nav-text">任务调度执行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-调度器配置"><span class="nav-text">1. 调度器配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-任务调度实现"><span class="nav-text">2. 任务调度实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-ReschedulingRunnable-核心实现"><span class="nav-text">3. ReschedulingRunnable 核心实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-ScheduledThreadPoolExecutor-延迟队列机制"><span class="nav-text">4. ScheduledThreadPoolExecutor 延迟队列机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-CronTrigger-执行时间计算"><span class="nav-text">5. CronTrigger 执行时间计算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FixedDelay-与-FixedRate-的区别"><span class="nav-text">FixedDelay 与 FixedRate 的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念对比"><span class="nav-text">概念对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#底层实现差异"><span class="nav-text">底层实现差异</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行时序对比"><span class="nav-text">执行时序对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置示例与最佳实践"><span class="nav-text">配置示例与最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-application-yml-配置"><span class="nav-text">1. application.yml 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-自定义-TaskScheduler"><span class="nav-text">2. 自定义 TaskScheduler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-异步任务与定时任务的线程池隔离"><span class="nav-text">3. 异步任务与定时任务的线程池隔离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-不同场景下的调度器选择"><span class="nav-text">4. 不同场景下的调度器选择</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#核心流程概览"><span class="nav-text">核心流程概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关键设计模式"><span class="nav-text">关键设计模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最佳实践建议"><span class="nav-text">最佳实践建议</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Marcher</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">105.4k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+<!-- 
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+-->
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共105.4k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
